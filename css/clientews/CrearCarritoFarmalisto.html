@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Crear Carrito Farmalisto</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <form method="POST" action="http://www.farmalisto.com.co/mobilews/addshopingcart.php">
+
+
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Token</td>
+                        <td><input type="text" name="token_mobile"></td>
+                    </tr>
+                    <tr>
+                        <td>Producto Normal</td>
+                        <td><input  type="text" name="ids_producto[3620]" value="1"></td>
+                    </tr>
+                    <tr>
+                        <td>Producto Formula Medica</td>
+                        <td><input  type="text" name="ids_producto[3051]" value="1"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+<br>
+<input type="submit" value="Enviar">
+</form>
+<br>
+<a href="index.php">Crear Token</a>
+    </body>
+</html>
