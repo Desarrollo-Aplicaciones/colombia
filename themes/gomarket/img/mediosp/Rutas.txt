@@ -1,0 +1,28 @@
+Rutas:
+
+\themes\gomarket\css\order-payment.css
+\themes\gomarket\css\reponsive.css
+\themes\gomarket\css\shopping-cart.css
+
+\themes\gomarket\order-payment.tpl
+\themes\gomarket\shopping-cart.tpl
+\themes\gomarket\shopping-cart-product-line.tpl
+\themes\gomarket\shopping-cart-product-line-formula.tpl
+
+\modules\payulatam\tpl\payment.tpl
+\modules\payulatam\tpl\payuPse.tpl
+\modules\payulatam\tpl\payuBaloto.tpl
+\modules\payulatam\tpl\credit_card.tpl
+\modules\payulatam\tpl\payuEfecty.tpl
+
+\modules\payulatam\payulatam.php
+
+\modules\cashondelivery\views\templates\hook\payment.tpl
+
+
+
+todas las imagenes (excepto select.png):
+-  \themes\gomarket\img\mediosp
+
+para select.png:
+-  \themes\gomarket\img\authentication

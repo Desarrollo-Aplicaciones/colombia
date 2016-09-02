@@ -1,0 +1,184 @@
+{*
+* 2007-2012 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2012 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*{$smarty.cookies.display}
+*}
+
+{if isset($products)}
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function()
+{
+	//_csJnit(IS,n);
+	$('.continue_shopping').unbind('click').live('click', function(){
+		lightbox_hide();
+	});
+
+	$('.proceed').unbind('click').live('click', function(){
+		document.location.href = "{$__PS_BASE_URI__}index.php?controller=order&paso=inicial";
+	});
+});
+
+function addcartlightbox( element ) {
+	var linkrewrite = element.attr('linkrewrite');
+	var pricepro = Math.round( element.attr('pricepro') );
+
+	var namepro = element.attr('namepro');
+	namepro = namepro.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+		return letter.toUpperCase();
+	});
+
+	var imgpro = element.attr('imgpro');
+	var imgpro = imgpro.split('-');
+
+	$(".lightbox_pname").html( namepro );
+	$("#lightbox_subtotal").html( pricepro );
+
+	if ( imgpro[1] == "default" ) {
+		$(".lightbox_img").attr( "src", "{$base_dir}img/p/es-default-medium_default.jpg" );
+	} else {
+		$(".lightbox_img").attr( "src", "{$base_dir}"+imgpro[1]+"-medium_default/"+linkrewrite+".jpg" );
+	}
+
+	standard_lightbox('buyConfirm');
+}
+//]]>
+</script>
+
+<div id="buyConfirm">
+	<div class="lightbox_close" onclick="lightbox_hide();"></div>
+	<div class="lightbox_title">Este producto se agregó correctamente al carrito</div>
+	<div class="lightbox_resume">
+		<img class="lightbox_img" src="" alt="" />
+		<div class="lightbox_desc">
+			<div class="lightbox_pname"></div>
+			<div style="text-align:center">Cantidad: &nbsp;&nbsp; <span id="lightbox_qty">1</span> &nbsp;Total: &nbsp;&nbsp; <span id="lightbox_subtotal"></span></div>
+		</div>
+	</div>
+	<div class="lightbox_subtotal">
+		<div><b>Hay en total <span class="ajax_cart_quantity">0</span> productos en el carrito</b></div>
+		<div>Subtotal: <b><span class="ajax_block_cart_total">$ 0</span></b></div>
+	</div>
+	<div class="options">
+		<div class="continue_shopping">Buscar más Productos</div>
+		<div class="proceed">Realizar Pago</div>
+	</div>
+	<div class="lightbox_payment">
+		Contamos con múltiples medios de pago<br />
+		<img src="{$img_dir}footer/baloto.jpg" alt="baloto" />
+		<img src="{$img_dir}footer/efecty.jpg" alt="efecty" />
+		<img src="{$img_dir}footer/pse.jpg" alt="Tarjeta Débito" />
+		<img src="{$img_dir}footer/dinners.jpg" alt="Dinner Club" />
+		<img src="{$img_dir}footer/master.jpg" alt="MasterCard" />
+		<img src="{$img_dir}footer/visa.jpg" alt="Visa" />
+		<img src="{$img_dir}footer/amex.jpg" alt="American Express" />
+		<img src="{$img_dir}footer/cod.jpg" alt="Pago Contraentrega" />
+	</div>
+</div>
+
+	<ul id="product_list" class="product_grid">
+	{foreach from=$products item=product name=products}
+		{assign "legend_img" $product.name}
+		{if !empty($product.legend)}
+			{assign "legend_img" $product.legend}
+		{/if}
+		<li class="{if isset($grid_product)}{$grid_product}{elseif isset($smarty.cookies.grid_product)}{$smarty.cookies.grid_product}{else}grid_6{/if} ajax_block_product {if $smarty.foreach.products.first}first_item{elseif $smarty.foreach.products.last}last_item{/if} {if $smarty.foreach.products.index % 2}alternate_item{else}item{/if} clearfix omega alpha">
+			<div class="center_block_search">
+				{*assign var="image_rx" value=false}
+				{foreach from=$product.features item=feature}
+					{if $feature.id_feature == "11" && ($feature.value|upper == "SI" || $feature.value|upper == "SÍ")}
+						{$image_rx = true}
+					{/if}
+				{/foreach*}
+				
+
+				<div class="image_search"><a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link" title="{$product.name|escape:'htmlall':'UTF-8'}">
+					{*if $image_rx == true}
+						<img src="{$base_dir}img/p/image_rx.jpg" alt="{$legend_img|escape:'htmlall':'UTF-8'}" />
+					{else*}
+						<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')}" alt="{$legend_img|escape:'htmlall':'UTF-8'}" />
+					{*/if*}
+				</a>
+				{if $product.specific_prices}
+        			{assign var='specific_prices' value=$product.specific_prices}
+        			{if $specific_prices.reduction_type == 'percentage' && ($specific_prices.from == $specific_prices.to OR ($smarty.now|date_format:'%Y-%m-%d %H:%M:%S' <= $specific_prices.to && $smarty.now|date_format:'%Y-%m-%d %H:%M:%S' >= $specific_prices.from))}
+	        			<p class="reduction">{*l s='Save '*}-<span>{$specific_prices.reduction*100|floatval}</span>%</p>
+	            	{/if}
+					{/if}
+				</div>
+                                <div class="line_catalog_search">
+                                    <img src="img/line_catalogo.jpg"/>
+                                </div>
+				<div class="name_product_search"><a href="{$product.link|escape:'htmlall':'UTF-8'}" title="{$product.name|escape:'htmlall':'UTF-8'}">{$product.name|lower|capitalize|truncate:55:'...'}</a></div>
+				<p class="product_desc">{$product.description_short|strip_tags:'UTF-8'|truncate:200:'...'}</p>
+				{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
+				<div class="content_price">
+					{if $product.reduction}<span class="pricee-discount">{displayWtPrice p=$product.price_without_reduction}</span>{/if}
+					{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}<span class="pricee{if $product.reduction} old{/if}" style="display: inline;">{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}</span>{/if}
+				</div>
+				{/if}
+					
+				{*if !$image_rx*}
+                    <div class="add_car_search">
+                        {if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.minimal_quantity <= 1 && $product.customizable != 2 && !$PS_CATALOG_MODE}
+							{if ($product.allow_oosp || $product.quantity > 0)}
+								{if isset($static_token)}
+							<a imgpro="{$product.id_image}"linkrewrite="{$product.link_rewrite}"namepro="{$product.name}"pricepro="{$product.price}" class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)}" title="{l s='Comprar'}">{l s='Comprar'}</a>
+								{else}
+							<a imgpro="{$product.id_image}"linkrewrite="{$product.link_rewrite}"namepro="{$product.name}"pricepro="{$product.price}" class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}", false)}" title="{l s='Comprar'}">{l s='Comprar'}</a>
+								{/if}						
+							{else}
+								<span class="exclusive">{l s='Out of stock'}</span>
+							{/if}
+                        {/if}
+                    </div>
+                {*/if*}
+				{if isset($comparator_max_item) && $comparator_max_item}
+					<p class="compare">
+						<input type="checkbox" class="comparator" id="comparator_item_{$product.id_product}" value="comparator_item_{$product.id_product}" {if isset($compareProducts) && in_array($product.id_product, $compareProducts)}checked="checked"{/if} /> 
+						<label for="comparator_item_{$product.id_product}">{l s='Select to compare'}</label>
+					</p>
+				{/if}
+			</div>
+		</li>
+	{/foreach}
+	</ul>
+	<!-- /Products list -->
+	 <div class="cclearfix" style="float:left;font-size: 7pt;padding: 0 0px 20px 0;text-align: justify;">Bienvenido a Farmalisto, tu droguería online, encontrarás productos de farmacia, salud, nutrición, cuidado personal y para la familia. Compra y haz tus pedidos fácilmente, servicio a domicilio en Bogotá, Antioquia, Valle del Cauca, Atlántico, Santander, Norte de Santander, Tolima, Risaralda, Magdalena, Córdoba, Caldas, Nariño, Cauca, Meta, Quindío, Cesar, Huila, Sucre, Boyacá, Cundinamarca, Casanare, La Guajira, Arauca, Caquetá, Putumayo, Zipaquirá, Chía, Cota, Mosquera, Funza, Siberia, La Calera, Soacha, Sibaté y demás ciudades y pueblos de Colombia, garantizamos el mejor precio. Acá te decimos para qué sirve.
+
+A través de farmalisto puedes comprar con diversos medios de pago, tarjeta débito, tarjeta de crédito, baloto, cuenta de ahorros, efectivo, te brindamos seguridad en cada una de tus transacciones a través de nuestro sistema Symantec Powered by verisign un completo sistema de seguridad en tus compras. Puedes llamarnos a nuestra línea de atención y televentas en Bogotá al 2205249 y Nacionalmente en el 01800 9133830. o puedes escribirnos a nuestro correo de contacto, contacto@farmalisto.com.co. 
+
+Nuestros beneficios: Mejor precio garantizado, se trata de una garantía en la que podrás obtener el doble del valor de la diferencia del producto que encuentres a un menor precio en otro establecimiento que sea certificado para la venta de medicamentos, traes la factura o cotización y en tu próxima compra la podrás hacer efectiva, No más filas, con nosotros ya no tendrás que hacer filas al salir de tu médico, IPS o EPS, simplemente compras online y hasta puedes pagar en casa, simple y rápidamente. 
+
+Discreción en todas tus compras, total confidencialidad en todas tus transacciones, hay algunas ocasiones en las que quieres comprar algunos productos y no quieres que nadie se entere, con nosotros puedes mantenerte tranquilo, haces tu pedido y te entregamos en el lugar que nos indiques.
+
+Tu fórmula médica completa en un sólo lugar, ya no tendrás que pasar de farmacia en farmacia para conseguir tus medicamentos, nosotros lo hacemos por ti, simplemente haz tu pedido y nosotros nos encargamos de todo.
+
+Contamos con profesionales certificados de la farmacológia ofreciendo así garantía total en tu experiencia de compra, no somos un ecomerce común somos una droguería 100% online en donde encontrarás todo lo que necesitas.
+
+Sí vas a hacer una compra por más de $49.900 pesos puedes obtener un descuento del 5% usando el cupón con el código "AYUDASALUD" permamentemente, sí consumes o compras mensualmente tus medicamentos, con nosotros no olvidarás tomarlos, te cuidamos y nos esforzamos en recordártelo, nuestro interés es tu bienestar.
+
+No te automediques, nosotros somos responsables por la salud de nuestros clientes, por ello exigimos un soporte certificado (fórmula médica) por tú médico o EPS en el que autorice la venta del medicamento, la dósis, presentación del producto, fecha, advertencias, características, posología, indicaciones y contraindicaciones es responsabilidad de tú médico y no nos responsabilizamos por ello.</div> 
+
+	
+{/if}
