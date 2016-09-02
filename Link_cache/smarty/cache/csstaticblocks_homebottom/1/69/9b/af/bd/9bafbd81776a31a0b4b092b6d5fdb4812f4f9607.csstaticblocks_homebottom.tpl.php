@@ -1,0 +1,24 @@
+<?php /*%%SmartyHeaderCode:162782231453487320317997-01108283%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    '9bafbd81776a31a0b4b092b6d5fdb4812f4f9607' => 
+    array (
+      0 => '/var/www/modules/csstaticblocks/views/templates/hook/csstaticblocks_homebottom.tpl',
+      1 => 1382817529,
+      2 => 'file',
+    ),
+  ),
+  'nocache_hash' => '162782231453487320317997-01108283',
+  'variables' => 
+  array (
+    'block_list' => 0,
+    'cookie' => 0,
+    'block' => 0,
+  ),
+  'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.14',
+  'unifunc' => 'content_5348732033ffd9_13793884',
+  'cache_lifetime' => 31536000,
+),true); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_5348732033ffd9_13793884')) {function content_5348732033ffd9_13793884($_smarty_tpl) {?><p style="text-align: center;"><img title="Farmalisto envío gratis" src="img/cms/banners/farmalisto-envio-gratis.jpg" alt="Envío gratis por compras superiores a $99.000" width="250" height="62" /><img title="Farmalisto mejor precio garantizado" src="img/cms/banners/farmalisto-mejor-precio.jpg" alt="Mejor precio Garantizado" width="250" height="62" /><img title="Farmalisto lineas de atención" src="img/cms/banners/farmalisto-linea-de-atencion.jpg" alt="Lineas de atención" width="250" height="62" /><img title="Farmalisto compra con seguridad y absoluta discreción" src="img/cms/banners/farmalisto-compra-segura-y-discreta.jpg" alt="Compra con seguridad y absoluta discreción" width="250" height="62" /></p><p style="text-align: justify;"><span style="font-size: 8pt;">Farmalisto Colombia es la Droguería Online más nueva y moderna del país, tenemos un amplio catálogo de artículos, productos y marcas de la mejor calidad y reconocimiento en el mundo, nuestros clientes tienen la posibilidad de comprar en Internet y recibir su pedido en la comodidad de su casa o lugar de su escogencia. Pueden pagar en el instante en el que reciben sus productos en casa, en efectivo o tarjeta. Tenemos un fuerte compromiso con nuestros clientes, recibirán con toda seguridad sus productos en la puerta de su hogar de forma segura, efectiva, rápida y con especial atención. ¿Crisis en Venezuela? ¿No puedes pedir tus medicamentos? ¿No tienes una Farmacia cerca? Acércate a la Frontera con Cúcuta y entregaremos tus medicamentos a poblaciones cercanas como Zulia, Tachira, Barinas, Bolívar, Mérida en Venezuela.</span></p><p style="text-align: center;"><span style="font-size: 8pt;"><strong>Medios que hablan de nosotros:</strong></span></p><p style="text-align: center;"><a href="http://www.portafolio.co/node/866565"><span style="line-height: 1.35;"><img title="Portafolio" src="./img/cms/banners/Banner%20logo/7.png" alt="Portafolio" width="150" height="63" /></span></a><span style="line-height: 1.35;"><a href="888">&nbsp;</a><a href="http://www.enter.co/noticias/farmalisto/"><img title="Enter.co" src="./img/cms/banners/Banner%20logo/1.png" alt="Enter.co" width="150" height="63" /></a></span>&nbsp;<a href="http://www.colombia.com/tecnologia/actualidad/sdi/83322/primera-drogueria-virtual-en-colombia" style="line-height: 1.35;"><img title="colombia.com" src="./img/cms/banners/Banner%20logo/2.png" alt="colombia.com" width="150" height="63" usemap="http://www.colombia.com/tecnologia/actualidad/sdi/83322/primera-drogueria-virtual-en-colombia" />&nbsp;</a><a href="http://www.larepublica.co/empresas/llega-competencia-virtual-para-farmacias_120736" style="line-height: 1.35;"><img title="La republica" src="./img/cms/banners/Banner%20logo/3.png" alt="La republica" width="150" height="63" /></a>&nbsp;<a href="http://colombiadigital.net/actualidad/nacional/item/6687-como-funciona-la-primera-drogueria-virtual-en-colombia.html" style="line-height: 1.35;"><img title="Colombia Digital" src="./img/cms/banners/Banner%20logo/4.png" alt="Colombia Digital" width="150" height="63" /></a>&nbsp;<a href="http://cadenasuper.com/index.php?option=com_content&amp;view=article&amp;id=12220:primera-drogueria-virtual-en-colombia"><img title="radio super" src="http://test.farmalisto.com.co/img/cms/banners/Banner%20logo/6.png" alt="radio super" width="150" height="63" /></a>&nbsp;</p><p style="text-align: center;"><img title="Afiliados a la cámara colombiana de comercio electrónico" src="http://farmalisto.com.co/img/cms/Imagenes/camara-comercio-electronico-farmalisto.jpg" alt="Afiliados a la cámara colombiana de comercio electrónico" width="166" height="70" />&nbsp;<img title="¡Sitio Seguro! Protegido por Norton" src="http://farmalisto.com.co/img/cms/Imagenes/norton-secure-site-farmalisto.jpg" alt="¡Sitio Seguro! Protegido por Norton" width="166" height="70" /></p><?php }} ?>

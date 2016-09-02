@@ -1,0 +1,100 @@
+<?php
+
+
+/**
+ * PasarelaPagoCore
+ * BD INSERT INTO `ps_configuration` (`id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, NULL, 'PASARELA_PAGO_SELECCIONADA', '1', '2015-04-08 16:00:00', '2015-04-08 18:01:21');
+
+ */
+
+class PasarelaPagoCore extends ObjectModel {
+
+	public $errores_cargue = array();
+
+  	public static $definition = array(
+	    'table' => 'pasarelas_pago',
+	    'primary' => 'id_pasarela',
+	    'fields' => array(
+		    'nombre' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
+		    'activa' => array('type' => self::TYPE_INT, 'required' => true),
+		    ),
+    );
+
+	/**
+	 * GetList
+	 * @return void
+	 */
+
+	public static function GetList() {
+
+		$query = new DbQuery();
+        $query->select(' id_pasarela, nombre ');
+        $query->from('pasarelas_pago', 'ol');
+        $query->where('activa = 1');
+        //$query->groupBy(' od.id_supply_order_detail ');
+
+
+        $items = Db::getInstance()->executeS($query);
+
+        if ( $items ) {
+
+            foreach ($items as $valores) {
+
+                $pasarela[$valores['nombre']] = " ".$valores['nombre']." ";
+            }
+
+
+        	return $pasarela;
+
+        } else {
+              $this->errores_cargue[] = "Error obteniendo listado de pasarelas de pago.";
+              return false;
+        }
+
+	}
+
+	/**
+	 * GetSelected
+	 * @return void
+	 */
+
+	public static function GetSelected() {
+
+		/*if ( Configuration::get('PASARELA_PAGO_SELECCIONADA') == '' ) {
+			echo "<br> vacia";
+		} else {
+			echo "<br> ocupada";
+		}*/
+
+		return ( (Configuration::get('PASARELA_PAGO_SELECCIONADA') != '' ? Configuration::get('PASARELA_PAGO_SELECCIONADA') : 'payulatam' ) ) ;
+
+	}
+
+/**
+ * Retorna el la franquicia a la que pertenece un numero de TC
+ */
+public static function getFranquicia($cart_number, $pasarela){
+
+	require_once(_PS_MODULE_DIR_ . 'payulatam/creditcards.class.php');
+
+    $arraypaymentMethod =  array("VISA"=>'VISA','DISCOVER'=>'DINERS','AMERICAN EXPRESS'=>'AMEX','MASTERCARD'=>'MASTERCARD');
+    $arraypaymentMethod2 =  array("VISA"=>'VISA','DISCOVER'=>'DINERS','AMERICAN EXPRESS'=>'AmEx','MASTERCARD'=>'MasterCard', 'DinersClub'=>'DinersClub','UnionPay'=>'UnionPay');
+	$CCV = new CreditCardValidator();
+    $CCV->Validate($cart_number);
+    $key = $CCV->GetCardName($CCV->GetCardInfo()['type']); 
+    if($CCV->GetCardInfo()['status'] == 'invalid'){
+        return json_encode(array('ERROR'=>'El numero de la tarjeta no es valido.'));
+    }
+
+   switch ($pasarela) {
+   	case 'payulatam':
+   		return (array_key_exists(strtoupper($key), $arraypaymentMethod)) ? $arraypaymentMethod[strtoupper($key)] : 'N/A'; 
+   		break;
+   	default:
+   		return (array_key_exists(strtoupper($key), $arraypaymentMethod2[strtoupper($key)])) ? $arraypaymentMethod2[strtoupper($key)] : 'N/A'; 
+   		break;
+   }
+    
+}
+	
+}
