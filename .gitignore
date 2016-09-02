@@ -30,6 +30,7 @@ admin-dev/export/
 admin-dev/import/
 download/
 /img/p/*
+/img/tmp/*
 upload/
 /nbproject
 nbproject
