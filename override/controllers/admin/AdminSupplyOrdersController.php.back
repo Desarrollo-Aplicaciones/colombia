@@ -1,0 +1,744 @@
+<?php
+class AdminSupplyOrdersController extends AdminSupplyOrdersControllerCore
+{
+
+	/**
+
+	 * AdminController::renderList() override
+
+	 * @see AdminController::renderList()
+
+	 */
+
+	public function renderList()
+
+	{ 
+
+		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
+
+		$this->displayInformation($this->l('You can create templates to generate actual orders.').'<br />');
+
+
+
+		if (count($this->warehouses) <= 1)
+
+			$this->displayWarning($this->l('You must choose at least one warehouse before creating supply orders. For more information, see Stock/Warehouses.'));
+
+
+
+		// assigns warehouses
+
+		$this->tpl_list_vars['warehouses'] = $this->warehouses;
+
+		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouse();
+
+		$this->tpl_list_vars['filter_status'] = $this->getFilterStatus();
+
+
+
+
+
+		// overrides query
+
+		$this->_select = '
+
+			s.name AS supplier,
+
+			w.name AS warehouse,
+
+			stl.name AS state,
+
+			st.delivery_note,
+
+			st.editable,
+
+			st.enclosed,
+
+			st.receipt_state,
+
+			st.pending_receipt,
+
+			st.color AS color,
+
+			a.id_supply_order as id_export';
+
+
+
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'supply_order_state_lang` stl ON
+
+						(
+
+							a.id_supply_order_state = stl.id_supply_order_state
+
+							AND stl.id_lang = '.(int)$this->context->language->id.'
+
+						)
+
+						LEFT JOIN `'._DB_PREFIX_.'supply_order_state` st ON a.id_supply_order_state = st.id_supply_order_state
+
+						LEFT JOIN `'._DB_PREFIX_.'supplier` s ON a.id_supplier = s.id_supplier
+
+						LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
+
+
+
+		$this->_where = ' AND a.is_template = 0';
+
+
+
+		if ($this->getCurrentWarehouse() != -1)
+
+		{
+
+			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
+
+			self::$currentIndex .= '&id_warehouse='.(int)$this->getCurrentWarehouse();
+
+		}
+
+
+
+		if ($this->getFilterStatus() != 0)
+
+		{
+
+			$this->_where .= ' AND st.enclosed != 1';
+
+			self::$currentIndex .= '&filter_status=on';
+
+		}
+
+
+
+		$this->list_id = 'orders';
+
+		if (Tools::isSubmit('ordersFilter_id_supply_order')){
+
+			foreach ($this->fields_list as $campo => $valor) {
+
+				if (isset($valor['filter_key'])){
+
+					$filter_supply_order[$campo] = Tools::getValue('ordersFilter_'.$valor['filter_key']);
+
+				}else{
+
+					$filter_supply_order[$campo] = Tools::getValue('ordersFilter_'.$campo);
+
+				}
+
+			}
+
+			$this->context->cookie->filter_supply_order = json_encode($filter_supply_order);
+
+		}
+
+		if (Tools::isSubmit('submitResetorders')){
+
+			$filter_supply_order = array();
+
+			$this->context->cookie->filter_supply_order = json_encode($filter_supply_order);
+
+		}
+
+		$filtered = json_decode($this->context->cookie->filter_supply_order, true);
+		if(empty($filtered))
+			$filtered = array();
+		foreach ($filtered as $key => $value) {
+
+			if($value){
+
+				if (is_array($value)){
+
+					if($filtered[$key][0]){
+
+						$this->_where .= ' AND a.'.$key.' > \''.$value[0].' 00:00:00\'';
+
+					}
+
+					if($filtered[$key][1]){
+
+						$this->_where .= ' AND a.'.$key.' < \''.$value[1].' 23:59:59\'';
+
+					}
+
+					$this->fields_list[$key]['filter_supply_order'][0] = $value[0];
+
+					$this->fields_list[$key]['filter_supply_order'][1] = $value[1];
+
+				}
+
+				else{
+
+					if($filtered[$key]){
+
+						if($this->fields_list[$key]['filter_key']){
+
+							$this->_where .= ' AND '.str_replace('!', '.', $this->fields_list[$key]['filter_key']).' LIKE (\'%'.$value.'%\')';
+
+						}
+
+						else{
+
+							$this->_where .= ' AND a.'.$key.' LIKE (\'%'.$value.'%\')';
+
+						}
+
+					}
+
+					$this->fields_list[$key]['filter_supply_order'] = $value;
+
+				}
+
+			}
+
+		}
+
+		if (Tools::getValue('ordersOrderby')){
+
+			$this->_orderBy = Tools::getValue('ordersOrderby');
+
+		}
+
+		else{
+
+			$this->_orderBy = "id_supply_order";
+
+		}
+
+		if (Tools::getValue('ordersOrderway')){
+
+			$this->_orderWay = Tools::getValue('ordersOrderway');
+
+		}
+
+		else{
+
+			$this->_orderWay = "DESC";
+
+		}
+
+
+
+		$first_list = parent::renderList();
+
+
+
+		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
+
+		{
+
+			if (count($this->_list) > 0)
+
+			{
+
+				$this->renderCSV();
+
+				die;
+
+			}
+
+			else
+
+				$this->displayWarning($this->l('There is nothing to export as a CSV.'));
+
+		}
+
+
+
+		// second list : templates
+
+		$second_list = null;
+
+		$this->is_template_list = true;
+
+		unset($this->tpl_list_vars['warehouses']);
+
+		unset($this->tpl_list_vars['current_warehouse']);
+
+		unset($this->tpl_list_vars['filter_status']);
+
+
+
+		// unsets actions
+
+		$this->actions = array();
+
+		unset($this->toolbar_btn['export-csv-orders']);
+
+		unset($this->toolbar_btn['export-csv-details']);
+
+		// adds actions
+
+		$this->addRowAction('view');
+
+		$this->addRowAction('edit');
+
+		$this->addRowAction('createsupplyorder');
+
+		$this->addRowAction('delete');
+
+		// unsets some fields
+
+		unset($this->fields_list['state'],
+
+			  $this->fields_list['supplier_invoice'],
+
+			  $this->fields_list['date_upd'],
+
+			  $this->fields_list['id_pdf'],
+
+			  $this->fields_list['date_delivery_expected'],
+
+			  $this->fields_list['id_export']);
+
+
+
+		// $this->fields_list['date_add']['align'] = 'left';
+
+
+
+		// adds filter, to gets only templates
+
+		unset($this->_where);
+
+		$this->_where = ' AND a.is_template = 1';
+
+		if ($this->getCurrentWarehouse() != -1)
+
+			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
+
+
+
+		// re-defines toolbar & buttons
+
+		$this->toolbar_title = $this->l('Stock: Supply order templates');
+
+		$this->initToolbar();
+
+		unset($this->toolbar_btn['new']);
+
+		$this->toolbar_btn['new'] = array(
+
+			'href' => self::$currentIndex.'&amp;add'.$this->table.'&mod=template&amp;token='.$this->token,
+
+			'desc' => $this->l('Add new template')
+
+		);
+
+
+
+		$this->list_id = 'templates';
+
+		// inits list
+
+		$second_list = parent::renderList();
+
+
+
+		return $first_list.$second_list;
+
+	}
+
+	/**
+
+	 * AdminController::postProcess() override
+
+	 * @see AdminController::postProcess()
+
+	 */
+
+	public function postProcess()
+
+	{
+
+		$this->is_editing_order = false;
+
+
+
+		// Checks access
+
+		if (Tools::isSubmit('submitAddsupply_order') && !($this->tabAccess['add'] === '1'))
+
+			$this->errors[] = Tools::displayError($this->l('You do not have permission to add a supply order.'));
+
+		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && !($this->tabAccess['edit'] === '1'))
+
+			$this->errors[] = Tools::displayError($this->l('You do not have permission to edit an order.'));
+
+
+
+		// Trick to use both Supply Order as template and actual orders
+
+		if (Tools::isSubmit('is_template'))
+
+			$_GET['mod'] = 'template';
+
+
+
+		// checks if supply order reference is unique
+
+		if (Tools::isSubmit('reference'))
+
+		{
+
+			// gets the reference
+
+			$ref = pSQL(Tools::getValue('reference'));
+
+
+
+			if (Tools::getValue('id_supply_order') != 0 && SupplyOrder::getReferenceById((int)Tools::getValue('id_supply_order')) != $ref)
+
+			{
+
+				if ((int)SupplyOrder::exists($ref) != 0)
+
+					$this->errors[] = Tools::displayError($this->l('The reference has to be unique.'));
+
+			}
+
+			else if (Tools::getValue('id_supply_order') == 0 && (int)SupplyOrder::exists($ref) != 0)
+
+				$this->errors[] = Tools::displayError($this->l('The reference has to be unique.'));
+
+		}
+
+
+
+		if ($this->errors)
+
+			return;
+
+
+
+		// Global checks when add / update a supply order
+
+		if (Tools::isSubmit('submitAddsupply_order') || Tools::isSubmit('submitAddsupply_orderAndStay'))
+
+		{
+
+			$this->action = 'save';
+
+			$this->is_editing_order = true;
+
+
+
+			// get supplier ID
+
+			$id_supplier = (int)Tools::getValue('id_supplier', 0);
+
+			if ($id_supplier <= 0 || !Supplier::supplierExists($id_supplier))
+
+				$this->errors[] = Tools::displayError($this->l('The selected supplier is not valid.'));
+
+
+
+			// get warehouse id
+
+			$id_warehouse = (int)Tools::getValue('id_warehouse', 0);
+
+			if ($id_warehouse <= 0 || !Warehouse::exists($id_warehouse))
+
+				$this->errors[] = Tools::displayError($this->l('The selected warehouse is not valid.'));
+
+
+
+			// get currency id
+
+			$id_currency = (int)Tools::getValue('id_currency', 0);
+
+			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
+
+				$this->errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
+
+			// get delivery date
+
+			$delivery_expected = new DateTime(pSQL(Tools::getValue('date_delivery_expected')));
+
+			// converts date to timestamp
+
+			if ($delivery_expected <= (new DateTime('yesterday')))
+
+				$this->errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
+
+
+
+			// gets threshold
+
+			$quantity_threshold = Tools::getValue('load_products');
+
+
+
+			if (is_numeric($quantity_threshold))
+
+				$quantity_threshold = (int)$quantity_threshold;
+
+			else
+
+				$quantity_threshold = null;
+
+
+
+			if (!count($this->errors))
+
+			{
+
+				// forces date for templates
+
+				if (Tools::isSubmit('is_template') && !Tools::getValue('date_delivery_expected'))
+
+					$_POST['date_delivery_expected'] = date('Y-m-d h:i:s');
+
+
+
+				// specify initial state
+
+				$_POST['id_supply_order_state'] = 1; //defaut creation state
+
+
+
+				// specify global reference currency
+
+				$_POST['id_ref_currency'] = Currency::getDefaultCurrency()->id;
+
+
+
+				// specify supplier name
+
+				$_POST['supplier_name'] = Supplier::getNameById($id_supplier);
+
+
+
+				//specific discount check
+
+				$_POST['discount_rate'] = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('discount_rate', 0));
+
+			}
+
+
+
+			// manage each associated product
+
+			$this->manageOrderProducts();
+
+
+
+			// if the threshold is defined and we are saving the order
+
+			if (Tools::isSubmit('submitAddsupply_order') && Validate::isInt($quantity_threshold))
+
+				$this->loadProducts((int)$quantity_threshold);
+
+		}
+
+
+
+		// Manage state change
+
+		if (Tools::isSubmit('submitChangestate')
+
+			&& Tools::isSubmit('id_supply_order')
+
+			&& Tools::isSubmit('id_supply_order_state'))
+
+		{
+
+			if ($this->tabAccess['edit'] != '1')
+
+				$this->errors[] = Tools::displayError($this->l('You do not have permission to change the order status.'));
+
+
+
+			// get state ID
+
+			$id_state = (int)Tools::getValue('id_supply_order_state', 0);
+
+			if ($id_state <= 0)
+
+				$this->errors[] = Tools::displayError($this->l('The selected supply order status is not valid.'));
+
+
+
+			// get supply order ID
+
+			$id_supply_order = (int)Tools::getValue('id_supply_order', 0);
+
+			if ($id_supply_order <= 0)
+
+				$this->errors[] = Tools::displayError($this->l('The supply order ID is not valid.'));
+
+
+
+			if (!count($this->errors))
+
+			{
+
+				// try to load supply order
+
+				$supply_order = new SupplyOrder($id_supply_order);
+
+
+
+				if (Validate::isLoadedObject($supply_order))
+
+				{
+
+					// get valid available possible states for this order
+
+					$states = SupplyOrderState::getSupplyOrderStates($supply_order->id_supply_order_state);
+
+
+
+					if (Tools::getValue('edit_supply_order')){
+
+						SupplyOrderState::editSupplyOrder($id_supply_order, Tools::getValue('edit_supply_order'));
+
+					}
+
+					foreach ($states as $state)
+
+					{
+
+						// if state is valid, change it in the order
+
+						if ($id_state == $state['id_supply_order_state'])
+
+						{
+
+
+
+							$new_state = new SupplyOrderState($id_state);
+
+							$old_state = new SupplyOrderState($supply_order->id_supply_order_state);
+
+
+
+							// special case of validate state - check if there are products in the order and the required state is not an enclosed state
+
+							if ($supply_order->isEditable() && !$supply_order->hasEntries() && !$new_state->enclosed)
+
+								$this->errors[] = Tools::displayError(
+
+									$this->l('It is not possible to change the status of this order because you did not order any products.')
+
+								);
+
+							if (Tools::getValue('id_supply_order_state') == 6 && Icrall::icrDel($id_supply_order))
+
+								$this->errors[] = Tools::displayError(
+
+									$this->l('Los ICR no pudieron ser desasociados.')
+
+								);
+							// validaciones para envió de ordenes por ftp a los proveedores
+							 $supply_order->id_supply_order_state = (int) $state['id_supply_order_state'];
+							$error ='';
+							if(Tools::getValue('id_supply_order_state') == 2 && Tools::isSubmit('id_supply_order')){
+								$conn_ftp = Utilities::getConnectFtpSupplier($supply_order->id_supplier);
+								if (!empty($conn_ftp)){
+									$status = Utilities::setOrderFile($conn_ftp , $supply_order->getEntries(),$supply_order);
+									if (is_array($status) && $status['status'] == 'OK'){
+										$error .= Utilities::sendFileFtp($conn_ftp, $status); 
+									}
+									if (is_array($status) && $status['status'] == 'ERROR'){
+										$error .= '<br>'.$status['message'];
+										$this->errors[] = Tools::displayError($error);
+									}
+								}
+							}
+							if (!count($this->errors))
+							{
+								$supply_order->id_supply_order_state = $state['id_supply_order_state'];
+								if ($supply_order->save())
+								{
+
+									// if pending_receipt,
+
+									// or if the order is being canceled,
+
+									// synchronizes StockAvailable
+
+									if (($new_state->pending_receipt && !$new_state->receipt_state) ||
+
+										($old_state->receipt_state && $new_state->enclosed && !$new_state->receipt_state))
+
+									{
+
+										$supply_order_details = $supply_order->getEntries();
+
+										$products_done = array();
+
+										foreach ($supply_order_details as $supply_order_detail)
+
+										{
+
+											if (!in_array($supply_order_detail['id_product'], $products_done))
+
+											{
+
+												StockAvailable::synchronize($supply_order_detail['id_product']);
+
+												$products_done[] = $supply_order_detail['id_product'];
+
+											}
+
+										}
+
+									}
+
+
+
+									$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+
+									$redirect = self::$currentIndex.'&token='.$token;
+
+									$this->redirect_after = $redirect.'&conf=5';
+
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+
+				else
+
+					$this->errors[] = Tools::displayError($this->l('The selected supplier is not valid.'));
+
+			}
+
+		}
+
+
+
+		// updates receipt
+
+		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && Tools::isSubmit('id_supply_order'))
+
+			$this->postProcessUpdateReceipt();
+
+
+
+		// use template to create a supply order
+
+		if (Tools::isSubmit('create_supply_order') && Tools::isSubmit('id_supply_order'))
+
+			$this->postProcessCopyFromTemplate();
+
+
+
+		if ((!count($this->errors) && $this->is_editing_order) || !$this->is_editing_order)
+
+			parent::postProcess();
+
+	}
+
+
+
+
+
+
+}

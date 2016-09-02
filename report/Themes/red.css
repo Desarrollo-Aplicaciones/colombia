@@ -1,0 +1,22 @@
+body{background-color:#FFF;font-family:Verdana;color:#646464;font-size:12pt;}
+.ultima{font-size:8pt; color:#F00}
+/*--------------Titulos----------------------------------*/
+.titulos, .titulos_tabla{color:#FFF;background-color:#1e711a;}
+.fecha, .leyendas{color:#999}
+/*--------------grafico de barras------------------*/
+.barras, .muestrabarras{background-color:#1e711a;}
+.label_barras, .label_barrash, .label_barrasm{color:#FFF}
+.label_barras, .label_barrasm{transform:rotate(-90deg);}
+.label_barrasm{font-size:10pt;}
+.label_barrash{font-size:8pt;}
+.dias .label_barras,.dias .label_barrash,.dias .label_barrasm{color:#646464}
+/*--------------grafico de puntos---------------------*/
+.puntosg , .puntosp, .muestrapuntos{background-color:#F00;}
+.labelpuntos{color:#F00;}
+/*--------------tabla---------------------------------*/
+.fila1{background-color:#fafafa;}
+.total,.porcentaje{color:#1e711a;font-size:13pt;}
+.total{background-color:#f0f0f0}
+/*--------------iconos--------------------------------*/
+.restore{background-color:#FF4115;color:#FFF; font-weight:bold}
+.enlarge{background-color:#2061FF;color:#FFF; font-weight:bold}
