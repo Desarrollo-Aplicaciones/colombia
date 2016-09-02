@@ -30,3 +30,5 @@ admin-dev/import/
 download/
 /img/p/*
 upload/
+/nbproject
+nbproject
