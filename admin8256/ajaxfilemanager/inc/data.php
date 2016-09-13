@@ -1,8 +1,8 @@
 <pre>Array
 (
     [currentFolderPath] => ../../img/cms/Landing-Page/
-    [new_folder] => medellin
+    [new_folder] => Entregas_y_pedidos
 )
 </pre>
 
-22/Jul/2016 15:12:55
+07/Sep/2016 16:10:25
