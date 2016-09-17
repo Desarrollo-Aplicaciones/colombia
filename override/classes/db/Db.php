@@ -49,10 +49,18 @@ abstract class Db extends DbCore
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
 
-		$this->result = $this->_query("/* ip ".$this->getRealIP()." */ ".$sql);
+		$this->result = $this->_query($sql);
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
 		return $this->result;
+		/*
+		if ($sql instanceof DbQuery)
+			$sql = $sql->build();
+		*/
+		//$this->result = $this->_query("/* ip ".$this->getRealIP()." */ ".$sql);
+		/*if (_PS_DEBUG_SQL_)
+			$this->displayError($sql);
+		return $this->result;*/
 	}
 
 	/**
