@@ -411,7 +411,7 @@ FROM  ps_cities_col cities
         return '!';
     }
 
-public static function horaDeEntrega(){
+/* public static function horaDeEntrega(){
 
     date_default_timezone_set('America/Bogota');
 
@@ -425,7 +425,7 @@ public static function horaDeEntrega(){
         $date->add(new DateInterval('PT'.$inicio_intervalos.'H'));
         $strDate = $date->format('Y-m-d H:i');
     }
-    else{
+    else{ 
         $strDate = $fecha->format('Y-m-d H:').'00'.$fecha->format(':s');
         $date = new DateTime($strDate);
         $date->add(new DateInterval('PT'.$inicio_intervalos.'H'));
@@ -475,8 +475,9 @@ public static function horaDeEntrega(){
                     $hora_in = (int)$date_1->format('H');
                     $hora_out = (int)$date_2->format('H');
 
-                    if($hora_in >= $hora_inicio && $hora_out <= $hora_fin && $hora_out > $hora_inicio)
+                   if($hora_in >= $hora_inicio && $hora_out <= $hora_fin && $hora_out > $hora_inicio)
                     {
+                         "Hora_in = ".$hora_in.", hora_inicio = ".$hora_inicio.', hora_out = '.$hora_out.', hora_fin = '.$hora_fin.'<br>';
                         $horasSelect[$date_1->format('Y-m-d')][] = ''.$date_1->format('H:i').' a '.$date_2->format('H:i').''; 
                     }
 
@@ -486,7 +487,8 @@ public static function horaDeEntrega(){
                 $day_delivered.= '</select>';
                 $js_json_delivered = '<script type="text/javascript"> var js_json_delivered = '.json_encode($horasSelect).'
 
-                var form_to_add = "";
+   console.log("js_json_delivered);      
+       var form_to_add = "";
 
                 $(function(){
 
@@ -553,7 +555,9 @@ $("#hour_delivered").change(function() {
 
 </script>';
 return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_delivered);
-}
+echo "esto es day delivered".$day_delivered;
+} 
+*/
 
     public static function update_date_delivered(){
             
@@ -567,6 +571,7 @@ return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_d
                         time_windows = '".$context->cart->time_windows."', time_delivery = '".$context->cart->time_delivery."'
                         WHERE id_cart = ".$context->cart->id;
                         Db::getInstance()->Execute($sql); 
+                       
             }
 
         }

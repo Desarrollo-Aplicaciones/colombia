@@ -1,4 +1,5 @@
 <?php
+//cualquier cosa
 /*
 * 2007-2013 PrestaShop
 *
