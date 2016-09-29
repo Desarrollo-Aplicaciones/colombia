@@ -707,7 +707,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 					{* <div class="title_hide_show">{l s='Data sheet'}</div> *}
 				{/if}
 				
-				{if isset($features) && $features}
+				{*if isset($features) && $features}
 					<!-- product's features -->
 					<ul id="idTab2" class="rte bullet content_hide_show">
 						<div id="scro">
@@ -721,7 +721,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							{/foreach}
 						</div>
 					</ul>
-				{/if}
+				{/if*}
 
 				{if $attachments}
 					{* <div class="title_hide_show" style="display:none">{l s='Download'}</div> *}

@@ -1505,6 +1505,9 @@ Aquí termino de insertar css para el cargue de Beneficios.
 	    display: inline-block;
 	    text-align: center;
 	}
+        .con_fe_global{
+            display: none;
+        }
 
 	.div_titulo_cate_dest{
 		width: 100%;
