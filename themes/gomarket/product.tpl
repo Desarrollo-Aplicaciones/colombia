@@ -264,7 +264,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 <!--Campo de fórmula médica-->
 
 
-	{*<div id="formula_medica">
+	<div id="formula_medica">
 		<div class="arrow_formula"><img src="{$img_dir}pdp/Rx.png" alt="{l s='Subtract'}" width="100%" /></div>
 		<div class="legend_formula">
 			<span class="only1">Consultar al médico, </span>
@@ -273,7 +273,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		</div>
 	</div>
 
-	<div class="divinvima" style="width:100%;">
+	{*<div class="divinvima" style="width:100%;">
 		<img class="imagenvima_es" src="{$img_dir}pdp/PDP_Invima_escritorio3.jpg" />
 		<img class="imagenvima_mv" src="{$img_dir}pdp/PDP_Invima_movil3.jpg" usemap="#map_imagenvima_mv" />
 		<map name="map_imagenvima_mv">
@@ -318,7 +318,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		{else} *}
 		
 			<!-- thumbnails -->
-			{if isset($images) && count($images) > 1}
+			{if isset($images) && count($images) >= 1}
 				<div id="views_block">
 
 					<!--Imagen labotratorio-->
