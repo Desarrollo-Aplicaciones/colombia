@@ -411,7 +411,7 @@ FROM  ps_cities_col cities
         return '!';
     }
 
-/* public static function horaDeEntrega(){
+ public static function horaDeEntrega(){
 
     date_default_timezone_set('America/Bogota');
 
@@ -557,7 +557,7 @@ $("#hour_delivered").change(function() {
 return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_delivered);
 echo "esto es day delivered".$day_delivered;
 } 
-*/
+
 
     public static function update_date_delivered(){
             
