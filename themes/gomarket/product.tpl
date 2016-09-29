@@ -261,10 +261,10 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 }(document, 'script', 'facebook-jssdk'));</script>
 <!--/Incluir JavaScript SDK para boton seguir facebook-->
 {include file="$tpl_dir./breadcrumb.tpl"}
+
 <!--Campo de fórmula médica-->
-
-
-	{*<div id="formula_medica">
+{if isset($isformula) && $isformula}
+	<div id="formula_medica">
 		<div class="arrow_formula"><img src="{$img_dir}pdp/Rx.png" alt="{l s='Subtract'}" width="100%" /></div>
 		<div class="legend_formula">
 			<span class="only1">Consultar al médico, </span>
@@ -272,8 +272,9 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 			<span class="only2">, Sin fórmula médica no es posible la compra de este medicamento.</span>
 		</div>
 	</div>
+{/if}
 
-	<div class="divinvima" style="width:100%;">
+	{*<div class="divinvima" style="width:100%;">
 		<img class="imagenvima_es" src="{$img_dir}pdp/PDP_Invima_escritorio3.jpg" />
 		<img class="imagenvima_mv" src="{$img_dir}pdp/PDP_Invima_movil3.jpg" usemap="#map_imagenvima_mv" />
 		<map name="map_imagenvima_mv">
@@ -318,7 +319,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		{else} *}
 		
 			<!-- thumbnails -->
-			{if isset($images) && count($images) > 1}
+			{if isset($images) && count($images) >= 1}
 				<div id="views_block">
 
 					<!--Imagen labotratorio-->
@@ -684,7 +685,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 			<ul id="more_info_tabs" class="idTabs idTabsShort clearfix">
 				{if $product->description}<li><a id="more_info_tab_more_info" href="#idTab1">{l s='More info'}</a></li>{/if}
 				{if $product->description_short}<li><a id="info_tab_info" href="#idTab0">{l s='Información'}</a></li>{/if}
-				{if $features}<li><a id="more_info_tab_data_sheet" href="#idTab2">{l s='Data sheet'}</a></li>{/if}
+				{*if $features}<li><a id="more_info_tab_data_sheet" href="#idTab2">{l s='Data sheet'}</a></li>{/if*}
 				{if $attachments}<li><a id="more_info_tab_attachments" href="#idTab9">{l s='Download'}</a></li>{/if}
 				{if isset($accessories) AND $accessories}<li><a href="#idTab4">{l s='Accessories'}</a></li>{/if}
 				{if isset($product) && $product->customizable}<li><a href="#idTab10">{l s='Product customization'}</a></li>{/if}
@@ -706,7 +707,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 					{* <div class="title_hide_show">{l s='Data sheet'}</div> *}
 				{/if}
 				
-				{if isset($features) && $features}
+				{*if isset($features) && $features}
 					<!-- product's features -->
 					<ul id="idTab2" class="rte bullet content_hide_show">
 						<div id="scro">
@@ -720,7 +721,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							{/foreach}
 						</div>
 					</ul>
-				{/if}
+				{/if*}
 
 				{if $attachments}
 					{* <div class="title_hide_show" style="display:none">{l s='Download'}</div> *}
