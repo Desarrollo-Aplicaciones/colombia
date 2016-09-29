@@ -974,6 +974,11 @@ Aquí termino de insertar css para el cargue de Farmalisto Escencial en mx.
 */
 
 
+/*Esconder farmalisto esencial*/
+.cont_fe_global{
+	display: none;
+}
+
 
 
 /*
