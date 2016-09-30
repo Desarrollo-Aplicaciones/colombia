@@ -94,7 +94,7 @@
 							<div class="ctn-col">
 								<a href="{$base_dir}content/3-condiciones-de-uso" class="txt-gray link">Aviso de privacidad</a>
 								<a href="{$base_dir}content/3-condiciones-de-uso" class="txt-gray link">Términos y condiciones</a>
-								<a href="https://www.farmalisto.com.co/content/6-garantia-del-mejor-precio" class="txt-gray link">Preguntas frecuentes</a>
+								<a href="https://www.farmalisto.com.co/content/6-garantia-del-mejor-precio" class="txt-gray link">Política del Mejor Precio</a>
 								<a href="{$base_dir}mapa-del-sitio" class="txt-gray link">Mapa del sitio</a>
 								<a href="{$base_dir}content/1-entregas-y-pedidos-domicilios" class="txt-gray link">Envíos y pedidos</a>
 								<a href="http://blogdrogueria.farmalisto.com.co/" class="txt-gray link">Blog</a>
