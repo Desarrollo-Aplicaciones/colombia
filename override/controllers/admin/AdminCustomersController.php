@@ -1,6 +1,89 @@
 <?php
 class AdminCustomersController extends AdminCustomersControllerCore
 {
+public function __construct()
+	{
+		$this->required_database = true;
+		$this->required_fields = array('newsletter','optin');
+		$this->table = 'customer';
+		$this->className = 'Customer';
+		$this->lang = false;
+		$this->deleted = true;
+		$this->explicitSelect = true;
+
+		$this->allow_export = true;
+		$this->addRowAction('edit');
+		$this->addRowAction('view');
+		$this->addRowAction('delete');
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Would you like to delete the selected items?')));
+
+		$this->context = Context::getContext();
+
+		$this->default_form_language = $this->context->language->id;
+
+		$genders = array();
+		$genders_icon = array();
+		$genders_icon[] = array('src' => '../genders/Unknown.jpg', 'alt' => '');		
+		foreach (Gender::getGenders() as $gender)
+		{
+			$gender_file = 'genders/'.$gender->id.'.jpg';
+			if (file_exists(_PS_IMG_DIR_.$gender_file))
+				$genders_icon[$gender->id] = array('src' => '../'.$gender_file, 'alt' => $gender->name);
+			else
+				$genders_icon[$gender->id] = array('src' => '../genders/Unknown.jpg', 'alt' => $gender->name);
+			$genders[$gender->id] = $gender->name;
+		}
+
+		$this->_select = '
+		a.date_add,
+		IF (YEAR(`birthday`) = 0, "-", (YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5))) AS `age`, (
+			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
+			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
+			WHERE g.id_customer = a.id_customer
+			ORDER BY c.date_add DESC
+			LIMIT 1
+		) as connect';
+		$this->fields_list = array(
+			'id_customer' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 20
+			),
+			'identification' => array(
+				'title' => $this->l('Identificación'),
+				'width' => '32'
+			),
+			'lastname' => array(
+				'title' => $this->l('Last name'),
+				'width' => 'auto'
+			),
+			'firstname' => array(
+				'title' => $this->l('First Name'),
+				'width' => 'auto'
+			),
+			'email' => array(
+				'title' => $this->l('Email address'),
+				'width' => 140,
+			),
+			'date_add' => array(
+				'title' => $this->l('Registration'),
+				'width' => 150,
+				'type' => 'date',
+				'align' => 'right'
+			),
+		);
+
+		$this->shopLinkType = 'shop';
+		$this->shopShareDatas = Shop::SHARE_CUSTOMER;
+
+		AdminController::__construct();
+
+		// Check if we can add a customer
+		if (Shop::isFeatureActive() && (Shop::getContext() == Shop::CONTEXT_ALL || Shop::getContext() == Shop::CONTEXT_GROUP))
+			$this->can_add_customer = false;
+	}
+
+
 	public function renderForm()
 	{
 
