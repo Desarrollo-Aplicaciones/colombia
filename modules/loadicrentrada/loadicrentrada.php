@@ -67,7 +67,10 @@ class loadicrentrada extends Module
 		  `reference` varchar(32) DEFAULT NULL,
 		  `cod_icr` varchar(6) DEFAULT NULL,
 		  `id_icr` int(11) DEFAULT NULL,
-		  `flag` enum('n','i','d','c') DEFAULT 'n'
+                  `invima` varchar(15) DEFAULT NULL,
+		  `flag` enum('n','i','d','c') DEFAULT 'n,
+                  
+                  
 		) ENGINE=Aria DEFAULT CHARSET=utf8;";
 		
 		 if (!$results = Db::getInstance()->ExecuteS($query1))
@@ -138,8 +141,17 @@ if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
       $guardar_archivo = new Icrall();
       $names=  $guardar_archivo->saveFile($_FILES,'fileloadicrentrada',new Employee($this->context->cookie->id_employee),'loadicrentrada');          
     
+         /* REGISTRO INVIMA */
+      
+    if($row->invima==NULL) { 
+      $registroinvima = "No tiene registro Invima"; 
+    }else{ 
+      $registroinvima = $row->invima; 
+    }
      
-     
+    if ($registroinvima-> validarRegistroInvima){
+        
+    }
      
      if (is_array($names) && $names[0] != '' && $names[0] != false && $names[2] !=false ){
      	$retorno_cargue = $guardar_archivo->loadicrentrada($names[2]);
@@ -148,7 +160,8 @@ if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
 	     	
 	     	if ( $guardar_archivo->validarIcrDuplicadosEntrada() && $guardar_archivo->validarIcrCargadoVsIngresadoEntrada() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcr() 
 	     	&& $guardar_archivo->validarIcrCargadoVsSupplyOrderIcrCantidades() && $guardar_archivo->ValidateFechaVencEntrada() && $guardar_archivo->cambiarFechasVaciasyNulas() && $guardar_archivo->validarEstadoRegistrosCargadosEntrada() && $guardar_archivo->OrdenesProductosEntrada()  
-	     	&& $guardar_archivo->IcrCargadosEntrada()  
+	     	&& $guardar_archivo->IcrCargadosEntrada()
+                && $guardar_archivo->validarRegistroInvima()
 	     	&& $guardar_archivo->validarProductosOrdenEntrada() ) { // validar icr duplicados  // actualizar registros con respecto a ordenes, productos e icr 
 	     			
 	     		if ( $guardar_archivo->InsertarProductosIcrOrdenEntrada() ) { // si inserta en ps_supply_order_icr
@@ -202,7 +215,7 @@ else
 		$output = ' <p><b>'.$this->_msg.'</b></p>
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data" method="post">
 			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-	<p>Con este modulo usted podrá actualizar las ordenes de entrada, recuerde que el archivo CSV debe tener los siguientes campos  <br><a download href="../modules/loadicrentrada/formato.csv">(ORDEN_SUMINISTRO, PROVEEDOR, EAN, DESCRIPCION, ICR, FECHA, CANTIDAD, PRECIO_COMPRA, IVA, LOTE, FECHA_VENCIMIENTO)</a>, estos <b>deben estar</b> en la cabecera del archivo,<BR> * para la fecha, el formato debe ser <b> YYYY-MM-DD </b>, si solo se tiene el año y el mes, colocar el primer día del mes: 2018-08  ==> 2018-08-01 
+	<p>Con este modulo usted podrá actualizar las ordenes de entrada, recuerde que el archivo CSV debe tener los siguientes campos  <br><a download href="../modules/loadicrentrada/formato.csv">(ORDEN_SUMINISTRO, PROVEEDOR, EAN, DESCRIPCION, ICR, FECHA, CANTIDAD, PRECIO_COMPRA, IVA, LOTE, FECHA_VENCIMIENTO, INVIMA)</a>, estos <b>deben estar</b> en la cabecera del archivo,<BR> * para la fecha, el formato debe ser <b> YYYY-MM-DD </b>, si solo se tiene el año y el mes, colocar el primer día del mes: 2018-08  ==> 2018-08-01 
 	<BR> * para los elementos que no aplican fecha de vencimiento, se debe ingresar N/A , NA o dejar la fecha 1969-12-31</p>
 
 
