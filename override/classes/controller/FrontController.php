@@ -226,10 +226,10 @@ public function init(){
                 $time = time();
                 $flagPopPup = null;
                 $fecha = strftime('%m%d%H ');
-                var_dump($fecha);
+//                var_dump($fecha);
                 
 //                if ( 102019 < (int)$fecha && (int)$fecha < 102021 ){
-                if ( 102111 < (int)$fecha && (int)$fecha < 102207 ){
+                if ( 102116 < (int)$fecha && (int)$fecha < 102212 ){
                     $flagPopPup = true;
                 }
                 
