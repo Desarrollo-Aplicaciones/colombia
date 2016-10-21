@@ -543,7 +543,7 @@ window.onload = init;
 <!-- End of LiveChat code -->
 
 <script>
-{if isset($flagPopPup) && $flagPopPup == 1 }
+{if $flagPopPup == 1 }
     var cumplepp = 1;
     {else}
     var cumplepp = 0;
