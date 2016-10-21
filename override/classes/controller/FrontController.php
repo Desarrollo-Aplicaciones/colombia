@@ -224,7 +224,7 @@ public function init(){
                 
                 date_default_timezone_set('America/Bogota');
                 $time = time();
-                $flagPopPup = null;
+                $flagPopPup = 0;
                 $fecha = strftime('%m%d%H ');
 //                var_dump($fecha);
                 
@@ -268,8 +268,11 @@ public function init(){
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true),
-			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT')
+			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
+                        'flagPopPup' => (int)$flagPopPup
 		));
+                
+                //(int)Configuration::get('MOSTRAR_CUMPLEFL')
 
 		// Add the tpl files directory for mobile
 		if ($this->context->getMobileDevice() != false)
@@ -297,9 +300,8 @@ public function init(){
 			'img_dir' => _THEME_IMG_DIR_,
 			'css_dir' => _THEME_CSS_DIR_,
 			'js_dir' => _THEME_JS_DIR_,
-			'pic_dir' => _THEME_PROD_PIC_DIR_,
-                        'flagPopPup' => Configuration::get('mostrar_cumplefl')
-		);
+			'pic_dir' => _THEME_PROD_PIC_DIR_
+		);               
 
 		// Add the images directory for mobile
 		if ($this->context->getMobileDevice() != false)
