@@ -224,16 +224,9 @@ public function init(){
                 
                 date_default_timezone_set('America/Bogota');
                 $time = time();
-//                $hour = strftime('%H');
-//                var_dump($hour, $date);
-//                echo "<br>";
-//                $date2 = date("dm", $time);
-//                $hour2 = date("H", $time);
-//                var_dump((int)$hour2, (int)$date2);
-//                
-                
                 $flagPopPup = null;
                 $fecha = strftime('%m%d%H ');
+                var_dump($fecha);
                 
 //                if ( 102019 < (int)$fecha && (int)$fecha < 102021 ){
                 if ( 102111 < (int)$fecha && (int)$fecha < 102207 ){
