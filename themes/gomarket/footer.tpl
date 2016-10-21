@@ -543,7 +543,13 @@ window.onload = init;
 <!-- End of LiveChat code -->
 
 <script>
-    if( {$flagPopPup} === 1 ){
+{if isset($flagPopPup) && $flagPopPup == 1 }
+    var cumplepp = 1;
+    {else}
+    var cumplepp = 0;
+{/if}
+    
+    if( cumplepp == 1 ){
         $(window).load(function(){
             standard_lightbox('care-lines');
         });

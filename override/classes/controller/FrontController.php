@@ -230,7 +230,7 @@ public function init(){
                 
 //                if ( 102019 < (int)$fecha && (int)$fecha < 102021 ){
                 if ( 102116 < (int)$fecha && (int)$fecha < 102212 ){
-                    $flagPopPup = true;
+                    $flagPopPup = 1;
                 }
                 
 		$this->context->smarty->assign(array(
