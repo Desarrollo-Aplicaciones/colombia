@@ -543,8 +543,12 @@ window.onload = init;
 <!-- End of LiveChat code -->
 
 <script>
+{if $flagPopPup == 1 }
     var cumplepp = 1;
-   
+    {else}
+    var cumplepp = 0;
+{/if}
+    
     if( cumplepp == 1 ){
         $(window).load(function(){
             standard_lightbox('care-lines');
@@ -552,7 +556,7 @@ window.onload = init;
     }
 </script>
 
-<div id="care-lines" style="display:none;">-{$flagPopPup}-
+<div id="care-lines" style="display:none;">
     <div class="lightbox_close" onclick="lightbox_hide();"></div>
     <div class="lightbox_title"></div>
     <div class="lightbox_resume">
