@@ -269,10 +269,10 @@ public function init(){
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true),
 			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
-                        'flagPopPup' => (int)$flagPopPup
+                        'flagPopPup' => (int)Configuration::get('MOSTRAR_CUMPLEFL')
 		));
                 
-                //(int)Configuration::get('MOSTRAR_CUMPLEFL')
+                //
 
 		// Add the tpl files directory for mobile
 		if ($this->context->getMobileDevice() != false)
