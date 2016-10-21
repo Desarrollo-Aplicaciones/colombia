@@ -220,7 +220,19 @@ public function init(){
 		$meta_language = array();
 		foreach ($languages as $lang)
 			$meta_language[] = $lang['iso_code'];
-
+                
+                
+                date_default_timezone_set('America/Bogota');
+                $time = time();
+                $flagPopPup = null;
+                $fecha = strftime('%m%d%H ');
+//                var_dump($fecha);
+                
+//                if ( 102019 < (int)$fecha && (int)$fecha < 102021 ){
+                if ( 102116 < (int)$fecha && (int)$fecha < 102212 ){
+                    $flagPopPup = true;
+                }
+                
 		$this->context->smarty->assign(array(
 			// Usefull for layout.tpl
 			'mobile_device' => $this->context->getMobileDevice(),
@@ -285,7 +297,8 @@ public function init(){
 			'img_dir' => _THEME_IMG_DIR_,
 			'css_dir' => _THEME_CSS_DIR_,
 			'js_dir' => _THEME_JS_DIR_,
-			'pic_dir' => _THEME_PROD_PIC_DIR_
+			'pic_dir' => _THEME_PROD_PIC_DIR_,
+                        'flagPopPup' => $flagPopPup
 		);
 
 		// Add the images directory for mobile

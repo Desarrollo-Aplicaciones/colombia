@@ -528,15 +528,34 @@ window.onload = init;
 {* chat *}
 <!-- Start of LiveChat (www.livechatinc.com) code -->
 <script type="text/javascript">
-window.__lc = window.__lc || {};
-window.__lc.license = 6077601;
-(function() {
-  var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
-  lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
-})();
+    window.__lc = window.__lc || {};
+    window.__lc.license = 8087761;
+    window.__lc.chat_between_groups = false;
+ 
+    (function() {
+        var lc = document.createElement('script');
+        lc.type = 'text/javascript';
+        lc.async = true;
+        lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
+    })();
 </script>
 <!-- End of LiveChat code -->
 
+<script>
+    if( {$flagPopPup} === 1 ){
+        $(window).load(function(){
+            standard_lightbox('care-lines');
+        });
+    }
+</script>
+
+<div id="care-lines">
+    <div class="lightbox_close" onclick="lightbox_hide();"></div>
+    <div class="lightbox_title"></div>
+    <div class="lightbox_resume">
+        <img src="{$img_dir}21_de_Octubre.jpg">
+    </div>
+</div>
 
 </html>
