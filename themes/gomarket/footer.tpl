@@ -556,7 +556,7 @@ window.onload = init;
     }
 </script>
 
-<div id="care-lines">
+<div id="care-lines" style="display:none;">
     <div class="lightbox_close" onclick="lightbox_hide();"></div>
     <div class="lightbox_title"></div>
     <div class="lightbox_resume">

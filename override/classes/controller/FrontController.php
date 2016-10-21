@@ -298,7 +298,7 @@ public function init(){
 			'css_dir' => _THEME_CSS_DIR_,
 			'js_dir' => _THEME_JS_DIR_,
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
-                        'flagPopPup' => $flagPopPup
+                        'flagPopPup' => Configuration::get('mostrar_cumplefl')
 		);
 
 		// Add the images directory for mobile
