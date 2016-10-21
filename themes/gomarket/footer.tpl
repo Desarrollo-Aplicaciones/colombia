@@ -538,5 +538,20 @@ window.__lc.license = 6077601;
 </script>
 <!-- End of LiveChat code -->
 
+<script>
+    if( {$flagPopPup} === 1 ){
+        $(window).load(function(){
+            standard_lightbox('care-lines');
+        });
+    }
+</script>
+
+<div id="care-lines">
+    <div class="lightbox_close" onclick="lightbox_hide();"></div>
+    <div class="lightbox_title"></div>
+    <div class="lightbox_resume">
+        <img src="{$img_dir}21_de_Octubre.jpg">
+    </div>
+</div>
 
 </html>

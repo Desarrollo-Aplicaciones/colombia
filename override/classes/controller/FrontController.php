@@ -220,7 +220,26 @@ public function init(){
 		$meta_language = array();
 		foreach ($languages as $lang)
 			$meta_language[] = $lang['iso_code'];
-
+                
+                
+                date_default_timezone_set('America/Bogota');
+                $time = time();
+//                $hour = strftime('%H');
+//                var_dump($hour, $date);
+//                echo "<br>";
+//                $date2 = date("dm", $time);
+//                $hour2 = date("H", $time);
+//                var_dump((int)$hour2, (int)$date2);
+//                
+                
+                $flagPopPup = null;
+                $fecha = strftime('%m%d%H ');
+                
+//                if ( 102019 < (int)$fecha && (int)$fecha < 102021 ){
+                if ( 102111 < (int)$fecha && (int)$fecha < 102207 ){
+                    $flagPopPup = true;
+                }
+                
 		$this->context->smarty->assign(array(
 			// Usefull for layout.tpl
 			'mobile_device' => $this->context->getMobileDevice(),
@@ -256,7 +275,8 @@ public function init(){
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true),
-			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT')
+			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
+                        
 		));
 
 		// Add the tpl files directory for mobile
@@ -285,7 +305,8 @@ public function init(){
 			'img_dir' => _THEME_IMG_DIR_,
 			'css_dir' => _THEME_CSS_DIR_,
 			'js_dir' => _THEME_JS_DIR_,
-			'pic_dir' => _THEME_PROD_PIC_DIR_
+			'pic_dir' => _THEME_PROD_PIC_DIR_,
+                        'flagPopPup' => $flagPopPup
 		);
 
 		// Add the images directory for mobile
@@ -522,6 +543,7 @@ function is_bot(){
 			'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
 			'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
 			'HOOK_FOOTER' => Hook::exec('displayFooter')
+                        
 		));
 
 		$this->context->smarty->assign('css_files', $this->css_files);
