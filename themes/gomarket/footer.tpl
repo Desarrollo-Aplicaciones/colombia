@@ -529,7 +529,7 @@ window.onload = init;
 <!-- Start of LiveChat (www.livechatinc.com) code -->
 <script type="text/javascript">
     window.__lc = window.__lc || {};
-    window.__lc.license = 8087761;
+    window.__lc.license = 6077601;
     window.__lc.chat_between_groups = false;
  
     (function() {
