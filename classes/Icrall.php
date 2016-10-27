@@ -92,7 +92,7 @@ class IcrallCore extends ObjectModel {
             tcis.flag = 'i'
             WHERE i.id_estado_icr = 2";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_compara)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización de los ICR cargados.";
@@ -109,7 +109,7 @@ class IcrallCore extends ObjectModel {
             SET             
             tcis.flag = 'n'";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_compara)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización del cargue Vs Picking.";
@@ -503,7 +503,7 @@ class IcrallCore extends ObjectModel {
             SET             
             tcei.flag = 'n'";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_compara)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización del cargue Vs Supply Order Icr.";
@@ -530,7 +530,7 @@ class IcrallCore extends ObjectModel {
             - CAST( datcar.cantcarg AS SIGNED)
           ) < 0";
 
-        if ($results_icr_c = Db::getInstance()->ExecuteS($query_icr_comparacant)) {
+        if ($results_icr_c = Db::getInstance()->Execute($query_icr_comparacant)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización del cargue Vs Supply Order Icr verificando cantidades.";
