@@ -148,7 +148,8 @@ if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
 	     	
 	     	if ( $guardar_archivo->validarIcrDuplicadosEntrada() && $guardar_archivo->validarIcrCargadoVsIngresadoEntrada() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcr() 
 	     	&& $guardar_archivo->validarIcrCargadoVsSupplyOrderIcrCantidades() && $guardar_archivo->ValidateFechaVencEntrada() && $guardar_archivo->cambiarFechasVaciasyNulas() && $guardar_archivo->validarEstadoRegistrosCargadosEntrada() && $guardar_archivo->OrdenesProductosEntrada()  
-	     	&& $guardar_archivo->IcrCargadosEntrada()  
+	     	&& $guardar_archivo->IcrCargadosEntrada() 
+                && $guardar_archivo->ValidateRegistroInvima()
 	     	&& $guardar_archivo->validarProductosOrdenEntrada() ) { // validar icr duplicados  // actualizar registros con respecto a ordenes, productos e icr 
 	     			
 	     		if ( $guardar_archivo->InsertarProductosIcrOrdenEntrada() ) { // si inserta en ps_supply_order_icr
@@ -202,7 +203,7 @@ else
 		$output = ' <p><b>'.$this->_msg.'</b></p>
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data" method="post">
 			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-	<p>Con este modulo usted podrá actualizar las ordenes de entrada, recuerde que el archivo CSV debe tener los siguientes campos  <br><a download href="../modules/loadicrentrada/formato.csv">(ORDEN_SUMINISTRO, PROVEEDOR, EAN, DESCRIPCION, ICR, FECHA, CANTIDAD, PRECIO_COMPRA, IVA, LOTE, FECHA_VENCIMIENTO)</a>, estos <b>deben estar</b> en la cabecera del archivo,<BR> * para la fecha, el formato debe ser <b> YYYY-MM-DD </b>, si solo se tiene el año y el mes, colocar el primer día del mes: 2018-08  ==> 2018-08-01 
+	<p>Con este modulo usted podrá actualizar las ordenes de entrada, recuerde que el archivo CSV debe tener los siguientes campos  <br><a download href="../modules/loadicrentrada/formato.csv">(ORDEN_SUMINISTRO, PROVEEDOR, EAN, DESCRIPCION, ICR, FECHA, CANTIDAD, PRECIO_COMPRA, IVA, LOTE, FECHA_VENCIMIENTO, REGISTRO_INVIMA)</a>, estos <b>deben estar</b> en la cabecera del archivo,<BR> * para la fecha, el formato debe ser <b> YYYY-MM-DD </b>, si solo se tiene el año y el mes, colocar el primer día del mes: 2018-08  ==> 2018-08-01 
 	<BR> * para los elementos que no aplican fecha de vencimiento, se debe ingresar N/A , NA o dejar la fecha 1969-12-31</p>
 
 
