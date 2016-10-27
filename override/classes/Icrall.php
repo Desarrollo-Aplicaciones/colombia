@@ -5,7 +5,7 @@
 */
 class Icrall extends IcrallCore {
 
-        public $response_extra = 0;
+        public $response_extra = 0; 
 
         public function icrDel($order) {
 
@@ -222,8 +222,7 @@ class Icrall extends IcrallCore {
                      GROUP_CONCAT(cod_icr SEPARATOR ' - ') AS invima_invalido 
                     FROM ps_tmp_cargue_entrada_icr
                     WHERE invima is null or invima = ' '";
-           
-                               
+                              
        
         if ($results = Db::getInstance()->ExecuteS($query_RegistroInvima)) {
 
