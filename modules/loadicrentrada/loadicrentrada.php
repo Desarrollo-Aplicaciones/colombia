@@ -24,16 +24,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 //require_once(_PS_ROOT_DIR_.'/classes/seveFileClass.php');
-
 if (!defined('_PS_VERSION_'))
 	exit;
-
 class loadicrentrada extends Module
 {
 	private $_html = '';
 	private $_postErrors = array();
         private $_msg='';
-
 	function __construct()
 	{
 		$this->name = 'loadicrentrada';
@@ -41,25 +38,18 @@ class loadicrentrada extends Module
 		$this->version = '0.1 Alfa';
 		$this->author = 'Farmalisto';
 		$this->need_instance = 0;
-
 		parent::__construct();
-
 		$this->displayName = $this->l('Cague masivo Entrada ICR ');
 		$this->description = $this->l('Actualiza las ordenes de entrada asociando los ICR desde un archivo (CSV)');
-
 	}
-
 	public function install()
 	{
-
 		if (!$id_tab = Tab::getIdFromClassName('AdminIcrEntrada'))
 		{
 		$tab = new Tab();
 		$tab->class_name = 'AdminIcrEntrada';
 		$tab->module = 'loadicrentrada';
 		$tab->id_parent = (int)Tab::getIdFromClassName('AdminStock'); //aparecerá al final del menú catalogo
-
-
 		$query1= "CREATE TABLE `" . _DB_PREFIX_ . "tmp_cargue_entrada_icr` (
 		  `id_orden_suministro` int(11) DEFAULT NULL,
 		  `id_proveedor` int(11) DEFAULT NULL,
@@ -74,16 +64,13 @@ class loadicrentrada extends Module
 		 {
 		 echo '<br><b>Error creando tablas .</b><br>';
 		 }
-
 		foreach (Language::getLanguages(false) as $lang)
 		$tab->name[(int)$lang['id_lang']] = 'Actualizar ordenes de entrada';
 		if (!$tab->save())
 		return $this->_abortInstall($this->l('Imposible crear la pestaña de nuevo'));
 		}
-
 		$this->_clearCache('loadicrentrada.tpl');
 		Configuration::updateValue('HOME_FEATURED_NBR', 8);
-
 		if (!parent::install())
 			return false;
 		return true;
@@ -94,12 +81,10 @@ class loadicrentrada extends Module
 		$this->_clearCache('loadicrentrada.tpl');
 		return parent::uninstall();
 	}
-
 	public function getContent()
 	{
 		$icr_all = new Icrall();
 		//$icr_all->pepe();
-
 $output = '<h2>'.$this->displayName.'</h2>';
 if (Tools::isSubmit('submitloadicrentrada'))
 {
@@ -110,10 +95,7 @@ if (Tools::isSubmit('submitloadicrentrada'))
   $allowedExts = array("txt", "csv" );
   
 $temp = explode(".", $_FILES["fileloadicrentrada"]["name"]);
-
-
 $extension = end($temp);
-
 if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
 || ($_FILES["fileloadicrentrada"]["type"] == "text/plain")
 || ($_FILES["fileloadicrentrada"]["type"] == "text/comma-separated-values")
@@ -143,7 +125,6 @@ if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
      
      if (is_array($names) && $names[0] != '' && $names[0] != false && $names[2] !=false ){
      	$retorno_cargue = $guardar_archivo->loadicrentrada($names[2]);
-
      	if ($retorno_cargue == true) {
 	     	
 	     	if ( $guardar_archivo->validarIcrDuplicadosEntrada() && $guardar_archivo->validarIcrCargadoVsIngresadoEntrada() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcr() 
@@ -156,7 +137,6 @@ if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
 	     			//echo "<br> listo hasta aca. inserto en supply icr";
 	     			if ($guardar_archivo->updateIcrProductoOrderEntrada() ) { // si cambia stock de los productos, aumentar
 	     				//echo "<br> listo hasta aca. stock cambiado";
-
 	     				if ($guardar_archivo->updateIcrStatusEntrada() ) { //si cambia estado de Icr
 	     					$output .= $this->displayConfirmation($this->l('Se actualizaron los ICR de las Ordenes de entrada.'));
 	     				} else {
@@ -171,14 +151,10 @@ if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
 	     	} else {
 	     		$output .= $this->displayError(implode("<br>", $guardar_archivo->errores_cargue));
 	     	}
-
 	     } else { //error
-
 	     	 $output .= $this->adminDisplayWarning(implode("<br>", $guardar_archivo->errores_cargue));
 	     }
-
      } else { //error
-
      	 $output .= $this->adminDisplayWarning(implode("<br>", $guardar_archivo->errores_cargue));
      }   
     
@@ -192,21 +168,16 @@ else
 }
  return $output.$this->displayForm();
 	}
-
 	public function displayForm()
 	{
-
 		$impuestos = TaxRulesGroup::getTaxRulesGroups(true);
 		$imp_show = '';
-
 		
 		$output = ' <p><b>'.$this->_msg.'</b></p>
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data" method="post">
 			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
 	<p>Con este modulo usted podrá actualizar las ordenes de entrada, recuerde que el archivo CSV debe tener los siguientes campos  <br><a download href="../modules/loadicrentrada/formato.csv">(ORDEN_SUMINISTRO, PROVEEDOR, EAN, DESCRIPCION, ICR, FECHA, CANTIDAD, PRECIO_COMPRA, IVA, LOTE, FECHA_VENCIMIENTO, REGISTRO_INVIMA)</a>, estos <b>deben estar</b> en la cabecera del archivo,<BR> * para la fecha, el formato debe ser <b> YYYY-MM-DD </b>, si solo se tiene el año y el mes, colocar el primer día del mes: 2018-08  ==> 2018-08-01 
 	<BR> * para los elementos que no aplican fecha de vencimiento, se debe ingresar N/A , NA o dejar la fecha 1969-12-31</p>
-
-
 <p><input name="fileloadicrentrada" type="file" />     </p>
 </div>
 				<center><input type="submit" name="submitloadicrentrada" value="Actualizar ordenes de entrada" class="button" /></center>

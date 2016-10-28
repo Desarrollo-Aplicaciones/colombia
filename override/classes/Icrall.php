@@ -387,6 +387,7 @@ class Icrall extends IcrallCore {
 
                                                 $this->errores_cargue[] = "Se han presentado errores con los estados de los ICR's ingresados.__ ICR's con estado inválido ( Icrs: ".$retorno_estados_icr_validos[0]['icrs']." ), Estados colocados: (".$retorno_estados_icr_validos[0]['estado_nuevo']."). | Los estados válidos son: <b>".$estados_validos."</b>";
                                                 return false;
+                                                echo "error";
                                             }
 
                                         } else {
