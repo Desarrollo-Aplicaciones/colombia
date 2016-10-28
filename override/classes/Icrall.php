@@ -1,4 +1,4 @@
-<?php
+ <?php
 /*
 **Autor: Esteban Rincón / Ewing Vásquez
 **Para: Farmalisto
