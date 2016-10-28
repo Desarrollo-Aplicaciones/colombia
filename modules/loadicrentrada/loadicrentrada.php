@@ -89,7 +89,7 @@ $output = '<h2>'.$this->displayName.'</h2>';
 if (Tools::isSubmit('submitloadicrentrada'))
 {
                     
-                    /* validar subida de archivo */
+                    /*** validar subida de archivo ****/
                      
   /* */                  
   $allowedExts = array("txt", "csv" );

@@ -1,4 +1,4 @@
- <?php
+<?php
 /*
 **Autor: Esteban Rincón / Ewing Vásquez
 **Para: Farmalisto
@@ -97,7 +97,7 @@ class Icrall extends IcrallCore {
                 SET fecha_vencimiento = '0000-00-00'
                 WHERE ( fecha_vencimiento IS NULL OR TRIM(fecha_vencimiento) = '')";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_fechas_vence)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_fechas_vence)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización de las fechas de vencimiento no ingresadas.";
@@ -163,8 +163,7 @@ class Icrall extends IcrallCore {
                                 if ($retorno_fecinvalid = DB::getInstance()->executeS($query_fecinvalid) ) {
 
                                     if( isset($retorno_fecinvalid[0]['fecinvalid']) && $retorno_fecinvalid[0]['fecinvalid'] == 0 ) {
-                                        return true;
-
+                                     return true;
                                     } else {
 
                                         $this->errores_cargue[] = "Algunas fechas de vencimiento de algunos ICR no es mayor a la actual. Cantidad de fechas erróneas ( ". $retorno_fecinvalid[0]['fecinvalid']." ). Icrs: ".$retorno_fecinvalid[0]['icrs'];
@@ -175,6 +174,7 @@ class Icrall extends IcrallCore {
                                 } else {
                                     $this->errores_cargue[] = "No se puede comprobar que fecha de vencimiento de los ICR sea mayor a la actual.";
                                     return false;
+
                                 }
 
 
@@ -214,8 +214,37 @@ class Icrall extends IcrallCore {
         }
         
     }
+            /* validacion  Registro Invima */
     
+    public function ValidateRegistroInvima() {
 
+       $query_RegistroInvima = "SELECT COUNT(id_icr) as total, 
+                     GROUP_CONCAT(cod_icr SEPARATOR ' - ') AS invima_invalido 
+                    FROM ps_tmp_cargue_entrada_icr
+                    WHERE invima is null or invima = ' '";
+           
+                               
+       
+        if ($results = Db::getInstance()->ExecuteS($query_RegistroInvima)) {
+
+                if ( $results[0]['total'] == 0 ) {
+
+                    return true;
+
+                } else {
+
+                    $this->errores_cargue[] = "Los Registros Invima no se han Ingresado : ".$results[0]['invima_invalido'];
+                    return false;
+                }
+
+            } else {
+
+                $this->errores_cargue[] = " No se pudo validar Los Registros Invima ";
+                return false;
+
+            }
+    }
+    
     public function validarFechaProductosSalida() {
 
 
@@ -238,7 +267,7 @@ class Icrall extends IcrallCore {
 
                 } else {
 
-                    $this->errores_cargue[] = "Algunos ICR's ya se encuentran vencidos: ".$results[0]['vencidos'];
+                    $this->errores_cargue[] = "Registros Invima  ".$results[0]['vencidos'];
                     return false;
                 }
 
@@ -281,7 +310,7 @@ class Icrall extends IcrallCore {
         }
 
         if (mysqli_connect_errno()) {
-
+     
             $this->errores_cargue[] = "Conexión fallida: %s\n mensaje error: " . mysqli_connect_error();
             return false;
         }
@@ -387,7 +416,6 @@ class Icrall extends IcrallCore {
 
                                                 $this->errores_cargue[] = "Se han presentado errores con los estados de los ICR's ingresados.__ ICR's con estado inválido ( Icrs: ".$retorno_estados_icr_validos[0]['icrs']." ), Estados colocados: (".$retorno_estados_icr_validos[0]['estado_nuevo']."). | Los estados válidos son: <b>".$estados_validos."</b>";
                                                 return false;
-                                                echo "error";
                                             }
 
                                         } else {
@@ -456,7 +484,7 @@ class Icrall extends IcrallCore {
             SET i.id_estado_icr = ei.id_estado
             WHERE i.id_estado_icr = 2";
         
-        if ($results_icr = Db::getInstance()->ExecuteS($query_upd_fecven_na)) {
+        if ($results_icr = Db::getInstance()->Execute($query_upd_fecven_na)) {
             $this->response_extra = Db::getInstance()->Affected_Rows();
             return true;
         } else {
@@ -503,4 +531,59 @@ class Icrall extends IcrallCore {
 
     }
 
+ /*
+  * carga un archivo csv a la tabla ps_tmp_cargue_entrada_icr
+  * @path_file_load_db ruta del archivo csv
+  */ 
+    
+ public function loadicrentrada($path_file_load_db) {
+
+
+        $mysqli_1 = mysqli_init();
+        mysqli_options($mysqli_1, MYSQLI_OPT_LOCAL_INFILE, true);
+        
+        $url_post = explode(':', _DB_SERVER_);
+
+
+        if ( count($url_post) > 1 ) {
+
+          mysqli_real_connect($mysqli_1, $url_post[0], _DB_USER_, _DB_PASSWD_, _DB_NAME_, $url_post[1]);
+
+        } else {
+
+          mysqli_real_connect($mysqli_1, _DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
+
+        }
+        
+
+        if (mysqli_connect_errno()) {
+
+            $this->errores_cargue[] = "Conexión fallida: %s\n mensaje error: " . mysqli_connect_error();
+            return false;
+        }
+
+        if (!mysqli_query($mysqli_1, "TRUNCATE TABLE ps_tmp_cargue_entrada_icr")) {
+                        $this->errores_cargue[] = "Error al truncar la tabla (ps_tmp_cargue_entrada_icr). Mensaje error: " .  mysqli_error($mysqli_1);
+            return false;
+        }
+
+        $cargadat = "LOAD DATA LOCAL INFILE '" . $path_file_load_db . "'
+        INTO TABLE ps_tmp_cargue_entrada_icr
+        FIELDS TERMINATED BY ';'
+        OPTIONALLY ENCLOSED BY '\"' 
+        LINES TERMINATED BY '\\r\\n'
+        IGNORE 1 LINES 
+        (id_orden_suministro, id_proveedor, reference, @dummy, cod_icr, @dummy, @dummy, @dummy, @dummy, lote, fecha_vencimiento, invima)";
+
+
+        if (!mysqli_query($mysqli_1, $cargadat)) {
+            $this->errores_cargue[] = "Error al subir el archivo (estructura no valida). Mensaje error: " . mysqli_error($mysqli_1);
+          
+           return false;
+        }  else {
+            return true;
+            
+        }
+        return false;
+    }
 }
