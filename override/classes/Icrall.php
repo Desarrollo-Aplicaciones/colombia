@@ -571,7 +571,7 @@ class Icrall extends IcrallCore {
         INTO TABLE ps_tmp_cargue_entrada_icr
         FIELDS TERMINATED BY ';'
         OPTIONALLY ENCLOSED BY '\"' 
-        LINES TERMINATED BY '\\r\\n'
+        LINES TERMINATED BY '\\r'
         IGNORE 1 LINES 
         (id_orden_suministro, id_proveedor, reference, @dummy, cod_icr, @dummy, @dummy, @dummy, @dummy, lote, fecha_vencimiento, invima)";
 
