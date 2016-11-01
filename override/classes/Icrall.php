@@ -288,7 +288,7 @@ class Icrall extends IcrallCore {
      */
     public function InsertarProductosIcrOrdenEntrada() {
         //..-echo "<br>8";
-        $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, `lote`, `fecha_vencimiento`, `id_warehouse`, registro_invima) ';
+        $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, `lote`, `fecha_vencimiento`, `id_warehouse`, registro_sanitario) ';
         $query .= ' SELECT sod.id_supply_order_detail, cei.id_icr, "'.$this->empledado->id.'", now(), cei.lote, cei.fecha_vencimiento, so.id_warehouse, cei.invima
         FROM `ps_supply_order_detail` sod
             INNER JOIN `ps_tmp_cargue_entrada_icr` cei 
