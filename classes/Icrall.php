@@ -885,9 +885,8 @@ class IcrallCore extends ObjectModel {
 
     public function updateIcrStatusEntrada() {
         //..echo "<br>10";
-        $query = 'UPDATE `'._DB_PREFIX_.'icr` i INNER JOIN `'._DB_PREFIX_.'tmp_cargue_entrada_icr` ol
-            ON ( i.id_icr = ol.id_icr ) 
-            SET i.id_estado_icr = 2'; // cambiar estado del icr a asignado
+        $query = "UPDATE "._DB_PREFIX_."icr i INNER JOIN "._DB_PREFIX_."tmp_cargue_entrada_icr ol
+            ON ( i.id_icr = ol.id_icr ) SET i.id_estado_icr = 2"; // cambiar estado del icr a asignado
                       
         if ($upicr = DB::getInstance()->execute($query) ) {
 
@@ -895,6 +894,7 @@ class IcrallCore extends ObjectModel {
         } else {
             $this->errores_cargue[] = "Error cambiando el estado de los ICR.";
             return false;
+            
         }
 
 
