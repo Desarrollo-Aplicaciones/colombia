@@ -255,7 +255,7 @@ class Icrall extends IcrallCore {
         INNER JOIN "._DB_PREFIX_."icr icr ON ( ordericr.id_icr= icr.id_icr ) 
         INNER JOIN "._DB_PREFIX_."supply_order_detail s_order_d ON ( ordericr.id_supply_order_detail=s_order_d.id_supply_order_detail )
         WHERE icr.id_estado_icr=2
-                AND ordericr.fecha_vencimiento <> '0000-00-00' 
+                AND ordericr.fecha_vencimiento <> '0000-00-00'  
                 AND ordericr.fecha_vencimiento <> '1969-12-31' 
                 AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW() ;";
                 
@@ -282,6 +282,29 @@ class Icrall extends IcrallCore {
     }
 
 
+    
+        /**
+     * InsertarProductosIcrOrden    inserta los icr por cada producto almacenado en el formulario
+     */
+    public function InsertarProductosIcrOrdenEntrada() {
+        //..-echo "<br>8";
+        $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, `lote`, `fecha_vencimiento`, `id_warehouse`, registro_invima) ';
+        $query .= ' SELECT sod.id_supply_order_detail, cei.id_icr, "'.$this->empledado->id.'", now(), cei.lote, cei.fecha_vencimiento, so.id_warehouse, cei.invima
+        FROM `ps_supply_order_detail` sod
+            INNER JOIN `ps_tmp_cargue_entrada_icr` cei 
+            ON (cei.id_orden_suministro = sod.id_supply_order AND cei.id_product = sod.id_product )
+            INNER JOIN `ps_supply_order` so ON ( so.id_supply_order = sod.id_supply_order )
+            ORDER BY sod.id_supply_order_detail, cei.id_icr';
+
+        if ($retorno = DB::getInstance()->execute($query) ) {
+            return true;
+        } else {
+            $this->errores_cargue[] = "No se pudieron ingresar los registros del archivo a la tabla de asociación de ICR.";
+            return false;
+        }
+    }
+    
+    
 /**********************************************************   CAMBIAR ESTADO ICRS POR MEDIO DE  CARGUE ****************************************************/
 
 
