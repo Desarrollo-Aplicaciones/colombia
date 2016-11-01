@@ -92,7 +92,7 @@ class IcrallCore extends ObjectModel {
             tcis.flag = 'i'
             WHERE i.id_estado_icr = 2";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_compara)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización de los ICR cargados.";
@@ -109,7 +109,7 @@ class IcrallCore extends ObjectModel {
             SET             
             tcis.flag = 'n'";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_compara)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización del cargue Vs Picking.";
@@ -124,7 +124,7 @@ class IcrallCore extends ObjectModel {
         $query_icr_flag = "SELECT id_orden, reference, cod_icr FROM ps_tmp_cargue_icr_salida 
             WHERE flag = 'n'";
 
-        if ($results_icr_flag = Db::getInstance()->ExecuteS($query_icr_flag)) {           
+        if ($results_icr_flag = Db::getInstance()->Execute($query_icr_flag)) {           
 
             $this->errores_cargue[] = "Error de datos en el archivo cargado.";
 
@@ -345,7 +345,7 @@ class IcrallCore extends ObjectModel {
 
                   SET icrU.id_estado_icr=3";
 
-          if (DB::getInstance()->executeS($query)) {
+          if (DB::getInstance()->execute($query)) {
                 return true;
           }   
 
@@ -486,7 +486,7 @@ class IcrallCore extends ObjectModel {
             tcei.id_icr = list.id_icr,
             tcei.flag = 'i';";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_compara)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización de los ICR cargados.";
@@ -503,7 +503,7 @@ class IcrallCore extends ObjectModel {
             SET             
             tcei.flag = 'n'";
 
-        if ($results_icr = Db::getInstance()->ExecuteS($query_icr_compara)) {
+        if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización del cargue Vs Supply Order Icr.";
@@ -530,7 +530,7 @@ class IcrallCore extends ObjectModel {
             - CAST( datcar.cantcarg AS SIGNED)
           ) < 0";
 
-        if ($results_icr_c = Db::getInstance()->ExecuteS($query_icr_comparacant)) {
+        if ($results_icr_c = Db::getInstance()->Execute($query_icr_comparacant)) {
             return true;
         } else {
             $this->errores_cargue[] = "Error en la actualización del cargue Vs Supply Order Icr verificando cantidades.";
@@ -728,7 +728,7 @@ class IcrallCore extends ObjectModel {
             $query->groupBy(' od.id_supply_order_detail ');
 
 
-            $items = Db::getInstance()->executeS($query);
+            $items = Db::getInstance()->execute($query);
         
             if ($items) {
                 $supply_order_detailBoxI = array();
@@ -853,7 +853,7 @@ class IcrallCore extends ObjectModel {
                                 WHERE id_supply_order_detail = ".(int)$id_supply_order_detail."
                                 AND id_supply_order_receipt_history = ".(int)$last_inserted."";
 
-                                DB::getInstance()->executeS($ins_history);
+                                DB::getInstance()->execute($ins_history);
                                 }
                                 //echo "<br>Antes de guardar detalle orden";
                                 $supply_order_detail->save();
@@ -889,7 +889,7 @@ class IcrallCore extends ObjectModel {
             ON ( i.id_icr = ol.id_icr ) 
             SET i.id_estado_icr = 2'; // cambiar estado del icr a asignado
                       
-        if ($upicr = DB::getInstance()->executeS($query) ) {
+        if ($upicr = DB::getInstance()->execute($query) ) {
 
             return true;
         } else {
