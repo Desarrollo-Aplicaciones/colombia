@@ -155,7 +155,7 @@
 	<body {if isset($page_name)}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column{/if} {if $hide_right_column}hide-right-column{/if} {if $content_only} content_only {/if}">
 
 	
-	{if $lightbox_horario_call == 1 && !isset($smarty.cookies.Cooklightbox_horario_call) }
+	{*if $lightbox_horario_call == 1 && !isset($smarty.cookies.Cooklightbox_horario_call) }
 		<div id="lightbox_horario_call" style="display:none;">
 			<div class="close_lightbox_horario_call" onclick="lightbox_hide(); "></div>
 
@@ -202,7 +202,7 @@
 				}
 			</style>
 		{/literal}
-	{/if}
+	{/if*}
 
 
 	{if !$content_only}
@@ -355,7 +355,7 @@ $(document).ready(function(){
 {/if}
 
 
-{if isset($newsletter) && $newsletter eq true and isset($lightboxshow) and $lightboxshow eq 'si'}
+{*if isset($newsletter) && $newsletter eq true and isset($lightboxshow) and $lightboxshow eq 'si'}
     
    
      
@@ -558,5 +558,5 @@ $(document).ready(function(){
     
 {/literal}
     
-{/if}
+{/if*}
 
