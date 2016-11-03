@@ -97,7 +97,7 @@
 
  {/if}
         
- {if isset($newsletter) && $newsletter eq true and  $lightboxshow eq 'si'}
+ {*if isset($newsletter) && $newsletter eq true and  $lightboxshow eq 'si'}
      
      <script type="text/javascript"> 
       
@@ -195,9 +195,9 @@ $( "#hombre1,#mujer1" ).click(function() {
     </div>
         </div>
     </div>       
-        <div class="news-overlay" ></div>
+        <div class="news-overlay" ></div> 
        
-{/if}
+{/if*}
 </div>
 <!--Lightbox container-->
     <div id="standard_lightbox">
@@ -538,6 +538,7 @@ window.__lc.license = 6077601;
 </script>
 <!-- End of LiveChat code -->
 
+{*
 <script>
     if( {$flagPopPup} === 1 ){
         $(window).load(function(){
@@ -553,5 +554,5 @@ window.__lc.license = 6077601;
         <img src="{$img_dir}21_de_Octubre.jpg">
     </div>
 </div>
-
+*}
 </html>
