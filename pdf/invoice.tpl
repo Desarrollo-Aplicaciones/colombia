@@ -115,20 +115,14 @@
 		{/if}
 
 		{assign var="shipping_discount_tax_excl" value=0}
-		{if $order_invoice->total_shipping_tax_incl > 0}
-			<tr>
-				<td style="width: 50%;">{l s='Shipping Cost' pdf='true'}</td>
-				<td style="width: 50%; text-align: right;">
+		
+		{*  INICIO  MODIFICACION UBICACION Y COSTO ENVIO   *}
+
+		{if $order_invoice->total_shipping_tax_incl > 0}			
 					{assign var="shipping_discount_tax_excl" value=($order_invoice->total_shipping_tax_incl/1.16)}
-					{displayPrice currency=$order->id_currency price=$shipping_discount_tax_excl}
-				</td>
-			</tr>
-		{else}
-			<tr>
-				<td style="width: 50%;">{l s='Shipping Cost' pdf='true'}</td>
-				<td style="width: 50%; text-align: right;">$ 0</td>
-			</tr>
 		{/if}
+
+		{*  FIN  MODIFICACION UBICACION Y COSTO ENVIO   *}
 
 		{assign var="subtotal" value=$sub_total_prod-$order_invoice->total_discount_tax_excl+shipping_discount_tax_excl}
 		<tr>
@@ -141,6 +135,27 @@
 				<td style="width: 50%; text-align: right;">{displayPrice currency=$order->id_currency price=$item}</td>
 			</tr>
 		{/foreach}
+
+
+		{*  INICIO  MODIFICACION UBICACION Y COSTO ENVIO   *}
+
+		{if $order_invoice->total_shipping_tax_incl > 0}
+			<tr>
+				<td style="width: 50%;">{l s='Shipping Cost' pdf='true'}</td>
+				<td style="width: 50%; text-align: right;">					
+					{displayPrice currency=$order->id_currency price=$shipping_discount_tax_excl}
+				</td>
+			</tr>
+		{else}
+			<tr>
+				<td style="width: 50%;">{l s='Shipping Cost' pdf='true'}</td>
+				<td style="width: 50%; text-align: right;">$ 0</td>
+			</tr>
+		{/if}
+
+		{*  FIN  MODIFICACION UBICACION Y COSTO ENVIO   *}
+
+
 		<tr>
 			<td style="width: 50%;">{l s='Total' pdf='true'}</td>
 			<td style="width: 50%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
