@@ -637,6 +637,27 @@ private function orderDetail($id_order = NULL){
 		
 	}
 
+	/**
+	 * Genera la ruta relativa de las imágenes publicitarias por directorio
+	 * dirname : <Nombre del directorio que contiene las imágenes>
+	 */
+	private function publicityBanners()
+	{
+		if ($this->get_request_method() != "GET") {
+			$this->response('', 406);
+	    }
+
+	    if (!isset($this->_request['dirname']) 
+	        || empty($this->_request['dirname'])) {
+			$this->response('', 204);
+	    }
+
+	    $dirname = $this->_request['dirname'];
+		$dir = "../publicity/banners/" . $dirname . "/";
+		$images = glob($dir . "*.jpg");
+		$this->response(json_encode($images), 200);
+	}
+
 }
 
 
