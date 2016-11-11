@@ -245,17 +245,9 @@ default :
 			break;
 
 			case 1:
-	//$this->context->smarty->assign(Address::horaDeEntrega());
-        $this->context->smarty->assign(array(
-            // addHours = 2
-            'inicio_intervalos' => (int) Configuration::get('INIT_INTERVALS'),
-            // 12
-            'numero_horas' => (int) Configuration::get('MAX_HOURS_DELIVERED'),
-            // 8
-            'hora_inicio' => (int) Configuration::get('INIT_HOUR_DELIVERE'),
-            // 18
-            'hora_fin' => (int) Configuration::get('END_HOUR_DELIVERE')
-        ));
+	
+                            $this->context->smarty->assign(Address::horaDeEntrega());
+        
                             
 //###############################################                        
 session_start();
