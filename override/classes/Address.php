@@ -324,7 +324,6 @@ INNER JOIN "._DB_PREFIX_."carrier car ON (car.id_reference = cac.id_carrier AND 
 INNER JOIN "._DB_PREFIX_."range_price crp ON (crp.id_carrier = car.id_carrier)
 INNER JOIN "._DB_PREFIX_."address_city add_city ON(address.id_address = add_city.id_address)
 WHERE customer.id_customer = ".(int) $id_customer.($id_address != NULL ? (' AND address.id_address = '.(int)$id_address) : '') ;
-$arr_dirs_user = array();
 // error_log($query, 3, "/var/www/test.farmalisto.com.co/app/log/errors.log");
 
 if ($results = Db::getInstance()->ExecuteS($query)) {

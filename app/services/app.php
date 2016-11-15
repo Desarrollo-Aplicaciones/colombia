@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once('classes/Rest.inc.php');
 require_once('classes/Model.php');
 
@@ -633,8 +633,29 @@ private function orderDetail($id_order = NULL){
 
 		$accountObj = $model->call_api($_REQUEST['accessToken'],"https://www.googleapis.com/plus/v1/people/me");
 
-		return $this->response(json_encode($accountObj),200);	
+		return $this->response(json_encode($accountObj),200);
 		
+	}
+
+	/**
+	 * Genera la ruta relativa de las imágenes publicitarias por directorio
+	 * dirname : <Nombre del directorio que contiene las imágenes>
+	 */
+	private function publicityBanners()
+	{
+		if ($this->get_request_method() != "GET") {
+			$this->response('', 406);
+	    }
+
+	    if (!isset($this->_request['dirname']) 
+	        || empty($this->_request['dirname'])) {
+			$this->response('', 204);
+	    }
+
+	    $dirname = $this->_request['dirname'];
+		$dir = "../publicity/banners/" . $dirname . "/";
+		$images = glob($dir . "*.jpg");
+		$this->response(json_encode($images), 200);
 	}
 
 }
