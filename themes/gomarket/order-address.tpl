@@ -255,23 +255,17 @@ function hide_date_delivered(id_address){
 		</div>	
 		<br /><br />			
 		<div class="etiqueta" id="label-dia"><label>Día<span class="purpura">*</span>:<br></label> 
-		    {*	{if isset($day_delivered) && isset($js_json_delivered)}
+			{if isset($day_delivered) && isset($js_json_delivered)}
 			{$day_delivered}
 			<br>	
 			{$js_json_delivered}		
-			{/if}  *}
-                    <select id="date_delivered" name="date_delivered" style="width:200px">
-                      <option value=""></option>
-                    </select>
+			{/if}
 		</div>
 
 
 		<div class="etiqueta" id="label-hora"><label>Hora<span class="purpura">*</span>:<br></label> 
-		     {*	<select class="seleccion" id="hour_delivered" style="width: 150px !important;">
-			</select><br> *}
-                    <select id="hour_delivered" name="hour_delivered_h" style="width:200px">
-                      <option value=""></option>
-                    </select> 
+			<select class="seleccion" id="hour_delivered" style="width: 150px !important;">
+			</select><br>
 		</div>
 	{* Fin fecha  y hora de entrega *}				
         <br /><br /><br />
@@ -972,5 +966,4 @@ function hide_date_delivered(id_address){
 
 			});
 		</script>
-
-              
+             
