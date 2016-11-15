@@ -1453,7 +1453,6 @@
 			{/if}
 		</div>
 
-
 		<div class="etiqueta" id="label-hora"><label>Hora<span class="purpura">*</span>:<br></label> 
 			<select class="seleccion" id="hour_delivered" style="width: 150px !important;">
 			</select><br>
