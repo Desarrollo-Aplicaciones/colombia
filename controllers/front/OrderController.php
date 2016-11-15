@@ -250,8 +250,7 @@ default :
         
                             
 //###############################################                        
-session_start();
-// si la varible sesión (formulamedica) se creo                            
+session_start();// si la varible sesión (formulamedica) se creo                            
 if (isset($_SESSION['formulamedica'])){
    // si la varible de seción (formulamedica) es igual a true
    

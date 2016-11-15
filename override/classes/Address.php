@@ -543,7 +543,7 @@ FROM  ps_cities_col cities
         return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_delivered);
     }
 
-
+//
 
     public static function update_date_delivered(){
             
