@@ -25,8 +25,7 @@
 <table style="width: 100%">
 <tr>
 	<td style="width: 50%; vertical-align:top;">
-		<p>{if $logo_path} <img src="{$logo_path}" style="width:{$width_logo}px; height:{$height_logo}px;" />
-		{/if}
+		
         <br />
       <strong>FARMALATAM COLOMBIA SAS<BR />
 		NIT: 900.659.494-9 </strong></p></td>
