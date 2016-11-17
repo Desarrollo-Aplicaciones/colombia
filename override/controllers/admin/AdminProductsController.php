@@ -289,14 +289,15 @@ class AdminProductsController extends AdminProductsControllerCore
 				'shops' => $json_shops,
 			);
 
-			$path = '/var/www/html/colombia/img/p/' . $obj->getImgFolder();
+			// Sube las imágenes en AWS S3
+			$path = _PS_PROD_IMG_DIR_ . $obj->getImgFolder();
 			$files = array_diff(scandir($path), array('.', '..'));
 			$test = new Aws();
 			foreach($files as $img) {
-				$abc = $test->setObjectImage($path . $img, $img);
-				error_log(print_r($abc, true));
+				$test->setObjectImage($path . $img, $img);
 			}
-			//$this->deleteDirectory($path);
+			// Elimina las imágenes del local
+			$this->deleteDirectory($path);
 
 			@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$obj->id_product.'.jpg');
 			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'_'.$this->context->shop->id.'.jpg');
