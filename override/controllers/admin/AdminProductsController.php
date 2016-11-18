@@ -294,7 +294,11 @@ class AdminProductsController extends AdminProductsControllerCore
 			$files = array_diff(scandir($path), array('.', '..'));
 			$awsObj = new Aws();
 			foreach($files as $img) {
-				$awsObj->setObjectImage($path . $img, $img);
+				if (!$awsObj->setObjectImage($path . $img, $img, 'p/')) {
+					die(Tools::jsonEncode(array(
+						'error' => "Error al subir la imagen $img a AWS S3, por favor contactar a IT."
+					)));
+				}
 			}
 			// Elimina las imágenes del local
 			$this->deleteDirectory($path);
