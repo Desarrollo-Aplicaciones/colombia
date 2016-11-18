@@ -37,7 +37,7 @@ class AwsCore extends ObjectModel
 	{
 		$result = $this->s3Client->getObject([
 		    'Bucket' => $this->bucket,
-		    'Key'    => $obj . '.jpg'
+		    'Key'    => $obj
 		]);
 
 		return $result;

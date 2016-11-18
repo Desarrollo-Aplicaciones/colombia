@@ -292,9 +292,9 @@ class AdminProductsController extends AdminProductsControllerCore
 			// Sube las imágenes en AWS S3
 			$path = _PS_PROD_IMG_DIR_ . $obj->getImgFolder();
 			$files = array_diff(scandir($path), array('.', '..'));
-			$test = new Aws();
+			$awsObj = new Aws();
 			foreach($files as $img) {
-				$test->setObjectImage($path . $img, $img);
+				$awsObj->setObjectImage($path . $img, $img);
 			}
 			// Elimina las imágenes del local
 			$this->deleteDirectory($path);
