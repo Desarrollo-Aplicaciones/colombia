@@ -23,51 +23,51 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-			{if !$content_only}
-					</div><!-- /Center -->
-			{if isset($settings)}
-				{if $page_name != 'index'}
-					{if (($settings->column == '2_column_right' || $settings->column == '3_column'))}
-						<!-- Left -->
-						<div id="right_column" class="{$settings->right_class} omega">
-							{$HOOK_RIGHT_COLUMN}
-						</div>
-					{/if}
-				{/if}
-			{/if}
-				</div><!--/columns-->
-			</div><!--/container_24-->
-		</div>
+            {if !$content_only}
+                    </div><!-- /Center -->
+            {if isset($settings)}
+                {if $page_name != 'index'}
+                    {if (($settings->column == '2_column_right' || $settings->column == '3_column'))}
+                        <!-- Left -->
+                        <div id="right_column" class="{$settings->right_class} omega">
+                            {$HOOK_RIGHT_COLUMN}
+                        </div>
+                    {/if}
+                {/if}
+            {/if}
+                </div><!--/columns-->
+            </div><!--/container_24-->
+        </div>
 
 
 
 <!-- Footer -->
-		{if !isset($smarty.cookies.validamobile)}
-			<div class="mode_footer">
+        {if !isset($smarty.cookies.validamobile)}
+            <div class="mode_footer">
                 <div class="ctn-gray-footer">
-    				<div class="container_24">
-    					{* <div id="footer" class="grid_24 clearfix  omega alpha"> *}
+                    <div class="container_24">
+                        {* <div id="footer" class="grid_24 clearfix  omega alpha"> *}
                             {include file="ctn-gray-footer.tpl"}
-    						{if isset($HOOK_CS_FOOTER_TOP) && $HOOK_CS_FOOTER_TOP}{$HOOK_CS_FOOTER_TOP}{/if}
+                            {if isset($HOOK_CS_FOOTER_TOP) && $HOOK_CS_FOOTER_TOP}{$HOOK_CS_FOOTER_TOP}{/if}
                             {$HOOK_HOMEBOTCEN}
-    						{$HOOK_FOOTER}
+                            {$HOOK_FOOTER}
                             {* Este es el cms que carga el texto largo del footer *}
                             <div id="ctn-footer-display" style="display: none;">
-        						{if isset($HOOK_CS_FOOTER_BOTTOM) && $HOOK_CS_FOOTER_BOTTOM}{$HOOK_CS_FOOTER_BOTTOM}{/if}
-        						{if $PS_ALLOW_MOBILE_DEVICE}
-        							<p class="center clearBoth"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>
-        						{/if}
+                                {if isset($HOOK_CS_FOOTER_BOTTOM) && $HOOK_CS_FOOTER_BOTTOM}{$HOOK_CS_FOOTER_BOTTOM}{/if}
+                                {if $PS_ALLOW_MOBILE_DEVICE}
+                                    <p class="center clearBoth"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>
+                                {/if}
                             </div>
-    					{* </div> *}
-    				</div>
+                        {* </div> *}
+                    </div>
                 </div>
                 <div id="ctn-gray-end-footer"><a name="ctn-gray-end-footer"></a>
                 </div>
             </div>
         {/if}
-		<div id="toTop">top</div>
-	</div><!--/page-->
-	{/if}
+        <div id="toTop">top</div>
+    </div><!--/page-->
+    {/if}
         
         
 {if isset($iexplorerold) && $iexplorerold eq true and  $lightboxshow eq 'si'}
@@ -76,7 +76,7 @@
     <div class="content-popup">
         <div class="close"><a href="#" id="close" onclick="closePopaUp()"><img src="{$base_dir}img/close.png"/></a></div>
         <div>
-        	<h2>Actualiza tu navegador </h2>
+            <h2>Actualiza tu navegador </h2>
                 <p>Hemos detectado que utilizas una versi&oacute;n vieja de Internet Explorer, te recomendamos actualizar tu navegador para obtener la mejor experiencia de uso.</p>
                 <p> Deseo actualizar mi navegador y obtener la mejor experiencia de uso. 
                 <div style="text-align: center;"> <a href="http://windows.microsoft.com/es-es/internet-explorer/download-ie"><img src="{$base_dir}img/internet-explorer-11.png" style="width: 64px;"> </a></p>
@@ -88,7 +88,7 @@
                
                 
             <div style="float:left; width:100%;">
-    	
+        
     </div>
         </div>
     </div>
@@ -145,8 +145,8 @@ $( "#hombre1,#mujer1" ).click(function() {
           $('#correo').val('');
           
           $('#news').fadeOut('slow');
-		$('.news-overlay').fadeOut('slow');
-		return false;         
+        $('.news-overlay').fadeOut('slow');
+        return false;         
       }
 
    },
@@ -449,7 +449,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5D8SLQ');</script>
 <!-- End Google Tag Manager -->
-	
+    
 
 {/literal}
 {*}
@@ -465,7 +465,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   
     <!-- Begin: www.iperceptions.com --> <script type="text/javascript"> ;(function (w, d, s, l) { var r = 100, js, fjs = d.getElementsByTagName(s)[0], id = "IPerceptionsJS", a = "async", b = "defer",go = function() { if(d.getElementById(id)) { return; } js = d.createElement(s);js.src = w.location.protocol + "//ips-invite.iperceptions.com/webValidator.aspx?sdfc=97f7aad6-121125-674fabf3-23d8-46f3-980a-82ec2cef430c&lID=16&source=91787"; js.id = id; js.type = "text/javascript"; js[a] = a; js[b] = b; fjs.parentNode.insertBefore(js, fjs); }; if(r < Math.floor(Math.random() * 100)) { d.cookie = "IPE_S_121125=0;Path=/;" } else if(!(/(^|;)\s*IPE(_S_)?121125=/.test(d.cookie))){ if (w.addEventListener) { w.addEventListener(l, go, false); } else if (w.attachEvent) { w.attachEvent("on" + l, go); } } })(window, document, "script", "load");</script><!-- End: www.iperceptions.com -->
     
-	
+    
 
 <!-- SessionCam Client Integration v6.0 -->
 <script type="text/javascript">
@@ -525,29 +525,34 @@ window.onload = init;
 
 </body>
 
-{* chat *}
 <!-- Start of LiveChat (www.livechatinc.com) code -->
 <script type="text/javascript">
 window.__lc = window.__lc || {};
 window.__lc.license = 6077601;
 (function() {
-  var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
-  lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
+ var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
+ lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
 })();
 </script>
 <!-- End of LiveChat code -->
 
 {*
 <script>
-    if( {$flagPopPup} === 1 ){
+{if $flagPopPup == 1 }
+    var cumplepp = 1;
+    {else}
+    var cumplepp = 0;
+{/if}
+    
+    if( cumplepp == 1 ){
         $(window).load(function(){
             standard_lightbox('care-lines');
         });
     }
 </script>
 
-<div id="care-lines">
+<div id="care-lines" style="display:none;">
     <div class="lightbox_close" onclick="lightbox_hide();"></div>
     <div class="lightbox_title"></div>
     <div class="lightbox_resume">
