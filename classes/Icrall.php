@@ -124,7 +124,7 @@ class IcrallCore extends ObjectModel {
         $query_icr_flag = "SELECT id_orden, reference, cod_icr FROM ps_tmp_cargue_icr_salida 
             WHERE flag = 'n'";
 
-        if ($results_icr_flag = Db::getInstance()->Execute($query_icr_flag)) {           
+        if ($results_icr_flag = Db::getInstance()->ExecuteS($query_icr_flag)) {           
 
             $this->errores_cargue[] = "Error de datos en el archivo cargado.";
 
