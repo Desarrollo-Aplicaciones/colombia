@@ -65,4 +65,59 @@ class ImageManager extends ImageManagerCore
 		else
 			return '<img src="'._PS_TMP_IMG_.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
 	}
+
+	/**
+	 * Generate and write image
+	 *
+	 * @param string $type
+	 * @param resource $resource
+	 * @param string $filename
+	 * @return bool
+	 */
+	public static function write($type, $resource, $filename)
+	{
+		switch ($type)
+		{
+			case 'gif':
+				$success = imagegif($resource, $filename);
+			break;
+
+			case 'png':
+				$quality = (Configuration::get('PS_PNG_QUALITY') === false ? 7 : Configuration::get('PS_PNG_QUALITY'));
+				$success = imagepng($resource, $filename, (int)$quality);
+			break;
+
+			case 'jpg':
+			case 'jpeg':
+			default:
+				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
+				imageinterlace($resource,1); /// make it PROGRESSIVE
+				$success = imagejpeg($resource, $filename, (int)$quality);
+			break;
+		}
+		imagedestroy($resource);
+		@chmod($filename, 0664);
+
+		// Sube las imágenes en AWS S3
+		$awsObj = new Aws();
+		if ($filename) {
+			$oriPath = str_replace(_PS_IMG_DIR_, "", $filename);
+			preg_match('/^([a-zA-Z]+).*(\/[_a-zA-Z0-9-]+\.jpg)$/i', $oriPath, $matches);
+			array_shift($matches);
+			$objAws = implode('', $matches);
+			if ($success 
+				&& $objAws 
+				&& $awsObj->setObjectImage($filename, $objAws)) {
+				error_log($type . " <> " . $resource . " <> " . $filename . " <> " . $objAws);
+				// Elimina las imágenes del local
+				// CRON 
+				//unlink($filename);
+			} else {
+				$success = false;
+			}
+		}
+
+		return $success;
+	}
+
 }
