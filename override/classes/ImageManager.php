@@ -98,7 +98,7 @@ class ImageManager extends ImageManagerCore
 		imagedestroy($resource);
 		@chmod($filename, 0664);
 
-		// Sube las imágenes en AWS S3
+		// Sube las imágenes al AWS S3
 		$awsObj = new Aws();
 		if ($filename) {
 			$oriPath = str_replace(_PS_IMG_DIR_, "", $filename);
@@ -108,9 +108,7 @@ class ImageManager extends ImageManagerCore
 			if ($success 
 				&& $objAws 
 				&& $awsObj->setObjectImage($filename, $objAws)) {
-				error_log($type . " <> " . $resource . " <> " . $filename . " <> " . $objAws);
-				// Elimina las imágenes del local
-				// CRON 
+				// Eliminar las imágenes del local con CRON diario
 				//unlink($filename);
 			} else {
 				$success = false;

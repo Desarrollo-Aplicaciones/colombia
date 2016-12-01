@@ -74,9 +74,16 @@
 								}
 
 								$info .= sprintf(", url:'%s'",  addslashes(getFileUrl($path)));
-								$info .= sprintf(", tipedit:'%s'",  TIP_DOC_RENAME);		
+								$info .= sprintf(", tipedit:'%s'",  TIP_DOC_RENAME);
 
-																				
+								// Sube las imágenes al AWS S3
+								preg_match('/^..\/..\/img\/(.*)/', $path, $matches);
+								array_shift($matches);
+								if (!empty($matches)) {
+									$awsObj = new Aws();
+									$awsObj->setObjectImage($path, implode('', $matches));
+								}
+
 							}else 
 							{
 								$error = ERR_FILE_NOT_AVAILABLE;

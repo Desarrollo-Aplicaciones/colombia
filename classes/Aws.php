@@ -11,6 +11,7 @@ class AwsCore extends ObjectModel
 {
 	public $s3Client;
 	public $bucket = 'imagenes-colombia';
+	public $shopDomainProd = 'www.farmalisto.com.co';
 
 	/**
 	 * Datos de acceso
@@ -91,16 +92,16 @@ class AwsCore extends ObjectModel
 	 */
 	public function setObjectImage($srcObj = '', $obj = '', $folder = '')
 	{
-		$folder = Configuration::get('PS_SHOP_DOMAIN') == "www.farmalisto.com.co" ? $folder : 'test/' . $folder;
+		$folder = Configuration::get('PS_SHOP_DOMAIN') == $this->shopDomainProd ? $folder : 'test/' . $folder;
 		try {
-			$this->s3Client->putObject(array(
+			$result = $this->s3Client->putObject(array(
 				'Bucket' => $this->bucket,
 				'Key' => $folder . $obj, 
 				'SourceFile' => $srcObj,
 				'ACL' => 'public-read', 
 				'ContentType' => 'image/jpeg'
 			));
-			return true;
+			return $result['ObjectURL'];
 		} catch (Exception $e) {
 			return false;
 		}
