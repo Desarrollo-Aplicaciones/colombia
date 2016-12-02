@@ -16,7 +16,7 @@ if (isset($_POST)) {
             case 'banner':
                 if ( isset($_FILES["myfile"]) && $_POST['altoimg'] !='' && $_POST['anchoimg'] != '' && isset($_POST["activo"])) {
 
-                    $names =  saveFile($_FILES,'myfile',$_POST['id_publicidad'],'cspublicidadfl/uploads', $_POST['altoimg'],$_POST['anchoimg']); 
+                    $names =  saveFile($_FILES,'myfile',$_POST['id_publicidad'],'cspublicidadfl/uploads', $_POST['altoimg'],$_POST['anchoimg']);
 
                     if (is_array($names) && $names[0] != '' && $names[0] != false && $names[2] !=false ){
 
@@ -30,6 +30,12 @@ if (isset($_POST)) {
 
                         if ($result_datos_up = Db::getInstance()->ExecuteS($cambio_publicidad)) {
 
+                           // Sube las imágenes al AWS S3
+                            $objAws = str_replace(Configuration::get('PATH_UP_LOAD'), "", $names[2]);
+                            if (!empty($objAws)) {
+                                $awsObj = new Aws();
+                                error_log($awsObj->setObjectImage($names[2], $objAws));
+                            }
                            /* $query_config = "SELECT * FROM ". _DB_PREFIX_ ."publicidad WHERE id_publicidad = '".$_POST['id_publicidad']."'";
 
                    
