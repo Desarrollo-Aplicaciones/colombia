@@ -635,7 +635,7 @@ class IcrallCore extends ObjectModel {
     }
 
 
-
+ 
 
  /**
      * validarProductosOrden valida que los productos enviados correspondan a la orden seleccionada
@@ -716,32 +716,37 @@ class IcrallCore extends ObjectModel {
      * @return string si la actualización es correcta retorna '1' si no retorna '0'
      */
     public function updateIcrProductoOrderEntrada() {
-        //..-echo "<br>9";
+        //echo 'entro al metodo update icrall entrada';  
+        //echo "<br>9";
         $way = '+';
         $this->status_icr = 2;
 
-            $query = new DbQuery();
+            $query = new DbQuery(); 
             $query->select(' od.id_supply_order, od.id_supply_order_detail AS suordetail, COUNT(ol.id_product) AS cant ');
             $query->from('tmp_cargue_entrada_icr', 'ol');
             $query->innerJoin('supply_order_detail', 'od', ' od.id_product = ol.id_product AND od.id_supply_order = ol.id_orden_suministro ');
             //$query->where('ol.id_supply_order = '.(int)$this->supply_order);
             $query->groupBy(' od.id_supply_order_detail ');
+             //print_r($query->__toString());
 
-
-            $items = Db::getInstance()->execute($query);
-        
+            $items = Db::getInstance()->executeS($query);
+            //echo 'get antes del if ';
             if ($items) {
                 $supply_order_detailBoxI = array();
                 $quantity_received_todayI = array();
-
+                //echo '<br>items if order <br>';
+                //print_r($items);
+               
                 foreach ($items as $item){
-                    //echo "<br>item:".$item['suordetail']." | cantidad:".$item['cant'];
+                   // echo "<br>item:".$item['suordetail']." | cantidad:".$item['cant'];
+                    //echo 'hola foreaecho ch';
                     $supply_order_detailBoxI[] = $item['suordetail'];                    
                     $quantity_received_todayI[$item['suordetail']] = $item['cant'];
                     $supply_order_arr[$item['suordetail']] = $item['id_supply_order'];
-                    
+                 //print_r($array); 
+                 
                 }
-
+                //echo 'fuera del if ';
                 //$supply_order->postProcessUpdateReceipt($supply_order_detailBoxI, $quantity_received_todayI, $this->supply_order, " (".$this->accion_icr.")");                       
             
 
@@ -755,11 +760,11 @@ class IcrallCore extends ObjectModel {
                     $supply_order_detail = new SupplyOrderDetail($id_supply_order_detail);
                     
                     $supply_order = new SupplyOrder((int)$supply_order_arr[$id_supply_order_detail]);
-                    
+                    //echo 'foreach cantidad recivida hoy '; 
 
                     if (Validate::isLoadedObject($supply_order_detail) && Validate::isLoadedObject($supply_order))
                     {
-                        //echo "<br>paso la validacion";
+                       echo "<br>paso la validacion";
                         // checks if quantity is valid
                         // It's possible to receive more quantity than expected in case of a shipping error from the supplier
                         if (!Validate::isInt($quantity) || $quantity <= 0) {
@@ -842,7 +847,7 @@ class IcrallCore extends ObjectModel {
 
                             if ($res)
                             {
-                                //echo "<br> entro a adicionar";
+                                echo "<br> entro a adicionar";
                                 $supplier_receipt_history->add();
 
                                 $last_inserted = Db::getInstance()->Insert_ID(); 
@@ -855,14 +860,14 @@ class IcrallCore extends ObjectModel {
 
                                 DB::getInstance()->execute($ins_history);
                                 }
-                                //echo "<br>Antes de guardar detalle orden";
+                                echo "<br>Antes de guardar detalle orden";
                                 $supply_order_detail->save();
-                                //echo "<br>Antes de guardar orden";
+                                echo "<br>Antes de guardar orden";
                                 $supply_order->save();
-                                //echo "<br>Luego de guardar orden.";
+                                echo "<br>Luego de guardar orden.";
                             }
                             else {
-                                //echo "<br> error final";
+                                echo "<br> error final";
                                 $this->errores_cargue[] = "Error 3. ".Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
                                 return false;
                             }
