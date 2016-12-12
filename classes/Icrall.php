@@ -124,7 +124,7 @@ class IcrallCore extends ObjectModel {
         $query_icr_flag = "SELECT id_orden, reference, cod_icr FROM ps_tmp_cargue_icr_salida 
             WHERE flag = 'n'";
 
-        if ($results_icr_flag = Db::getInstance()->Execute($query_icr_flag)) {           
+        if ($results_icr_flag = Db::getInstance()->ExecuteS($query_icr_flag)) {           
 
             $this->errores_cargue[] = "Error de datos en el archivo cargado.";
 
@@ -635,7 +635,7 @@ class IcrallCore extends ObjectModel {
     }
 
 
-
+ 
 
  /**
      * validarProductosOrden valida que los productos enviados correspondan a la orden seleccionada
@@ -716,167 +716,162 @@ class IcrallCore extends ObjectModel {
      * @return string si la actualización es correcta retorna '1' si no retorna '0'
      */
     public function updateIcrProductoOrderEntrada() {
-        //..-echo "<br>9";
+       
         $way = '+';
         $this->status_icr = 2;
-
-            $query = new DbQuery();
-            $query->select(' od.id_supply_order, od.id_supply_order_detail AS suordetail, COUNT(ol.id_product) AS cant ');
-            $query->from('tmp_cargue_entrada_icr', 'ol');
-            $query->innerJoin('supply_order_detail', 'od', ' od.id_product = ol.id_product AND od.id_supply_order = ol.id_orden_suministro ');
-            //$query->where('ol.id_supply_order = '.(int)$this->supply_order);
-            $query->groupBy(' od.id_supply_order_detail ');
-
-
-            $items = Db::getInstance()->execute($query);
         
-            if ($items) {
-                $supply_order_detailBoxI = array();
-                $quantity_received_todayI = array();
-
-                foreach ($items as $item){
-                    //echo "<br>item:".$item['suordetail']." | cantidad:".$item['cant'];
-                    $supply_order_detailBoxI[] = $item['suordetail'];                    
-                    $quantity_received_todayI[$item['suordetail']] = $item['cant'];
-                    $supply_order_arr[$item['suordetail']] = $item['id_supply_order'];
-                    
-                }
-
-                //$supply_order->postProcessUpdateReceipt($supply_order_detailBoxI, $quantity_received_todayI, $this->supply_order, " (".$this->accion_icr.")");                       
+        $query = new DbQuery(); 
+        $query->select(' od.id_supply_order, od.id_supply_order_detail AS suordetail, COUNT(ol.id_product) AS cant ');
+        $query->from('tmp_cargue_entrada_icr', 'ol');
+        $query->innerJoin('supply_order_detail', 'od', ' od.id_product = ol.id_product AND od.id_supply_order = ol.id_orden_suministro ');
+        //$query->where('ol.id_supply_order = '.(int)$this->supply_order);
+        $query->groupBy(' od.id_supply_order_detail ');
+        //print_r($query->__toString());
+        $items = Db::getInstance()->executeS($query);
+         
+        if ($items) {
+            $supply_order_detailBoxI = array();
+            $quantity_received_todayI = array();
             
-
-                Context::getContext()->employee->id = $this->empledado->id;
-                Context::getContext()->employee->firstname = $this->empledado->firstname;
-                Context::getContext()->employee->lastname = $this->empledado->lastname;
-
-                $to_update = $quantity_received_todayI;
-                foreach ($to_update as $id_supply_order_detail => $quantity) {
-                    $last_inserted = '';
-                    $supply_order_detail = new SupplyOrderDetail($id_supply_order_detail);
+            foreach ($items as $item) {
+                // echo "<br>item:".$item['suordetail']." | cantidad:".$item['cant'];
+                $supply_order_detailBoxI[] = $item['suordetail'];                    
+                $quantity_received_todayI[$item['suordetail']] = $item['cant'];
+                $supply_order_arr[$item['suordetail']] = $item['id_supply_order'];
+            }
+                
+            //$supply_order->postProcessUpdateReceipt($supply_order_detailBoxI, $quantity_received_todayI, $this->supply_order, " (".$this->accion_icr.")");                       
+            
+            Context::getContext()->employee->id = $this->empledado->id;
+            Context::getContext()->employee->firstname = $this->empledado->firstname;
+            Context::getContext()->employee->lastname = $this->empledado->lastname;
+            $to_update = $quantity_received_todayI;
+            foreach ($to_update as $id_supply_order_detail => $quantity) {
+                $last_inserted = '';
+                $supply_order_detail = new SupplyOrderDetail($id_supply_order_detail);
+                $supply_order = new SupplyOrder((int)$supply_order_arr[$id_supply_order_detail]);
                     
-                    $supply_order = new SupplyOrder((int)$supply_order_arr[$id_supply_order_detail]);
-                    
+                if (Validate::isLoadedObject($supply_order_detail) 
+                    && Validate::isLoadedObject($supply_order)) {
+                    // checks if quantity is valid
+                    // It's possible to receive more quantity than expected in case of a shipping error from the supplier
+                    if (!Validate::isInt($quantity) || $quantity <= 0) {
+                         //printf('Quantity (%d) for product #%d is not valid', (int)$quantity, (int)$id_supply_order_detail);
+                        $this->errores_cargue[] = "Error 0. Cantidad (".$quantity.") para el producto ".(int)$id_supply_order_detail." no es valida.";
+                        return false;
+                    } else {
+                        // everything is valid :  updates
+                        //$this->employee->id.", '".$this->employee->lastname."', '".$this->employee->firstname." (".$this->accion_icr.")
+                        //echo "<br> creates the history";
+                        $supplier_receipt_history = new SupplyOrderReceiptHistory();
+                        $supplier_receipt_history->id_supply_order_detail = (int)$id_supply_order_detail;
+                        $supplier_receipt_history->id_employee = (int)$this->empledado->id;
+                        $supplier_receipt_history->employee_firstname = pSQL($this->empledado->firstname);
+                        $supplier_receipt_history->employee_lastname = pSQL($this->empledado->lastname);
+                        $supplier_receipt_history->id_supply_order_state = (int)$supply_order->id_supply_order_state;
+                        $supplier_receipt_history->quantity = (int)$quantity;
+                       
+                        // updates quantity received
+                        if ($way == '+') {
+                            $supply_order_detail->quantity_received += (int)$quantity;
+                        } else {
+                            $supply_order_detail->quantity_received -= (int)$quantity;
+                        } 
 
-                    if (Validate::isLoadedObject($supply_order_detail) && Validate::isLoadedObject($supply_order))
-                    {
-                        //echo "<br>paso la validacion";
-                        // checks if quantity is valid
-                        // It's possible to receive more quantity than expected in case of a shipping error from the supplier
-                        if (!Validate::isInt($quantity) || $quantity <= 0) {
-                            //printf('Quantity (%d) for product #%d is not valid', (int)$quantity, (int)$id_supply_order_detail);
-                            $this->errores_cargue[] = "Error 0. Cantidad (".$quantity.") para el producto ".(int)$id_supply_order_detail." no es valida.";
+                        // if current state is "Pending receipt", then we sets it to "Order received in part"
+                        if (3 == $supply_order->id_supply_order_state)
+                            $supply_order->id_supply_order_state = 4;
+
+                        //echo "<br>  Adds to stock";
+                        $warehouse = new Warehouse($supply_order->id_warehouse);
+                        if (!Validate::isLoadedObject($warehouse)) {
+                            //echo "<br> error warehouse";
+                            $this->errores_cargue[] = "Error 1. ".Tools::displayError($this->l('The warehouse could not be loaded.'));
                             return false;
-                        } else // everything is valid :  updates
-                        {
-                            //$this->employee->id.", '".$this->employee->lastname."', '".$this->employee->firstname." (".$this->accion_icr.")
-                            //echo "<br> creates the history";
-                            $supplier_receipt_history = new SupplyOrderReceiptHistory();
-                            $supplier_receipt_history->id_supply_order_detail = (int)$id_supply_order_detail;
-                            $supplier_receipt_history->id_employee = (int)$this->empledado->id;
-                            $supplier_receipt_history->employee_firstname = pSQL($this->empledado->firstname);
-                            $supplier_receipt_history->employee_lastname = pSQL($this->empledado->lastname);
-                            $supplier_receipt_history->id_supply_order_state = (int)$supply_order->id_supply_order_state;
-                            $supplier_receipt_history->quantity = (int)$quantity;
+                        }
+                        
+                        $price = $supply_order_detail->unit_price_te;
+                        // converts the unit price to the warehouse currency if needed
+                        if ($supply_order->id_currency != $warehouse->id_currency) {
+                            //echo "<br> convertir precios";
+                            // first, converts the price to the default currency
+                            $price_converted_to_default_currency = Tools::convertPrice(
+                                    $supply_order_detail->unit_price_te, 
+                                    $supply_order->id_currency, 
+                                    false
+                            );
 
-                            // updates quantity received
-                            if ($way == '+') {
-                                $supply_order_detail->quantity_received += (int)$quantity;
-                            } else {
-                                $supply_order_detail->quantity_received -= (int)$quantity;
-                            } 
+                            // then, converts the newly calculated pri-ce from the default currency to the needed currency
+                            $price = Tools::ps_round(
+                                Tools::convertPrice(
+                                    $price_converted_to_default_currency,
+                                    $warehouse->id_currency,
+                                    true
+                                ),
+                                6
+                            );
+                        }
+                     
+                        $manager = StockManagerFactory::getManager();
+                        $res = $manager->addProduct(
+                            $supply_order_detail->id_product,
+                            $supply_order_detail->id_product_attribute,
+                            $warehouse,
+                            (int)$quantity,
+                            Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'),
+                            $price,
+                            true,
+                            $supply_order->id
+                        );
 
-                            // if current state is "Pending receipt", then we sets it to "Order received in part"
-                            if (3 == $supply_order->id_supply_order_state)
-                                $supply_order->id_supply_order_state = 4;
+                        if (!$res) {
+                            //echo "<br> error res";
+                            $this->errores_cargue[] = "Error 2. ".Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
+                            return false;
+                        }
 
-                            //echo "<br>  Adds to stock";
-                            $warehouse = new Warehouse($supply_order->id_warehouse);
-                            if (!Validate::isLoadedObject($warehouse))
-                            {
-                                //echo "<br> error warehouse";
-                                $this->errores_cargue[] = "Error 1. ".Tools::displayError($this->l('The warehouse could not be loaded.'));
-                                return false;
-                            }
-                            //echo "<br> precio";
-                            $price = $supply_order_detail->unit_price_te;
-                            // converts the unit price to the warehouse currency if needed
-                            if ($supply_order->id_currency != $warehouse->id_currency)
-                            {
-                                //echo "<br> convertir precios";
-                                // first, converts the price to the default currency
-                                $price_converted_to_default_currency = Tools::convertPrice($supply_order_detail->unit_price_te, $supply_order->id_currency, false);
+                        $location = Warehouse::getProductLocation(
+                            $supply_order_detail->id_product,
+                            $supply_order_detail->id_product_attribute,
+                            $warehouse->id
+                        );
 
-                                // then, converts the newly calculated pri-ce from the default currency to the needed currency
-                                $price = Tools::ps_round(Tools::convertPrice($price_converted_to_default_currency,
-                                                                             $warehouse->id_currency,
-                                                                             true),
-                                                         6);
-                            }
-                            //echo "<br> StockManagerFactory_getManager";
-                            $manager = StockManagerFactory::getManager();
-                            //echo "<br> Manager";
+                        $res = Warehouse::setProductlocation(
+                            $supply_order_detail->id_product,
+                            $supply_order_detail->id_product_attribute,
+                            $warehouse->id,
+                            $location ? $location : ''
+                        );
 
-                            $res = $manager->addProduct($supply_order_detail->id_product,
-                                                        $supply_order_detail->id_product_attribute,
-                                                        $warehouse,
-                                                        (int)$quantity,
-                                                        Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'),
-                                                        $price,
-                                                        true,
-                                                        $supply_order->id);
-                            //echo "<br>res";
-                            if (!$res){
-                                //echo "<br> error res";
-                                $this->errores_cargue[] = "Error 2. ".Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
-                                return false;
-                            }
+                        if ($res) {
+                            $supplier_receipt_history->add();
+                            $last_inserted = Db::getInstance()->Insert_ID(); 
 
-                            $location = Warehouse::getProductLocation($supply_order_detail->id_product,
-                                                                      $supply_order_detail->id_product_attribute,
-                                                                      $warehouse->id);
-
-                            $res = Warehouse::setProductlocation($supply_order_detail->id_product,
-                                                                 $supply_order_detail->id_product_attribute,
-                                                                 $warehouse->id,
-                                                                 $location ? $location : '');
-
-                            if ($res)
-                            {
-                                //echo "<br> entro a adicionar";
-                                $supplier_receipt_history->add();
-
-                                $last_inserted = Db::getInstance()->Insert_ID(); 
-
-                                if ($last_inserted != '') {
+                            if ($last_inserted != '') {
                                 $ins_history = "
                                 UPDATE ps_supply_order_receipt_history SET employee_firstname = '".$this->empledado->firstname." (add)'
                                 WHERE id_supply_order_detail = ".(int)$id_supply_order_detail."
                                 AND id_supply_order_receipt_history = ".(int)$last_inserted."";
-
                                 DB::getInstance()->execute($ins_history);
-                                }
-                                //echo "<br>Antes de guardar detalle orden";
-                                $supply_order_detail->save();
-                                //echo "<br>Antes de guardar orden";
-                                $supply_order->save();
-                                //echo "<br>Luego de guardar orden.";
                             }
-                            else {
-                                //echo "<br> error final";
-                                $this->errores_cargue[] = "Error 3. ".Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
-                                return false;
-                            }
+                            
+                            $supply_order_detail->save();
+                            $supply_order->save();
+                        } else {
+                            $this->errores_cargue[] = "Error 3. ".Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
+                            return false;
                         }
-                    } else {
-                        $this->errores_cargue[] = "Error validando el objeto en el stock.";
-                        return false;
                     }
+                } else {
+                    $this->errores_cargue[] = "Error validando el objeto en el stock.";
+                    return false;
                 }
-
-            } else {
-              $this->errores_cargue[] = "Error en el query reduciendo el stock.";
-              return false;
             }
+
+        } else {
+          $this->errores_cargue[] = "Error en el query reduciendo el stock.";
+          return false;
+        }
 
         return true;
     }
