@@ -1,6 +1,5 @@
 {
   "home":[
-    {"src":"https://www.farmalisto.com.co/app/banners/home/gumivit2.jpg", "link":"menu.product({id: 8858})", "target": "self"},
     {"src":"https://www.farmalisto.com.co/app/banners/home/confia.jpg", "link":"", "target": ""}
   ]
 }
