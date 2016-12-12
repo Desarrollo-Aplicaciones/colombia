@@ -727,6 +727,7 @@ class IcrallCore extends ObjectModel {
         //$query->where('ol.id_supply_order = '.(int)$this->supply_order);
         $query->groupBy(' od.id_supply_order_detail ');
         //print_r($query->__toString());
+       
         $items = Db::getInstance()->executeS($query);
          
         if ($items) {
