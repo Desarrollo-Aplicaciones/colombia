@@ -144,6 +144,24 @@ class AppMovilCore extends ObjectModel {
     }
 
 /**
+     *  [TruncateProdsProvNew Trunca la tabla de proveedores_costo]
+     *  @return [bool] [dependiendo del resultado/ejecucion del query]
+     */
+    public function TruncateProdsProvNew() {
+                    
+            $query_insert = "TRUNCATE TABLE ps_proveedores_costo;";
+                    
+            if ( $results = Db::getInstance()->Execute( $query_insert) ) {
+                return true;
+            } else {
+                $this->errores_cargue[] = "No se pudo truncar la tabla productos/proveedores.";
+                return false;
+            }
+
+    }
+    
+    
+    /**
  *  [InsertProdsProvNew Inserta los productos proveedores nuevos en la tabla  de proveedores_costo]
  *  @return [bool] [dependiendo del resultado/ejecucion del query]
  */
@@ -151,10 +169,11 @@ class AppMovilCore extends ObjectModel {
 
             $query_insert = "INSERT INTO ps_proveedores_costo ( id_product, id_supplier, price, date, flag )
                 SELECT tpa.`id_producto`, 
-                tpa.id_proveedor, tpa.PVP, STR_TO_DATE( tpa.Fecha , '%Y-%m-%d' ) , 1 
+                tpa.id_proveedor, tpa.PVP, STR_TO_DATE( tpa.fecha , '%Y-%m-%d' ) , 1 
                 FROM tmp_precios_proveed_app tpa
                 LEFT JOIN ps_proveedores_costo ppc ON ( tpa.`id_producto` = ppc.id_product AND tpa.id_proveedor = ppc.id_supplier )
                 WHERE ppc.id_product is NULL;";
+            //error_log("\n\n Este es el query: ".$query_insert,3,"/tmp/errorcito.log");
 
             if ( $results = Db::getInstance()->Execute( $query_insert) ) {
 
@@ -198,7 +217,6 @@ class AppMovilCore extends ObjectModel {
   */ 
  public function loadprodprovapp($path_file_load_db) {
 
-
         $mysqli_1 = mysqli_init();
         mysqli_options($mysqli_1, MYSQLI_OPT_LOCAL_INFILE, true);
         
@@ -220,6 +238,7 @@ class AppMovilCore extends ObjectModel {
 
             $this->errores_cargue[] = "Conexión fallida: %s\n mensaje error: " . mysqli_connect_error();
             return false;
+            
         }
 
         if (!mysqli_query($mysqli_1, "TRUNCATE TABLE tmp_precios_proveed_app")) {
@@ -229,12 +248,13 @@ class AppMovilCore extends ObjectModel {
 
         $cargadat = "LOAD DATA LOCAL INFILE '" . $path_file_load_db . "'
         INTO TABLE tmp_precios_proveed_app
-        FIELDS TERMINATED BY ';'
+        FIELDS TERMINATED BY ','
         OPTIONALLY ENCLOSED BY '\"' 
-        LINES TERMINATED BY '\\r\\n'
+        LINES TERMINATED BY '\\n'
         IGNORE 1 LINES 
         (id_producto, pvp, id_proveedor, fecha)";
 
+        //error_log("\n\n\n\n query 1111: ".$cargadat,3,"/tmp/errorcito.log");
 
         if (!mysqli_query($mysqli_1, $cargadat)) {
             $this->errores_cargue[] = "Error al subir el archivo (estructura no valida). Mensaje error: " . mysqli_error($mysqli_1);
