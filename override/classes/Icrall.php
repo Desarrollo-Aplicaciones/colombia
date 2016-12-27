@@ -339,7 +339,7 @@ class Icrall extends IcrallCore {
         }
 
         if (!mysqli_query($mysqli_1, "TRUNCATE TABLE `" . _DB_PREFIX_ . "tmp_cargue_icr_devolucion`")) {
-                        $this->errores_cargue[] = "Error al truncar la tabla (`" . _DB_PREFIX_ . "tmp_cargue_icr_devolucion`). Mensaje error: " . mysqli_error($mysqli_1);
+            $this->errores_cargue[] = "Error al truncar la tabla (`" . _DB_PREFIX_ . "tmp_cargue_icr_devolucion`). Mensaje error: " . mysqli_error($mysqli_1);
             return false;
         }
 
@@ -347,20 +347,21 @@ class Icrall extends IcrallCore {
         INTO TABLE ps_tmp_cargue_icr_devolucion
         FIELDS TERMINATED BY ';'
         OPTIONALLY ENCLOSED BY '\"' 
-        LINES TERMINATED BY '\\r\\n'
+        LINES TERMINATED BY '\\n'
         IGNORE 1 LINES 
-        ( cod_icr, estado_icr )";
-
+        ( cod_icr, estado_icr );";
+        
         if (!mysqli_query($mysqli_1, $cargadat)) {
             $this->errores_cargue[] = "Error al subir el archivo (estructura no valida). Mensaje error: " . mysqli_error($mysqli_1);
-          
-           return false;
-        }  else {
+            return false;
+        }
+        else {
             return true;
-            
         }
         return false;
     }
+          
+            
 
 
 
@@ -376,7 +377,7 @@ class Icrall extends IcrallCore {
         $query = 'SELECT COUNT(cod_icr) AS cant, GROUP_CONCAT(DISTINCT(cod_icr)) AS icrs  FROM `' . _DB_PREFIX_ . 'tmp_cargue_icr_devolucion`
             GROUP BY cod_icr
             ORDER BY COUNT(cod_icr) DESC';
-
+        
         if ( $retorno = DB::getInstance()->executeS($query) ) {
             
             if( isset($retorno[0]['cant']) && $retorno[0]['cant'] == 1 ) {
@@ -400,7 +401,9 @@ class Icrall extends IcrallCore {
                             INNER JOIN `" . _DB_PREFIX_ . "icr` i ON ( tcid.cod_icr = i.cod_icr )
                             INNER JOIN `" . _DB_PREFIX_ . "icr_estado` ie ON ( ie.id_estado = i.id_estado_icr )
                             WHERE i.id_estado_icr <> 2 ";
-
+                        
+                        //error_log("\n\n query_estados_icr: ".$query_estados_icr, 3,"/tmp/errorlog.log");
+                        
                         if ($retorno_estados_icr = DB::getInstance()->executeS($query_estados_icr) ) {
 
                             if( isset($retorno_estados_icr[0]['no_creado']) && $retorno_estados_icr[0]['icrs'] == NULL && $retorno_estados_icr[0]['estado_actual'] == NULL ) {
@@ -421,7 +424,7 @@ class Icrall extends IcrallCore {
                                         
                                         // Adicionar con , los nuevos estados admitidos
                                                                                 
-                                        $estados_validos = "'Devolucion'"; //, 'Anulado'
+                                        $estados_validos = "'Devolucion', 'Vencido'"; //, 'Anulado'
 
                                         $query_estados_icr_validos = "SELECT 'Estados' AS Estado_a, 
                                                 GROUP_CONCAT(DISTINCT(tcid.cod_icr)) AS icrs, 
@@ -506,6 +509,8 @@ class Icrall extends IcrallCore {
             INNER JOIN ps_icr_estado ei ON ( tcid.estado_icr = ei.descripcion )
             SET i.id_estado_icr = ei.id_estado
             WHERE i.id_estado_icr = 2";
+        
+        //error_log("\n\n query_upd_fecven_na: ".$query_upd_fecven_na, 3,"/tmp/errorlog.log");
         
         if ($results_icr = Db::getInstance()->Execute($query_upd_fecven_na)) {
             $this->response_extra = Db::getInstance()->Affected_Rows();
