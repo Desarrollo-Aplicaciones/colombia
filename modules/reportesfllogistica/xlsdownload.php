@@ -14,7 +14,7 @@ if (isset($_GET['opc_sel']) ) {
             $time1 = strtotime($input1);
             $time2 = strtotime($input2);
 
-            if ( date($date_format, $time1) == $input1 && date($date_format, $time2) == $input2 && isset($_GET['f_ini']) && $_GET['f_ini'] != '' 
+             if ( date($date_format, $time1) == $input1 && date($date_format, $time2) == $input2 && isset($_GET['f_ini']) && $_GET['f_ini'] != '' 
                 && isset($_GET['f_fin']) && $_GET['f_fin'] != '' ) {
 
                 header("Content-type: text/csv; charset=utf-8");
@@ -37,7 +37,7 @@ if (isset($_GET['opc_sel']) ) {
                         i.cod_icr,
                         tro.nombre,
                         osl.name,
-                        CONCAT( "$ ", REPLACE(sod.unit_price_te,".",",") ) AS costo_icr,
+                        CONCAT( "$ ", REPLACE(sod.price_with_order_discount_te,".",",") / (quantity_expected)) AS costo_icr,
                         ROUND(sod.tax_rate) AS iva_proveedor,
                         ct.date_delivery as Fecha_entrga,
                         ct.time_windows as Hora_entrega,
@@ -64,7 +64,11 @@ if (isset($_GET['opc_sel']) ) {
                     LEFT JOIN ps_employee emp ON(asoc.id_entity = emp.id_employee)
                     WHERE o.date_add BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"
                     ORDER BY ct.date_delivery ,ct.time_delivery,o.date_add ASC';
-
+                    //echo $sql;
+                    //echo"<hr>";
+                    //exit();
+               
+                
                 if ($results = Db::getInstance_slv()->ExecuteS($sql)) {
                     
                     $output = fopen('php://output', 'w');
