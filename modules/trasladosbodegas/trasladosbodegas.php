@@ -29,7 +29,7 @@ class TrasladosBodegas extends Module
         foreach (Language::getLanguages(false) as $lang)
         $tab->name[(int)$lang['id_lang']] = 'Traslados de inventario';
         if (!$tab->save())
-        return $this->_abortInstall($this->l('Imposible crear la pestaña de nuevo'));
+        return $this->displayError('Imposible crear la pestaña de nuevo');
         }
         $query = "CREATE TABLE IF NOT EXISTS `ps_supply_order_icr_history` (
             `id_supply_order_icr_history` INT(11) NOT NULL AUTO_INCREMENT,
@@ -43,7 +43,7 @@ class TrasladosBodegas extends Module
         ENGINE=Aria";
         if(!(Db::getInstance()->Execute($query_icr_duplicado)))
         {
-            return $this->_abortInstall($this->l('Imposible crear la tabla de nuevo'));
+            return $this->displayError('Imposible crear la tabla de nuevo');
         }
 
         Configuration::updateValue('HOME_FEATURED_NBR', 8);
