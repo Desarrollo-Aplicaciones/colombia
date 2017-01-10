@@ -180,7 +180,7 @@ if (isset($_GET['opc_sel']) ) {
                 }
 
                 $sql = 'SELECT so.id_supply_order, sod.reference, sod.`name`, i.cod_icr, REPLACE(sod.unit_price_te ,".",",") unit_price_te, REPLACE(sod.tax_rate ,".",",") tax_rate, w.`name` AS bodega, soi.lote, soi.fecha_vencimiento,
-                        DATE_ADD( soi.fecha ,INTERVAL -5 HOUR ), p.upc
+                        DATE_ADD( soi.fecha ,INTERVAL -5 HOUR ) AS fecha, p.upc
                         FROM ps_supply_order_icr soi
                         INNER JOIN ps_supply_order_detail sod ON ( soi.id_supply_order_detail = sod.id_supply_order_detail)
                         INNER JOIN ps_supply_order so ON ( so.id_supply_order = sod.id_supply_order)
@@ -189,12 +189,16 @@ if (isset($_GET['opc_sel']) ) {
                         INNER JOIN ps_product p ON ( sod.id_product = p.id_product )
                         WHERE DATE_ADD( soi.fecha ,INTERVAL -5 HOUR ) BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"
                         ORDER BY '.$orden_query.' ASC';
+                
+                //echo $sql;
+                //echo"<hr>";
+               // exit();
 
                 if ($results = Db::getInstance_slv()->ExecuteS($sql)) {
 
                     $output = fopen('php://output', 'w');
                     fputcsv( $output, array( "ORDEN_SUMINISTRO", "REFERENCIA", "DESCRIPCION", "ICR", "PRECIO_UNITARIO", "IVA", "BODEGA", "LOTE", "FECHA_VENCIMIENTO", "REGISTRO_SANITARIO", "FECHA_INGRESO" ) ) ;
-
+                    
                     /*echo "<table>
                             <tr>     
                                 <td> ORDEN_SUMINISTRO </td>
@@ -226,7 +230,7 @@ if (isset($_GET['opc_sel']) ) {
                                 <td> ".utf8_decode($dat_print['fecha'])." </td>
                             </tr>";*/
                         fputcsv( $output, array( utf8_decode($dat_print['id_supply_order']), utf8_decode($dat_print['reference']), utf8_decode($dat_print['name']), utf8_decode($dat_print['cod_icr']), utf8_decode($dat_print['unit_price_te']), utf8_decode($dat_print['tax_rate']), utf8_decode($dat_print['bodega']), utf8_decode($dat_print['lote']), utf8_decode($dat_print['fecha_vencimiento']), utf8_decode($dat_print['upc']), utf8_decode($dat_print['fecha']) ) ) ;
-
+                    
                     }
 
                     /*echo "</table>";*/
