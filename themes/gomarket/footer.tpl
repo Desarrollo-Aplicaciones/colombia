@@ -529,6 +529,7 @@ window.onload = init;
 <script type="text/javascript">
 window.__lc = window.__lc || {};
 window.__lc.license = 6077601;
+window.__lc.chat_between_groups = false;
 (function() {
  var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
  lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
