@@ -41,12 +41,10 @@ class TrasladosBodegas extends Module
         )
         DEFAULT CHARSET=utf8
         ENGINE=Aria";
-        if(!(Db::getInstance()->Execute($query_icr_duplicado)))
+        if(!(Db::getInstance()->Execute($query)))
         {
             return $this->displayError('Imposible crear la tabla de nuevo');
         }
-
-        Configuration::updateValue('HOME_FEATURED_NBR', 8);
 
         if (!parent::install()) {   
             return false;
