@@ -23,7 +23,6 @@ if (isset($_GET['opc_sel']) ) {
 
                 $sql = 'SELECT
                         o.id_order,
-                        o.payment,
                         o.invoice_number,
                         CONCAT(c.firstname, " ", c.lastname) AS cliente,
                         a.address1,
