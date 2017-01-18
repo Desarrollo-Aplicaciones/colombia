@@ -38,7 +38,7 @@ if (isset($_GET['opc_sel']) ) {
                         tro.nombre,
                         osl.name,
                         CONCAT( "$ ", REPLACE(sod.price_with_order_discount_te,".",",") / (quantity_expected)) AS costo_icr,
-                        soi.id_supply_order_icr,
+                        sod.id_supply_order,
                         ROUND(sod.tax_rate) AS iva_proveedor,
                         ct.date_delivery as Fecha_entrga,
                         ct.time_windows as Hora_entrega,
@@ -126,7 +126,7 @@ if (isset($_GET['opc_sel']) ) {
                                     </tr>
                                 ";*/
 
-                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['product_quantity'], $dat_print['cod_icr'], utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order_icr'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'] ));
+                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['product_quantity'], $dat_print['cod_icr'], utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'] ));
 
                             }
                     //echo "</table>";
