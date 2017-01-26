@@ -7,6 +7,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		$order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
 	{
 
+            $porcen_simil = Configuration::get('SEARCH_PORCENT_SIMILITUD');
+            
 		if (!$context)
 			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
@@ -46,7 +48,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				if ($word[0] != '-') {
 					$cant_words++;
 					$sum_words_fibo += $cant_words;
-					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= 70 ";
+					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= ".$porcen_simil." ";
 					$listword .= $word.';';				
 					
 					if ($cant_words == 1 && is_numeric($word) && strlen($word) >= 5 ) { // si la palabra que busco es la primera palabra y es numérica
@@ -95,7 +97,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 													UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra
 					 		) pepe
  						) tw 
-					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )
+					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= ".$porcen_simil." )
 				GROUP BY si.id_product 
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
@@ -263,7 +265,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 													UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra
 					 		) pepe
  						) tw 
-					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )
+					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= ".$porcen_simil." )
 				GROUP BY si.id_product 
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
@@ -377,6 +379,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 	public static function findWsMobile($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
 	$order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
 	{
+            $porcen_simil = Configuration::get('SEARCH_PORCENT_SIMILITUD');
 		if (!$context)
 			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
@@ -404,7 +407,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 			if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN'))
 			{
 				if ($word[0] != '-')
-					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= 70 ";
+					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= ".$porcen_simil." ";
 				
 				
 			}
@@ -582,7 +585,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 	public static function findApp($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
 	$order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
 	{
-
+            $porcen_simil = Configuration::get('SEARCH_PORCENT_SIMILITUD');
+            
 		if (!$context)
 			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
@@ -622,7 +626,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				if ($word[0] != '-') {
 					$cant_words++;
 					$sum_words_fibo += $cant_words;
-					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= 70 ";
+					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= ".$porcen_simil." ";
 					$listword .= $word.';';				
 					
 					if ($cant_words == 1 && is_numeric($word) && strlen($word) >= 5 ) { // si la palabra que busco es la primera palabra y es numérica
@@ -671,7 +675,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 													UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra
 					 		) pepe
  						) tw 
-					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )
+					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= ".$porcen_simil." )
 				GROUP BY si.id_product 
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
@@ -837,7 +841,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 													UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra
 					 		) pepe
  						) tw 
-					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )
+					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= ".$porcen_simil." )
 				GROUP BY si.id_product 
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
