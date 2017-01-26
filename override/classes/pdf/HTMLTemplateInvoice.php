@@ -468,10 +468,9 @@ $array_ivas = array();
 
 
 
-
-if (  $this->order->total_shipping != '0.00' ||  $this->order->total_shipping_tax_incl != '0.00' ) {
-    
-                    $iva_envio_orden = Configuration::get('IVA_ENVIO_ORDEN');
+                $iva_envio_orden = Configuration::get('IVA_ENVIO_ORDEN');
+                
+                if (  $this->order->total_shipping != '0.00' ||  $this->order->total_shipping_tax_incl != '0.00' ) {                    
                     
                     if ( !isset( $array_ivas[ $iva_envio_orden ] ) ) {
                         $array_ivas[ $iva_envio_orden ] = 0;
@@ -544,7 +543,8 @@ exit();*/
             'apoyosalud'=> $cupon,
             'ivas' => $array_ivas,
             'formu_medical'=>$formu_medical,
-            'note' => $note
+            'note' => $note,
+            'iva_envio' => $iva_envio_orden
         ));
 
         return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));

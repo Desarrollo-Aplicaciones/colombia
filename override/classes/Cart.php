@@ -277,10 +277,10 @@ class Cart extends CartCore {
 			$producto_rx3 = false; //Inicializo la variable en falso, para usarla de banderita. :)
 
 			foreach (Context::getContext()->cart->_products as $key => $productico) {
-				$val_total += $productico['total_wt']; //valor total de la compra sin impuestos
-				if ((stripos($productico['name'], "rx3")) !== false){
-                		$producto_rx3 = true;
-                	}
+                            $val_total += $productico['total_wt']; //valor total de la compra sin impuestos
+                            if ((stripos($productico['name'], "rx3")) !== false){
+                                $producto_rx3 = true;
+                            }
 			}
 			
                         $iva_envio_orden = Configuration::get('IVA_ENVIO_ORDEN');
