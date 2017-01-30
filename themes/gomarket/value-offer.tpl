@@ -9,7 +9,7 @@
 					<img class="img-exp" src="{$img_dir}pedidos.jpg" id="img-exp-box">
 				</div>
 				<div class="ctn-exp-number">
-					<span class="number-exp" data-type-num="int">59164</span>
+					<span class="number-exp" data-type-num="int">84266</span>
 				</div>				
 			</div>
 			<div class="ctn-exp-inf">
@@ -23,7 +23,7 @@
 					<img class="img-exp2" src="{$img_dir}calificacion.jpg" id="img-exp-stars">
 				</div>
 				<div class="ctn-exp-number">
-					<span class="number-exp" data-type-num="float">4.4</span>
+					<span class="number-exp" data-type-num="float">4.3</span>
 				</div>				
 			</div>
 			<div class="ctn-exp-inf">
@@ -37,7 +37,7 @@
 					<img class="img-exp" src="{$img_dir}colombia.jpg" id="img-exp-map">
 				</div>
 				<div class="ctn-exp-number">
-					<span class="number-exp" data-type-num="float">2.5</span>
+					<span class="number-exp" data-type-num="float">3</span>
 				</div>				
 			</div>
 			<div class="ctn-exp-inf">
@@ -51,7 +51,7 @@
 					<img class="img-exp2" src="{$img_dir}feliz.jpg" id="img-exp-eyes">
 				</div>
 				<div class="ctn-exp-number">
-					<span class="number-exp" data-type-num="int">67322</span>
+					<span class="number-exp" data-type-num="int">94470</span>
 				</div>				
 			</div>
 			<div class="ctn-exp-inf">
