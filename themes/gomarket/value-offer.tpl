@@ -30,6 +30,7 @@
 				<span class="text-exp">Calificación media</span>
 			</div>
 		</div>
+                                
 
 		<div class="ctn-exp">
 			<div class="ctn-exp-sup">
