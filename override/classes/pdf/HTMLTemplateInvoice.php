@@ -468,21 +468,22 @@ $array_ivas = array();
 
 
 
-
-if (  $this->order->total_shipping != '0.00' ||  $this->order->total_shipping_tax_incl != '0.00' ) {
-
-                    if ( !isset( $array_ivas['16'] ) ) {
-                        $array_ivas['16'] = 0;
+                $iva_envio_orden = Configuration::get('IVA_ENVIO_ORDEN');
+                
+                if (  $this->order->total_shipping != '0.00' ||  $this->order->total_shipping_tax_incl != '0.00' ) {                    
+                    
+                    if ( !isset( $array_ivas[ $iva_envio_orden ] ) ) {
+                        $array_ivas[ $iva_envio_orden ] = 0;
                     }
 
                     //////echo "<br> valor final envio: ".  $this->order->total_shipping;
                     //////echo "<br> - valor sin iva envio: ". 
-                    $val_no_iva_envio =  number_format(  $this->order->total_shipping / 1.16 ,3, '.', '');
+                    $val_no_iva_envio =  number_format(  $this->order->total_shipping / (1 + ($iva_envio_orden / 100) ) ,3, '.', '');
 
                     //////echo "<br> - iva envio: ". 
                     $val_iva_envio_act = /* number_format( ( */ $this->order->total_shipping  - $val_no_iva_envio/*) ,2, '.', '')*/;
 
-                    $array_ivas['16'] += number_format( $val_iva_envio_act ,2, '.', '');
+                    $array_ivas[ $iva_envio_orden ] += number_format( $val_iva_envio_act ,2, '.', '');
 
                     //////echo "<br> val anterior de iva :". /*number_format( */$val_total_de_iva /*,2, '.', '')*/;
 
@@ -542,7 +543,8 @@ exit();*/
             'apoyosalud'=> $cupon,
             'ivas' => $array_ivas,
             'formu_medical'=>$formu_medical,
-            'note' => $note
+            'note' => $note,
+            'iva_envio' => $iva_envio_orden
         ));
 
         return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));

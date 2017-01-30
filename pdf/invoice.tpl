@@ -119,7 +119,7 @@
 		{*  INICIO  MODIFICACION UBICACION Y COSTO ENVIO   *}
 
 		{if $order_invoice->total_shipping_tax_incl > 0}			
-					{assign var="shipping_discount_tax_excl" value=($order_invoice->total_shipping_tax_incl/1.16)}
+					{assign var="shipping_discount_tax_excl" value=($order_invoice->total_shipping_tax_incl/ ( 1 + ($iva_envio/100) ) )}
 		{/if}
 
 		{*  FIN  MODIFICACION UBICACION Y COSTO ENVIO   *}

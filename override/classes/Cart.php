@@ -163,8 +163,8 @@ class Cart extends CartCore {
                 	}
                 }
             }
-
-			$valtot_tax = (round( (round($val_total*1.16)/100) *2 , 0)/ 2 ) * 100; //valor con impuesto 16% y redondeado
+                        $iva_envio_orden = Configuration::get('IVA_ENVIO_ORDEN');
+			$valtot_tax = (round( (round($val_total* ( 1 + ( $iva_envio_orden / 100 ) ) )/100) *2 , 0)/ 2 ) * 100; //valor con impuesto 16% y redondeado
 
 			if ( $val_total > $resultado[0]['delimiter2']) { // si total de compra es mayor al valor para no cobrar envio
 				$val=0;
@@ -277,13 +277,14 @@ class Cart extends CartCore {
 			$producto_rx3 = false; //Inicializo la variable en falso, para usarla de banderita. :)
 
 			foreach (Context::getContext()->cart->_products as $key => $productico) {
-				$val_total += $productico['total_wt']; //valor total de la compra sin impuestos
-				if ((stripos($productico['name'], "rx3")) !== false){
-                		$producto_rx3 = true;
-                	}
+                            $val_total += $productico['total_wt']; //valor total de la compra sin impuestos
+                            if ((stripos($productico['name'], "rx3")) !== false){
+                                $producto_rx3 = true;
+                            }
 			}
 			
-			$valtot_tax = (round( (round($val_total*1.16)/100) *2 , 0)/ 2 ) * 100; //valor con impuesto 16% y redondeado
+                        $iva_envio_orden = Configuration::get('IVA_ENVIO_ORDEN');
+			$valtot_tax = (round( (round($val_total* ( 1 + ($iva_envio_orden/100) ) )/100) *2 , 0)/ 2 ) * 100; //valor con impuesto 16% y redondeado
 
 			if ( $val_total > $resultado[0]['delimiter2']) { // si total de compra es mayor al valor para no cobrar envio
 				$shipping_cost=0;
