@@ -1121,7 +1121,7 @@ public function postProcess()
                 $query_update_employee  = "UPDATE ps_cart
                     SET id_employee = ".(int)Context::getContext()->cookie->id_employee."
                     WHERE id_cart = ".(int)$id_cart;
-                    echo $query_update_employee;
+                    //echo $query_update_employee;
 
                 if ( Db::getInstance()->Execute($query_update_employee) ){
                     //echo "<br> actu emploooo";
