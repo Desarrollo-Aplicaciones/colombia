@@ -44,10 +44,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
 		$this->_select = '
 		a.id_currency,
 		a.id_order AS `id_pdf`,
-	    oi.number AS `factura`,
-	    a.total_paid_tax_incl AS `a.total_paid_tax_incl`,
+                oi.number AS `factura`,
+                a.total_paid_tax_incl AS `a.total_paid_tax_incl`,
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
-		osl.`name` AS `osname`,
+                CONCAT(osl.`name`, " ", a.complemento_estado) AS osname,
 		os.`color`,
 		ot.`extras` AS `extras`,
 		ad.city as city_delivery,
@@ -1136,13 +1136,11 @@ public function postProcess()
                         $cod_pagar = Tools::getValue('cod_pagar');
                         $private_message = stripslashes (Tools::getValue('private_message'));
                         
-                        
-                        
                         if($payment_module->validateOrder(
                             (int)$cart->id, (int)$id_order_state,
                             $cart->getOrderTotal(true, Cart::BOTH), !empty($cod_pagar) ? $cod_pagar : $payment_module->displayName, $this->l('Manual order -- Employee:').
-                            substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key, null, $private_message
-                        ) && Tools::isSubmit('express'))
+                            substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key, null, $private_message 
+                        ) && Tools::isSubmit('express'))                 
                         { 
                             $sql = "SELECT id_ps_orders_transporte FROM ps_orders_transporte WHERE id_order = $payment_module->currentOrder";
                             $sql2=0;
@@ -1668,109 +1666,117 @@ return $array;
     return false;
    }
 
-   /**
+    public static function complemento_estado($id_profile)
+    {
+        $complement = Profile::getProfile ($id_profile); 
+        $estado= Configuration::get('ps_complemento_estado'); 
+        $array = explode( ",", $estado); 
+        
+        foreach ($array as $key => $value) {
+            //echo "<br>---".$complement['name']. "_-".$value;
+            if (strpos(strtolower($complement['name']),strtolower( $value)) !== FALSE) {
+                return $value;
+            }
+        }
+        return ('');        
+    }
+      /**
      * Validación de condiciones 
      */ 
-  protected function validate_conditions($row2){
-   			$array_errors = array();
+    protected function validate_conditions($row2)
+    {
+        $array_errors = array();
 
-	  		// Lista de validaciones 
-	  		$array['conditions'] =  json_decode($row2['conditions'],true);
-	  		foreach ($array['conditions'] as $condition ) {
-	  			// valida condiciones del estado actual utilizando los métodos disponibles
-	  			if(isset($array['conditions']['methods']) && !empty($array['conditions']['methods'])){
-	  				foreach ($array['conditions']['methods'] as $method => $options) { 
-	  					if($this->validate_condition($method,$options,'method')){ 
-	  						$array_errors[]= array('class'=>$options['class'],'message'=>$options['message'],'locations'=>$options['locations'],"control_vars"=>$options['control_vars']);
-	  					}
+        // Lista de validaciones 
+        $array['conditions'] =  json_decode($row2['conditions'],true);
+        foreach ($array['conditions'] as $condition ) {
+            // valida condiciones del estado actual utilizando los métodos disponibles
+            if(isset($array['conditions']['methods']) && !empty($array['conditions']['methods'])){
+                foreach ($array['conditions']['methods'] as $method => $options) { 
+                    if($this->validate_condition($method,$options,'method')){ 
+                        $array_errors[]= array('class'=>$options['class'],'message'=>$options['message'],'locations'=>$options['locations'],"control_vars"=>$options['control_vars']);
+                    }
+                }
+            }
+        }
+                    // valida condiciones del estado actual utilizando los atributos disponibles
+                    /* if(isset($array['conditions']['attributes']) && !empty($array['conditions']['attributes'])){
+                        foreach ($array['conditions']['attributes'] as $attribute =>  $options) {
+                            if($this->validate_conditions->validate_condition($method,$options,'attribute')){ 
+                                $array_errors[]= array('class'=>$options['class'],'message'=>$options['message'],'locations'=>$options['locations'],"control_vars"=>$options['control_vars']);
+                            }
+                        }
+                    }*/
 
-	  					}
-	  				}
-	  			}
-	  			// valida condiciones del estado actual utilizando los atributos disponibles
-/*	  			if(isset($array['conditions']['attributes']) && !empty($array['conditions']['attributes'])){
-	  				foreach ($array['conditions']['attributes'] as $attribute =>  $options) {
-	  					if($this->validate_conditions->validate_condition($method,$options,'attribute')){ 
-	  						$array_errors[]= array('class'=>$options['class'],'message'=>$options['message'],'locations'=>$options['locations'],"control_vars"=>$options['control_vars']);
-	  					}
-	  				}
-	  			}*/
- 
-  		return $array_errors;
-	}
+        return $array_errors;
+    }
      /**
       * Valida una condición asociada a estado de orden 
       */
-	protected function validate_condition($property,$options,$option)
-          {
-			 if(isset($property) && isset($option) && !empty($property) && !empty($option))
-			   {
-				   	if($option === 'method'){
-				   		//exit('return:<pre>'.print_r($options['return'],true));
-				   		if($options['return'] == call_user_func_array(array($this, $property), $options['parameters'])){
-				   			return true; // Si el valor retornado por el método es igual al valor de la restricción 
-				   		}
-				   		else{
-				   			return false;
-				   		}
-				   	}
-				   	elseif($option === 'attribute'){
+    protected function validate_condition($property,$options,$option)
+    {
+        if(isset($property) && isset($option) && !empty($property) && !empty($option)) {
+            if($option === 'method'){
+                //exit('return:<pre>'.print_r($options['return'],true));
+                if($options['return'] == call_user_func_array(array($this, $property), $options['parameters'])) {
+                    return true; // Si el valor retornado por el método es igual al valor de la restricción 
+                } else {
+                    return false;
+                }
+            }
+            elseif($option === 'attribute') {
+            }   
+        }
 
-				   	}
-				  }
-
-				   if(isset($array_conditions['parameters'])){
-				   	foreach ($array_conditions['parameters'] as $key) {
-				   		
-				   	}
-				   }
-
-				   	foreach ($results as $key) {
-				   		if(!$key) // si alguna de las condiciones no es verdadera 
-				   		return false;	
-				   	}
-				   return true; // si todas las condiciones son verdaderas              
-    		}
+        if(isset($array_conditions['parameters'])) {
+            foreach ($array_conditions['parameters'] as $key) {
+            }
+        }
+        foreach ($results as $key) {
+            if(!$key) // si alguna de las condiciones no es verdadera 
+                return false;	
+        }
+            return true; // si todas las condiciones son verdaderas              
+    }
 
    /**
      * valida si una orden tiene asociado un mensajero de envió o una empresa transportadora
      */  
-   protected function is_sassociate_carrier_order($id_order = NULL){ 
+    protected function is_sassociate_carrier_order($id_order = NULL)
+    { 
    
-   		if($id_order == NULL){
-   			$id_order = $this->id_object;
-   		}
+        if($id_order == NULL) {
+            $id_order = $this->id_object;
+   	}
        	$query="SELECT asoc.id_associate_carrier, ordenes.id_order,asoc.entity, asoc.id_entity
 				FROM ps_orders ordenes
 				INNER JOIN ps_associate_carrier asoc ON (ordenes.id_order = asoc.id_order)
 				WHERE asoc.id_order = ".(int)$id_order;
-     	if ($results = Db::getInstance()->ExecuteS($query)){
-     		if(isset($results) && !empty($results[0]['id_associate_carrier']) && $results[0]['id_order'] == (int)$id_order){
-     			return true; // solo si la orden tiene un mensajero asociado
-     	}
-
-     }
-     return false; // en cualquier otro caso se retorna falso.
-   }
+     	if ($results = Db::getInstance()->ExecuteS($query)) {
+            if(isset($results) && !empty($results[0]['id_associate_carrier']) && $results[0]['id_order'] == (int)$id_order) {
+                return true; // solo si la orden tiene un mensajero asociado
+            }
+        }
+        return false; // en cualquier otro caso se retorna falso.
+    }
    
    /*
 	Valida si una orden de salida tiene todos los ICRS asociados. 
    */
-   public  function ordenCompleta($id_order = NULL){
-
-   	if($id_order == NULL){
-   		$id_order = $this->id_object;
+    public  function ordenCompleta($id_order = NULL)
+    {
+        if($id_order == NULL){
+            $id_order = $this->id_object;
    	}
     
-    $query="SELECT 'NO' in
-
-			(SELECT if(t1.car_cantidad=t2.ord_total,'SI','NO') as completo
+        $query="SELECT 'NO' in
+                        (SELECT if(t1.car_cantidad=t2.ord_total,'SI','NO') as completo
 			FROM
-				(SELECT order_d.product_id ord_product_id,order_d.product_quantity ord_total  FROM ps_orders orders
-					INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
-					WHERE order_d.id_order =".$id_order." and order_d.id_order> 1813) as t2
+                            (SELECT order_d.product_id ord_product_id,order_d.product_quantity ord_total  FROM ps_orders orders
+                                INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
+				WHERE order_d.id_order =".$id_order." and order_d.id_order> 1813) as t2
 
-			LEFT JOIN
+			    LEFT JOIN
 				(SELECT  s_order_d.id_product car_id_product, COUNT(s_order_d.id_product) as car_cantidad
 					FROM ps_orders orders 
 					INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
@@ -1780,110 +1786,105 @@ return $array;
 					INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
 					WHERE icr.id_estado_icr=3 and orders.id_order=".$id_order." and orders.id_order>1813
 					GROUP BY s_order_d.id_product) as t1
-
-			ON(t1.car_id_product=t2.ord_product_id)) as incompleta";
-          if ($results = Db::getInstance()->ExecuteS($query)){
-          if($results[0]['incompleta']==0)
-         return true;
+                                        ON(t1.car_id_product=t2.ord_product_id)) as incompleta";
+        
+        if ($results = Db::getInstance()->ExecuteS($query)) {
+            if($results[0]['incompleta']==0)
+                return true;
         }  
         
-  return false;    
+        return false;    
 
-}
-
-public function transportista($order)
-{ 
-  
-    if(isset($order)&&  $order->module==='cashondelivery'  ){
-        $query = " SELECT nombre,`value`FROM
-					ps_transporte_opciones; ";
-       if ($results = Db::getInstance()->ExecuteS($query)){
-           foreach ($results as $valores) {
-               $opciones_transportador[$valores['value']]=$valores['nombre'];
-           }
-        	$this->context->smarty->assign(array('opciones_transportador'=>$opciones_transportador));
-        }    
-            $this->context->smarty->assign(array('opcion_transportador'=>TRUE));
-    } else {
-    	$this->context->smarty->assign(array('opcion_transportador'=>FALSE));
     }
-}
+    
+    public function transportista($order)
+    { 
+  
+        if(isset($order)&&  $order->module==='cashondelivery'  ) { 
+            $query = " SELECT nombre,`value`FROM
+                            ps_transporte_opciones; ";
+            if ($results = Db::getInstance()->ExecuteS($query)) {
+                foreach ($results as $valores) {
+                    $opciones_transportador[$valores['value']]=$valores['nombre'];
+                }
+        	$this->context->smarty->assign(array('opciones_transportador'=>$opciones_transportador));
+            }    
+            $this->context->smarty->assign(array('opcion_transportador'=>TRUE));
+        } else {
+    	$this->context->smarty->assign(array('opcion_transportador'=>FALSE));
+        }
+    }   
 /*
  * Almacena la opción de COD Farmalisto
  */
-
-public function opcionTransportista($request)
-{   //exit(json_encode(array('result'=>$request)));
-    if($this->is_sassociate_carrier_order())
-       {        
-       		$query=" UPDATE `ps_associate_carrier` SET  `entity`='".ucwords($request['entity'])."', `propertis_entity`='{}', `id_entity`=".(int)$request['id_entity'].", `id_employee`=".$this->context->cookie->{'id_employee'}.", date_update='".date('Y-m-d H:i:s')."', `id_shop`='1' WHERE (`id_order`=".(int)$this->id_object.");";
-           // exit(json_encode(array('results' => $query)));
-            if ($results = Db::getInstance()->Execute($query)){
-            	$this->add_sassociate_carrier_history();
-               return true;
-           }
-       }
-
- else {
-   
-          // Insert
-		$query="INSERT INTO `ps_associate_carrier` (`entity`, `id_entity`,  `id_order`,  `date`, `id_shop`,`id_employee`) VALUES ('".$request['entity']."', ".$request['id_entity'].", ".(int)$this->id_object.", '".date('Y-m-d H:i:s')."', '1', ".$this->context->cookie->{'id_employee'}.");"; 
-  			//exit(json_encode(array('results' => $query)));
-   		if ($results = Db::getInstance()->ExecuteS($query)){
-   			$this->add_sassociate_carrier_history();
+    public function opcionTransportista($request)
+    {   //exit(json_encode(array('result'=>$request)));
+        if($this->is_sassociate_carrier_order()) {        
+            $query=" UPDATE `ps_associate_carrier` SET  `entity`='".ucwords($request['entity'])."', `propertis_entity`='{}', `id_entity`=".(int)$request['id_entity'].", `id_employee`=".$this->context->cookie->{'id_employee'}.", date_update='".date('Y-m-d H:i:s')."', `id_shop`='1' WHERE (`id_order`=".(int)$this->id_object.");";
+                // exit(json_encode(array('results' => $query)));
+            if ($results = Db::getInstance()->Execute($query)) {
+                $this->add_sassociate_carrier_history();
+                return true;
+            }
+        } else {
+            // Insert
+            $query="INSERT INTO `ps_associate_carrier` (`entity`, `id_entity`,  `id_order`,  `date`, `id_shop`,`id_employee`) VALUES ('".$request['entity']."', ".$request['id_entity'].", ".(int)$this->id_object.", '".date('Y-m-d H:i:s')."', '1', ".$this->context->cookie->{'id_employee'}.");"; 
+            //exit(json_encode(array('results' => $query)));
+            
+            if ($results = Db::getInstance()->ExecuteS($query)) {
+                $this->add_sassociate_carrier_history();
        		return true;
-       
-   		}
+            }
    	}
    	return false;
-}
+    }
 
-protected function get_sassociate_carrier_order(){
-		$sql="SELECT  ascar.* FROM
+    protected function get_sassociate_carrier_order()
+    {
+        $sql="SELECT  ascar.* FROM
 				"._DB_PREFIX_."associate_carrier ascar
 				INNER JOIN "._DB_PREFIX_."orders ordenes ON (ascar.id_order = ordenes.id_order) 
 				WHERE ascar.id_order = ".$this->id;
-	}
+    }
 
-	protected function add_sassociate_carrier_history(){
-		$sql = "INSERT INTO `ps_sassociate_carrier_history` (`id_employee`, `id_order`, `log`, `date`) VALUES (".$this->context->cookie->{'id_employee'}.", ".(int)$this->id_object.", '', '".date('Y-m-d H:i:s')."');";
-		//exit(json_encode(array('results' => $sql)));
-		if ($results = Db::getInstance()->ExecuteS($sql)){
-       		return true;
-       
-   		}
-	}
+    protected function add_sassociate_carrier_history()
+    {
+        $sql = "INSERT INTO `ps_sassociate_carrier_history` (`id_employee`, `id_order`, `log`, `date`) VALUES (".$this->context->cookie->{'id_employee'}.", ".(int)$this->id_object.", '', '".date('Y-m-d H:i:s')."');";
+        //exit(json_encode(array('results' => $sql)));
+	if ($results = Db::getInstance()->ExecuteS($sql)) {
+            return true;
+        }
+    }
 
-protected function add_smarty_vars($ps_conf_var = NULL, $smarty_var, $order = NULL){
+    protected function add_smarty_vars($ps_conf_var = NULL, $smarty_var, $order = NULL)
+    {
+        if((isset($this->{'object'}) || !empty($order)) && $ps_conf_var != NULL) {
+            $current_state = 0;
+            if(isset($this->{'object'}->current_state)) {
+		$current_state = (int)$this->{'object'}->current_state;
+	    } else {
+                $current_state = (int)$order->current_state;
+            }
+            $sql = "SELECT confdes.`name` 
+			FROM ps_configuration confdes
+                        INNER JOIN ps_conf_status detino ON (confdes.`name` = detino.`name`)
+                        INNER JOIN ps_status_options opciones ON (detino.id_conf_status = opciones.id_option_status)
+                        INNER JOIN ps_conf_status origen ON (opciones.id_conf_status = origen.id_conf_status)
+                        INNER JOIN ps_configuration confori ON (origen.`name` = confori.`name`)
+                        INNER JOIN ps_order_state_lang estado ON (confdes.`value` = estado.id_order_state)
+                        WHERE confori.`value` = ".$current_state." AND confdes.`name` = '".$ps_conf_var."';";
 
-	if((isset($this->{'object'}) || !empty($order)) && $ps_conf_var != NULL){
-		$current_state = 0;
-		if(isset($this->{'object'}->current_state)){
-			$current_state = (int)$this->{'object'}->current_state;
-		}else{
-			$current_state = (int)$order->current_state;
+            $result = Db::getInstance()->getValue($sql);
+            if(!empty($result) && $result == $ps_conf_var && !empty($smarty_var)) {
+		if(is_array($smarty_var)) {
+                    foreach ($smarty_var as $key => $value) {
+                        $this->extra_vars_tpl[$key] = $value;  
+                    }
+		} else {
+                    $this->extra_vars_tpl[trim($smarty_var)] = TRUE;  
 		}
-			$sql = "SELECT 				confdes.`name` 
-							FROM ps_configuration confdes
-							INNER JOIN ps_conf_status detino ON (confdes.`name` = detino.`name`)
-							INNER JOIN ps_status_options opciones ON (detino.id_conf_status = opciones.id_option_status)
-							INNER JOIN ps_conf_status origen ON (opciones.id_conf_status = origen.id_conf_status)
-							INNER JOIN ps_configuration confori ON (origen.`name` = confori.`name`)
-							INNER JOIN ps_order_state_lang estado ON (confdes.`value` = estado.id_order_state)
-							WHERE confori.`value` = ".$current_state." AND confdes.`name` = '".$ps_conf_var."';";
-
-			$result = Db::getInstance()->getValue($sql);
-			if(!empty($result) && $result == $ps_conf_var && !empty($smarty_var)){
-				if(is_array($smarty_var)){
-					foreach ($smarty_var as $key => $value) {
-						$this->extra_vars_tpl[$key] = $value;  
-					}
-				}else{
-					$this->extra_vars_tpl[trim($smarty_var)] = TRUE;  
-				}
-				
-			}
-		}else{
+            }
+	} else {
 
 			if(is_array($smarty_var)){
 				foreach ($smarty_var as $key => $value) {
@@ -2155,7 +2156,7 @@ protected function add_smarty_vars($ps_conf_var = NULL, $smarty_var, $order = NU
     	if (isset($employee_name) && !empty($employee_name)) {
             $this->extra_vars_tpl['employee_name'] = $employee_name; 
             //echo '<br><br>ENTRA 1<br><br>';   
-            
+           
         }
     }
 }
