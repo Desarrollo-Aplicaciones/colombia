@@ -164,8 +164,28 @@ function addcartlightbox( element ) {
 	{/foreach}
 	</ul>
 	<!-- /Products list -->
-	 <div class="cclearfix" style="float:left;font-size: 7pt;padding: 0 0px 20px 0;text-align: justify;"> 
-	 Bienvenido a Farmalisto, tu droguería online, encontrarás productos de farmacia, salud, nutrición, cuidado personal y para la familia. Compra y haz tus pedidos fácilmente, servicio a domicilio en Bogotá, Antioquia, Valle del Cauca, Atlántico, Santander, Norte de Santander, Tolima, Risaralda, Magdalena, Córdoba, Caldas, Nariño, Cauca, Meta, Quindío, Cesar, Huila, Sucre, Boyacá, Cundinamarca, Casanare, La Guajira, Arauca, Caquetá, Putumayo, Zipaquirá, Chía, Cota, Mosquera, Funza, Siberia, La Calera, Soacha, Sibaté, Cali, Medellín, Barranquilla, Bucaramanga, Santa Marta, Cartagena, Montería y demás ciudades y pueblos de Colombia, realizamos despachos a domicilio de tus medicamentos a las fronteras con Venezuela y Ecuador, garantizamos el mejor precio. Acá te decimos para qué sirve. A través de farmalisto puedes comprar con diversos medios de pago, tarjeta débito, tarjeta de crédito, baloto, cuenta de ahorros, efectivo, te brindamos seguridad en cada una de tus transacciones a través de nuestro sistema Symantec Powered by verisign un completo sistema de seguridad en tus compras. Puedes llamarnos a nuestra línea de atención y televentas en Bogotá al 2205249 y Nacionalmente en el 01800 9133830. No más filas, con nosotros ya no tendrás que hacer filas al salir de tu médico, IPS o EPS, simplemente compras online y hasta puedes pagar en casa, simple y rápidamente. Discreción en todas tus compras, total confidencialidad en todas tus transacciones. Tu fórmula médica completa en un sólo lugar, ya no tendrás que pasar de farmacia en farmacia para conseguir tus medicamentos, nosotros lo hacemos por ti, simplemente haz tu pedido y nosotros nos encargamos de todo. Contamos con profesionales certificados de la farmacológia ofreciendo así garantía total en tu experiencia de compra, no somos un ecommerce común somos una droguería 100% online en donde encontrarás todo lo que necesitas. Sí vas a hacer una compra por más de $49.900 pesos puedes obtener un descuento del 5% usando el cupón con el código "AYUDASALUD" permanentemente, sí consumes o compras mensualmente tus medicamentos, con nosotros no olvidarás tomarlos, te cuidamos y nos esforzamos en recordártelo, nuestro interés es tu bienestar. No te automediques, nosotros somos responsables por la salud de nuestros clientes, por ello exigimos un soporte certificado (fórmula médica) por tú médico o EPS en el que autorice la venta del medicamento, la dosis, presentación del producto, fecha, advertencias, características, posología, indicaciones y contraindicaciones es responsabilidad de tú médico y no nos responsabilizamos por ello.</div> 
-
-	
+        <div class="back-ctn-btn-cat">
+            <div class="ctn-btn-cat">
+                <div class="btn-cat" id="btn-cat">+</div>
+            </div>
+        </div>
+            <div class="cclearfix" id="toggle-category" style="float:left;font-size: 7pt;padding: 0 0px 20px 0;text-align: justify;display: none;"> 
+                Bienvenido a Farmalisto, tu droguería online, encontrarás productos de farmacia, salud, nutrición, cuidado personal y para la familia. Compra y haz tus pedidos fácilmente, servicio a domicilio en Bogotá, Antioquia, Valle del Cauca, Atlántico, Santander, Norte de Santander, Tolima, Risaralda, Magdalena, Córdoba, Caldas, Nariño, Cauca, Meta, Quindío, Cesar, Huila, Sucre, Boyacá, Cundinamarca, Casanare, La Guajira, Arauca, Caquetá, Putumayo, Zipaquirá, Chía, Cota, Mosquera, Funza, Siberia, La Calera, Soacha, Sibaté, Cali, Medellín, Barranquilla, Bucaramanga, Santa Marta, Cartagena, Montería y demás ciudades y pueblos de Colombia, realizamos despachos a domicilio de tus medicamentos a las fronteras con Venezuela y Ecuador, garantizamos el mejor precio. Acá te decimos para qué sirve. A través de farmalisto puedes comprar con diversos medios de pago, tarjeta débito, tarjeta de crédito, baloto, cuenta de ahorros, efectivo, te brindamos seguridad en cada una de tus transacciones a través de nuestro sistema Symantec Powered by verisign un completo sistema de seguridad en tus compras. Puedes llamarnos a nuestra línea de atención y televentas en Bogotá al 2205249 y Nacionalmente en el 01800 9133830. No más filas, con nosotros ya no tendrás que hacer filas al salir de tu médico, IPS o EPS, simplemente compras online y hasta puedes pagar en casa, simple y rápidamente. Discreción en todas tus compras, total confidencialidad en todas tus transacciones. Tu fórmula médica completa en un sólo lugar, ya no tendrás que pasar de farmacia en farmacia para conseguir tus medicamentos, nosotros lo hacemos por ti, simplemente haz tu pedido y nosotros nos encargamos de todo. Contamos con profesionales certificados de la farmacológia ofreciendo así garantía total en tu experiencia de compra, no somos un ecommerce común somos una droguería 100% online en donde encontrarás todo lo que necesitas. Sí vas a hacer una compra por más de $49.900 pesos puedes obtener un descuento del 5% usando el cupón con el código "AYUDASALUD" permanentemente, sí consumes o compras mensualmente tus medicamentos, con nosotros no olvidarás tomarlos, te cuidamos y nos esforzamos en recordártelo, nuestro interés es tu bienestar. No te automediques, nosotros somos responsables por la salud de nuestros clientes, por ello exigimos un soporte certificado (fórmula médica) por tú médico o EPS en el que autorice la venta del medicamento, la dosis, presentación del producto, fecha, advertencias, características, posología, indicaciones y contraindicaciones es responsabilidad de tú médico y no nos responsabilizamos por ello.
+            </div> 
+        <script type="text/javascript">
+            $(function(){
+                $(".ctn-btn-cat").click(function(){
+                    if( $( '#toggle-category' ).is( ":hidden" ) ){
+                        console.log("entre1");
+                        $( "#btn-cat" ).css( "transform", "rotate(45deg)" );
+                    }
+                    else {
+                        console.log("Entre2");
+                        
+                        $( "#btn-cat" ).css( "transform", "rotate(0deg)" );
+                    }
+                    $( "#toggle-category" ).slideToggle("slow");
+                });
+            });
+        </script>
 {/if}

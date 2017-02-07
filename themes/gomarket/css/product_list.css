@@ -11,7 +11,7 @@ ul#product_list.product_grid li.grid_3 .exclusive{padding:0 10px;}
 .accessories_block ul#product_list{padding-bottom:0;border:none;box-shadow:none;margin:0}
 .accessories_block{margin-bottom:0;}
 ul#product_list li,
-.accessories_block ul#product_list li{vertical-align:top;height:auto;padding:10px 0 30px;position:relative;/*float:none;*/display:inline-block;#display:inline;margin:0 5px;float:none;}
+.accessories_block ul#product_list li{vertical-align:top;height:auto;padding:10px 0 30px;position:relative;/*float:none;*/display:inline-block; margin:0 5px;float:none;}
 .accessories_block ul#product_list li{margin:0}
 .grid_19 ul#product_list li.grid_5{margin:0 0 0 -1px}
 .one_column ul#product_list li.grid_4{margin:0 9px}
@@ -347,3 +347,38 @@ ul#product_list li{
     box-shadow:         none;
     margin-top:10px;
 }
+
+.back-ctn-btn-cat {
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+    height: 26px;
+    box-shadow: 0 4px 2px -2px rgba(0,0,0,0.10);
+    margin-bottom: 35px;
+}
+
+.back-ctn-btn-cat .ctn-btn-cat {
+    margin-top: 6px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 30px;
+    font-weight: bold;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    width: 44px;
+}
+
+.back-ctn-btn-cat .ctn-btn-cat .btn-cat{
+    border-radius: 50%;
+    background-color: #fff;
+    color: #39BC93;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.10), 0 2px 10px 0 rgba(0,0,0,0.10);
+    transition: 0.5s, ease-out;
+}
+
+.div-toggle-text{
+    width: 100%;
+    display: inline-block;
+}
+
