@@ -21,8 +21,7 @@ if (isset($_GET['opc_sel']) ) {
                 header("Content-Disposition: attachment; filename=".basename("Descarga_pedidos.csv"));
                 header("Content-Transfer-Encoding: binary"); 
 
-                $sql = 'SELECT
-                        o.id_order,
+                $sql = 'SELECT           o.id_order,
                         o.invoice_number,
                         CONCAT(c.firstname, " ", c.lastname) AS cliente,
                         a.address1,
@@ -32,7 +31,15 @@ if (isset($_GET['opc_sel']) ) {
                         od.product_reference,
                         od.product_name,
                         CONCAT( "$ ", REPLACE(od.product_price,".",",") ) AS precio,
-                        CONCAT( "$ ", REPLACE(od.unit_price_tax_incl,".",",") ) AS precio_tax,
+                        CONCAT( "$ ", REPLACE(od.unit_price_tax_incl,".",",") ) AS precio_tax,	
+			ocr.value AS valor_descuento,
+			ocr.name AS cupon_descuento,
+			IF ( ocr.reduction_percent IS NOT NULL AND ocr.reduction_amount IS NOT NULL AND ocr.reduction_product IS NOT NULL, 
+                            IF ( cr.reduction_product != 0, "Dto a producto" , "Dto a orden"), " ") AS descuento_a,
+			IF ( ocr.reduction_percent IS NOT NULL AND ocr.reduction_percent != 0, "Dto Porcentaje" , 	
+                            IF ( ocr.reduction_amount IS NOT NULL AND ocr.reduction_amount != 0, "Dto Monto" , "")   ) AS tipo_descuento,
+			IF ( ocr.reduction_percent IS NOT NULL AND ocr.reduction_amount IS NOT NULL AND ocr.reduction_product IS NOT NULL, 
+                            IF ( cr.reduction_product != 0, IF ( cr.reduction_product = od.product_id, "*", ""), ""), "") AS producto_con_descuento,
                         od.product_quantity,
                         i.cod_icr,
                         tro.nombre,
@@ -48,9 +55,13 @@ if (isset($_GET['opc_sel']) ) {
                     WHEN  "Carrier" THEN trans.`name`
                     ELSE "N/A"
                     END
-                    AS Transportador
+                    AS Transportador /*,
+                    ocr.*,
+                    cr.reduction_product*/
                     FROM ps_order_detail od  -- 174411
                     INNER JOIN ps_orders o ON ( o.id_order = od.id_order )
+                    LEFT JOIN ps_order_cart_rule ocr ON ( ocr.id_order = o.id_order )
+                    LEFT JOIN ps_cart_rule cr ON ( ocr.id_cart_rule = cr.id_cart_rule AND cr.reduction_product != 0)
                     INNER JOIN ps_customer c ON ( o.id_customer = c.id_customer )
                     INNER JOIN ps_address a ON ( o.id_address_delivery = a.id_address )
                     INNER JOIN ps_order_state_lang osl ON ( osl.id_order_state = o.current_state )
@@ -64,7 +75,7 @@ if (isset($_GET['opc_sel']) ) {
                     LEFT JOIN ps_associate_carrier asoc ON (o.id_order = asoc.id_order)
                     LEFT JOIN ps_carrier trans ON(asoc.id_entity = trans.id_carrier)
                     LEFT JOIN ps_employee emp ON(asoc.id_entity = emp.id_employee)
-                    WHERE o.date_add BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"
+                    WHERE  o.date_add BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"
                     ORDER BY ct.date_delivery ,ct.time_delivery,o.date_add ASC';
                     //echo $sql;
                     //echo"<hr>";
@@ -74,8 +85,8 @@ if (isset($_GET['opc_sel']) ) {
                 if ($results = Db::getInstance_slv()->ExecuteS($sql)) {
                     
                     $output = fopen('php://output', 'w');
-                    fputcsv($output, array('NUM PEDIDO', 'NUM FACTURA', 'CLIENTE', 'DIRECCION 1', 'DIRECCION 2', 'CIUDAD DESTINO', 'FECHA', 'REFERENCIA', 'DESCRIPCION', 'PRECIO', 'PRECIO CON IMPUESTO', 'CANTIDAD', 'ICR', 'TRANSPORTADORA', 'ESTADO ORDEN', 'COSTO ICR', 'ORDEN SUMINISTRO', 'IVA PROVEEDOR', 'FECHA DE ENTREGA', 'HORA DE ENTREGA', 'METODO DE PAGO', 'TRANSPORTADOR'));
-
+                    fputcsv($output, array('NUM PEDIDO', 'NUM FACTURA', 'CLIENTE', 'DIRECCION 1', 'DIRECCION 2', 'CIUDAD DESTINO', 'FECHA', 'REFERENCIA', 'DESCRIPCION', 'PRECIO', 'PRECIO CON IMPUESTO', 'VALOR DESCUENTO', 'CUPON DESCUENTO', 'DESCUENTO A', 'TIPO DESCUENTO', 'PRODUCTO CON DESCUENTO', 'CANTIDAD', 'ICR', 'TRANSPORTADORA', 'ESTADO ORDEN', 'COSTO ICR', 'ORDEN SUMINISTRO', 'IVA PROVEEDOR', 'FECHA DE ENTREGA', 'HORA DE ENTREGA', 'METODO DE PAGO', 'TRANSPORTADOR'));
+                            
                     /*echo "<table border='1'>
                             <tr>
                                 <td> NUM PEDIDO </td>
@@ -126,7 +137,7 @@ if (isset($_GET['opc_sel']) ) {
                                     </tr>
                                 ";*/
 
-                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['product_quantity'], $dat_print['cod_icr'], utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'] ));
+                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['valor_descuento'], $dat_print['cupon_descuento'], $dat_print['descuento_a'], $dat_print['tipo_descuento'], $dat_print['producto_con_descuento'], $dat_print['product_quantity'],  $dat_print['product_quantity'], $dat_print['cod_icr'], utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'] ));
 
                             }
                     //echo "</table>";
