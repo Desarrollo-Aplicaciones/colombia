@@ -60,7 +60,7 @@ class Order extends OrderCore {
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'private_message' => 		array('type' => self::TYPE_STRING),
                         'complemento_estado' => 	array('type' => self::TYPE_STRING),
-                        'id_employee_close_order' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+                        'id_employee_close_order' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 		),
 	);
 
