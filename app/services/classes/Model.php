@@ -56,8 +56,9 @@ class Model extends PaymentModule {
 
 		$results = Search::findApp($id_lang, $expr, $page_number, $page_size, $order_by, $order_way, FALSE, FALSE);
 		$products = array();
-		if ((int) $results['total'] > 0) {
-			$total_rows = (int) $results['total'];
+		if ((int) count($results['result']) > 0) {
+			//$total_rows = (int) $results['total'];
+			$total_rows = (int) count($results['result']);
 			$total_pages = ceil($total_rows / $page_size);
 			$start = 0;
 
@@ -120,7 +121,6 @@ class Model extends PaymentModule {
 						} else {
 							$textocorto = $value['name'];
 						}
-
 						$array_prod[] = array(
 						                      'id' => (int) $value['id_product'],
 						                      'reference' => (string) $value['reference'],
@@ -139,18 +139,16 @@ class Model extends PaymentModule {
 						                      'porcen'  => $value['id_porcent'],
 						                      'peso'  => $value['id_peso']
 						                      );
-}
-
-if ($array_prod != NULL) {
-	$products['products'] = $array_prod;
-	return $products;
-}
-}
-}
-}
-
-return array();
-}
+					}
+					if ($array_prod != NULL) {
+						$products['products'] = $array_prod;
+						return $products;
+					}
+				}
+			}
+		}
+		return array();
+	}
 	/**
 	 * @param $level_depth_min int nivel inferior de categorías
 	 * @param $level_depth_max int nivel superior de categorías
@@ -1468,7 +1466,6 @@ if ($results = Db::getInstance()->ExecuteS($query)) {
 
     	return (Db::getInstance()->getValue($sql));	
     }
-
 
     public function call_api($accessToken,$url){
 

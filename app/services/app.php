@@ -201,6 +201,17 @@ class API extends REST {
 
 	}  
 
+	public function getProductQuantity()
+	{
+		$result = $this->getProductRealQuantities($this->_request['id'], 0);
+		if (empty($result)) {
+			// Si no hay registros, estado "Sin contenido"
+			$this->response('', 204);
+		} else {
+			// Si todo sale bien, enviará cabecera de "OK" y la lista de la búsqueda en formato JSON
+			$this->response($this->json($result), 200);
+		}
+	}
 
 	private function header()
 	{
@@ -230,7 +241,6 @@ class API extends REST {
 		$id_prod        = $this->_request['id'];
 
 		$model = new Model();
-		//return $this->response(json_encode("XD"),200);
 		return $this->response(json_encode($model->getProduct($id_prod)),200);
 	}
 
