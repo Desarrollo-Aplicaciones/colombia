@@ -166,14 +166,14 @@ class API extends REST {
 	private function categories($params)
 	{
 		$model = new Model();
-		$this->response(json_encode($model->get_category(2,3)),200);
+		$this->response(json_encode($model->get_category(2, 3, TRUE)),200);
 	}
 
 
 	public function prodCategories() {
 
-		// Validación Cross si el método de la petición es GET de lo contrario volverá estado de "no aceptable"
-		if ($this->get_request_method() != "GET") {
+		// Validación Cross si el método de la petición es POST de lo contrario volverá estado de "no aceptable"
+		if ($this->get_request_method() != "POST") {
 			$this->response('', 406);
 		}    
 
@@ -198,10 +198,6 @@ class API extends REST {
 			// Si todo sale bien, enviará cabecera de "OK" y la lista de la búsqueda en formato JSON
 			$this->response($this->json($result), 200);
 		}
-
-
-		//return $this->response($this->json($mugre), 200);
-		//return $this->response(json_encode($model->getProdCategories($ids_cats, $page_number,$page_size, $order_way,$order_by)),200);
 
 	}  
 
