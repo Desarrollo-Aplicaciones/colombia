@@ -100,7 +100,7 @@ public function get_id_custumer_account($billing_account_id, $json = false) {
      */
         public static function searchByName($query)
         {
-            $sql = 'SELECT cus.*
+            $sql = 'SELECT cus.*, (SELECT group_concat(" ",fm.type_message) FROM ps_fraud_message fm WHERE FIND_IN_SET(fm.id, cus.fraud)) AS "type_fraud"
             FROM `'._DB_PREFIX_.'customer` cus LEFT JOIN `'._DB_PREFIX_.'address` adr ON (cus.id_customer = adr.id_customer)
             WHERE (
                    cus.`email` LIKE \'%'.pSQL($query).'%\'
