@@ -127,7 +127,7 @@ if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv")
      	$retorno_cargue = $guardar_archivo->loadicrentrada($names[2]);
      	if ($retorno_cargue == true) {
 	     	
-	     	if ( $guardar_archivo->validarIcrDuplicadosEntrada() && $guardar_archivo->validarIcrCargadoVsIngresadoEntrada() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcr() 
+	     	if ( $guardar_archivo->validarIcrDuplicadosEntrada() && $guardar_archivo->validarLoteFechavencimientoVaciosEntrada() && $guardar_archivo->validarIcrCargadoVsIngresadoEntrada() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcr() 
 	     	&& $guardar_archivo->validarIcrCargadoVsSupplyOrderIcrCantidades() && $guardar_archivo->ValidateFechaVencEntrada() && $guardar_archivo->cambiarFechasVaciasyNulas() && $guardar_archivo->validarEstadoRegistrosCargadosEntrada() && $guardar_archivo->OrdenesProductosEntrada()  
 	     	&& $guardar_archivo->IcrCargadosEntrada() 
                 && $guardar_archivo->ValidateRegistroInvima()

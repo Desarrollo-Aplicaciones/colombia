@@ -459,6 +459,25 @@ class IcrallCore extends ObjectModel {
         }
     }
 
+    /**
+     * [validarLoteFechavencimientoVaciosEntrada Valida que el lote y la fecha de vecimiento no esten vacios archivo ( ps_tmp_cargue_entrada_icr )]
+     * @return [type] [bool]
+     */
+    public function validarLoteFechavencimientoVaciosEntrada() {
+      //..-echo "<br>1";
+
+        $query_lote_fecha_vacios = "SELECT cod_icr , COUNT(cod_icr) as cant FROM ps_tmp_cargue_entrada_icr
+        WHERE lote = '' OR (DATE(fecha_vencimiento) = DATE('0000-00-00') OR fecha_vencimiento ='' )
+          GROUP BY cod_icr";
+
+        if ($results_icr = Db::getInstance()->ExecuteS($query_lote_fecha_vacios)) {
+            $this->errores_cargue[] = "Existen errores en el lote o la fecha de vencimiento, no pueden estar vacios.";
+            return false;
+        } else {
+        return true;    
+        }
+    }
+
 
     /**
      * [validarIcrCargadoVsIngresado Validar ICR cargados vr los ingresados en las ordenes de suministros y el detalle de la orden de ps_tmp_cargue_icr_salida]

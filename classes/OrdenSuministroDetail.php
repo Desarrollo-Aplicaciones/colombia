@@ -113,7 +113,7 @@ class OrdenSuministroDetail {
                     $query->innerJoin('supply_order', 'sp', 'p.id_supplier = sp.id_supplier');
                     $query->where('sp.id_supply_order = '.$this->supply_order);
                     $query->where('p.id_product IN ('.implode(",", $this->productos).')' );
-
+                    
                     $items = Db::getInstance()->executeS($query);
 
                         if ($items) {
