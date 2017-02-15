@@ -652,19 +652,9 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		if ($ajax)
 		{
 
-			//$conn_string = "host=10.0.1.111 port=5432 dbname=farmalisto_mexico user=search password=search123";
 			$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 			$dbconn4 = pg_pconnect($conn_string);
 			$conn_open = 1;
-
-			/*$query_psql = "SELECT si.id_product, SUM(si.weight) AS peso, ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) AS porce FROM ps_search_index si
-				INNER JOIN ps_search_word sw ON ( sw.id_word = si.id_word )
-				INNER JOIN (SELECT row_number() OVER() AS orden, UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra ) tw 
-					ON ( ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )				
-				GROUP BY ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ), si.id_product, tw.orden
-				ORDER BY ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC, tw.orden, peso DESC";
-				*/
-
 
 			$query_psql = "SELECT si.id_product, SUM(si.weight) AS peso, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) AS porce
 			FROM search.ps_search_index si
@@ -680,19 +670,6 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
 
-				//$loggin = new Registrolog();
-            	//$loggin->lwrite("Search_ajax", "log_busquedas.txt", $query_psql_1);
-
-				//$loggin = new Registrolog();
-            	//$loggin->lwrite("Search_ajax", "log_busquedas.txt", $query_psql);
-				/*"SELECT si.id_product, SUM(si.weight) AS peso FROM
-				ps_search_index si
-				INNER JOIN ps_search_word sw ON ( sw.id_word = si.id_word )
-				WHERE 
-					( ".implode(' OR ', $score_array)."
-					)
-				GROUP BY si.id_product
-				ORDER BY peso DESC";*/
 			$alenum = 0;
 			if ( $resultado = pg_exec($query_psql)) {
 				
@@ -705,8 +682,6 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 						PRIMARY KEY (`id_asc`),
 						INDEX indx_pr_search_'.$alenum.' (id_product) USING BTREE
 						)';
-
-					//$loggin->lwrite("Search_ajax", "log_busquedas.txt", $sql_create);
 					
 					$result_crear = $db->execute($sql_create);
 
@@ -724,15 +699,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 
 			        $ins_prods_buscar = rtrim($ins_prods_buscar, ",");
 
-			        //$loggin->lwrite("Search_ajax", "log_busquedas.txt", $ins_prods_buscar);
-
 			        if ( !$ret_insert = $db->execute($ins_prods_buscar) ) {
-			        	//echo "<br> nooooooooooooo";
-			        	//$loggin->lwrite("Search_ajax", "log_busquedas.txt", "NOOOO inserto ");
 			        	return ($ajax ? array() : array('total' => 0, 'result' => array()));
-			        } else {
-			        	//echo "<br> siiiiiiiiiiii";
-			        	//$loggin->lwrite("Search_ajax", "log_busquedas.txt", "Siiiii inserto");
 			        }
 		        
 		    }
@@ -760,12 +728,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				GROUP BY p.id_product
 				ORDER BY position2.id_asc ASC				
 				LIMIT 7";
-
-				//$loggin->lwrite("Search_ajax", "log_busquedas.txt", "sql 138: ".$sql);
 				
 				if ($alenum != 0 && $result = $db->executeS($sql)) {
-					//echo "<br> 222222 siiiiiiii";
-					//$loggin->lwrite("Search_ajax", "log_busquedas.txt", "SI ENCONTROOOOOO");
 					$array_full = array();
 					$cantnum = 0;
 
@@ -802,8 +766,6 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 
 					return $result;
 				} else {
-					//echo "<br> 222222 Noooooooo";
-					//$loggin->lwrite("Search_ajax", "log_busquedas.txt", "NOOO ENCONTROOOOOO");
 					return ($ajax ? array() : array('total' => 0, 'result' => array()));
 				}			
 		}
@@ -819,18 +781,9 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		else if ($order_by == 'date_upd')
 			$alias = 'p.';
 
-		//$conn_string = "host=10.0.1.111 port=5432 dbname=farmalisto_mexico user=search password=search123";
 		$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 		$dbconn4 = pg_pconnect($conn_string);
 		$conn_open = 1;
-
-		/*$sql = "SELECT si.id_product, SUM(si.weight) AS peso, ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) AS porce FROM ps_search_index si
-				INNER JOIN ps_search_word sw ON ( sw.id_word = si.id_word )
-				INNER JOIN (SELECT row_number() OVER() AS orden, UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra ) tw 
-					ON ( ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )				
-				GROUP BY ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ), si.id_product, tw.orden
-				ORDER BY ( 100 - ( ( levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC, tw.orden, peso DESC";
-				*/
 
 		$sql = "SELECT si.id_product, SUM(si.weight) AS peso, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) AS porce
 			FROM search.ps_search_index si
@@ -846,17 +799,6 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
 
-		
-
-		//error_log($sql);
-				/*"SELECT si.id_product, SUM(si.weight) AS peso FROM
-				ps_search_index si 
-				INNER JOIN ps_search_word sw ON ( sw.id_word = si.id_word )
-				WHERE 
-					( ".implode(' OR ', $score_array)."
-					)
-				GROUP BY si.id_product
-				ORDER BY peso DESC";*/
 			$eligible_products = array();
 			$ret_insert = 0;
 			$orden_bus = '';
@@ -936,9 +878,9 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')'.
 				($ret_insert ? ' INNER JOIN tmp_search_'.$alenum.' bt ON ( bt.id_product = p.id_product )' : '').'
-				WHERE p.active = 1 AND product_shop.active = 1 AND p.`id_product` '.$product_pool.'
+				WHERE p.active = 1 AND product_shop.active = 1 AND (stock.quantity > 0 AND stock.quantity IS NOT NULL) AND p.`id_product` '.$product_pool.' 
 				GROUP BY product_shop.id_product
-				'.$orden_bus.'			
+				'.$orden_bus.' 
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
 		
 		$result = $db->executeS($sql);
@@ -954,10 +896,9 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				WHERE p.`id_product` '.$product_pool;
 		$total = $db->getValue($sql);
 
-		if (!$result)
+		if (!$result){
 			$result_properties = false;
-		else
-			//$result_properties = Product::getProductsProperties((int)$id_lang, $result);
+		}
                 
 
 		return array('total' => $total,'result' => $result);
