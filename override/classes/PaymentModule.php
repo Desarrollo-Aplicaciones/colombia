@@ -227,10 +227,14 @@ class PaymentModule extends PaymentModuleCore {
                         }
                     }
 
-/*echo "<pre>";
-print_r($order);
-die();*/
-                    $order->complemento_estado =  AdminOrdersController::complemento_estado (Context::getContext()->employee->id_profile);
+//echo "<pre>";
+//var_dump(Context::getContext()->employee);
+//die();
+                    
+                    if(array_key_exists('employee',Context::getContext() ) && Context::getContext()->employee != null ){
+                        $order->complemento_estado =  AdminOrdersController::complemento_estado (Context::getContext()->employee->id_profile);
+                        $order->id_employee_close_order = Context::getContext()->employee->id;                        
+                    }
                     $result = $order->add();
 
                     /************ Progressive Discounts ************/

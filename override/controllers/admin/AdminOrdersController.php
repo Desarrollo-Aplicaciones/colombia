@@ -1123,9 +1123,9 @@ public function postProcess()
                     WHERE id_cart = ".(int)$id_cart;
                     //echo $query_update_employee;
 
-                if ( Db::getInstance()->Execute($query_update_employee) ){
+                //if ( Db::getInstance()->Execute($query_update_employee) ){
                     //echo "<br> actu emploooo";
-                }
+                //}
                     
                     if ($this->tabAccess['edit'] === '1') {
                         $payment_module = Module::getInstanceByName($module_name);
