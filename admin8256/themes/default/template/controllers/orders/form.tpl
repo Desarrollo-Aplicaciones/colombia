@@ -571,7 +571,7 @@
 				{
 					var html = '<ul>';
 					$.each(res.customers, function() {
-						if(this.fraud != 0) {
+						if(this.fraud != 0 && this.fraud != "") {
 							var idFraud = "id='fraud'";
 						} else {
 							var idFraud = "";
@@ -647,7 +647,7 @@
 			}
 		});
                 {* Limpiar contenedor de customers *}
-                if(arreglo[4] != 0) {
+                if(arreglo[4] != 0 && arreglo[4] != "") {
                 	var fraud = "error";
                 	var concatMessage = ' - '+arreglo[5];
                 } else {
