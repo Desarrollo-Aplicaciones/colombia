@@ -56,8 +56,9 @@ class Model extends PaymentModule {
 
 		$results = Search::findApp($id_lang, $expr, $page_number, $page_size, $order_by, $order_way, FALSE, FALSE);
 		$products = array();
-		if ((int) $results['total'] > 0) {
-			$total_rows = (int) $results['total'];
+		if ((int) count($results['result']) > 0) {
+			//$total_rows = (int) $results['total'];
+			$total_rows = (int) count($results['result']);
 			$total_pages = ceil($total_rows / $page_size);
 			$start = 0;
 
@@ -120,7 +121,6 @@ class Model extends PaymentModule {
 						} else {
 							$textocorto = $value['name'];
 						}
-
 						$array_prod[] = array(
 						                      'id' => (int) $value['id_product'],
 						                      'reference' => (string) $value['reference'],
@@ -139,34 +139,34 @@ class Model extends PaymentModule {
 						                      'porcen'  => $value['id_porcent'],
 						                      'peso'  => $value['id_peso']
 						                      );
-}
-
-if ($array_prod != NULL) {
-	$products['products'] = $array_prod;
-	return $products;
-}
-}
-}
-}
-
-return array();
-}
+					}
+					if ($array_prod != NULL) {
+						$products['products'] = $array_prod;
+						return $products;
+					}
+				}
+			}
+		}
+		return array();
+	}
 	/**
 	 * @param $level_depth_min int nivel inferior de categorías
 	 * @param $level_depth_max int nivel superior de categorías
+	 * @param $con_activo bool si está en false traerá todas las categorías sin el filtro de active
 	 * @return array
 	 */
-	public function get_category($level_depth_min = 2,$level_depth_max = 3){
+	public function get_category($level_depth_min = 2,$level_depth_max = 3, $con_activo = FALSE){
 		if(!(is_integer($level_depth_min) && is_integer($level_depth_max) && $level_depth_min > 0 && ($level_depth_min < $level_depth_max))){
 			$level_depth_min = 2;
 			$level_depth_max = 3;
 		}
 		
+		$sql_activo = ($con_activo)?' AND cat.active = 1':'';
 
 		$query ="SELECT cat.id_category as i, cat.id_parent, cat.level_depth, LOWER(catl.`name`) as n 
 		FROM "._DB_PREFIX_."category cat 
 		INNER JOIN "._DB_PREFIX_."category_lang catl ON (cat.id_category = catl.id_category)
-		WHERE cat.level_depth BETWEEN  ".$level_depth_min." AND   ".$level_depth_max.";";
+		WHERE cat.level_depth BETWEEN  ".$level_depth_min." AND   ".$level_depth_max.$sql_activo.";";
 
 
 		if ( $results = Db::getInstance()->ExecuteS($query) ) {
@@ -252,10 +252,15 @@ return array();
 			$query = " SELECT COUNT(prod.id_product) total, cat_prodl.name AS title
 			FROM "._DB_PREFIX_."product prod
 			INNER JOIN "._DB_PREFIX_."product_lang prodl on(prod.id_product=prodl.id_product)
-			INNER JOIN "._DB_PREFIX_."category_product cat_prod ON (cat_prod.id_product=prod.id_product)
 			INNER JOIN "._DB_PREFIX_."product_shop prods ON (prod.id_product=prods.id_product AND prod.active = prods.active)
-			INNER JOIN "._DB_PREFIX_."category_lang cat_prodl ON (cat_prod.id_category=cat_prodl.id_category) 
-			WHERE cat_prodl.id_category in ('".implode("','",$busqueda)."') limit 1;";
+			LEFT JOIN "._DB_PREFIX_."category_lang cat_prodl ON (cat_prodl.id_category=prod.id_category_default)
+			LEFT JOIN "._DB_PREFIX_."tax_rule taxr ON(prods.id_tax_rules_group = taxr.id_tax_rules_group AND taxr.id_tax != 0)
+			LEFT JOIN "._DB_PREFIX_."tax tax ON(taxr.id_tax = tax.id_tax AND tax.active = 1 AND tax.deleted = 0) 
+			LEFT JOIN "._DB_PREFIX_."manufacturer m ON (m.`id_manufacturer` = prod.`id_manufacturer`)
+			LEFT JOIN "._DB_PREFIX_."image i ON (i.`id_product` = prod.`id_product` AND  i.cover = 1 )
+			WHERE cat_prodl.id_category in ('".implode("','",$busqueda)."')  
+			AND prod.active=1 AND prods.active=1
+			AND prod.is_virtual=0 AND prods.visibility='both' AND (taxr.id_tax != 0 OR ISNULL(taxr.id_tax)) limit 1";
 
 			if ($results = Db::getInstance()->ExecuteS($query)) {
 				foreach ($results as $value) {
@@ -265,9 +270,7 @@ return array();
 			}
 
 			$total_paginas = ceil($total_filas / $page_size);
-
 			$inicio = 0;
-
 			if ( $page_number > $total_paginas | $page_number == 1) {
 				$page_number = 1;
 				$inicio = 0;
@@ -393,27 +396,15 @@ return array();
 					                      );
 
 				}
+				if ( $array_prod!=NULL ) {
+					$array_productos['products'] = $array_prod;
+					return $array_productos;
+				}
 
-/*echo "<hr>";
-print_r($results);
-echo "<hr>";
-
-print_r($array_prod);
-echo "<hr>";
-
-print_r(json_encode($array_prod,JSON_FORCE_OBJECT));
-exit;*/
-if ( $array_prod!=NULL ) {
-	$array_productos['products'] = $array_prod;
-	return $array_productos;
-}
-
-}   
-
-}
-
-return array();
-}
+			}   
+		}
+		return array();
+	}
 
 
 private function remomeCharSql($string, $length = NULL){
@@ -1475,7 +1466,6 @@ if ($results = Db::getInstance()->ExecuteS($query)) {
 
     	return (Db::getInstance()->getValue($sql));	
     }
-
 
     public function call_api($accessToken,$url){
 
