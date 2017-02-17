@@ -142,8 +142,8 @@ if ((($_FILES["fileloadicrsalida"]["type"] == "text/csv")
      	$retorno_cargue = $guardar_archivo->loadicrsalida($names[2]);
 
      	if ($retorno_cargue == true) {     	
-	     	
-	     	if ( $guardar_archivo->validarIcrDuplicados() && $guardar_archivo->validarIcrCargadoVsIngresado() && $guardar_archivo->validarIcrCargadoVsPicking() && $guardar_archivo->validarEstadoRegistrosCargados() && $guardar_archivo->OrdenesProductos()  && $guardar_archivo->IcrCargados()  && $guardar_archivo->validarProductosOrden() && $guardar_archivo->validarFechaProductosSalida() ) { // validar icr duplicados  // actualizar registros con respecto a ordenes, productos e icr 
+	     	 
+	     	if ( $guardar_archivo->validarIcrDuplicados() && $guardar_archivo->validarLoteFechavencimientoVaciosSalida() && $guardar_archivo->validarIcrCargadoVsIngresado() && $guardar_archivo->validarIcrCargadoVsPicking() && $guardar_archivo->validarEstadoRegistrosCargados() && $guardar_archivo->OrdenesProductos()  && $guardar_archivo->IcrCargados()  && $guardar_archivo->validarProductosOrden() && $guardar_archivo->validarFechaProductosSalida() ) { // validar icr duplicados  // actualizar registros con respecto a ordenes, productos e icr 
 
 	     		if ( $guardar_archivo->insertarPicking() ) { // si inserta en picking
 	     			if ($guardar_archivo->cambiarIcrEstado() ) { // si cambia estado de icr
