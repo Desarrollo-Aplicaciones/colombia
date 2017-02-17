@@ -478,6 +478,26 @@ class IcrallCore extends ObjectModel {
         }
     }
 
+    /**
+     * [validarLoteFechavencimientoVaciosSalida Valida que el lote y la fecha de vecimiento no esten vacios archivo ( ps_supply_order_icr )]
+     * @return [type] [bool]
+     */
+    public function validarLoteFechavencimientoVaciosSalida() {
+      //..-echo "<br>1";
+
+        $query_lote_fecha_vacios = "SELECT oi.id_icr , COUNT(oi.id_icr) as cant FROM ps_supply_order_icr oi
+        INNER JOIN ps_icr i ON i.id_icr = oi.id_icr INNER JOIN ps_tmp_cargue_icr_salida cis ON cis.cod_icr = i.cod_icr
+        WHERE (oi.lote = '' OR (DATE(oi.fecha_vencimiento) = DATE('0000-00-00') OR oi.fecha_vencimiento ='' ))
+          GROUP BY i.cod_icr";
+
+        if ($results_icr = Db::getInstance()->ExecuteS($query_lote_fecha_vacios)) {
+            $this->errores_cargue[] = "Existen errores en el lote o la fecha de vencimiento, no pueden estar vacios.";
+            return false;
+        } else {
+        return true;    
+        }
+    }
+
 
     /**
      * [validarIcrCargadoVsIngresado Validar ICR cargados vr los ingresados en las ordenes de suministros y el detalle de la orden de ps_tmp_cargue_icr_salida]
@@ -1033,7 +1053,6 @@ class IcrallCore extends ObjectModel {
   */ 
  public function loadicrsalida($path_file_load_db) {
 
-
         $mysqli_1 = mysqli_init();
         mysqli_options($mysqli_1, MYSQLI_OPT_LOCAL_INFILE, true);
         
@@ -1065,7 +1084,7 @@ class IcrallCore extends ObjectModel {
         INTO TABLE ps_tmp_cargue_icr_salida
         FIELDS TERMINATED BY ';'
         OPTIONALLY ENCLOSED BY '\"' 
-        LINES TERMINATED BY '\\r\\n'
+        LINES TERMINATED BY '\\n'
         IGNORE 1 LINES 
         (id_orden, @dummy,@dummy,@dummy, reference, @dummy,@dummy,@dummy,@dummy, cod_icr)";
 
