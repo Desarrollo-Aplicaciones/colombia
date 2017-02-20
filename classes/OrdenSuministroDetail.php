@@ -285,14 +285,36 @@ AND od.id_product IN (212);
     public function InsertarProductosIcrOrdenLoad() {
 
         DB::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_load_icr` ');
-
+        $err = 0;
         foreach ($this->productoicr as $prod => $idIcrCod) {
             foreach ($idIcrCod as $idicr => $codicr) {
-
-                $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_load_icr` (`id_supply_order`, `id_product`, `id_icr`, `cod_icr`) VALUES ';
-                $query .= '('.(int)$this->supply_order.', '.(int)$prod.', '.(int)$idicr.', "'.strtoupper($codicr).'" ) ';
-                DB::getInstance()->execute($query);
-                $query='';
+                $i = 0;
+                foreach($codicr as $key => $value) {
+                    if($i == 1) {
+                        if(trim($value) != "") {
+                            $lote = $value;
+                        } else {
+                            $err = 1;
+                        }
+                    } 
+                    if($i == 2) {
+                        if(trim($value) != "") {
+                            $fecha_vencimiento = $value;
+                        } else {
+                            $err = 1;
+                        }
+                    } 
+                    $i++;
+                }
+                if($err == 0) {
+                    $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_load_icr` (`id_supply_order`, `id_product`, `id_icr`, `cod_icr`, `lote`, `fecha_vencimiento`) VALUES ';
+                    $query .= '('.(int)$this->supply_order.', '.(int)$prod.', '.(int)$idicr.', "'.strtoupper($codicr).'", "'.$lote.'", "'.$fecha_vencimiento.'" ) ';
+                    DB::getInstance()->execute($query);
+                    $query='';
+                } else {
+                    echo "<br>Se deben ingresar todos los lotes o fechas de vencimiento. <br><a href='javascript:history.back(1)'>Regresar</a>";
+                    exit;
+                }
             }
         }
     }
@@ -303,8 +325,8 @@ AND od.id_product IN (212);
      */
     public function InsertarProductosIcrOrden() {
 
-        $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, id_warehouse) ';
-        $query .= ' SELECT sod.id_supply_order_detail, soli.id_icr, '.$this->getId_employee().', now(), so.id_warehouse FROM `'._DB_PREFIX_.'supply_order_detail` sod
+        $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, id_warehouse, lote, fecha_vencimiento) ';
+        $query .= ' SELECT sod.id_supply_order_detail, soli.id_icr, '.$this->getId_employee().', now(), so.id_warehouse, soli.lote, soli.fecha_vencimiento FROM `'._DB_PREFIX_.'supply_order_detail` sod
                     INNER JOIN `'._DB_PREFIX_.'supply_order_load_icr` soli 
                     ON (sod.id_supply_order = soli.id_supply_order AND sod.id_product = soli.id_product)
                     INNER JOIN `'._DB_PREFIX_.'supply_order` so

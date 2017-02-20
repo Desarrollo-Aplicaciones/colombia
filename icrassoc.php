@@ -126,30 +126,31 @@ if (isset($_POST)) {
 		if (isset($_POST['id_supply_order']) && $_POST['id_supply_order'] != '' && isset($_POST['opcion'])) {
 
 			$ordsum =  new OrdenSuministroDetail();
-
+			$i = 0;
 			foreach ($_POST as $key => $value) {
 
 				if (substr($key,0,3) == 'pr_') {
 
 					$arr_prod_icr = explode("_", $key);
-
+					
 					if ( !isset( $arrprods[ $arr_prod_icr[1] ] ) ) {
 
 						$arrprods[ $arr_prod_icr[1]  ] = $arr_prod_icr[1] ;
 					}
 
 					foreach ($value as $id_icr => $value_icr) {
-
-						$arrprodsicrs[ $arr_prod_icr[1] ][$arr_prod_icr[3]] = $value_icr;
+						
+						$arrprodsicrs[ $arr_prod_icr[1] ][$arr_prod_icr[3]][$i] = $value_icr;
 
 						$arricrs[ $arr_prod_icr[3] ] = $arr_prod_icr[3];
 						//echo "<br>val: ".$value_icr;						
+						$i++;
 					}
 
 					
 				}
 			}
-
+			
 			$ordsum->supply_order = $_POST['id_supply_order'];
             $ordsum->setId_employee($_POST['id_emp']);
             $ordsum->setNomemployee($_POST['firstname']);
