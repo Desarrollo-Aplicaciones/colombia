@@ -656,6 +656,7 @@ class PaymentModule extends PaymentModuleCore {
                             '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
                             '{invoice_other}' => $invoice->other,
                             '{order_name}' => $order->getUniqReference(),
+                            '{id_order}'=> $order->id,
                             '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
                             '{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
                             '{payment}' => Tools::substr($order->payment, 0, 32),
