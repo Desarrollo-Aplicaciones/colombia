@@ -417,6 +417,10 @@ public function __construct()
 		// print_r((bool)$var15);
 		// die();
 
+		if(!Tools::validateIdentification()) {
+			$this->errors[] = Tools::displayError('Ya existe un cliente con el número de identificación: '. $_POST['identification'].'.');
+		}
+		
 		if (in_array( 4, Tools::getValue('groupBox')) && Tools::getValue('id_type') != 4 ){
 			$this->errors[] = Tools::displayError('El tipo de documento no puede ser asociado a un cliente corporativo.');
 		}
