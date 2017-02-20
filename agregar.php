@@ -84,7 +84,7 @@ margin: 3px;
 
      <div style="float: left; width: 50%" id="dato_prod"></div>
 
-     <div style="float: right; width: 25%; margin: -3px 2px 0px 18px; overflow: scroll; height: 98%;" id="list_cb">
+     <div style="float: right; width: 47%; margin: -3px 2px 0px 18px; overflow: scroll; height: 98%;" id="list_cb">
          <h3>C&oacute;digo ICR</h3>
          <table  id="icrstable">
                  <thead>
@@ -330,6 +330,8 @@ $("#txtSearch").keyup(function(event){
                             
                             console.log("retornado: " + product + " | arr: "+ JSON.stringify(retornado).toString() );
                             $("#icrstable").append("<tr><td>"+ count_icr +" <input readonly type='text' name='pr_" + $("#prodsel").val() + "_pri_" + retornado[0] + "[]' value='" + retornado[1] + "'> <a class=\"quitaicr\" id=\""+ retornado[1] +"\"  href='#'> X </a> </td></tr>");
+                            $("#icrstable").append("<tr><td>Lote <input type='text' name='pr_" + $("#prodsel").val() + "_pri_" + retornado[0] + "_lote[]' value=''></td></tr>");
+                            $("#icrstable").append("<tr><td>Fecha vencimiento <input type='text' name='pr_" + $("#prodsel").val() + "_pri_" + retornado[0] + "_fechavencimiento[]' value='' placeholder='YYYY-MM-DD'></td></tr>");
                             //$('#txtSearch').attr('readonly', false); +1.9
                            //$("#txtSearch").prop("readonly",false); jquery -1.9
                             //console.log("json:::: - prod: " + product + " | arr: "+ JSON.stringify(ref_product_icr).toString() );
