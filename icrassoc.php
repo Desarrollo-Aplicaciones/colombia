@@ -75,23 +75,24 @@ if (isset($_POST)) {
                             if ( isset($icr) && $icr != '' ) {
                             	$row = $ordsum->icrDisponible($icr);
                             	$row2 = $ordsum->icrFechaVencida($icr);
+                            	$loteFecha = $ordsum->icrLoteFechaVencimiento($icr);
 
-                            	if( $row['total'] == 1 ) { //productos.cont_
+                            	if($loteFecha['total'] == 1) {
+                            		if( $row['total'] == 1 ) { //productos.cont_
                          			
-                         			if ( $row2['total'] == 0 ) {
-                         				$resp=$row['id_icr']."|".$row['cod_icr']."|".$row['name']."|".$row['reference']."|".$row['id_product']."|productos.cont_".$row['id_product']."|productos.total_".$row['id_product'];
-                         				die("$resp");
-                         			} else {
+	                         			if ( $row2['total'] == 1 ) {
+	                         				$resp=$row['id_icr']."|".$row['cod_icr']."|".$row['name']."|".$row['reference']."|".$row['id_product']."|productos.cont_".$row['id_product']."|productos.total_".$row['id_product']."|".$row2['fecha_vencimiento'];
+	                         				die("$resp");
+	                         			} else {
 
-										die('NOFEC');
-                         			}                        			
+											die('NOFEC');
+	                         			}     
+	                            	} else { 
 
-                                    
-
-                            	} else { 
-
-                            		die('NO');
-                            		
+	                            		die('NO');
+	                            	}
+                            	} else {
+                            		die('NOFECLOTE');
                             	}
 
                 } else {

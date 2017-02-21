@@ -879,7 +879,41 @@ WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2";
         WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2
                 AND ordericr.fecha_vencimiento <> '0000-00-00' 
                 AND ordericr.fecha_vencimiento <> '1969-12-31' 
-                AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
+                AND DATEDIFF(ordericr.fecha_vencimiento,NOW()) >= 30";
+                //AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
+                
+            if ($results = Db::getInstance()->ExecuteS($query)) {
+                foreach ($results as $row) {
+                    return $row;
+                }
+            }
+               
+         }  else {
+         return null;
+         }
+
+    }
+
+    /**
+     * [icrLoteFechaVencimiento valida que el icr tenga la fecha de vencimiento y el lote para su salida]
+     * @param  [type] $icr [XXX###]
+     * @return [type] mixed     [array / true]
+     */
+    public function icrLoteFechaVencimiento($icr)
+    {
+        // valida si es un cod�go icr es valido
+         if(strlen($icr)==6 && !preg_match('/[^A-Za-z]/', substr($icr, 0,3))  && is_numeric(substr($icr, 3,3)))
+         {
+           
+        $query="select COUNT(1) as total
+        FROM "._DB_PREFIX_."supply_order_detail  orderdtl 
+        INNER JOIN "._DB_PREFIX_."supply_order_icr ordericr ON(orderdtl.id_supply_order_detail= ordericr.id_supply_order_detail)
+        INNER JOIN "._DB_PREFIX_."icr icr ON (ordericr.id_icr= icr.id_icr) 
+        INNER JOIN "._DB_PREFIX_."supply_order_detail s_order_d ON (ordericr.id_supply_order_detail=s_order_d.id_supply_order_detail)
+        WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2
+                AND ordericr.fecha_vencimiento <> '0000-00-00'
+                AND ordericr.lote <> ''";
+                //AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
                 
             if ($results = Db::getInstance()->ExecuteS($query)) {
                 foreach ($results as $row) {
