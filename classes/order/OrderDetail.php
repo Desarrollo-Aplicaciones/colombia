@@ -411,6 +411,7 @@ class OrderDetailCore extends ObjectModel
 	 */
 	protected function checkProductStock($product, $id_order_state)
 	{
+            //error_log("\n\nEntro a ese mierdero..",3,"/tmp/states.log");
 		if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR'))
 		{
 			$update_quantity = true;

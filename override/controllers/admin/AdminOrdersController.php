@@ -582,6 +582,7 @@ public function postProcess()
 		/* Change order state, add a new entry in order history and send an e-mail to the customer if needed */
 		elseif (Tools::isSubmit('submitState') && isset($order))
 		{
+//                        error_log("Este es el Order: ".print_r($order,true),3,"/tmp/states.log");
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$order_state = new OrderState(Tools::getValue('id_order_state'));
@@ -604,11 +605,23 @@ public function postProcess()
 						$history = new OrderHistory();
 						$history->id_order = $order->id;
 						$history->id_employee = (int)$this->context->employee->id;
-
+                                                
 						$use_existings_payment = false;
 						if (!$order->hasInvoice())
 							$use_existings_payment = true;     $this->logtxt ('linea 462 '.print_r($order,true));
 						$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment);
+                                                
+                                                $products = $this->getProducts($order);
+                                                foreach ($products as &$product){
+                                                    $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
+                                                    if (Configuration::get('PS_STOCK_MANAGEMENT') && $product['current_stock'] < $product['product_quantity'] && $current_order_state->id == 3){
+//                                                        error_log("\n\n el producto: ".$product['product_id']." - ".$product['product_name']."No esta en stock y faltan: ".$product['out_of_stock'],3,"/tmp/states.log");
+                                                        $history = new OrderHistory();
+                                                        $history->id_order = (int) $order->id;
+                                                        $history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order, true);
+                                                        $history->addWithemail();
+                                                    }
+                                                }
 
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
 						$templateVars = array();
@@ -1601,70 +1614,70 @@ protected function statusOrderOfList($id_order){
      * 
      */
 
-    protected function statusOrder($OrderStates,$select)
-           {
-           	$array = array();
- 			$array['detener_estado']= 'false'; 
+    protected function statusOrder($OrderStates,$select){
+        $array = array();
+        $array['detener_estado']= 'false'; 
  
-					$query="SELECT 	confdes.`value`,
-									estado.`name`,
-									confdes.`name` as status_name, 
-									detino.conditions,detino.messages,
-									detino.objects,
-									detino.stop_step
-							FROM ps_configuration confdes
-							INNER JOIN ps_conf_status detino ON (confdes.`name` = detino.`name`)
-							INNER JOIN ps_status_options opciones ON (detino.id_conf_status = opciones.id_option_status)
-							INNER JOIN ps_conf_status origen ON (opciones.id_conf_status = origen.id_conf_status)
-							INNER JOIN ps_configuration confori ON (origen.`name` = confori.`name`)
-							INNER JOIN ps_order_state_lang estado ON (confdes.`value` = estado.id_order_state)
-							WHERE confori.`value` = ".(int)$select.';';
-    if ($results = Db::getInstance()->ExecuteS($query))
-    {   
-        $osname=null;
-        foreach ($results as $row ) {
-          $osname[$row['value']]=$row['name'];
-        }
-        
-       $array_errors = array();
-        $estados=null;
-        $i=0;
-        foreach ($OrderStates as $row)
-        { 
-           
-            foreach ($results as $row2)
-            {
-               if((int)$row['id_order_state']==$row2['value'])
-                { 
-                  $estados[]=$OrderStates[$i];
-                }
-
-               //  Valida las restricciones que se deben aplicar al estado actual  
-                if((int)$row['id_order_state']==(int)$select)
-                {  // carga las restricciones del estado actual de la orden
-                   $array = $this->statusOrderOfList($this->id_object);   	
-                }
+        $query="SELECT 	confdes.`value`,
+                        estado.`name`,
+                        confdes.`name` as status_name, 
+                        detino.conditions,detino.messages,
+                        detino.objects,
+                        detino.stop_step
+                FROM ps_configuration confdes
+                INNER JOIN ps_conf_status detino ON (confdes.`name` = detino.`name`)
+                INNER JOIN ps_status_options opciones ON (detino.id_conf_status = opciones.id_option_status)
+                INNER JOIN ps_conf_status origen ON (opciones.id_conf_status = origen.id_conf_status)
+                INNER JOIN ps_configuration confori ON (origen.`name` = confori.`name`)
+                INNER JOIN ps_order_state_lang estado ON (confdes.`value` = estado.id_order_state)
+                WHERE confori.`value` = ".(int)$select.';';
+//        error_log("\n\nEste es query: ".print_r($query, true),3, "/tmp/states.log" );
+        $results = Db::getInstance()->ExecuteS($query);
+//        error_log("\n\nEste es results query: ".print_r($results, true),3, "/tmp/states.log" );
+        if ($results){   
+            $osname=null;
+            foreach ($results as $row ) {
+                $osname[$row['value']]=$row['name'];
             }
-             $i++;
+
+            $array_errors = array();
+            $estados=null;
+            $i=0;
+            foreach ($OrderStates as $row){ 
+
+                foreach ($results as $row2){
+                    if((int)$row['id_order_state']==$row2['value']){ 
+                        $estados[]=$OrderStates[$i];
+                    }
+
+                    //  Valida las restricciones que se deben aplicar al estado actual  
+                    if((int)$row['id_order_state']==(int)$select){ 
+                        // carga las restricciones del estado actual de la orden
+                        $array = $this->statusOrderOfList($this->id_object);   	
+                    }
+                }
+                $i++;
+            }
+
+            $array['osname']= $osname;
+            $array['status_order']= $estados;
+            // si existen validaciones que no se cumplen para el estado actual de la orden se detiene el estado y se muestra al usuario los mensajes de error o advertencia 	
+            if(count($array_errors)>0){
+                $array['ERRORS_THIS_STEP'] = $array_errors;
+                $array['detener_estado'] = 'true';                        
+                $array['PS_STOP_THIS_STEP'] = 'true'; 
+            }
+            else{
+                $array['detener_estado'] = 'false';                        
+                $array['PS_STOP_THIS_STEP'] = 'false'; 
+            }
+            return $array;
         }
-      
-       $array['osname']= $osname;
-       $array['status_order']= $estados;
-       // si existen validaciones que no se cumplen para el estado actual de la orden se detiene el estado y se muestra al usuario los mensajes de error o advertencia 	
-       if(count($array_errors)>0){
-       		$array['ERRORS_THIS_STEP'] = $array_errors;
-       	    $array['detener_estado'] = 'true';                        
-            $array['PS_STOP_THIS_STEP'] = 'true'; 
-       }else{
-       	    $array['detener_estado'] = 'false';                        
-            $array['PS_STOP_THIS_STEP'] = 'false'; 
-       }
-        
-return $array;
+        //error_log("Este es array FINAL: ".print_r($array, true),3, "/tmp/states.log" );
+        return false;
     }
+        
    
-    return false;
-   }
 
     public static function complemento_estado($id_profile)
     {
@@ -2007,6 +2020,7 @@ return $array;
 			$display_out_of_stock_warning = true;
 
 		// products current stock (from stock_available)
+                $flagStockDisplayOption = false;
 		foreach ($products as &$product)
 		{
 			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
@@ -2018,9 +2032,19 @@ return $array;
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 			
+                        //error_log("\n\n si entro ".print_r($product, true),3,"/tmp/states.log");
+                        
 			// if the current stock requires a warning
-			if ($product['current_stock'] == 0 && $display_out_of_stock_warning)
-				$this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
+			if ($product['current_stock'] == 0 && $display_out_of_stock_warning){
+                            $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
+                        }
+                        else if ( $product['current_stock'] < $product['product_quantity'] ) {
+                            //error_log("\n\n si entro",3,"/tmp/states.log");
+                            $missingProduct = $product['product_quantity'] - $product['current_stock'];
+//                            $errorW = 'Faltan '.$missingProduct.' cantidades del producto '.$product['product_name'];
+                            $this->displayWarning('Faltan '.$missingProduct.' cantidades del producto '.$product['product_name']);
+                            $flagStockDisplayOption = true;
+                        }
 			if ($product['id_warehouse'] != 0)
 			{
 				$warehouse = new Warehouse((int)$product['id_warehouse']);
@@ -2032,8 +2056,16 @@ return $array;
 
 		$gender = new Gender((int)$customer->id_gender, $this->context->language->id);
                      
-        $estados=$this->statusOrder(OrderState::getOrderStates((int)Context::getContext()->language->id,(int)$this->context->employee->id_profile),$order->current_state);
+                //error_log("\n\n Variable display_out_of_stock_warning: ".print_r($display_out_of_stock_warning,true),3,"/tmp/states.log");
+                
+                
+                $estados=$this->statusOrder(OrderState::getOrderStates((int)Context::getContext()->language->id,(int)$this->context->employee->id_profile),$order->current_state);
         $this->fields_list['osname']['list'] = $estados['osname'];
+        
+        
+        
+        //error_log("\n\n\n\n\n\n\n orderCurrentState: ".print_r($order->getCurrentOrderState(),true),3,"/tmp/states.log");
+        //error_log("\n\n Estos son los estados: ".print_r($estados['status_order'],true),3,"/tmp/states.log");
         
         $cart = new Cart($order->id_cart);             
 		// Smarty assign
@@ -2085,7 +2117,8 @@ return $array;
             'ERRORS_THIS_STEP' => isset($estados['ERRORS_THIS_STEP']) ? $estados['ERRORS_THIS_STEP'] : NULL ,
             "stop_step" => $estados['stop_step'],
             "formula_medica" => Utilities::is_formula($cart,$this->context),
-            "imgs_formula_medica" =>  Utilities::getImagenesFormula($order->id)
+            "imgs_formula_medica" =>  Utilities::getImagenesFormula($order->id),
+                    'flagStockDisplayOption' => $flagStockDisplayOption
 		);
 		$this->motivo_cancelcion();
 		$this->get_mensajero_order($this->id_object);

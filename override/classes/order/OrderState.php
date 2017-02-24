@@ -53,12 +53,12 @@ class OrderState extends OrderStateCore
 		
 			$result = Db::getInstance()->executeS($sql);
 			// echo '<b> data-    -2xd: <pre>'.var_dump($result).'</pre>';
+                    //error_log("Este es el arreglo de order_state_back: ".print_r($result, true),3, "/tmp/states.log" );
                 
-                if($flag_order_back){
-                    /*error_log("Este es el arreglo de order_state_back: ".print_r($result, true),3, "/tmp/orderstates.log" );*/
+                if(/*$flag_order_back*/ false){
                     // Ewstados validos para nuevas ordenes por back.
                     $valid_states = explode(',',Configuration::get('PS_CREATE_ORDER_STATE_BACK'));
-                    /*error_log("Este es el arreglo de estados validos: ".print_r($valid_states, true),3, "/tmp/orderstates.log" );*/
+                    //error_log("Este es el arreglo de estados validos: ".print_r($valid_states, true),3, "/tmp/states.log" );
                     
                     $states = array();
                     
@@ -69,11 +69,12 @@ class OrderState extends OrderStateCore
                             }
                         }
                     }
+                    //error_log("Este es el arreglo de estados validos FINAL: ".print_r($states, true),3, "/tmp/states.log" );
                     return $states;
-                    /*error_log("Este es el arreglo de estados validos FINAL: ".print_r($states, true),3, "/tmp/orderstates.log" );*/
                     
                 }
                         
+                //error_log("Este es el retorno fuera de todo: ".print_r($result, true),3, "/tmp/states.log" );
 		return $result;
 	}
 
