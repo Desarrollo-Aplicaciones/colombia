@@ -601,6 +601,37 @@ public function postProcess()
 					$current_order_state = $order->getCurrentOrderState();
 					if ($current_order_state->id != $order_state->id)
 					{
+						if($order_state->id == 4) {
+							$fechaHora = $order->delivery_date;
+						
+							$hora = strtotime($fechaHora);
+							$hora = date("Hi", $hora);
+							
+							$fecha = strtotime($fechaHora);
+							$fecha = date("Y-m-d", $fecha);
+							
+							$customer = new Customer($order->id_customer);
+							$address = new Address($order->id_address_delivery);
+
+							$getOrderDelivery = $this->get_mensajero_order($order->id);
+							$ccDelivery = explode("@",$getOrderDelivery['email']);
+							
+							//$server='www.smartquick.com.co'; 
+							$server='181.49.224.186';
+							$pedido=urlencode($order->id);
+							$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
+							$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
+							$ciudad=urlencode($address->city);
+							$direccion=urlencode($address->address1);
+							$doc_cliente=urlencode($customer->identification);
+							$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
+							$telefono=urlencode($address->phone_mobile);
+							$observacion=urlencode($order->private_message);
+							$doc_mensajero=urlencode($ccDelivery[0]);
+							$url_insercion='http://'.$server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
+
+							file_get_contents($url_insercion);
+						}
 						// Create new OrderHistory
 						$history = new OrderHistory();
 						$history->id_order = $order->id;
@@ -1923,7 +1954,7 @@ protected function statusOrderOfList($id_order){
 					WHEN  'Carrier' THEN trans.`name`
 					ELSE 'N/A'
 					END
-					AS name_entity, asoc.id_entity, asoc.entity
+					AS name_entity, asoc.id_entity, asoc.entity, emp.email
 						FROM ps_employee emp LEFT JOIN ps_associate_carrier asoc ON (emp.id_employee = asoc.id_entity)
 						INNER JOIN ps_orders orden ON (asoc.id_order = orden.id_order)
 						LEFT JOIN ps_carrier trans ON(asoc.id_entity = trans.id_carrier)
