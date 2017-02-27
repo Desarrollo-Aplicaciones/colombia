@@ -57,8 +57,8 @@ class Model extends PaymentModule {
 		$results = Search::findApp($id_lang, $expr, $page_number, $page_size, $order_by, $order_way, FALSE, FALSE);
 		$products = array();
 		if ((int) count($results['result']) > 0) {
-			//$total_rows = (int) $results['total'];
-			$total_rows = (int) count($results['result']);
+			$total_rows = (int) $results['total'];
+			// $total_rows = (int) count($results['result']);
 			$total_pages = ceil($total_rows / $page_size);
 			$start = 0;
 
@@ -570,15 +570,7 @@ public function setAccount($arg){
 	if(!empty($arg["id_type"]))
 		$customer->id_type = (int) $arg["id_type"];
 
-	$flag = false;
-	if (empty($customer->id)) {
-		$flag = $customer->add();
-	}else{
-		$flag = $customer->update();
-	}
-
-
-	
+	$flag = empty($customer->id) ? $customer->add() : $customer->update();
 
 	if($flag){
 		$gender = $customer->id_gender  == 1 ? 'M' : ($customer->id_gender  == 2 ? 'F' : '');

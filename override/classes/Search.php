@@ -891,9 +891,10 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				)
+				)'.Product::sqlStock('p', '', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				WHERE p.`id_product` '.$product_pool;
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cat ON (p.`id_category_default` = cat.`id_category`)
+				WHERE p.active = 1 AND product_shop.active = 1 AND (stock.quantity > 0 AND stock.quantity IS NOT NULL) AND  p.`id_product` '.$product_pool;
 		$total = $db->getValue($sql);
 
 		if (!$result){
