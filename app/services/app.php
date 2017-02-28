@@ -253,11 +253,11 @@ class API extends REST {
 	private function socialLogin(){
 
 		$arguments['firstname']	= $this->_request['firstname'];
-		$arguments['lastname']		= $this->_request['lastname'];
-		$arguments['email']			= $this->_request['email'];
+		$arguments['lastname']	= $this->_request['lastname'];
+		$arguments['email']		= $this->_request['email'];
 		$arguments['id']		= $this->_request['id'];
-		$arguments['passwd'] = NULL;
-		$arguments['gender'] 			=  substr($this->_request['gender'], 0,1);
+		$arguments['passwd'] 	= NULL;
+		$arguments['gender'] 	= substr($this->_request['gender'], 0,1);
 
 		if (Validate::isEmail($arguments['email']) && !empty($arguments['id']) && !empty($arguments['firstname']) ){
 

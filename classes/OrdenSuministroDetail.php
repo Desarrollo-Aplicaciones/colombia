@@ -285,14 +285,36 @@ AND od.id_product IN (212);
     public function InsertarProductosIcrOrdenLoad() {
 
         DB::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_load_icr` ');
-
+        $err = 0;
         foreach ($this->productoicr as $prod => $idIcrCod) {
             foreach ($idIcrCod as $idicr => $codicr) {
-
-                $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_load_icr` (`id_supply_order`, `id_product`, `id_icr`, `cod_icr`) VALUES ';
-                $query .= '('.(int)$this->supply_order.', '.(int)$prod.', '.(int)$idicr.', "'.strtoupper($codicr).'" ) ';
-                DB::getInstance()->execute($query);
-                $query='';
+                $i = 0;
+                foreach($codicr as $key => $value) {
+                    if($i == 1) {
+                        if(trim($value) != "") {
+                            $lote = $value;
+                        } else {
+                            $err = 1;
+                        }
+                    } 
+                    if($i == 2) {
+                        if(trim($value) != "") {
+                            $fecha_vencimiento = $value;
+                        } else {
+                            $err = 1;
+                        }
+                    } 
+                    $i++;
+                }
+                if($err == 0) {
+                    $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_load_icr` (`id_supply_order`, `id_product`, `id_icr`, `cod_icr`, `lote`, `fecha_vencimiento`) VALUES ';
+                    $query .= '('.(int)$this->supply_order.', '.(int)$prod.', '.(int)$idicr.', "'.strtoupper($codicr).'", "'.$lote.'", "'.$fecha_vencimiento.'" ) ';
+                    DB::getInstance()->execute($query);
+                    $query='';
+                } else {
+                    echo "<br>Se deben ingresar todos los lotes o fechas de vencimiento. <br><a href='javascript:history.back(1)'>Regresar</a>";
+                    exit;
+                }
             }
         }
     }
@@ -303,8 +325,8 @@ AND od.id_product IN (212);
      */
     public function InsertarProductosIcrOrden() {
 
-        $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, id_warehouse) ';
-        $query .= ' SELECT sod.id_supply_order_detail, soli.id_icr, '.$this->getId_employee().', now(), so.id_warehouse FROM `'._DB_PREFIX_.'supply_order_detail` sod
+        $query = 'INSERT INTO `'._DB_PREFIX_.'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, id_warehouse, lote, fecha_vencimiento) ';
+        $query .= ' SELECT sod.id_supply_order_detail, soli.id_icr, '.$this->getId_employee().', now(), so.id_warehouse, soli.lote, soli.fecha_vencimiento FROM `'._DB_PREFIX_.'supply_order_detail` sod
                     INNER JOIN `'._DB_PREFIX_.'supply_order_load_icr` soli 
                     ON (sod.id_supply_order = soli.id_supply_order AND sod.id_product = soli.id_product)
                     INNER JOIN `'._DB_PREFIX_.'supply_order` so
@@ -857,7 +879,41 @@ WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2";
         WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2
                 AND ordericr.fecha_vencimiento <> '0000-00-00' 
                 AND ordericr.fecha_vencimiento <> '1969-12-31' 
-                AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
+                AND DATEDIFF(ordericr.fecha_vencimiento,NOW()) >= 30";
+                //AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
+                
+            if ($results = Db::getInstance()->ExecuteS($query)) {
+                foreach ($results as $row) {
+                    return $row;
+                }
+            }
+               
+         }  else {
+         return null;
+         }
+
+    }
+
+    /**
+     * [icrLoteFechaVencimiento valida que el icr tenga la fecha de vencimiento y el lote para su salida]
+     * @param  [type] $icr [XXX###]
+     * @return [type] mixed     [array / true]
+     */
+    public function icrLoteFechaVencimiento($icr)
+    {
+        // valida si es un cod�go icr es valido
+         if(strlen($icr)==6 && !preg_match('/[^A-Za-z]/', substr($icr, 0,3))  && is_numeric(substr($icr, 3,3)))
+         {
+           
+        $query="select COUNT(1) as total
+        FROM "._DB_PREFIX_."supply_order_detail  orderdtl 
+        INNER JOIN "._DB_PREFIX_."supply_order_icr ordericr ON(orderdtl.id_supply_order_detail= ordericr.id_supply_order_detail)
+        INNER JOIN "._DB_PREFIX_."icr icr ON (ordericr.id_icr= icr.id_icr) 
+        INNER JOIN "._DB_PREFIX_."supply_order_detail s_order_d ON (ordericr.id_supply_order_detail=s_order_d.id_supply_order_detail)
+        WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2
+                AND ordericr.fecha_vencimiento <> '0000-00-00'
+                AND ordericr.lote <> ''";
+                //AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
                 
             if ($results = Db::getInstance()->ExecuteS($query)) {
                 foreach ($results as $row) {
