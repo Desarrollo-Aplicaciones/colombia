@@ -55,7 +55,7 @@ class OrderState extends OrderStateCore
 			// echo '<b> data-    -2xd: <pre>'.var_dump($result).'</pre>';
                     //error_log("Este es el arreglo de order_state_back: ".print_r($result, true),3, "/tmp/states.log" );
                 
-                if(/*$flag_order_back*/ false){
+                if($flag_order_back){
                     // Ewstados validos para nuevas ordenes por back.
                     $valid_states = explode(',',Configuration::get('PS_CREATE_ORDER_STATE_BACK'));
                     //error_log("Este es el arreglo de estados validos: ".print_r($valid_states, true),3, "/tmp/states.log" );

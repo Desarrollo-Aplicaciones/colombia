@@ -1976,7 +1976,8 @@ protected function statusOrderOfList($id_order){
 		$order = new Order($id_order);
 		if (!Validate::isLoadedObject($order))
 			throw new PrestaShopException('object can\'t be loaded');
-
+                
+                //error_log("\n\n\nORDER: n".print_r($order,true),3,"/tmp/states.log");
 		$order->private_message = addslashes($order->private_message);
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);
@@ -2066,16 +2067,19 @@ protected function statusOrderOfList($id_order){
                         //error_log("\n\n si entro ".print_r($product, true),3,"/tmp/states.log");
                         
 			// if the current stock requires a warning
-			if ($product['current_stock'] == 0 && $display_out_of_stock_warning){
-                            $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
-                        }
-                        else if ( $product['current_stock'] < $product['product_quantity'] ) {
+                        if ( $product['current_stock'] < $product['product_quantity'] ) {
                             //error_log("\n\n si entro",3,"/tmp/states.log");
                             $missingProduct = $product['product_quantity'] - $product['current_stock'];
-//                            $errorW = 'Faltan '.$missingProduct.' cantidades del producto '.$product['product_name'];
+//                            $errorW = 'Faltan '.$missingProduct.' cantidades del producto '.$product['product_name'],3,"/tmp/states.log";
                             $this->displayWarning('Faltan '.$missingProduct.' cantidades del producto '.$product['product_name']);
-                            $flagStockDisplayOption = true;
+                            if($current_order_state->id == 9){
+                                //error_log("Entro".print_r($current_order_state,true),3,"/tmp/states.log");
+                                $flagStockDisplayOption = true;
+                            }
                         }
+//			if ($product['current_stock'] == 0 && $display_out_of_stock_warning){
+//                            $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
+//                        }
 			if ($product['id_warehouse'] != 0)
 			{
 				$warehouse = new Warehouse((int)$product['id_warehouse']);
