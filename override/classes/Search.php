@@ -682,6 +682,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 						PRIMARY KEY (`id_asc`),
 						INDEX indx_pr_search_'.$alenum.' (id_product) USING BTREE
 						)';
+
+						sleep(1);
 					
 					$result_crear = $db->execute($sql_create);
 
