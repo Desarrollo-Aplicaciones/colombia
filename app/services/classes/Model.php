@@ -53,7 +53,7 @@ class Model extends PaymentModule {
 		$page_size   = empty($page_size) ? 1 : $page_size;
 		$order_by    = empty($order_by) ? 'position' : $order_by;
 		$order_way   = empty($order_way) ? 'desc' : $order_way;
-
+		$context = Context::getContext();
 		$results = Search::findApp($id_lang, $expr, $page_number, $page_size, $order_by, $order_way, FALSE, FALSE);
 		$products = array();
 		if ((int) count($results['result']) > 0) {

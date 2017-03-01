@@ -854,6 +854,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 
 		$product_pool = ((strpos($product_pool, ',') === false) ? (' = '.(int)$product_pool.' ') : (' IN ('.rtrim($product_pool, ',').') '));
 
+		// error_log(print_r($context->shop,true));
 
 		$sql = 'SELECT p.id_product, p.reference, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
 				/*pl.`description_short`, pl.`available_now`, pl.`available_later`,*/ pl.`link_rewrite`, lower(pl.`name`) AS name,
@@ -884,7 +885,6 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				GROUP BY product_shop.id_product
 				'.$orden_bus.' 
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
-		
 		$result = $db->executeS($sql);
 
 		$sql = 'SELECT COUNT(*)
