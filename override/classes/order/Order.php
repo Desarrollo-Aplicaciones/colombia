@@ -201,4 +201,12 @@ class Order extends OrderCore {
 		$order_invoices->where('id_order', '=', $this->id);
 		return $order_invoices;
 	}
+
+	/**
+	* Tomo las ordenes con estado enviado.
+	*/
+	public function getOrdersSent() {
+
+		return Db::getInstance()->execute('SELECT * FROM ps_orders WHERE current_state = 4');
+	}
 }

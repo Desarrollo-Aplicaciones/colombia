@@ -601,6 +601,7 @@ public function postProcess()
 					$current_order_state = $order->getCurrentOrderState();
 					if ($current_order_state->id != $order_state->id)
 					{
+						$errorSmart = null;
 						if($order_state->id == 4) {
 							$fechaHora = $order->delivery_date;
 						
@@ -630,7 +631,14 @@ public function postProcess()
 							$doc_mensajero=urlencode($ccDelivery[0]);
 							$url_insercion='http://'.$server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
 
-							file_get_contents($url_insercion);
+							$result = json_decode(file_get_contents($url_insercion));
+							
+							if($result->status == 'ERROR') {
+								$errorSmart = "&smart=false";
+							} else {
+								$errorSmart = "&smart=true";
+							}
+
 						}
 						// Create new OrderHistory
 						$history = new OrderHistory();
@@ -671,7 +679,7 @@ public function postProcess()
 								}
 							}
 
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token.$errorSmart);
 						}
 						$this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
 					}
