@@ -2,7 +2,7 @@
 	{assign var="sizeticket" value="100%"}
 	<table style="width: {$sizeticket};">
 		<tr style="text-align: center;">
-			<td><img src="{$img_ps_dir}logo_tirilla_invoice.jpg" style="width: 110px;"></td>
+			<td><img src="{$base_dir_ssl}logo_tirilla_invoice.jpg" style="width: 110px;"></td>
 		</tr>
 		<br>
 		<tr style="text-align: center; font-size: 7pt;">
