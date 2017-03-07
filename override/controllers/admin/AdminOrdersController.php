@@ -602,7 +602,7 @@ public function postProcess()
 					if ($current_order_state->id != $order_state->id)
 					{
 						$errorSmart = null;
-						if($order_state->id == 4) {
+						if($order_state->id == 22) {
 							$fechaHora = $order->delivery_date;
 						
 							$hora = strtotime($fechaHora);
