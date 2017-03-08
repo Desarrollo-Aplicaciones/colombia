@@ -1,6 +1,6 @@
 <?php
-
-require(dirname(__FILE__).'/config/config.inc.php');
+echo "entro";
+require('/var/www/test.farmalisto.com.co/colombia/config/config.inc.php');
 
 $sqlOrder = "SELECT * FROM "._DB_PREFIX_."orders WHERE current_state = 4 OR current_state = 20";
 $results = Db::getInstance()->ExecuteS($sqlOrder);
@@ -13,7 +13,7 @@ $status = array(
 	);
 
 foreach($results as $key => $value) {
-
+echo "consultando";
 	$jsonResult = json_decode(file_get_contents("http://181.49.224.186/restfarmalisto/servicio_rest/MantieneReceptor/consulta_pedidos/".$value['id_order']), true);
 
 	//echo $carrierOrder['id_entity'] . ' -> '. $value['current_state']. ' -> '. $status[$jsonResult['estado']] .'<br>';
@@ -31,7 +31,7 @@ foreach($results as $key => $value) {
 		$resultsInsert = Db::getInstance()->ExecuteS($sqlInsertHistory);
 	}
 }
-
+echo "término de consultar";
 function get_mensajero_order($id_order) {
 	$sql = "SELECT emp.id_employee, asoc.id_entity
 				FROM ps_employee emp LEFT JOIN ps_associate_carrier asoc ON (emp.id_employee = asoc.id_entity)
