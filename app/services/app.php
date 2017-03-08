@@ -163,7 +163,7 @@ class API extends REST {
 		$this->response(json_encode($context->customer->isLogged()), 200);
 	}
 
-	private function categories($params)
+	private function categories()
 	{
 		$model = new Model();
 		$this->response(json_encode($model->get_category(2, 3, TRUE)),200);
@@ -180,7 +180,7 @@ class API extends REST {
 		$ids         = $this->_request['ids'];
 		$page_number = $this->_request['page_number'];
 		$page_size   = $this->_request['page_size'];
-		$order_by    = $this->_request['order_by'];
+		$order_by    = (isset($this->_request['order_by']))?$this->_request['order_by']:NULL;
 		$order_way   = $this->_request['order_way'];
 
 		$ids_cats = explode(",", $ids);
@@ -253,11 +253,11 @@ class API extends REST {
 	private function socialLogin(){
 
 		$arguments['firstname']	= $this->_request['firstname'];
-		$arguments['lastname']		= $this->_request['lastname'];
-		$arguments['email']			= $this->_request['email'];
+		$arguments['lastname']	= $this->_request['lastname'];
+		$arguments['email']		= $this->_request['email'];
 		$arguments['id']		= $this->_request['id'];
-		$arguments['passwd'] = NULL;
-		$arguments['gender'] 			=  substr($this->_request['gender'], 0,1);
+		$arguments['passwd'] 	= NULL;
+		$arguments['gender'] 	= substr($this->_request['gender'], 0,1);
 
 		if (Validate::isEmail($arguments['email']) && !empty($arguments['id']) && !empty($arguments['firstname']) ){
 
@@ -284,19 +284,20 @@ class API extends REST {
 		} 
 
 		$arguments = array();
-		$arguments['firstname']	= $this->_request['firstname'];
-		$arguments['lastname']		= $this->_request['lastname'];
-		$arguments['gender'] 			= $this->_request['gender'];
-		$arguments['email']			= $this->_request['email'];
-		$arguments['passwd']		= $this->_request['passwd'];
-		$arguments['signon']		= $this->_request['signon'];			
-		$arguments['news']			= $this->_request['news'];
-		$arguments['dni']			= $this->_request['dni'];
-		$arguments['birthday']			= $this->_request['birthday'];
-		$arguments['website']			= $this->_request['website'];
-		$arguments['company']			= $this->_request['company'];
-		$arguments['id_type']			= $this->_request['id_type'];
-		$arguments['update']			=  $this->_request['update'];	
+		$arguments['firstname']		= (isset($this->_request['firstname']))?$this->_request['firstname']:NULL;
+		$arguments['lastname']		= (isset($this->_request['lastname']))?$this->_request['lastname']:NULL;
+		$arguments['gender'] 		= (isset($this->_request['gender']))?$this->_request['gender']:NULL;
+		$arguments['email']			= (isset($this->_request['email']))?$this->_request['email']:NULL;
+		$arguments['passwd']		= (isset($this->_request['passwd']))?$this->_request['passwd']:NULL;
+		$arguments['signon']		= (isset($this->_request['signon']))?$this->_request['signon']:NULL;			
+		$arguments['news']			= (isset($this->_request['news']))?$this->_request['news']:NULL;
+		$arguments['dni']			= (isset($this->_request['dni']))?$this->_request['dni']:NULL;
+		$arguments['birthday']		= (isset($this->_request['birthday']))?$this->_request['birthday']:NULL;
+		$arguments['website']		= (isset($this->_request['website']))?$this->_request['website']:NULL;
+		$arguments['company']		= (isset($this->_request['company']))?$this->_request['company']:NULL;
+		$arguments['id_type']		= (isset($this->_request['id_type']))?$this->_request['id_type']:NULL;
+		$arguments['update']		=  (isset($this->_request['update']))?$this->_request['update']:NULL;	
+		$arguments['img_profile']	=  NULL;
 
 
 		if (Validate::isEmail($arguments['email']) && !empty($arguments['email'])){
@@ -345,7 +346,7 @@ class API extends REST {
 		} 
 
 		$id_customer	= $this->_request['id_customer'];
-		$id_address	= $this->_request['id_address'];
+		$id_address	= (isset($this->_request['id_address']))?$this->_request['id_address']:NULL;
 		$model = new Model();		
 		return $this->response(json_encode($model->get_address($id_customer,$id_address)),200);	
 
@@ -362,23 +363,23 @@ class API extends REST {
 
 		$arg = array();
 
-		$arg['id_customer'] = $this->_request['id_customer'];
-		$arg['id_country'] = $this->_request['id_country'];
-		$arg['id_state'] = $this->_request['id_state'];
-		$arg['alias'] = $this->_request['alias'];
-		$arg['lastname'] = $this->_request['lastname'];
-		$arg['firstname'] = $this->_request['firstname'];
-		$arg['address1'] = $this->_request['address1'];
-		$arg['address2'] = $this->_request['address2'];
-		$arg['city'] = $this->_request['city'];
-		$arg['phone'] = $this->_request['phone'];
-		$arg['mobile'] = $this->_request['mobile'];
-		$arg['dni'] = $this->_request['dni'];
-		$arg['postcode'] = $this->_request['postcode'];	
-		$arg['id_colonia'] = $this->_request['id_colonia'];
-		$arg['is_rfc'] = $this->_request['is_rfc'];
-		$arg['id_city'] = $this->_request['id_city'];
-		$arg['id'] = $this->_request['id'];
+		$arg['id_customer'] = (isset($this->_request['id_customer']))?$this->_request['id_customer']:NULL;
+		$arg['id_country'] = (isset($this->_request['id_country']))?$this->_request['id_country']:NULL;
+		$arg['id_state'] = (isset($this->_request['id_state']))?$this->_request['id_state']:NULL;
+		$arg['alias'] = (isset($this->_request['alias']))?$this->_request['alias']:NULL;
+		$arg['lastname'] = (isset($this->_request['lastname']))?$this->_request['lastname']:NULL;
+		$arg['firstname'] = (isset($this->_request['firstname']))?$this->_request['firstname']:NULL;
+		$arg['address1'] = (isset($this->_request['address1']))?$this->_request['address1']:NULL;
+		$arg['address2'] = (isset($this->_request['address2']))?$this->_request['address2']:NULL;
+		$arg['city'] = (isset($this->_request['city']))?$this->_request['city']:NULL;
+		$arg['phone'] = (isset($this->_request['phone']))?$this->_request['phone']:NULL;
+		$arg['mobile'] = (isset($this->_request['mobile']))?$this->_request['mobile']:NULL;
+		$arg['dni'] = (isset($this->_request['dni']))?$this->_request['dni']:NULL;
+		$arg['postcode'] = (isset($this->_request['postcode']))?$this->_request['postcode']:NULL;	
+		$arg['id_colonia'] = (isset($this->_request['id_colonia']))?$this->_request['id_colonia']:NULL;
+		$arg['is_rfc'] = (isset($this->_request['is_rfc']))?$this->_request['is_rfc']:NULL;
+		$arg['id_city'] = (isset($this->_request['id_city']))?$this->_request['id_city']:NULL;
+		$arg['id'] = (isset($this->_request['id']))?$this->_request['id']:NULL;
 
 
 		$model = new Model();		
@@ -475,10 +476,10 @@ private function cart(){
 	$param['products'] = 		$this->_request['products'];
 	$param['id_customer'] = 	$this->_request['id_customer'];
 	$param['discounts'] = 		$this->_request['discounts'];
-	$param['deleteDiscount'] = 	$this->_request['deleteDiscount'];
+	$param['deleteDiscount'] = 	(isset($this->_request['deleteDiscount']))?$this->_request['deleteDiscount']: NULL;
 	$param['id_address'] = 		$this->_request['id_address'];
 	$param['msg'] = 			$this->_request['msg'];
-	$param['id_cart'] = 		($this->_request['id_cart'] > 0 ? $this->_request['id_cart'] : NULL);
+	$param['id_cart'] = 		(isset($this->_request['id_cart']) && $this->_request['id_cart'] > 0) ? $this->_request['id_cart'] : NULL;
 	$param['clear'] = 		(!empty($this->_request['clear'])  ? (boolean) $this->_request['clear'] : FALSE);
 
 	$model = new Model();

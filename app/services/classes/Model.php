@@ -53,12 +53,12 @@ class Model extends PaymentModule {
 		$page_size   = empty($page_size) ? 1 : $page_size;
 		$order_by    = empty($order_by) ? 'position' : $order_by;
 		$order_way   = empty($order_way) ? 'desc' : $order_way;
-
+		$context = Context::getContext();
 		$results = Search::findApp($id_lang, $expr, $page_number, $page_size, $order_by, $order_way, FALSE, FALSE);
 		$products = array();
 		if ((int) count($results['result']) > 0) {
-			//$total_rows = (int) $results['total'];
-			$total_rows = (int) count($results['result']);
+			$total_rows = (int) $results['total'];
+			// $total_rows = (int) count($results['result']);
 			$total_pages = ceil($total_rows / $page_size);
 			$start = 0;
 
@@ -205,7 +205,7 @@ class Model extends PaymentModule {
 				foreach ($aux_3[$i] as $key => $value) {   
 					foreach ($aux_3 as $key_2 => $value_2) { 
 						foreach ($value_2 as $key_3 => $value_3) {
-							if($value['id_parent'] == $value_3['i']){
+							if(isset($value['id_parent']) && $value['id_parent'] == $value_3['i']){
 								unset($value['id_parent']);
 								unset($value['level_depth']);
 								$aux_3[$key_2][$key_3]['s'][] = $value;
@@ -234,6 +234,7 @@ class Model extends PaymentModule {
 		$array_productos= array();  
 
 		$buscar = $ids_categories;
+		$context = Context::getContext();
 
 		$busqueda=NULL;
 		if ($page_size > 300) {
@@ -518,6 +519,8 @@ public function getProduct($id) {
 			}
 		}
 
+		$context = Context::getContext();
+
 		$results[0]['prov'] = $array_proveedores;
 		$results[0]['prov_date'] = $mostRecent2;
 		$results[0]['imgs'] = $array_img;
@@ -569,16 +572,9 @@ public function setAccount($arg){
 		$customer->company =  $arg["company"];
 	if(!empty($arg["id_type"]))
 		$customer->id_type = (int) $arg["id_type"];
+	$customer->img_profile = $arg["img_profile"];
 
-	$flag = false;
-	if (empty($customer->id)) {
-		$flag = $customer->add();
-	}else{
-		$flag = $customer->update();
-	}
-
-
-	
+	$flag = empty($customer->id) ? $customer->add() : $customer->update();
 
 	if($flag){
 		$gender = $customer->id_gender  == 1 ? 'M' : ($customer->id_gender  == 2 ? 'F' : '');
@@ -605,6 +601,7 @@ public function setAccount($arg){
 		             'birthday' => $customer->birthday,
 		             'website' => $customer->website,
 		             'company' => $customer->company,
+		             'img_profile' => $customer->img_profile,
 		             'success' => TRUE);
 
 	}
@@ -890,11 +887,13 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
         		$aplicar_cupon = 1;
         		foreach ($discounts as $key => $value) {
         			$cartRule = NULL;
-        			if( $value['type_voucher'] == 'md' ) {							
-        				$iddoc = trim($value['cupon']);
-        				$cartRule = new CartRule(CartRule::getIdByDoctor($iddoc));
-        			} elseif( $value['type_voucher'] == 'cupon' ) {
-        				$cartRule = new CartRule(CartRule::getIdByCode(trim($value['cupon'])));
+        			if (isset($value['type_voucher'])) {
+	        			if( $value['type_voucher'] == 'md' ) {							
+	        				$iddoc = trim($value['cupon']);
+	        				$cartRule = new CartRule(CartRule::getIdByDoctor($iddoc));
+	        			} elseif( $value['type_voucher'] == 'cupon' ) {
+	        				$cartRule = new CartRule(CartRule::getIdByCode(trim($value['cupon'])));
+	        			}
         			}
         			if(!empty($cartRule))
         				$this->context->cart->addCartRule($cartRule->id);
@@ -956,7 +955,7 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
             }
 
 
-            if ( $aplicar_cupon == 1 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
+            if ( isset($discounts_return[0]) && $aplicar_cupon == 1 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
 
             	$discounts_return = array();
             	$discounts_return[] = array( 'success' => false, 'msg' => 'Cupon incorrecto, no aplicado' );
@@ -1194,6 +1193,7 @@ private function createOrder($method,$state) {
 
     		if($option == 'profile'){
     			$this->context->customer->img_profile = $storage_name;
+    			error_log(print_r($this->context->customer));
     			return $this->context->customer->update();
 
     		}

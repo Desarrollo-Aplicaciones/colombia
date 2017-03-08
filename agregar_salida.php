@@ -159,6 +159,7 @@ margin: 3px;
                          <th>Producto</th>
                          <th>Referencia</th>
                          <th>IRC</th>
+                         <th>Fecha Vencimiento</th>
                      </tr>
                   
                      <?php
@@ -374,8 +375,8 @@ $("#txtSearch").keyup(function(event){
                       console.log("Rta salida: "+response);
                       console.log("Productos: " + productos.toString());
                                                
-                       if(response != 'NO') {
-
+                      if(response != 'NO') {
+                        if(response != 'NOFECLOTE') {
                           if(response != 'NOFEC') {
                             // if()   
                             // valida si el codigo ICR esta en la lista       
@@ -389,7 +390,7 @@ $("#txtSearch").keyup(function(event){
                                     if(productos["cont_"+retornado[4]]<=productos["total_"+retornado[4]])
                                     {
                                  
-                                    $("#icrstable").append("<tr><td>"+ retornado[2] +"</td><td>"+ retornado[3] +"</td><td>"+ count_icr +" <input readonly type='text' name='pri"+ "[]' value='" + retornado[1] + "'> <a class=\"quitaicr\" id=\""+ retornado[1] +"|"+retornado[4]+ "\"  href='#'> X </a> </td></tr>");
+                                    $("#icrstable").append("<tr><td>"+ retornado[2] +"</td><td>"+ retornado[3] +"</td><td>"+ count_icr +" <input readonly type='text' name='pri"+ "[]' value='" + retornado[1] + "'> <a class=\"quitaicr\" id=\""+ retornado[1] +"|"+retornado[4]+ "\"  href='#'> X </a> </td><td>"+retornado[7]+"</td></tr>");
                                        
                                          //agrgar al array de icr  
                                          codigos_icr[count_icr]=retornado[1];
@@ -417,12 +418,17 @@ $("#txtSearch").keyup(function(event){
                             $("#txtSearch").val("");
 
                           }
-                                                      
                         } else {
-                            $('#alert_irc').get(0).play();
-                            alert("Este Codigo <"+icr+"> no esta autorizado.");
+                          $('#alert_irc').get(0).play();
+                            alert("Este Codigo <"+icr+"> no tiene el lote o la fecha de vencimiento.");
                             $("#txtSearch").val("");
                         }
+                                                      
+                      } else {
+                          $('#alert_irc').get(0).play();
+                          alert("Este Codigo <"+icr+"> no esta autorizado.");
+                          $("#txtSearch").val("");
+                      }
                         //alert("fin success")
                         //$("#txtSearch").prop("readonly",false);
                         // $("#txtSearch").removeAttr("readonly");

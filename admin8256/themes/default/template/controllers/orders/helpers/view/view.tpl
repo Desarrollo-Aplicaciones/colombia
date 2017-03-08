@@ -305,7 +305,13 @@ function save_private_message() {
 	
 			{elseif $stop_step}
 			<div class="conf">¡Muy bien!, Ya puedes continuar con el siguiente paso del proceso.</div>
-        {/if}		
+        {/if}
+
+        {if $smarty.get.smart == 'false'}
+        	<div class="error">Error, la orden no se pudo guardar en el sistema de SmartQuick.</div>
+        	{elseif $smarty.get.smart == 'true'}
+        	<div class="conf">La orde se guardo correctamente en el sistema de SmartQuick.</div>
+        {/if}
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
 	{if ($hook_invoice)}

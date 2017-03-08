@@ -39,7 +39,7 @@ class Address extends AddressCore
 			$nom_city = $arr_nom_city[0]['city_name'];
             $val_id_city = $dir_change[0];
 
-		} elseif ( is_numeric($_POST['city_id'])) {
+		} elseif ( isset($_POST['city_id']) && is_numeric($_POST['city_id'])) {
 
             $arr_nom_city = City::getCityByIdCity($_POST['city_id']);
             $nom_city = $arr_nom_city[0]['city_name'];
