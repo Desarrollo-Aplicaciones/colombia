@@ -314,7 +314,7 @@ AND od.id_product IN (212);
                                 }
 
                             } else {
-                                $err = 2
+                                $err = 2;
                             }
                         } else {
                             $err = 1;
