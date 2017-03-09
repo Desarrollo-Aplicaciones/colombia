@@ -2,7 +2,7 @@
 echo "entro";
 require('/var/www/test.farmalisto.com.co/colombia/config/config.inc.php');
 
-$sqlOrder = "SELECT * FROM "._DB_PREFIX_."orders WHERE current_state = 4 OR current_state = 20";
+$sqlOrder = "SELECT * FROM "._DB_PREFIX_."orders WHERE current_state = 4 OR current_state = 22";
 $results = Db::getInstance()->ExecuteS($sqlOrder);
 
 $status = array(
