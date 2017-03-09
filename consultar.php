@@ -22,11 +22,11 @@ echo "consultando";
 
 		$carrierOrder = get_mensajero_order($value['id_order']);
 
-		$sqlUpdateOrder = "UPDATE ps_orders SET current_state = '5'  WHERE id_order = '".$value['id_order']."'";
+		$sqlUpdateOrder = "UPDATE ps_orders SET current_state = '".$status[$jsonResult['estado']]."'  WHERE id_order = '".$value['id_order']."'";
 		$resultsUpdate = Db::getInstance()->ExecuteS($sqlUpdateOrder);
 
 		$sqlInsertHistory = "INSERT INTO ps_order_history(id_employee, id_order, id_order_state, date_add)
-			VALUES ('".$carrierOrder['id_employee']."','".$value['id_order']."','5','".date('Y-m-d H:i:s')."')";
+			VALUES ('".$carrierOrder['id_employee']."','".$value['id_order']."','".$status[$jsonResult['estado']]."','".date('Y-m-d H:i:s')."')";
 
 		$resultsInsert = Db::getInstance()->ExecuteS($sqlInsertHistory);
 	}
