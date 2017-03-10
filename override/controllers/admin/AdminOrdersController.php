@@ -392,7 +392,48 @@ class AdminOrdersController extends AdminOrdersControllerCore
                  	}elseif($option_ajax ==='save_order_carrier'){
                  		//exit(json_encode(array('results' => "sucesfull")));
                  		if($this->opcionTransportista($_GET)){
-                 			exit(json_encode(array('results' => "sucesfull")));
+                 			$success = array('results' => "sucesfull");
+                 			$errorSmart = null;
+                 			$order = new Order(Tools::getValue('id_order'));
+							if($order->current_state == 22) {
+								$fechaHora = $order->delivery_date;
+							
+								$hora = strtotime($fechaHora);
+								$hora = date("Hi", $hora);
+								
+								$fecha = strtotime($fechaHora);
+								$fecha = date("Y-m-d", $fecha);
+								
+								$customer = new Customer($order->id_customer);
+								$address = new Address($order->id_address_delivery);
+
+								$getOrderDelivery = $this->get_mensajero_order($order->id);
+								$ccDelivery = explode("@",$getOrderDelivery['email']);
+								
+								//$server='www.smartquick.com.co'; 
+								$server='181.49.224.186';
+								$pedido=urlencode($order->id);
+								$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
+								$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
+								$ciudad=urlencode($address->city);
+								$direccion=urlencode($address->address1);
+								$doc_cliente=urlencode($customer->identification);
+								$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
+								$telefono=urlencode($address->phone_mobile);
+								$observacion=urlencode($order->private_message);
+								$doc_mensajero=urlencode($ccDelivery[0]);
+								$url_insercion='http://'.$server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
+
+								$result = json_decode(file_get_contents($url_insercion));
+								
+								if($result->status == 'ERROR') {
+									$errorSmart = "error";
+								} else {
+									$errorSmart = "sucesfull";
+								}
+								$success['smart'] = $errorSmart;
+							}
+                 			exit(json_encode($success));
                  		}else{
                  			exit(json_encode(array('results' => "error")));
                  		}
@@ -601,8 +642,15 @@ public function postProcess()
 					$current_order_state = $order->getCurrentOrderState();
 					if ($current_order_state->id != $order_state->id)
 					{
+						// Create new OrderHistory
+						$history = new OrderHistory();
+						$history->id_order = $order->id;
+						$history->id_employee = (int)$this->context->employee->id;
+                        
 						$errorSmart = null;
-						if($order_state->id == 22) {
+						$getOrderDelivery = $this->get_mensajero_order($order->id);
+						$ccDelivery = explode("@",$getOrderDelivery['email']);
+						if($order_state->id == 22 && count($ccDelivery) > 1) {
 							$fechaHora = $order->delivery_date;
 						
 							$hora = strtotime($fechaHora);
@@ -613,9 +661,6 @@ public function postProcess()
 							
 							$customer = new Customer($order->id_customer);
 							$address = new Address($order->id_address_delivery);
-
-							$getOrderDelivery = $this->get_mensajero_order($order->id);
-							$ccDelivery = explode("@",$getOrderDelivery['email']);
 							
 							//$server='www.smartquick.com.co'; 
 							$server='181.49.224.186';
@@ -638,13 +683,8 @@ public function postProcess()
 							} else {
 								$errorSmart = "&smart=true";
 							}
-
 						}
-						// Create new OrderHistory
-						$history = new OrderHistory();
-						$history->id_order = $order->id;
-						$history->id_employee = (int)$this->context->employee->id;
-                                                
+
 						$use_existings_payment = false;
 						if (!$order->hasInvoice())
 							$use_existings_payment = true;     $this->logtxt ('linea 462 '.print_r($order,true));
