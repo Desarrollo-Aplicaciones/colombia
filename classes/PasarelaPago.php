@@ -778,7 +778,7 @@
 		   */ 
 		 public static function EnviarPagoPayu($args,$conn){
 		 	// $conn = PasarelaPagoCore::GetDataConnect('Tarjeta_credito');
-		 	$intentos = PasarelaPagoCore::count_pay_cart((int) $args['id_cart']);
+		 	$intentos = self::count_pay_cart((int) $args['id_cart']);
 		 	$conf = new ConfPayu();
 		 	$context = Context::getContext();
 		 	$referenceCode = md5('payU_' . Configuration::get('PS_SHOP_NAME') . '_' . (int) $args['id_cart'] .'_'.$intentos);
@@ -801,7 +801,7 @@
 		 		$_deviceSessionId = md5($context->cookie->timestamp);
 		 	}
 
-		 	$total_tax = PasarelaPago::get_total_tax($id_cart);
+		 	$total_tax = self::get_total_tax((int)$args['id_cart']);
 
 		 	$data = '{
 
@@ -933,7 +933,7 @@
 		 	$data = str_replace('"number":"' . $subs, '"number":"' . $nueva, $data);
 		 	$data = str_replace('"securityCode":"' . $args['codigot'], '"securityCode":"' . '****', $data);
 
-		 	return PasarelaPagoCore::validatePayu($response_Payu, $data,$args);
+		 	return self::validatePayu($response_Payu, $data,$args);
 		 }
 
 		/**
@@ -990,19 +990,18 @@
 		 */
 		public static function payOrder($args){
 			
-			$pasarela = new PasarelaPagoCore;
-			$conn = $pasarela->GetDataConnect($args['option_pay']);
-			$pasarela->add_relationship_mediosp_cart($args['option_pay']);
+			$conn = self::GetDataConnect($args['option_pay']);
+			self::add_relationship_mediosp_cart($args['option_pay']);
 
 			switch ($conn['nombre_pasarela']) {
 				case 'payulatam':
-				return $pasarela->EnviarPagoPayu($args,$conn); 
+				return self::EnviarPagoPayu($args,$conn); 
 				break;
 				case 'redeban':
-				return	$pasarela->EnviarPagoRedeBan($args['option_pay'],$parameters,$conn);
+				return	self::EnviarPagoRedeBan($args['option_pay'],$parameters,$conn);
 				break;
 				case 'openpay':
-				return	$pasarela->EnviarPagoOpenPay($args,$conn);
+				return	self::EnviarPagoOpenPay($args,$conn);
 				break;							
 				
 				default:
