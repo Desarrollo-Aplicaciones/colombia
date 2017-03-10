@@ -984,8 +984,8 @@ echo "<hr>";*/
 
 			
 		if (  /*$this->id_customer == 250 && */ !is_null($products) && count($products) > 0 
-			&& ( debug_backtrace()[1]['class'] != "CartRule" && debug_backtrace()[1]['function'] != "getContextualValue") 
-			&& ( debug_backtrace()[1]['class'] != "CartRuleCore" && debug_backtrace()[1]['function'] != "checkValidity") ) {
+			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRule" && debug_backtrace()[1]['function'] != "getContextualValue") 
+			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRuleCore" && debug_backtrace()[1]['function'] != "checkValidity") ) {
 
 			$al_log = "\n";
 

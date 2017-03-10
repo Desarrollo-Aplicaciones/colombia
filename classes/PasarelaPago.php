@@ -990,18 +990,19 @@
 		 */
 		public static function payOrder($args){
 			
-			$conn = PasarelaPagoCore::GetDataConnect($args['option_pay']);
-			PasarelaPagoCore::add_relationship_mediosp_cart($args['option_pay']);
+			$pasarela = new PasarelaPagoCore;
+			$conn = $pasarela->GetDataConnect($args['option_pay']);
+			$pasarela->add_relationship_mediosp_cart($args['option_pay']);
 
 			switch ($conn['nombre_pasarela']) {
 				case 'payulatam':
-				return PasarelaPagoCore::EnviarPagoPayu($args,$conn); 
+				return $pasarela->EnviarPagoPayu($args,$conn); 
 				break;
 				case 'redeban':
-				return	PasarelaPagoCore::EnviarPagoRedeBan($args['option_pay'],$parameters,$conn);
+				return	$pasarela->EnviarPagoRedeBan($args['option_pay'],$parameters,$conn);
 				break;
 				case 'openpay':
-				return	PasarelaPagoCore::EnviarPagoOpenPay($args,$conn);
+				return	$pasarela->EnviarPagoOpenPay($args,$conn);
 				break;							
 				
 				default:

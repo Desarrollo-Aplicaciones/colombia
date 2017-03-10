@@ -526,13 +526,20 @@ public function addImg(){
 
 	$model = new Model();
 
+	// $this->isLogin();
+
+	// $context = Context::getContext();
+ //    $this->response(json_encode($context->customer));
+
 	$flag = true;
 	foreach ($_FILES as $key) {
-		if(!$model->add_image($key,$option)){
+		$imagen = $model->add_image($key,$option);
+		if(!$imagen){
 			$flag = false;
 			break;
 		}
 	}
+	// $this->response(json_encode($imagen));
 	$this->response(json_encode(array('success'=>$flag)),200);
 }
 
@@ -663,6 +670,21 @@ private function orderDetail($id_order = NULL){
 		$dir = "../publicity/banners/" . $dirname . "/";
 		$images = glob($dir . "*.jpg");
 		$this->response(json_encode($images), 200);
+	}
+
+	/**
+	   * Miera si la dirección dada se encuentra en otras ciudades para denegarle acceso a pago contraentrega
+	   * @return [type] [description]
+	   */
+	public function otraCiudad()
+	{
+	    if ($this->get_request_method() != "POST") {
+	      $this->response('', 406);
+	    }
+
+	    $id_address =   $this->_request['id'];
+	    $model = new Model();
+	    $this->response($this->json($model->list_medios_de_pago($id_address)),200);
 	}
 
 }

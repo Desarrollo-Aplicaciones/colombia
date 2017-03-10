@@ -1036,14 +1036,14 @@ public function pay($args){
 		                      'token_id'				=> $args['payment']['token_id'],
 		                      'openpay_device_session_id'		=> $args['payment']['device_session_id']);
 
-$order_state = PasarelaPagoCore::payOrder($data_payment);
+		$order_state = PasarelaPagoCore::payOrder($data_payment);
 
-if($order_state == Configuration::get('PS_OS_ERROR')){
-	$message = 'Ha ocurrido un error al realizar el pago, valida tus datos o intenta con otro medio de pago.';
-	return array('success' => FALSE,'message' => $message , "erros" => PasarelaPagoCore::getLastErrorByCart($this->context->cart->id));
-}else{
-	return $this->createOrder($args['payment']['method'],$order_state);
-}
+		if($order_state == Configuration::get('PS_OS_ERROR')){
+			$message = 'Ha ocurrido un error al realizar el pago, valida tus datos o intenta con otro medio de pago.';
+			return array('success' => FALSE,'message' => $message , "erros" => PasarelaPagoCore::getLastErrorByCart($this->context->cart->id));
+		}else{
+			return $this->createOrder($args['payment']['method'],$order_state);
+		}
 
 
 	}else{ // pagos con cashondelivery
@@ -1145,6 +1145,7 @@ private function createOrder($method,$state) {
     		return array('ERROR'=>'Debes enviar un archivo');
 
     	$this->context = Context::getContext();
+    	 //return $this->context->customer;
 
     	if (!isset($this->context->customer->id) || empty($this->context->customer->id))
     		return array('ERROR'=>'Debes iniciar sesión para agregar la foto de tu perfil.');
@@ -1157,7 +1158,7 @@ private function createOrder($method,$state) {
 
     	//$name_file = "Receta_medica_".$this->context->cart->id_customer_.date('Y-m-d H:i:s');
     	//$name_file = str_replace(' ','-',$name_file);
-    	$storage_name = ""; PasarelaPagoCore::randString(); 
+    	$storage_name = ""; //PasarelaPagoCore::randString(); 
     	$full_name = ""; 
 
     	$flag = TRUE;
@@ -1193,7 +1194,6 @@ private function createOrder($method,$state) {
 
     		if($option == 'profile'){
     			$this->context->customer->img_profile = $storage_name;
-    			error_log(print_r($this->context->customer));
     			return $this->context->customer->update();
 
     		}
@@ -1382,15 +1382,16 @@ private function createOrder($method,$state) {
 
 
 
-    private function get_id_city_select_address() {
+    private function get_id_city_select_address($id_address = null) {
 
     	$this->context = Context::getContext();
+    	$direccion = (is_null($id_address))?$this->context->cart->id_address_delivery:$id_address;
 
     	try {
     		$sql = 'SELECT adc.id_city
     		FROM '._DB_PREFIX_.'address adr 
     		INNER JOIN '._DB_PREFIX_.'address_city adc ON (adc.id_address=adr.id_address)
-    		WHERE adc.id_address= ' . (int) $this->context->cart->id_address_delivery;
+    		WHERE adc.id_address= ' . (int) $direccion;
 
     		if ($results = Db::getInstance()->ExecuteS($sql)) {
 
@@ -1411,14 +1412,14 @@ private function createOrder($method,$state) {
     }
 
 
-    public function list_medios_de_pago() {
+    public function list_medios_de_pago($id_address = null) {
 
     	$this->context = Context::getContext();
 
     	$query = "select mediosp.id_medio_de_pago,mediosp.Activo, IF (ISNULL(pepe.id_medio_de_pago),0,1) as inrule,mediosp.nombre 
     	from "._DB_PREFIX_."medios_de_pago mediosp LEFT JOIN 
     	( SELECT mediospin.id_medio_de_pago, rules.id_ciudad FROM "._DB_PREFIX_."medios_de_pago mediospin INNER JOIN "._DB_PREFIX_."rules_mediosp_ciudades rules 
-    	 ON( mediospin.id_medio_de_pago = rules.id_medio_de_pago AND rules.id_ciudad = " .(int) $this->get_id_city_select_address(). ")
+    	 ON( mediospin.id_medio_de_pago = rules.id_medio_de_pago AND rules.id_ciudad = " .(int) $this->get_id_city_select_address($id_address). ")
     	 ) AS pepe ON (pepe.id_medio_de_pago = mediosp.id_medio_de_pago);";
 
 $list_mediosp = array();
