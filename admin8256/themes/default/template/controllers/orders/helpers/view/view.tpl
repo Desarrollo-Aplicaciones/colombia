@@ -111,8 +111,12 @@
                 				}).done(function(data, status, xhr){
                 													console.debug("Insertar /actualizar Empleado");
 	                												var json = $.parseJSON(data);
-	                												if(json.results == 'sucesfull')
+	                												if(json.results == 'sucesfull') {
+	                													if(json.smart == 'error') {
+	                														alert("No se guardaron los datos en el sistema de Smark Quick.");
+	                													}
 	                													location.reload();
+	                												}
                 													}).fail(function() {
  																						console.error("Error Ajax insert/update Employee");
                 																		});	
