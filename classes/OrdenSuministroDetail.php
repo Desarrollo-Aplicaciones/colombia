@@ -299,22 +299,25 @@ AND od.id_product IN (212);
                     } 
                     if($i == 2) {
                         if(trim($value) != "") {
-                            $fecha1=strtotime(date("Y-m-d"));
-                            $fecha2=strtotime($fecha_vencimiento);
-
-                            if($fecha2 > $fecha1) {
-                                $diff = ($fecha1-$fecha2)/86400;
-                                $dias = abs($diff); 
-                                $dias = floor($dias);
-
-                                if($dias < 90) {
-                                    $err = 2;
-                                } else {
-                                    $fecha_vencimiento = $value;
-                                }
-
+                            if($value == '1969-12-31' || $value == 'N/A' || $value == 'NA') {
+                                $err = 0;
                             } else {
-                                $err = 2;
+                                $fecha1=strtotime(date("Y-m-d"));
+                                $fecha2=strtotime($value);
+
+                                if($fecha2 > $fecha1) {
+                                    $diff = ($fecha1-$fecha2)/86400;
+                                    $dias = abs($diff); 
+                                    $dias = floor($dias);
+
+                                    if($dias < 90) {
+                                        $err = 2;
+                                    } else {
+                                        $fecha_vencimiento = $value;
+                                    }
+                                } else {
+                                    $err = 2;
+                                }
                             }
                         } else {
                             $err = 1;
