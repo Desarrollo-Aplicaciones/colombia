@@ -53,6 +53,7 @@ class OrderState extends OrderStateCore
 		
 			$result = Db::getInstance()->executeS($sql);
 			// echo '<b> data-    -2xd: <pre>'.var_dump($result).'</pre>';
+                    //error_log("\n\n\n\nEste es el sql: \n".print_r($sql, true),3, "/tmp/states.log" );
                     //error_log("Este es el arreglo de order_state_back: ".print_r($result, true),3, "/tmp/states.log" );
                 
                 if($flag_order_back){
