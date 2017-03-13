@@ -1714,7 +1714,7 @@ protected function statusOrderOfList($id_order){
                 INNER JOIN ps_configuration confori ON (origen.`name` = confori.`name`)
                 INNER JOIN ps_order_state_lang estado ON (confdes.`value` = estado.id_order_state)
                 WHERE confori.`value` = ".(int)$select.';';
-//        error_log("\n\nEste es query: ".print_r($query, true),3, "/tmp/states.log" );
+        //error_log("\n\nEste es query: ".print_r($query, true),3, "/tmp/states.log" );
         $results = Db::getInstance()->ExecuteS($query);
 //        error_log("\n\nEste es results query: ".print_r($results, true),3, "/tmp/states.log" );
         if ($results){   
@@ -2149,10 +2149,11 @@ protected function statusOrderOfList($id_order){
                 $estados=$this->statusOrder(OrderState::getOrderStates((int)Context::getContext()->language->id,(int)$this->context->employee->id_profile),$order->current_state);
         $this->fields_list['osname']['list'] = $estados['osname'];
         
-        
-        
         //error_log("\n\n\n\n\n\n\n orderCurrentState: ".print_r($order->getCurrentOrderState(),true),3,"/tmp/states.log");
-        //error_log("\n\n Estos son los estados: ".print_r($estados['status_order'],true),3,"/tmp/states.log");
+        error_log("\n\n Estos son los estados: ".print_r($estados['status_order'],true),3,"/tmp/states.log");
+        
+        $estadosValidos = explode(",", Configuration::get('PS_STATUS_AFTER_OUTSTOCK'));
+        error_log("\n\n\n\n\n\n\n estadosValidos: ".print_r($estadosValidos,true),3,"/tmp/states.log");
         
         $cart = new Cart($order->id_cart);             
 		// Smarty assign
@@ -2205,7 +2206,8 @@ protected function statusOrderOfList($id_order){
             "stop_step" => $estados['stop_step'],
             "formula_medica" => Utilities::is_formula($cart,$this->context),
             "imgs_formula_medica" =>  Utilities::getImagenesFormula($order->id),
-                    'flagStockDisplayOption' => $flagStockDisplayOption
+                    'flagStockDisplayOption' => $flagStockDisplayOption,
+                    'estadosValidos' =>  $estadosValidos
 		);
 		$this->motivo_cancelcion();
 		$this->get_mensajero_order($this->id_object);
