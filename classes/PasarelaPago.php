@@ -832,33 +832,23 @@
 		 						"value":'. ($total_tax == 0.00 ? 0.00 : ($args['total_paid'] - $total_tax)).',
 		 						"currency":"'. $context->currency->iso_code.'"
 		 					}
-		 				}
-		 			},
-		 			"buyer":{
-		 				"fullName":"'.$customer->firstname.' '. $customer->lastname.'",
-		 				"contactPhone":"'.((empty($address->phone_mobile)) ? 'N/A' : $address->phone_mobile) .'",
-		 				"emailAddress":"'.$customer->email.'",
-		 				"dniNumber":"'.$dni.'",
-		 				"shippingAddress":{
-		 					"street1":"'.((empty($address->address1)) ? 'N/A' : $address->address1).'",
-		 					"street2":"'.((empty($address->address2)) ? 'N/A' : $address->address2).'",
-		 					"city":"'.$address->city.'",
-		 					"state":"'.$conf->get_state($address->id_state).'",
-		 					"country":"'. $context->country->iso_code.'",
-		 					"postalCode":"' . ((empty($address->postcode)) ? '00000': $address->postcode) . '",
-		 					"phone":"'.((empty($address->phone)) ? 'N/A': $address->phone ).'"
-		 				}
-		 			},
-		 			"shippingAddress":{
-		 				"street1":"'.((empty($address->address1)) ? 'N/A' : $address->address1).'",
-		 				"street2":"'.((empty($address->address2)) ? 'N/A' : $address->address2).'",
-		 				"city":"'.$address->city.'",
-		 				"state":"'.$conf->get_state($address->id_state).'",
-		 				"country":"'.$context->country->iso_code .'",
-		 				"postalCode":"'. ((empty($address->postcode)) ? '00000': $address->postcode) .'",
-		 				"phone":"'.((empty($address->phone)) ? 'N/A': $address->phone) .'"
-		 			}
-		 		},';
+		 				},
+			 			"buyer":{
+			 				"fullName":"'.$customer->firstname.' '. $customer->lastname.'",
+			 				"contactPhone":"'.((empty($address->phone_mobile)) ? 'N/A' : $address->phone_mobile) .'",
+			 				"emailAddress":"'.$customer->email.'",
+			 				"dniNumber":"'.$dni.'",
+			 				"shippingAddress":{
+			 					"street1":"'.((empty($address->address1)) ? 'N/A' : $address->address1).'",
+			 					"street2":"'.((empty($address->address2)) ? 'N/A' : $address->address2).'",
+			 					"city":"'.$address->city.'",
+			 					"state":"'.$conf->get_state($address->id_state).'",
+			 					"country":"'. $context->country->iso_code.'",
+			 					"postalCode":"' . ((empty($address->postcode)) ? '00000': $address->postcode) . '",
+			 					"phone":"'.((empty($address->phone)) ? 'N/A': $address->phone ).'"
+			 				}
+			 			}
+		 			},';
 		 		if($args['option_pay'] == 'Tarjeta_credito' || $args['option_pay'] == 'Pse'){
 
 		 			$data .='
@@ -919,6 +909,8 @@
 		 		"test":'.(($conn['produccion'] == 1) ? 'false' : 'true').'
 
 		 	}';
+		 	// error_log(print_r(json_encode(json_decode($data)), TRUE));
+		 	// error_log(print_r(json_last_error(), TRUE));
 		 		//echo "<textarea>".$data.'</textarea>'; exit();
 		 	$response_Payu = $conf->sendJson($data);
 
@@ -933,6 +925,7 @@
 		 	$data = str_replace('"number":"' . $subs, '"number":"' . $nueva, $data);
 		 	$data = str_replace('"securityCode":"' . $args['codigot'], '"securityCode":"' . '****', $data);
 
+		 	//error_log(print_r($response_Payu), print_r($data), print_r($args));
 		 	return self::validatePayu($response_Payu, $data,$args);
 		 }
 
@@ -1002,8 +995,7 @@
 				break;
 				case 'openpay':
 				return	self::EnviarPagoOpenPay($args,$conn);
-				break;							
-				
+				break;
 				default:
 					# code...
 				break;

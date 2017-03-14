@@ -30,6 +30,25 @@ class City extends CityCore
 	}
 
 	/**
+	 * Listado de ciudades principales
+	 * @return [type]           [description]
+	 */
+	public static function getPriorityCitiesWithState()
+	{
+		$q_city_unique='
+		SELECT s.id_state as id, CONCAT(cc.city_name, " - ", s.name) as name, cit.id_city as id_city
+		FROM `'._DB_PREFIX_.'priority_city` cit
+		INNER JOIN `'._DB_PREFIX_.'cities_col` cc ON (cc.id_city = cit.id_city)
+		INNER JOIN `'._DB_PREFIX_.'state` s ON (s.id_state = cc.id_state)
+		WHERE cit.in_app = 1
+		ORDER BY cit.order ASC';
+		$result = Db::getInstance()->executeS($q_city_unique);
+		error_log(gettype($result));
+		return $result;
+	}
+
+
+	/**
 	 * Listado de Ciudades con código postal y/o ciudad con precio de envío
 	 * @param  [type] $id_state [id_del estado]
 	 * @return [type]           [array con la respuesta del query]

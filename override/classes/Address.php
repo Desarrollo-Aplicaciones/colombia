@@ -181,11 +181,15 @@ WHERE country.id_country=" . (int) $id_country . ";";
 static public function get_states_app($id_country) {
 
         $query = "select  state.id_state as `id`,state.`name` FROM
-"._DB_PREFIX_."country country
-INNER JOIN "._DB_PREFIX_."state state ON (country.id_country= state.id_country)
-WHERE country.id_country=" . (int) $id_country . ";";
+        "._DB_PREFIX_."country country
+        INNER JOIN "._DB_PREFIX_."state state ON (country.id_country= state.id_country)
+        WHERE country.id_country=" . (int) $id_country . ";";
+        $citye_obj = new City();
 
         if ($results = Db::getInstance()->ExecuteS($query)) {
+            $cities = $citye_obj->getPriorityCitiesWithState();
+            error_log(gettype($cities));
+            $results = array_merge($cities, $results);
             return $results;
         }
 

@@ -1023,20 +1023,22 @@ public function pay($args){
 		                      'id_order' 				=> 0,
 		                      'id_address_invoice' 		=> $this->context->cart->id_address_invoice,
 		                      'option_pay'				=> $args['payment']['method'],
-		                      'numerot' 				=> (isset($args['payment']['number']))?$args['payment']['number']:NULL,
-		                      'codigot' 				=> (isset($args['payment']['cvc']))?$args['payment']['cvc']:NULL,
-		                      'date' 					=> (isset($args['payment']['expiry']))?$args['payment']['expiry']:NULL,
-		                      'nombre' 					=> (isset($args['payment']['name']))?$args['payment']['name']:NULL,
-		                      'cuotas' 					=> (isset($args['payment']['dues']))?$args['payment']['dues']:NULL,
-		                      'pse_bank' 				=> (isset($args['payment']['pse_code']))?$args['payment']['pse_code']:NULL,
-		                      'name_bank' 				=> (isset($args['payment']['pse_name']))?$args['payment']['pse_name']:NULL,
-		                      'pse_tipoCliente' 		=> (isset($args['payment']['customer_type']))?$args['payment']['customer_type']:NULL,
-		                      'pse_docType' 			=> (isset($args['payment']['doc_type']))?$args['payment']['doc_type']:NULL,
-		                      'pse_docNumber' 			=> (isset($args['payment']['customer_dni']))?$args['payment']['customer_dni']:NULL,
-		                      'token_id'				=> (isset($args['payment']['token_id']))?$args['payment']['token_id']:NULL,
-		                      'openpay_device_session_id'		=> (isset($args['payment']['device_session_id']))?$args['payment']['device_session_id']:NULL);
+		                      'numerot' 				=> $args['payment']['number'],
+		                      'codigot' 				=> $args['payment']['cvc'],
+		                      'date' 					=> $args['payment']['expiry'],
+		                      'nombre' 					=> $args['payment']['name'],
+		                      'cuotas' 					=> $args['payment']['dues'],
+		                      'pse_bank' 				=> $args['payment']['pse_code'],
+		                      'name_bank' 				=> $args['payment']['pse_name'],
+		                      'pse_tipoCliente' 		=> $args['payment']['customer_type'],
+		                      'pse_docType' 			=> $args['payment']['doc_type'],
+		                      'pse_docNumber' 			=> $args['payment']['customer_dni'],
+		                      'token_id'				=> $args['payment']['token_id'],
+		                      'openpay_device_session_id'		=> $args['payment']['device_session_id']);
 
 		$order_state = PasarelaPagoCore::payOrder($data_payment);
+
+		error_log(print_r($order_state, TRUE));
 
 		if($order_state == Configuration::get('PS_OS_ERROR')){
 			$message = 'Ha ocurrido un error al realizar el pago, valida tus datos o intenta con otro medio de pago.';
