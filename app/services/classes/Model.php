@@ -1038,7 +1038,6 @@ public function pay($args){
 
 		$order_state = PasarelaPagoCore::payOrder($data_payment);
 
-		error_log(print_r($order_state, TRUE));
 
 		if($order_state == Configuration::get('PS_OS_ERROR')){
 			$message = 'Ha ocurrido un error al realizar el pago, valida tus datos o intenta con otro medio de pago.';

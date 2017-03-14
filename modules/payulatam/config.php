@@ -48,7 +48,7 @@ public function sendJson($data)
 
   $responseData ='';
 
-error_log(print_r(json_decode($data, TRUE), TRUE));
+// error_log(print_r(json_decode($data, TRUE), TRUE));
   try {
     $ch =NULL;
 
