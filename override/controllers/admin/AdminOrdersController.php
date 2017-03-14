@@ -692,20 +692,23 @@ public function postProcess()
                                                 error_log("\n\n Paso por aqui fofio..!! ".print_r($order_state->id,true),3,"/tmp/states.log");
                                                 
                                                 $products = $this->getProducts($order);
+                                                $flagOutStock = false;
                                                 foreach ($products as &$product){
                                                     $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
                                                         //error_log("\n\n Paso por aqui fofio..!! ",3,"/tmp/states.log");
                                                     
                                                     if (Configuration::get('PS_STOCK_MANAGEMENT') && $product['current_stock'] < $product['product_quantity'] && $order_state->id == 3){
+                                                        $flagOutStock = true;
+                                                    }
+                                                }
+                                                if ( $flagOutStock ){
                                                         //error_log("\n\n el producto: ".$product['product_id']." - ".$product['product_name']."No esta en stock y faltan: ".$product['out_of_stock'],3,"/tmp/states.log");
                                                         $history->addWithemail();
                                                         $history = new OrderHistory();
                                                         $history->id_order = (int) $order->id;
                                                         $history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order, true);
                                                         // $history->addWithemail();
-                                                    }
                                                 }
-
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
 						$templateVars = array();
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
@@ -2150,10 +2153,10 @@ protected function statusOrderOfList($id_order){
         $this->fields_list['osname']['list'] = $estados['osname'];
         
         //error_log("\n\n\n\n\n\n\n orderCurrentState: ".print_r($order->getCurrentOrderState(),true),3,"/tmp/states.log");
-        error_log("\n\n Estos son los estados: ".print_r($estados['status_order'],true),3,"/tmp/states.log");
+        //error_log("\n\n Estos son los estados: ".print_r($estados['status_order'],true),3,"/tmp/states.log");
         
         $estadosValidos = explode(",", Configuration::get('PS_STATUS_AFTER_OUTSTOCK'));
-        error_log("\n\n\n\n\n\n\n estadosValidos: ".print_r($estadosValidos,true),3,"/tmp/states.log");
+        //error_log("\n\n\n\n\n\n\n estadosValidos: ".print_r($estadosValidos,true),3,"/tmp/states.log");
         
         $cart = new Cart($order->id_cart);             
 		// Smarty assign
