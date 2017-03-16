@@ -116,7 +116,7 @@ class StatsForecast extends Module
 			SUM(o.total_paid_tax_excl / o.conversion_rate) as totalSales
 		FROM '._DB_PREFIX_.'orders o
 		WHERE o.date_add BETWEEN '.ModuleGraph::getDateBetween().'
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' AND o.current_state IN (2,3,4,5,10,12,18,20)
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' AND o.current_state IN (2,3,4,5,9,10,12,18,20,22)
 		GROUP BY '.$dateFromGAdd);
 		while ($row = $db->nextRow($result))
 			$dataTable[$row['fix_date']] = $row;
