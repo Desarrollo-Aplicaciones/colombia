@@ -781,8 +781,11 @@
 		 	$intentos = self::count_pay_cart((int) $args['id_cart']);
 		 	$conf = new ConfPayu();
 		 	$context = Context::getContext();
-		 	$referenceCode = md5('payU_' . Configuration::get('PS_SHOP_NAME') . '_' . (int) $args['id_cart'] .'_'.$intentos);
-		 	$ref = $referenceCode . '~' . $args['total_paid'] . '~' . (($conn['produccion'] == 1) ? $context->currency->iso_code : 'USD');
+		 	// $referenceCode = md5('payU_' . Configuration::get('PS_SHOP_NAME') . '_' . (int) $args['id_cart'] .'_'.$intentos);
+		 	// $ref = $referenceCode . '~' . $args['total_paid'] . '~' . (($conn['produccion'] == 1) ? $context->currency->iso_code : 'USD');
+		 	// 
+		 	$referenceCode = 'payU_' . Configuration::get('PS_SHOP_NAME') . '_' . (int) $args['id_cart'] .'_'.$intentos;
+		 	$ref = md5($conn['apikey_privatekey']. '~' .$conn['mercid']. '~' .$referenceCode . '~' . $args['total_paid'] . '~' . $context->currency->iso_code);
 
 		 	$description = (int)$args['id_customer']. '_' .(int)$args['id_cart']. '_' .(int)$args['id_order']. '_' .(int)$args['id_address_invoice'];
 		 	$customer = new Customer((int) $args['id_customer']);
@@ -818,7 +821,7 @@
 		 				"description":"'.$description.'",
 		 				"language":"'.$context->language->iso_code.'",
 		 				"notifyUrl":"'.$conf->urlv().'",
-		 				"signature":"'. $conf->sing($ref).'",
+		 				"signature":"'. $ref.'",
 		 				"additionalValues":{
 		 					"TX_VALUE":{
 		 						"value":'.$args['total_paid'].',
@@ -925,7 +928,7 @@
 		 	$data = str_replace('"number":"' . $subs, '"number":"' . $nueva, $data);
 		 	$data = str_replace('"securityCode":"' . $args['codigot'], '"securityCode":"' . '****', $data);
 
-		 	//error_log(print_r($response_Payu), print_r($data), print_r($args));
+		 	error_log(print_r($response_Payu), print_r($data), print_r($args));
 		 	return self::validatePayu($response_Payu, $data,$args);
 		 }
 
