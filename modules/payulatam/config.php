@@ -45,8 +45,10 @@ public function keys()
 
 public function sendJson($data)
 {
+
   $responseData ='';
 
+// error_log(print_r(json_decode($data, TRUE), TRUE));
   try {
     $ch =NULL;
 
@@ -55,33 +57,35 @@ public function sendJson($data)
     }
     else if($this->test)
     {  
-     $ch = curl_init('https://stg.api.payulatam.com/payments-api/4.0/service.cgi');
-   }
-   else {
-     $ch = curl_init('https://api.payulatam.com/payments-api/4.0/service.cgi');  
-   }
+      $ch = curl_init('https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi');
+      //$ch = curl_init('https://stg.api.payulatam.com/payments-api/4.0/service.cgi');
+    }
+    else {
+      $ch = curl_init('https://api.payulatam.com/payments-api/4.0/service.cgi');  
+    }
 
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // deshabilitar la validacion SSl (false)
+// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // deshabilitar la validacion SSl (false)
 curl_setopt_array($ch, array(
                   CURLOPT_POST => TRUE,
                   CURLOPT_RETURNTRANSFER => TRUE,
+                  CURLOPT_SSL_VERIFYHOST => FALSE,
+                  CURLOPT_SSL_VERIFYPEER => FALSE,
                   CURLOPT_HTTPHEADER => array(
                                               "Content-Type: application/json; charset=utf-8",
                                               "Accept: application/json"),
-CURLOPT_POSTFIELDS =>$data)); //json_encode($postData) 
+                  CURLOPT_POSTFIELDS =>$data)); //json_encode($postData) 
 
 $response = curl_exec($ch); // enviando datos al servidor de payuLatam
 
 $info = curl_getinfo($ch);
 // echo '<br><b>Info Solicitud: </br><pre>'.print_r($info,true).'</pre><br>';
+//error_log(print_r(curl_error($ch), TRUE));
 curl_close($ch);
 
 if($response === FALSE) // si hay errores
 {
-   //die(curl_error($ch));
   return false;
 }
-
 return $responseData = json_decode($response, TRUE); // decodificando el formato Json
 
 } catch (Exception $ex) {

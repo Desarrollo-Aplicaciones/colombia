@@ -635,12 +635,12 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 						//echo "numerico:".is_numeric($word);
 					}
 				}
+
 			}
 			else {
 				unset($words[$key]);
 			}
 			$listword = trim($listword,";");
-
 		if (!count($words))
 			return ($ajax ? array() : array('total' => 0, 'result' => array()));
 
@@ -682,6 +682,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 						PRIMARY KEY (`id_asc`),
 						INDEX indx_pr_search_'.$alenum.' (id_product) USING BTREE
 						)';
+
+						sleep(1);
 					
 					$result_crear = $db->execute($sql_create);
 
@@ -853,6 +855,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		$product_pool = ((strpos($product_pool, ',') === false) ? (' = '.(int)$product_pool.' ') : (' IN ('.rtrim($product_pool, ',').') '));
 
 
+		// error_log(print_r($context->shop,true));
+
 		$sql = 'SELECT p.id_product, p.reference, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
 				/*pl.`description_short`, pl.`available_now`, pl.`available_later`,*/ pl.`link_rewrite`, lower(pl.`name`) AS name,
 			 MAX(image_shop.`id_image`) id_image, il.`legend`, m.id_manufacturer AS id_lab, lower(m.`name`) AS lab, cat.name AS cat, cat.id_category AS id_cat,
@@ -882,7 +886,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				GROUP BY product_shop.id_product
 				'.$orden_bus.' 
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
-		
+				
 		$result = $db->executeS($sql);
 
 		$sql = 'SELECT COUNT(*)

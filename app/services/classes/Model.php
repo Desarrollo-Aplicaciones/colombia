@@ -53,7 +53,7 @@ class Model extends PaymentModule {
 		$page_size   = empty($page_size) ? 1 : $page_size;
 		$order_by    = empty($order_by) ? 'position' : $order_by;
 		$order_way   = empty($order_way) ? 'desc' : $order_way;
-
+		$context = Context::getContext();
 		$results = Search::findApp($id_lang, $expr, $page_number, $page_size, $order_by, $order_way, FALSE, FALSE);
 		$products = array();
 		if ((int) count($results['result']) > 0) {
@@ -205,7 +205,7 @@ class Model extends PaymentModule {
 				foreach ($aux_3[$i] as $key => $value) {   
 					foreach ($aux_3 as $key_2 => $value_2) { 
 						foreach ($value_2 as $key_3 => $value_3) {
-							if($value['id_parent'] == $value_3['i']){
+							if(isset($value['id_parent']) && $value['id_parent'] == $value_3['i']){
 								unset($value['id_parent']);
 								unset($value['level_depth']);
 								$aux_3[$key_2][$key_3]['s'][] = $value;
@@ -234,6 +234,7 @@ class Model extends PaymentModule {
 		$array_productos= array();  
 
 		$buscar = $ids_categories;
+		$context = Context::getContext();
 
 		$busqueda=NULL;
 		if ($page_size > 300) {
@@ -518,6 +519,8 @@ public function getProduct($id) {
 			}
 		}
 
+		$context = Context::getContext();
+
 		$results[0]['prov'] = $array_proveedores;
 		$results[0]['prov_date'] = $mostRecent2;
 		$results[0]['imgs'] = $array_img;
@@ -569,6 +572,7 @@ public function setAccount($arg){
 		$customer->company =  $arg["company"];
 	if(!empty($arg["id_type"]))
 		$customer->id_type = (int) $arg["id_type"];
+	$customer->img_profile = $arg["img_profile"];
 
 	$flag = empty($customer->id) ? $customer->add() : $customer->update();
 
@@ -597,6 +601,7 @@ public function setAccount($arg){
 		             'birthday' => $customer->birthday,
 		             'website' => $customer->website,
 		             'company' => $customer->company,
+		             'img_profile' => $customer->img_profile,
 		             'success' => TRUE);
 
 	}
@@ -882,11 +887,13 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
         		$aplicar_cupon = 1;
         		foreach ($discounts as $key => $value) {
         			$cartRule = NULL;
-        			if( $value['type_voucher'] == 'md' ) {							
-        				$iddoc = trim($value['cupon']);
-        				$cartRule = new CartRule(CartRule::getIdByDoctor($iddoc));
-        			} elseif( $value['type_voucher'] == 'cupon' ) {
-        				$cartRule = new CartRule(CartRule::getIdByCode(trim($value['cupon'])));
+        			if (isset($value['type_voucher'])) {
+	        			if( $value['type_voucher'] == 'md' ) {							
+	        				$iddoc = trim($value['cupon']);
+	        				$cartRule = new CartRule(CartRule::getIdByDoctor($iddoc));
+	        			} elseif( $value['type_voucher'] == 'cupon' ) {
+	        				$cartRule = new CartRule(CartRule::getIdByCode(trim($value['cupon'])));
+	        			}
         			}
         			if(!empty($cartRule))
         				$this->context->cart->addCartRule($cartRule->id);
@@ -948,7 +955,7 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
             }
 
 
-            if ( $aplicar_cupon == 1 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
+            if ( isset($discounts_return[0]) && $aplicar_cupon == 1 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
 
             	$discounts_return = array();
             	$discounts_return[] = array( 'success' => false, 'msg' => 'Cupon incorrecto, no aplicado' );
@@ -1029,14 +1036,15 @@ public function pay($args){
 		                      'token_id'				=> $args['payment']['token_id'],
 		                      'openpay_device_session_id'		=> $args['payment']['device_session_id']);
 
-$order_state = PasarelaPagoCore::payOrder($data_payment);
+		$order_state = PasarelaPagoCore::payOrder($data_payment);
 
-if($order_state == Configuration::get('PS_OS_ERROR')){
-	$message = 'Ha ocurrido un error al realizar el pago, valida tus datos o intenta con otro medio de pago.';
-	return array('success' => FALSE,'message' => $message , "erros" => PasarelaPagoCore::getLastErrorByCart($this->context->cart->id));
-}else{
-	return $this->createOrder($args['payment']['method'],$order_state);
-}
+
+		if($order_state == Configuration::get('PS_OS_ERROR')){
+			$message = 'Ha ocurrido un error al realizar el pago, valida tus datos o intenta con otro medio de pago.';
+			return array('success' => FALSE,'message' => $message , "erros" => PasarelaPagoCore::getLastErrorByCart($this->context->cart->id));
+		}else{
+			return $this->createOrder($args['payment']['method'],$order_state);
+		}
 
 
 	}else{ // pagos con cashondelivery
@@ -1138,6 +1146,7 @@ private function createOrder($method,$state) {
     		return array('ERROR'=>'Debes enviar un archivo');
 
     	$this->context = Context::getContext();
+    	 //return $this->context->customer;
 
     	if (!isset($this->context->customer->id) || empty($this->context->customer->id))
     		return array('ERROR'=>'Debes iniciar sesión para agregar la foto de tu perfil.');
@@ -1150,7 +1159,7 @@ private function createOrder($method,$state) {
 
     	//$name_file = "Receta_medica_".$this->context->cart->id_customer_.date('Y-m-d H:i:s');
     	//$name_file = str_replace(' ','-',$name_file);
-    	$storage_name = ""; PasarelaPagoCore::randString(); 
+    	$storage_name = ""; //PasarelaPagoCore::randString(); 
     	$full_name = ""; 
 
     	$flag = TRUE;
@@ -1374,15 +1383,16 @@ private function createOrder($method,$state) {
 
 
 
-    private function get_id_city_select_address() {
+    private function get_id_city_select_address($id_address = null) {
 
     	$this->context = Context::getContext();
+    	$direccion = (is_null($id_address))?$this->context->cart->id_address_delivery:$id_address;
 
     	try {
     		$sql = 'SELECT adc.id_city
     		FROM '._DB_PREFIX_.'address adr 
     		INNER JOIN '._DB_PREFIX_.'address_city adc ON (adc.id_address=adr.id_address)
-    		WHERE adc.id_address= ' . (int) $this->context->cart->id_address_delivery;
+    		WHERE adc.id_address= ' . (int) $direccion;
 
     		if ($results = Db::getInstance()->ExecuteS($sql)) {
 
@@ -1403,14 +1413,14 @@ private function createOrder($method,$state) {
     }
 
 
-    public function list_medios_de_pago() {
+    public function list_medios_de_pago($id_address = null) {
 
     	$this->context = Context::getContext();
 
     	$query = "select mediosp.id_medio_de_pago,mediosp.Activo, IF (ISNULL(pepe.id_medio_de_pago),0,1) as inrule,mediosp.nombre 
     	from "._DB_PREFIX_."medios_de_pago mediosp LEFT JOIN 
     	( SELECT mediospin.id_medio_de_pago, rules.id_ciudad FROM "._DB_PREFIX_."medios_de_pago mediospin INNER JOIN "._DB_PREFIX_."rules_mediosp_ciudades rules 
-    	 ON( mediospin.id_medio_de_pago = rules.id_medio_de_pago AND rules.id_ciudad = " .(int) $this->get_id_city_select_address(). ")
+    	 ON( mediospin.id_medio_de_pago = rules.id_medio_de_pago AND rules.id_ciudad = " .(int) $this->get_id_city_select_address($id_address). ")
     	 ) AS pepe ON (pepe.id_medio_de_pago = mediosp.id_medio_de_pago);";
 
 $list_mediosp = array();

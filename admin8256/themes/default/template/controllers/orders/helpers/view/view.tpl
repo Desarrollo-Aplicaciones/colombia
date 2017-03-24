@@ -111,8 +111,12 @@
                 				}).done(function(data, status, xhr){
                 													console.debug("Insertar /actualizar Empleado");
 	                												var json = $.parseJSON(data);
-	                												if(json.results == 'sucesfull')
+	                												if(json.results == 'sucesfull') {
+	                													if(json.smart == 'error') {
+	                														alert("No se guardaron los datos en el sistema de Smark Quick.");
+	                													}
 	                													location.reload();
+	                												}
                 													}).fail(function() {
  																						console.error("Error Ajax insert/update Employee");
                 																		});	
@@ -305,7 +309,13 @@ function save_private_message() {
 	
 			{elseif $stop_step}
 			<div class="conf">¡Muy bien!, Ya puedes continuar con el siguiente paso del proceso.</div>
-        {/if}		
+        {/if}
+
+        {if $smarty.get.smart == 'false'}
+        	<div class="error">Error, la orden no se pudo guardar en el sistema de SmartQuick.</div>
+        	{elseif $smarty.get.smart == 'true'}
+        	<div class="conf">La orde se guardo correctamente en el sistema de SmartQuick.</div>
+        {/if}
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
 	{if ($hook_invoice)}
@@ -381,7 +391,7 @@ function save_private_message() {
 						{/if}
    <select id="id_order_state" {if  isset($ERRORS_THIS_STEP) && !empty($ERRORS_THIS_STEP) && count($ERRORS_THIS_STEP) > 0} {if isset($status_name ) && $status_name !='VERIFICACION_MANUAL'} disabled="disabled" {/if}{/if}  name="id_order_state">
        			{foreach from=$states item=state}
-					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id || $flagStockDisplayOption && $state['id_order_state'] != '6'} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
+					<option value="{$state['id_order_state']}"{if $state['id_order_state'] == $currentState->id || $flagStockDisplayOption && !in_array($state['id_order_state'], $estadosValidos)} selected="selected" disabled="disabled"{/if}>{$state['name']|stripslashes}</option>
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />

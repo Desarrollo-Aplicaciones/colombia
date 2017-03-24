@@ -146,6 +146,7 @@ class Cart extends CartCore {
 		//id ciudades sin sobrecosto de envio refrigeración
 		$ciudades_excluidas = explode(",", Configuration::get('NO_COBRO_REFRIGERADO'));
 
+		$producto_rx3 = false; //Inicializo la variable en falso, para usarla de banderita. :)
 		if(isset( $resultado[0]['id_carrier'])) {
 			Context::getContext()->cart->id_carrier = $resultado[0]['id_carrier'];
 
@@ -153,8 +154,6 @@ class Cart extends CartCore {
                         
             if (Context::getContext()->cart->_products) 
             {
-				
-				$producto_rx3 = false; //Inicializo la variable en falso, para usarla de banderita. :)
 
             	foreach (Context::getContext()->cart->_products as $productico) {
                     $val_total += $productico['total_wt']; //valor total de la compra sin impuestos
@@ -985,8 +984,8 @@ echo "<hr>";*/
 
 			
 		if (  /*$this->id_customer == 250 && */ !is_null($products) && count($products) > 0 
-			&& ( debug_backtrace()[1]['class'] != "CartRule" && debug_backtrace()[1]['function'] != "getContextualValue") 
-			&& ( debug_backtrace()[1]['class'] != "CartRuleCore" && debug_backtrace()[1]['function'] != "checkValidity") ) {
+			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRule" && debug_backtrace()[1]['function'] != "getContextualValue") 
+			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRuleCore" && debug_backtrace()[1]['function'] != "checkValidity") ) {
 
 			$al_log = "\n";
 
@@ -1501,14 +1500,14 @@ echo "<hr>";*/
 							$order_total_discount = $cart_rule['obj']->reduction_amount;
 						}
 					}
+					$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
+					
+					$giftProductSpecial = explode(",", Configuration::get('PS_GIFTPRODUCTSPECIAL'));
+					if ( !in_array((int)$cart_rule['obj']->id, $giftProductSpecial) ) {
+						$order_total -= $order_total_discount;
+					}
 				}
 
-				$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
-				
-				$giftProductSpecial = explode(",", Configuration::get('PS_GIFTPRODUCTSPECIAL'));
-				if ( !in_array((int)$cart_rule['obj']->id, $giftProductSpecial) ) {
-					$order_total -= $order_total_discount;
-				}
 
 				$totalPriceProducts = $order_total;
 
@@ -1545,10 +1544,12 @@ echo "<hr>";*/
 		
 		if ($type == Cart::ONLY_DISCOUNTS) {
 			$giftProductSpecial = explode(",", Configuration::get('PS_GIFTPRODUCTSPECIAL'));
-			if ( in_array((int)$cart_rule['obj']->id, $giftProductSpecial) ) {
-				return 0;
-			} else {
-				return $order_total_discount;
+			foreach ($cart_rules as $cart_rule){
+				if ( in_array((int)$cart_rule['obj']->id, $giftProductSpecial) ) {
+					return 0;
+				} else {
+					return $order_total_discount;
+				}
 			}
 		}
 		if ( $type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING && $ReductionAmount != 0 ) {
@@ -2161,7 +2162,7 @@ public function getPackageList($flush = false)
 	public function InventarioPorCiudad() {
 
 		/**************** INVENTARIO POR CIUDAD ***************/
-
+		$envio_en_ciudad = 0;
 		if ( Configuration::get('city_filter_inventory') == 1 ) {
 			$envio_en_ciudad = 1;
 

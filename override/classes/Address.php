@@ -39,7 +39,7 @@ class Address extends AddressCore
 			$nom_city = $arr_nom_city[0]['city_name'];
             $val_id_city = $dir_change[0];
 
-		} elseif ( is_numeric($_POST['city_id'])) {
+		} elseif ( isset($_POST['city_id']) && is_numeric($_POST['city_id'])) {
 
             $arr_nom_city = City::getCityByIdCity($_POST['city_id']);
             $nom_city = $arr_nom_city[0]['city_name'];
@@ -181,11 +181,15 @@ WHERE country.id_country=" . (int) $id_country . ";";
 static public function get_states_app($id_country) {
 
         $query = "select  state.id_state as `id`,state.`name` FROM
-"._DB_PREFIX_."country country
-INNER JOIN "._DB_PREFIX_."state state ON (country.id_country= state.id_country)
-WHERE country.id_country=" . (int) $id_country . ";";
+        "._DB_PREFIX_."country country
+        INNER JOIN "._DB_PREFIX_."state state ON (country.id_country= state.id_country)
+        WHERE country.id_country=" . (int) $id_country . ";";
+        $citye_obj = new City();
 
         if ($results = Db::getInstance()->ExecuteS($query)) {
+            $cities = $citye_obj->getPriorityCitiesWithState();
+            error_log(gettype($cities));
+            $results = array_merge($cities, $results);
             return $results;
         }
 

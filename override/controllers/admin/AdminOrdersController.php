@@ -392,7 +392,48 @@ class AdminOrdersController extends AdminOrdersControllerCore
                  	}elseif($option_ajax ==='save_order_carrier'){
                  		//exit(json_encode(array('results' => "sucesfull")));
                  		if($this->opcionTransportista($_GET)){
-                 			exit(json_encode(array('results' => "sucesfull")));
+                 			$success = array('results' => "sucesfull");
+                 			$errorSmart = null;
+                 			$order = new Order(Tools::getValue('id_order'));
+							if($order->current_state == 22) {
+								$fechaHora = $order->delivery_date;
+							
+								$hora = strtotime($fechaHora);
+								$hora = date("Hi", $hora);
+								
+								$fecha = strtotime($fechaHora);
+								$fecha = date("Y-m-d", $fecha);
+								
+								$customer = new Customer($order->id_customer);
+								$address = new Address($order->id_address_delivery);
+
+								$getOrderDelivery = $this->get_mensajero_order($order->id);
+								$ccDelivery = explode("@",$getOrderDelivery['email']);
+								
+								//$server='www.smartquick.com.co'; 
+								$server='181.49.224.186';
+								$pedido=urlencode($order->id);
+								$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
+								$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
+								$ciudad=urlencode($address->city);
+								$direccion=urlencode($address->address1);
+								$doc_cliente=urlencode($customer->identification);
+								$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
+								$telefono=urlencode($address->phone_mobile);
+								$observacion=urlencode($order->private_message);
+								$doc_mensajero=urlencode($ccDelivery[0]);
+								$url_insercion='http://'.$server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
+
+								$result = json_decode(file_get_contents($url_insercion));
+								
+								if($result->status == 'ERROR') {
+									$errorSmart = "error";
+								} else {
+									$errorSmart = "sucesfull";
+								}
+								$success['smart'] = $errorSmart;
+							}
+                 			exit(json_encode($success));
                  		}else{
                  			exit(json_encode(array('results' => "error")));
                  		}
@@ -601,7 +642,15 @@ public function postProcess()
 					$current_order_state = $order->getCurrentOrderState();
 					if ($current_order_state->id != $order_state->id)
 					{
-						if($order_state->id == 4) {
+						// Create new OrderHistory
+						$history = new OrderHistory();
+						$history->id_order = $order->id;
+						$history->id_employee = (int)$this->context->employee->id;
+                        
+						$errorSmart = null;
+						$getOrderDelivery = $this->get_mensajero_order($order->id);
+						$ccDelivery = explode("@",$getOrderDelivery['email']);
+						if($order_state->id == 22 && count($ccDelivery) > 1) {
 							$fechaHora = $order->delivery_date;
 						
 							$hora = strtotime($fechaHora);
@@ -612,9 +661,6 @@ public function postProcess()
 							
 							$customer = new Customer($order->id_customer);
 							$address = new Address($order->id_address_delivery);
-
-							$getOrderDelivery = $this->get_mensajero_order($order->id);
-							$ccDelivery = explode("@",$getOrderDelivery['email']);
 							
 							//$server='www.smartquick.com.co'; 
 							$server='181.49.224.186';
@@ -630,30 +676,39 @@ public function postProcess()
 							$doc_mensajero=urlencode($ccDelivery[0]);
 							$url_insercion='http://'.$server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
 
-							file_get_contents($url_insercion);
+							$result = json_decode(file_get_contents($url_insercion));
+							
+							if($result->status == 'ERROR') {
+								$errorSmart = "&smart=false";
+							} else {
+								$errorSmart = "&smart=true";
+							}
 						}
-						// Create new OrderHistory
-						$history = new OrderHistory();
-						$history->id_order = $order->id;
-						$history->id_employee = (int)$this->context->employee->id;
-                                                
+
 						$use_existings_payment = false;
 						if (!$order->hasInvoice())
 							$use_existings_payment = true;     $this->logtxt ('linea 462 '.print_r($order,true));
 						$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment);
+                                                error_log("\n\n Paso por aqui fofio..!! ".print_r($order_state->id,true),3,"/tmp/states.log");
                                                 
                                                 $products = $this->getProducts($order);
+                                                $flagOutStock = false;
                                                 foreach ($products as &$product){
                                                     $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
-                                                    if (Configuration::get('PS_STOCK_MANAGEMENT') && $product['current_stock'] < $product['product_quantity'] && $current_order_state->id == 3){
-//                                                        error_log("\n\n el producto: ".$product['product_id']." - ".$product['product_name']."No esta en stock y faltan: ".$product['out_of_stock'],3,"/tmp/states.log");
+                                                        //error_log("\n\n Paso por aqui fofio..!! ",3,"/tmp/states.log");
+                                                    
+                                                    if (Configuration::get('PS_STOCK_MANAGEMENT') && $product['current_stock'] < $product['product_quantity'] && $order_state->id == 3){
+                                                        $flagOutStock = true;
+                                                    }
+                                                }
+                                                if ( $flagOutStock ){
+                                                        //error_log("\n\n el producto: ".$product['product_id']." - ".$product['product_name']."No esta en stock y faltan: ".$product['out_of_stock'],3,"/tmp/states.log");
+                                                        $history->addWithemail();
                                                         $history = new OrderHistory();
                                                         $history->id_order = (int) $order->id;
                                                         $history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order, true);
-                                                        $history->addWithemail();
-                                                    }
+                                                        // $history->addWithemail();
                                                 }
-
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
 						$templateVars = array();
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
@@ -671,7 +726,7 @@ public function postProcess()
 								}
 							}
 
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token.$errorSmart);
 						}
 						$this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
 					}
@@ -1662,7 +1717,7 @@ protected function statusOrderOfList($id_order){
                 INNER JOIN ps_configuration confori ON (origen.`name` = confori.`name`)
                 INNER JOIN ps_order_state_lang estado ON (confdes.`value` = estado.id_order_state)
                 WHERE confori.`value` = ".(int)$select.';';
-//        error_log("\n\nEste es query: ".print_r($query, true),3, "/tmp/states.log" );
+        //error_log("\n\nEste es query: ".print_r($query, true),3, "/tmp/states.log" );
         $results = Db::getInstance()->ExecuteS($query);
 //        error_log("\n\nEste es results query: ".print_r($results, true),3, "/tmp/states.log" );
         if ($results){   
@@ -1976,7 +2031,8 @@ protected function statusOrderOfList($id_order){
 		$order = new Order($id_order);
 		if (!Validate::isLoadedObject($order))
 			throw new PrestaShopException('object can\'t be loaded');
-
+                
+                //error_log("\n\n\nORDER: n".print_r($order,true),3,"/tmp/states.log");
 		$order->private_message = addslashes($order->private_message);
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);
@@ -2066,16 +2122,19 @@ protected function statusOrderOfList($id_order){
                         //error_log("\n\n si entro ".print_r($product, true),3,"/tmp/states.log");
                         
 			// if the current stock requires a warning
-			if ($product['current_stock'] == 0 && $display_out_of_stock_warning){
-                            $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
-                        }
-                        else if ( $product['current_stock'] < $product['product_quantity'] ) {
+                        if ( $product['current_stock'] < $product['product_quantity'] ) {
                             //error_log("\n\n si entro",3,"/tmp/states.log");
                             $missingProduct = $product['product_quantity'] - $product['current_stock'];
-//                            $errorW = 'Faltan '.$missingProduct.' cantidades del producto '.$product['product_name'];
+//                            $errorW = 'Faltan '.$missingProduct.' cantidades del producto '.$product['product_name'],3,"/tmp/states.log";
                             $this->displayWarning('Faltan '.$missingProduct.' cantidades del producto '.$product['product_name']);
-                            $flagStockDisplayOption = true;
+                            if($current_order_state->id == 9){
+                                //error_log("Entro".print_r($current_order_state,true),3,"/tmp/states.log");
+                                $flagStockDisplayOption = true;
+                            }
                         }
+//			if ($product['current_stock'] == 0 && $display_out_of_stock_warning){
+//                            $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
+//                        }
 			if ($product['id_warehouse'] != 0)
 			{
 				$warehouse = new Warehouse((int)$product['id_warehouse']);
@@ -2093,10 +2152,11 @@ protected function statusOrderOfList($id_order){
                 $estados=$this->statusOrder(OrderState::getOrderStates((int)Context::getContext()->language->id,(int)$this->context->employee->id_profile),$order->current_state);
         $this->fields_list['osname']['list'] = $estados['osname'];
         
-        
-        
         //error_log("\n\n\n\n\n\n\n orderCurrentState: ".print_r($order->getCurrentOrderState(),true),3,"/tmp/states.log");
         //error_log("\n\n Estos son los estados: ".print_r($estados['status_order'],true),3,"/tmp/states.log");
+        
+        $estadosValidos = explode(",", Configuration::get('PS_STATUS_AFTER_OUTSTOCK'));
+        //error_log("\n\n\n\n\n\n\n estadosValidos: ".print_r($estadosValidos,true),3,"/tmp/states.log");
         
         $cart = new Cart($order->id_cart);             
 		// Smarty assign
@@ -2149,7 +2209,8 @@ protected function statusOrderOfList($id_order){
             "stop_step" => $estados['stop_step'],
             "formula_medica" => Utilities::is_formula($cart,$this->context),
             "imgs_formula_medica" =>  Utilities::getImagenesFormula($order->id),
-                    'flagStockDisplayOption' => $flagStockDisplayOption
+                    'flagStockDisplayOption' => $flagStockDisplayOption,
+                    'estadosValidos' =>  $estadosValidos
 		);
 		$this->motivo_cancelcion();
 		$this->get_mensajero_order($this->id_object);

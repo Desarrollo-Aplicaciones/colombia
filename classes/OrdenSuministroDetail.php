@@ -299,7 +299,26 @@ AND od.id_product IN (212);
                     } 
                     if($i == 2) {
                         if(trim($value) != "") {
-                            $fecha_vencimiento = $value;
+                            if($value == '1969-12-31' || $value == 'N/A' || $value == 'NA') {
+                                $err = 0;
+                            } else {
+                                $fecha1=strtotime(date("Y-m-d"));
+                                $fecha2=strtotime($value);
+
+                                if($fecha2 > $fecha1) {
+                                    $diff = ($fecha1-$fecha2)/86400;
+                                    $dias = abs($diff); 
+                                    $dias = floor($dias);
+
+                                    if($dias < 90) {
+                                        $err = 2;
+                                    } else {
+                                        $fecha_vencimiento = $value;
+                                    }
+                                } else {
+                                    $err = 2;
+                                }
+                            }
                         } else {
                             $err = 1;
                         }
@@ -312,7 +331,12 @@ AND od.id_product IN (212);
                     DB::getInstance()->execute($query);
                     $query='';
                 } else {
-                    echo "<br>Se deben ingresar todos los lotes o fechas de vencimiento. <br><a href='javascript:history.back(1)'>Regresar</a>";
+                    if($err == 1) {
+                        echo "<br>Se deben ingresar todos los lotes o fechas de vencimiento. <br><a href='javascript:history.back(1)'>Regresar</a>";
+                    }
+                    if($err == 2) {
+                        echo "<br>La fecha de vencimiento es menor a 3 meses. <br><a href='javascript:history.back(1)'>Regresar</a>";
+                    }
                     exit;
                 }
             }
@@ -879,7 +903,7 @@ WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2";
         WHERE icr.cod_icr='".$icr."' AND icr.id_estado_icr=2
                 AND ordericr.fecha_vencimiento <> '0000-00-00' 
                 AND ordericr.fecha_vencimiento <> '1969-12-31' 
-                AND DATEDIFF(ordericr.fecha_vencimiento,NOW()) >= 30";
+                AND DATEDIFF(ordericr.fecha_vencimiento,NOW()) >= 90";
                 //AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
                 
             if ($results = Db::getInstance()->ExecuteS($query)) {

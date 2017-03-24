@@ -778,11 +778,14 @@
 		   */ 
 		 public static function EnviarPagoPayu($args,$conn){
 		 	// $conn = PasarelaPagoCore::GetDataConnect('Tarjeta_credito');
-		 	$intentos = PasarelaPagoCore::count_pay_cart((int) $args['id_cart']);
+		 	$intentos = self::count_pay_cart((int) $args['id_cart']);
 		 	$conf = new ConfPayu();
 		 	$context = Context::getContext();
-		 	$referenceCode = md5('payU_' . Configuration::get('PS_SHOP_NAME') . '_' . (int) $args['id_cart'] .'_'.$intentos);
-		 	$ref = $referenceCode . '~' . $args['total_paid'] . '~' . (($conn['produccion'] == 1) ? $context->currency->iso_code : 'USD');
+		 	// $referenceCode = md5('payU_' . Configuration::get('PS_SHOP_NAME') . '_' . (int) $args['id_cart'] .'_'.$intentos);
+		 	// $ref = $referenceCode . '~' . $args['total_paid'] . '~' . (($conn['produccion'] == 1) ? $context->currency->iso_code : 'USD');
+		 	// 
+		 	$referenceCode = 'payU_' . Configuration::get('PS_SHOP_NAME') . '_' . (int) $args['id_cart'] .'_'.$intentos;
+		 	$ref = md5($conn['apikey_privatekey']. '~' .$conn['mercid']. '~' .$referenceCode . '~' . $args['total_paid'] . '~' . $context->currency->iso_code);
 
 		 	$description = (int)$args['id_customer']. '_' .(int)$args['id_cart']. '_' .(int)$args['id_order']. '_' .(int)$args['id_address_invoice'];
 		 	$customer = new Customer((int) $args['id_customer']);
@@ -801,7 +804,7 @@
 		 		$_deviceSessionId = md5($context->cookie->timestamp);
 		 	}
 
-		 	$total_tax = PasarelaPago::get_total_tax($id_cart);
+		 	$total_tax = self::get_total_tax((int)$args['id_cart']);
 
 		 	$data = '{
 
@@ -818,7 +821,7 @@
 		 				"description":"'.$description.'",
 		 				"language":"'.$context->language->iso_code.'",
 		 				"notifyUrl":"'.$conf->urlv().'",
-		 				"signature":"'. $conf->sing($ref).'",
+		 				"signature":"'. $ref.'",
 		 				"additionalValues":{
 		 					"TX_VALUE":{
 		 						"value":'.$args['total_paid'].',
@@ -832,33 +835,23 @@
 		 						"value":'. ($total_tax == 0.00 ? 0.00 : ($args['total_paid'] - $total_tax)).',
 		 						"currency":"'. $context->currency->iso_code.'"
 		 					}
-		 				}
-		 			},
-		 			"buyer":{
-		 				"fullName":"'.$customer->firstname.' '. $customer->lastname.'",
-		 				"contactPhone":"'.((empty($address->phone_mobile)) ? 'N/A' : $address->phone_mobile) .'",
-		 				"emailAddress":"'.$customer->email.'",
-		 				"dniNumber":"'.$dni.'",
-		 				"shippingAddress":{
-		 					"street1":"'.((empty($address->address1)) ? 'N/A' : $address->address1).'",
-		 					"street2":"'.((empty($address->address2)) ? 'N/A' : $address->address2).'",
-		 					"city":"'.$address->city.'",
-		 					"state":"'.$conf->get_state($address->id_state).'",
-		 					"country":"'. $context->country->iso_code.'",
-		 					"postalCode":"' . ((empty($address->postcode)) ? '00000': $address->postcode) . '",
-		 					"phone":"'.((empty($address->phone)) ? 'N/A': $address->phone ).'"
-		 				}
-		 			},
-		 			"shippingAddress":{
-		 				"street1":"'.((empty($address->address1)) ? 'N/A' : $address->address1).'",
-		 				"street2":"'.((empty($address->address2)) ? 'N/A' : $address->address2).'",
-		 				"city":"'.$address->city.'",
-		 				"state":"'.$conf->get_state($address->id_state).'",
-		 				"country":"'.$context->country->iso_code .'",
-		 				"postalCode":"'. ((empty($address->postcode)) ? '00000': $address->postcode) .'",
-		 				"phone":"'.((empty($address->phone)) ? 'N/A': $address->phone) .'"
-		 			}
-		 		},';
+		 				},
+			 			"buyer":{
+			 				"fullName":"'.$customer->firstname.' '. $customer->lastname.'",
+			 				"contactPhone":"'.((empty($address->phone_mobile)) ? 'N/A' : $address->phone_mobile) .'",
+			 				"emailAddress":"'.$customer->email.'",
+			 				"dniNumber":"'.$dni.'",
+			 				"shippingAddress":{
+			 					"street1":"'.((empty($address->address1)) ? 'N/A' : $address->address1).'",
+			 					"street2":"'.((empty($address->address2)) ? 'N/A' : $address->address2).'",
+			 					"city":"'.$address->city.'",
+			 					"state":"'.$conf->get_state($address->id_state).'",
+			 					"country":"'. $context->country->iso_code.'",
+			 					"postalCode":"' . ((empty($address->postcode)) ? '00000': $address->postcode) . '",
+			 					"phone":"'.((empty($address->phone)) ? 'N/A': $address->phone ).'"
+			 				}
+			 			}
+		 			},';
 		 		if($args['option_pay'] == 'Tarjeta_credito' || $args['option_pay'] == 'Pse'){
 
 		 			$data .='
@@ -919,6 +912,8 @@
 		 		"test":'.(($conn['produccion'] == 1) ? 'false' : 'true').'
 
 		 	}';
+		 	// error_log(print_r(json_encode(json_decode($data)), TRUE));
+		 	// error_log(print_r(json_last_error(), TRUE));
 		 		//echo "<textarea>".$data.'</textarea>'; exit();
 		 	$response_Payu = $conf->sendJson($data);
 
@@ -933,7 +928,8 @@
 		 	$data = str_replace('"number":"' . $subs, '"number":"' . $nueva, $data);
 		 	$data = str_replace('"securityCode":"' . $args['codigot'], '"securityCode":"' . '****', $data);
 
-		 	return PasarelaPagoCore::validatePayu($response_Payu, $data,$args);
+		 	error_log(print_r($response_Payu), print_r($data), print_r($args));
+		 	return self::validatePayu($response_Payu, $data,$args);
 		 }
 
 		/**
@@ -990,20 +986,19 @@
 		 */
 		public static function payOrder($args){
 			
-			$conn = PasarelaPagoCore::GetDataConnect($args['option_pay']);
-			PasarelaPagoCore::add_relationship_mediosp_cart($args['option_pay']);
+			$conn = self::GetDataConnect($args['option_pay']);
+			self::add_relationship_mediosp_cart($args['option_pay']);
 
 			switch ($conn['nombre_pasarela']) {
 				case 'payulatam':
-				return PasarelaPagoCore::EnviarPagoPayu($args,$conn); 
+				return self::EnviarPagoPayu($args,$conn); 
 				break;
 				case 'redeban':
-				return	PasarelaPagoCore::EnviarPagoRedeBan($args['option_pay'],$parameters,$conn);
+				return	self::EnviarPagoRedeBan($args['option_pay'],$parameters,$conn);
 				break;
 				case 'openpay':
-				return	PasarelaPagoCore::EnviarPagoOpenPay($args,$conn);
-				break;							
-				
+				return	self::EnviarPagoOpenPay($args,$conn);
+				break;
 				default:
 					# code...
 				break;

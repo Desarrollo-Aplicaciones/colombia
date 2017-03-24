@@ -24,6 +24,10 @@ public function init(){
 		// For compatibility with globals, DEPRECATED as of version 1.5
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
+                   
+                $this->context->smarty->assign(array(
+			'base_dir_ssl' => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__
+                    ));
 
 		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
 		if (Configuration::get('PS_SSL_ENABLED') && ($_SERVER['REQUEST_METHOD'] != 'POST') && $this->ssl != Tools::usingSecureMode())
