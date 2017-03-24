@@ -410,8 +410,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
 								$getOrderDelivery = $this->get_mensajero_order($order->id);
 								$ccDelivery = explode("@",$getOrderDelivery['email']);
 								
-								$server='www.smartquick.com.co'; 
-								//$server='181.49.224.186';
+								//$server='www.smartquick.com.co'; 
+								$server='181.49.224.186';
 								$pedido=urlencode($order->id);
 								$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
 								$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
@@ -662,8 +662,8 @@ public function postProcess()
 							$customer = new Customer($order->id_customer);
 							$address = new Address($order->id_address_delivery);
 							
-							$server='www.smartquick.com.co'; 
-							//$server='181.49.224.186';
+							//$server='www.smartquick.com.co'; 
+							$server='181.49.224.186';
 							$pedido=urlencode($order->id);
 							$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
 							$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
