@@ -14,7 +14,7 @@ $status = array(
 
 foreach($results as $key => $value) {
 echo "consultando";
-	$jsonResult = json_decode(file_get_contents("http://181.49.224.186/restfarmalisto/servicio_rest/MantieneReceptor/consulta_pedidos/".$value['id_order']), true);
+	$jsonResult = json_decode(file_get_contents("http://www.smartquick.com.co/restfarmalisto/servicio_rest/MantieneReceptor/consulta_pedidos/".$value['id_order']), true);
 
 	//echo $carrierOrder['id_entity'] . ' -> '. $value['current_state']. ' -> '. $status[$jsonResult['estado']] .'<br>';
 
