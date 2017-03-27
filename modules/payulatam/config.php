@@ -3,11 +3,11 @@ require_once('XmlToArray.class.php');
 require_once(dirname(__FILE__) . '/../../config/config.inc.php');
 class ConfPayu {
 
- private $testing=  array('apiKey'=>'6u39nqhq8ftd0hlvnjfs66eh8c',
-                          'apiLogin'=>'11959c415b33d0c',
-                          'merchantId'=>'500238',
-                          'accountId'=>'500537',
-                          'pse-CO'=>'500538');
+ private $testing=  array('apiKey'=>'4Vj8eK4rloUd272L48hsrarnUA',
+                          'apiLogin'=>'pRRXKOl8ikMmt9u',
+                          'merchantId'=>'508029',
+                          'accountId'=>'512321',
+                          'pse-CO'=>'512321');
  
 private $production=  array('apiKey'=>'1frsu8h7400repsub01sujbpum',
                           'apiLogin'=>'05c78842c916bfc',
@@ -81,7 +81,7 @@ $info = curl_getinfo($ch);
 // echo '<br><b>Info Solicitud: </br><pre>'.print_r($info,true).'</pre><br>';
 //error_log(print_r(curl_error($ch), TRUE));
 curl_close($ch);
-
+//error_log(print_r($response, TRUE));
 if($response === FALSE) // si hay errores
 {
   return false;
