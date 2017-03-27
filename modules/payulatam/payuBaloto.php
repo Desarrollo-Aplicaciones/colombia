@@ -129,7 +129,9 @@ class PayuBaloto extends PayUControllerWS{
 
     $extra_vars =  array('method'=>'Baloto',
                          'cod_pago'=>$response['transactionResponse']['extraParameters']['REFERENCE'],
-                         'fechaex'=> date('d/m/Y', substr($response['transactionResponse']['extraParameters']['EXPIRATION_DATE'], 0, -3)));
+                         'fechaex'=> date('d/m/Y', substr($response['transactionResponse']['extraParameters']['EXPIRATION_DATE'], 0, -3)),
+                         'url_payment_receipt_html'=>$response['transactionResponse']['extraParameters']['URL_PAYMENT_RECEIPT_HTML']
+                        );
 
     $this->createPendingOrder($extra_vars, 'Baloto', 'El sistema esta en espera de la confirmación de la pasarela de pago.', 'PAYU_WAITING_PAYMENT');
     $order=$conf->get_order($id_cart);

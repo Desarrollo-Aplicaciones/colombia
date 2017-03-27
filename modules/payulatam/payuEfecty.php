@@ -43,7 +43,6 @@ class PayuEfecty extends PayUControllerWS{
   if (isset($_POST['pagar']))
   {
     $conf=new ConfPayu();
-
     $id_cart = $this->context->cart->id;
     $id_address = $this->context->cart->id_address_delivery;
     $customer = new Customer((int)$this->context->cart->id_customer);
@@ -130,7 +129,9 @@ class PayuEfecty extends PayUControllerWS{
 
     $extra_vars =  array('method'=>'Efecty',
                          'cod_pago'=>$response['transactionResponse']['extraParameters']['REFERENCE'],
-                         'fechaex'=> date('d/m/Y', substr($response['transactionResponse']['extraParameters']['EXPIRATION_DATE'], 0, -3)));
+                         'fechaex'=> date('d/m/Y', substr($response['transactionResponse']['extraParameters']['EXPIRATION_DATE'], 0, -3)),
+                         'url_payment_receipt_html'=>$response['transactionResponse']['extraParameters']['URL_PAYMENT_RECEIPT_HTML']
+                        );
 
     $this->createPendingOrder($extra_vars, 'Efecty', 'El sistema esta en espera de la confirmación de la pasarela de pago.', 'PAYU_WAITING_PAYMENT');
     $order=$conf->get_order($id_cart);
