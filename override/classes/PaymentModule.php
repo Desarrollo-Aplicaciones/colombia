@@ -619,7 +619,7 @@ class PaymentModule extends PaymentModuleCore {
                          $url_pago = '';
                         
                             if ( isset($extra_vars['url_payment_receipt_html']) && $extra_vars['url_payment_receipt_html'] != '' ) {
-                                $url_pago = $extra_vars['url_payment_receipt_html']; 
+                                 $url_pago =' <td align="center"><a href="'.$extra_vars['url_payment_receipt_html'].'"><img style="border: none;" src="'. $this->context->smarty->tpl_vars['content_dir']->value . "img/btn.png".'" alt="pago"/> </a> <td>'; 
                             } 
                             
                         $invoice = new Address($order->id_address_invoice);
@@ -679,8 +679,7 @@ class PaymentModule extends PaymentModuleCore {
                             '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
                             '{baloto}' => $metodo_de_pago,
                             '{url_transfer}' => $url_pago,
-                            '{img_transfer}' => Tools::getHttpHost(true).__PS_BASE_URI__.'/img/btn.png'
-                            );
+                        );
 
 
                         if (is_array($extra_vars))
