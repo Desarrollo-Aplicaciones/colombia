@@ -1,6 +1,7 @@
 <?php
 echo "entro";
-require('/var/www/test.farmalisto.com.co/colombia/config/config.inc.php');
+echo $path = getcwd();exit;
+require($path.'/config/config.inc.php');
 
 $sqlOrder = "SELECT id_order FROM "._DB_PREFIX_."orders WHERE current_state = 4 OR current_state = 22";
 $results = Db::getInstance()->ExecuteS($sqlOrder);
