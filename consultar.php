@@ -2,8 +2,27 @@
 echo "entro";
 require('/var/www/test.farmalisto.com.co/colombia/config/config.inc.php');
 
-$sqlOrder = "SELECT * FROM "._DB_PREFIX_."orders WHERE current_state = 4 OR current_state = 22";
+$sqlOrder = "SELECT id_order FROM "._DB_PREFIX_."orders WHERE current_state = 4 OR current_state = 22";
 $results = Db::getInstance()->ExecuteS($sqlOrder);
+
+$sqlC = 'SELECT  value, name FROM ps_configuration WHERE name="PS_URL_TEST_SQ"
+		 OR name="PS_URL_PROD_SQ" OR name="PS_ENVIRONMENT"';
+		$resultsC = Db::getInstance()->ExecuteS($sqlC); 
+
+$nameUrl = "";
+$urlSq = "";
+
+if (count($resultsC) > 0) {
+	foreach($resultsC as $key){
+		if($key['name'] =='PS_ENVIRONMENT' && $key['value'] == 'NO') {
+			$nameUrl = 'PS_URL_TEST_SQ';
+		} else if($key['name'] =='PS_ENVIRONMENT' && $key['value'] == 'SI') {
+			$nameUrl = 'PS_URL_PROD_SQ';
+		} else if($key['name'] == $nameUrl) {
+			$urlSq  = $key['value'];
+		}
+	}
+}
 
 $status = array(
 		'EN RUTA' => 4,
@@ -14,7 +33,7 @@ $status = array(
 
 foreach($results as $key => $value) {
 echo "consultando";
-	$jsonResult = json_decode(file_get_contents("http://181.49.224.186/restfarmalisto/servicio_rest/MantieneReceptor/consulta_pedidos/".$value['id_order']), true);
+	$jsonResult = json_decode(file_get_contents($urlSq."/restfarmalisto/servicio_rest/MantieneReceptor/consulta_pedidos/".$value['id_order']), true);
 
 	//echo $carrierOrder['id_entity'] . ' -> '. $value['current_state']. ' -> '. $status[$jsonResult['estado']] .'<br>';
 
