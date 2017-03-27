@@ -355,6 +355,29 @@ class AdminOrdersController extends AdminOrdersControllerCore
 			unset($this->toolbar_btn['new']);
 		return $res;
 	}
+
+	public function getEnvironmentSmartQuick(){
+		$sql = 'SELECT  value, name FROM ps_configuration WHERE name="PS_URL_TEST_SQ"
+		 OR name="PS_URL_PROD_SQ" OR name="PS_ENVIRONMENT"';
+		$results = Db::getInstance()->ExecuteS($sql); 
+		
+		$nameUrl = "";
+		$urlSq = "";
+
+		if (count($results) > 0) {
+			foreach($results as $key){
+				if($key['name'] =='PS_ENVIRONMENT' && $key['value'] == 'NO') {
+					$nameUrl = 'PS_URL_TEST_SQ';
+				} else if($key['name'] =='PS_ENVIRONMENT' && $key['value'] == 'SI') {
+					$nameUrl = 'PS_URL_PROD_SQ';
+				} else if($key['name'] == $nameUrl) {
+					$urlSq  = $key['value'];
+				}
+			}
+		}
+	    return $urlSq;    
+	}
+
 	public function processAjax()
 	{ 
 
@@ -395,7 +418,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                  			$success = array('results' => "sucesfull");
                  			$errorSmart = null;
                  			$order = new Order(Tools::getValue('id_order'));
-							if($order->current_state == 22) {
+							if($order->current_state == 4) {
 								$fechaHora = $order->delivery_date;
 							
 								$hora = strtotime($fechaHora);
@@ -410,8 +433,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
 								$getOrderDelivery = $this->get_mensajero_order($order->id);
 								$ccDelivery = explode("@",$getOrderDelivery['email']);
 								
-								//$server='www.smartquick.com.co'; 
-								$server='181.49.224.186';
+								$server = $this->getEnvironmentSmartQuick(); 
+								//$server='181.49.224.186';
 								$pedido=urlencode($order->id);
 								$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
 								$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
@@ -422,8 +445,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
 								$telefono=urlencode($address->phone_mobile);
 								$observacion=urlencode($order->private_message);
 								$doc_mensajero=urlencode($ccDelivery[0]);
-								$url_insercion='http://'.$server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
-
+								$url_insercion= $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
+								
 								$result = json_decode(file_get_contents($url_insercion));
 								
 								if($result->status == 'ERROR') {
@@ -662,8 +685,8 @@ public function postProcess()
 							$customer = new Customer($order->id_customer);
 							$address = new Address($order->id_address_delivery);
 							
-							//$server='www.smartquick.com.co'; 
-							$server='181.49.224.186';
+							$server = $this->getEnvironmentSmartQuick(); 
+							//$server='181.49.224.186';
 							$pedido=urlencode($order->id);
 							$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
 							$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
@@ -674,8 +697,8 @@ public function postProcess()
 							$telefono=urlencode($address->phone_mobile);
 							$observacion=urlencode($order->private_message);
 							$doc_mensajero=urlencode($ccDelivery[0]);
-							$url_insercion='http://'.$server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
-
+							$url_insercion= $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
+							
 							$result = json_decode(file_get_contents($url_insercion));
 							
 							if($result->status == 'ERROR') {
