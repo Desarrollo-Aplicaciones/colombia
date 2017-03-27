@@ -1164,10 +1164,6 @@ public static function getLastErrorByCart($id_cart){
 	LIMIT 1";
 	$rs = Db::getInstance()->executeS($sql);
 	return $rs[0]['errors'];
-	//return Db::getInstance()->getValue($sql);
-
-	
-	
 }
 
 	/**
