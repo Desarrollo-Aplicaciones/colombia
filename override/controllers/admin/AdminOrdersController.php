@@ -383,11 +383,11 @@ class AdminOrdersController extends AdminOrdersControllerCore
 	    {
 	        if(fwrite($archivo, date("d m Y H:m:s"). " -> ". $data. "\n"))
 	        {
-	            echo "Se ha ejecutado correctamente";
+	            //echo "Se ha ejecutado correctamente";
 	        }
 	        else
 	        {
-	            echo "Ha habido un problema al crear el archivo";
+	            //echo "Ha habido un problema al crear el archivo";
 	        }
 	 
 	        fclose($archivo);
