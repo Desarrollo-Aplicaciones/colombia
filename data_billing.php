@@ -30,7 +30,7 @@ switch ( $action ) {
 				$customer->addGroups($customer_group);
 			}
 			$customer->update();
-			
+			$customer->updateGroupDiscount($customer->identification);
 		}
 
 		if ( $_POST['existdir'] == "" ) {
