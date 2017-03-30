@@ -56,10 +56,17 @@ class Mail extends MailCore
 		// It would be difficult to send an e-mail if the e-mail is not valid, so this time we can die if there is a problem
 		if (!is_array($to) && !Validate::isEmail($to))
 		{
-			Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
+			Tools::dieOrLog(Tools::displayError('Error: Email contains an invalid domain.'), $die);
 			return false;
 		}
-
+		
+		//error_log("Este es el to: ".print_r($to,true));
+		if (self::validateSinEmail($to))
+		{
+			Tools::dieOrLog(Tools::displayError('Error: parameter  is corrupted'), $die);
+			return false;
+		}
+		
 		if (!is_array($template_vars))
 			$template_vars = array();
 
@@ -348,4 +355,14 @@ class Mail extends MailCore
 			return false;
 		}
 	}
-}
+	
+	public function validateSinEmail($email){
+		$without_email = explode(",",Configuration::get('PS_WITHOUT_EMAIL'));
+		if(preg_match_all ("/^(.+)@([a-zA-Z0-9_]*)/", $email, $e1)){
+			if (!in_array($e1[2][0], $without_email)){
+				return false;
+			}
+		}
+		return true;
+	}
+}		
