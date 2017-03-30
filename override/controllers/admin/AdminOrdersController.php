@@ -379,9 +379,9 @@ class AdminOrdersController extends AdminOrdersControllerCore
 	}
 
 	public function generateLogSmartQuickFarmalisto($data) {
-		if($archivo = fopen("logs_estados_smartQuick_farmalisto.txt", "a"))
+		if($archivo = fopen("/home/ubuntu/ordenes/logs_crear_guia_smartQuick_farmalisto.txt", "a"))
 	    {
-	        if(fwrite($archivo, date("d m Y H:m:s"). " -> ". $data. "\n"))
+	        if(fwrite($archivo, date("d m Y H:i:s"). " -> ". $data. "\n"))
 	        {
 	            //echo "Se ha ejecutado correctamente";
 	        }
@@ -434,7 +434,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                  			$success = array('results' => "sucesfull");
                  			$errorSmart = null;
                  			$order = new Order(Tools::getValue('id_order'));
-                 			$this->generateLogSmartQuickFarmalisto($order->current_state);
+                 			$this->generateLogSmartQuickFarmalisto("Estado: ".$order->current_state);
 							if($order->current_state == 22) {
 								$fechaHora = $order->delivery_date;
 							
@@ -464,7 +464,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 								$doc_mensajero=urlencode($ccDelivery[0]);
 								$url_insercion = $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
 								
-								$this->generateLogSmartQuickFarmalisto($url_insercion);
+								$this->generateLogSmartQuickFarmalisto("Url Servicio: ".$url_insercion);
 
 								$result = json_decode(file_get_contents($url_insercion));
 								
@@ -692,7 +692,7 @@ public function postProcess()
 						$errorSmart = null;
 						$getOrderDelivery = $this->get_mensajero_order($order->id);
 						$ccDelivery = explode("@",$getOrderDelivery['email']);
-						$this->generateLogSmartQuickFarmalisto($order_state->id.' -> '.count($ccDelivery));
+						$this->generateLogSmartQuickFarmalisto("ID estado: ".$order_state->id.' -> Documento mensajero: '.count($ccDelivery));
 						if($order_state->id == 22 && count($ccDelivery) > 1) {
 							$fechaHora = $order->delivery_date;
 						
@@ -719,7 +719,7 @@ public function postProcess()
 							$doc_mensajero=urlencode($ccDelivery[0]);
 							$url_insercion= $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
 							
-							$this->generateLogSmartQuickFarmalisto($url_insercion);
+							$this->generateLogSmartQuickFarmalisto("Url servicio: ".$url_insercion);
 
 							$result = json_decode(file_get_contents($url_insercion));
 							
