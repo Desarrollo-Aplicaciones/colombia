@@ -548,20 +548,24 @@ FROM  ps_cities_col cities
     }
 
 
-    public static function update_date_delivered(){
-            
-            if (Tools::getValue('date_delivered') && Tools::getValue('hour_delivered_h')) {
-
-                $context = Context::getContext();
-                $context->cart->date_delivery = Tools::getValue('date_delivered');
-                $context->cart->time_windows = Tools::getValue('hour_delivered_h');
-                $context->cart->time_delivery = substr(Tools::getValue('hour_delivered_h'),0,5);
-                $sql ="UPDATE "._DB_PREFIX_."cart SET date_delivery = '".$context->cart->date_delivery."',
-                        time_windows = '".$context->cart->time_windows."', time_delivery = '".$context->cart->time_delivery."'
-                        WHERE id_cart = ".$context->cart->id;
-                        Db::getInstance()->Execute($sql); 
-                       
-            }
+	public static function update_date_delivered(){
+		if ( Tools::getValue( 'hour_delivery' )  == 2 ){
+			$context = Context::getContext();
+			$context->cart->time_windows = "Entrega Inmediata";
+			$sql ="UPDATE "._DB_PREFIX_."cart SET  time_windows = '".$context->cart->time_windows."'
+				WHERE id_cart = ".$context->cart->id;
+			Db::getInstance()->Execute($sql);
+		}
+		else if  (Tools::getValue('date_delivered') && Tools::getValue('hour_delivered_h')) {
+			$context = Context::getContext();
+			$context->cart->date_delivery = Tools::getValue('date_delivered');
+			$context->cart->time_windows = Tools::getValue('hour_delivered_h');
+			$context->cart->time_delivery = substr(Tools::getValue('hour_delivered_h'),0,5);
+			$sql ="UPDATE "._DB_PREFIX_."cart SET date_delivery = '".$context->cart->date_delivery."',
+				time_windows = '".$context->cart->time_windows."', time_delivery = '".$context->cart->time_delivery."'
+				WHERE id_cart = ".$context->cart->id;
+				Db::getInstance()->Execute($sql);                        
+		}
 
         }
 

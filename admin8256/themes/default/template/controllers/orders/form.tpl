@@ -321,7 +321,21 @@
 			});
 		});
 		resetBind();
+		
+		$('input[name="hour_delivery"]').on('change', function(e) {
+			console.log($(this).val());
+			if ( $(this).val() == 2 ){
+				$('#ctn_toogle_hour_delivery').hide();
+				$('#day_delivered, #hour_delivered').prop('disabled', true);
+			}
+			else if ( $(this).val() == 1 ){
+				$('#ctn_toogle_hour_delivery').show();
+				$('#ctn_toogle_hour_delivery').css('display', 'inline-block');
+				$('#day_delivered, #hour_delivered').removeAttr('disabled');
+			}
+		});
 	});
+	
 	function envio(id)
 	{
 		if($("#express").is(':checked'))
@@ -1455,14 +1469,14 @@
 <br>
 <fieldset id="hora_entrega" style="display:none;">
 	<legend><img src="../img/t/AdminStatuses.gif" />Hora de entrega</legend>
-	<p>
-		<label>Seleccione el día y la hora de entrega</label>
-		<br>
+	<input type="radio" name="hour_delivery"  value="1" checked><label>Seleccione el día y la hora de entrega</label>
+	<br>
+	<div id="ctn_toogle_hour_delivery" style="">
 		<div class="etiqueta" id="label-dia"><label>Día<span class="purpura">*</span>:<br></label> 
 			{if isset($day_delivered) && isset($js_json_delivered)}
 			{$day_delivered}
 			<br>	
-			{$js_json_delivered}		
+			{$js_json_delivered}
 			{/if}
 		</div>
 
@@ -1472,7 +1486,10 @@
 		</div>
 		
 		<div id="doctor_err" class="warn" style="display:none"></div>
-	</p>
+	</div>
+	<br>
+	<div class="separation"></div>
+	<input type="radio" name="hour_delivery" value="2"><label>Entrega inmediata</label>
 </fieldset>
 <br>
 <fieldset id="address_part" style="display:none;">
