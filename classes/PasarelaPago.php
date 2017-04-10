@@ -928,7 +928,7 @@
 		 	$data = str_replace('"number":"' . $subs, '"number":"' . $nueva, $data);
 		 	$data = str_replace('"securityCode":"' . $args['codigot'], '"securityCode":"' . '****', $data);
 
-		 	error_log(print_r($response_Payu), print_r($data), print_r($args));
+		 	//error_log(print_r($response_Payu), print_r($data), print_r($args));
 		 	return self::validatePayu($response_Payu, $data,$args);
 		 }
 
