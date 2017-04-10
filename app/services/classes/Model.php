@@ -205,10 +205,11 @@ class Model extends PaymentModule {
 				foreach ($aux_3[$i] as $key => $value) {   
 					foreach ($aux_3 as $key_2 => $value_2) { 
 						foreach ($value_2 as $key_3 => $value_3) {
-							if(isset($value['id_parent']) && $value['id_parent'] == $value_3['i']){
+							if(isset($value['id_parent']) && $value['id_parent'] == explode(',', $value_3['i'])[0]){
 								unset($value['id_parent']);
 								unset($value['level_depth']);
 								$aux_3[$key_2][$key_3]['s'][] = $value;
+								$aux_3[$key_2][$key_3]['i'] = $aux_3[$key_2][$key_3]['i'].', '.$value['i'];
 								unset($aux_3[$i][$key]);
 
 							}
@@ -225,6 +226,7 @@ class Model extends PaymentModule {
 				unset($aux_4[$key]['level_depth']);			
 
 			}
+			error_log($aux_4);
 		// retorna árbol de categorías 
 			return $aux_4;
 		}
