@@ -124,7 +124,7 @@ class AdminProductsController extends AdminProductsControllerCore
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
 		
 		$this->_select .= 'shop.name as shopname, ';
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, CONCAT("Inventario:",sav.`quantity`," - Disponible:",(sav.`quantity`-sav.`reserve_on_stock`)) as sav_quantity, '.$alias.'.`active`';
 		
 		if ($join_category)
 		{
