@@ -321,7 +321,21 @@
 			});
 		});
 		resetBind();
+		
+		$('input[name="hour_delivery"]').on('change', function(e) {
+			console.log($(this).val());
+			if ( $(this).val() == 2 ){
+				$('#ctn_toogle_hour_delivery').hide();
+				$('#day_delivered, #hour_delivered').prop('disabled', true);
+			}
+			else if ( $(this).val() == 1 ){
+				$('#ctn_toogle_hour_delivery').show();
+				$('#ctn_toogle_hour_delivery').css('display', 'inline-block');
+				$('#day_delivered, #hour_delivered').removeAttr('disabled');
+			}
+		});
 	});
+	
 	function envio(id)
 	{
 		if($("#express").is(':checked'))
@@ -441,18 +455,18 @@
 	function displayQtyInStock(id)
 	{
 		var id_product = $('#id_product').val();
-		var reservados = 0;
-		var disponibles = 0;
+		/*var reservados = 0;
+		var disponibles = 0;*/
 		if ($('#ipa_' + id_product + ' option').length)
 			var id_product_attribute = $('#ipa_' + id_product).val();
 		else
 			var id_product_attribute = 0;
 
-		disponibles = parseInt(stock[id_product][id_product_attribute]) - parseInt(restock[id_product][id_product_attribute]);
+		/*disponibles = parseInt(stock[id_product][id_product_attribute]) - parseInt(restock[id_product][id_product_attribute]);*/
 
 		$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
-		$('#qty_in_restock').html(parseInt(restock[id_product][id_product_attribute]));
-		$('#qty_in_disstock').html(disponibles);
+		/*$('#qty_in_restock').html(parseInt(restock[id_product][id_product_attribute]));
+		$('#qty_in_disstock').html(disponibles);*/
 	}
 
 	function duplicateOrder(id_order)
@@ -706,7 +720,7 @@
 				var attributes_html = '';
 				var customization_html = '';
 				stock = {};
-				restock = {};
+				//restock = {};
 
 				if(res.found)
 				{
@@ -722,7 +736,7 @@
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
-						restock[id_product] = new Array();
+						//restock[id_product] = new Array();
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
@@ -751,7 +765,7 @@
 						});
 
 						stock[this.id_product][0] = this.stock[0];
-						restock[this.id_product][0] = this.reserve;
+						//restock[this.id_product][0] = this.reserve;
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
@@ -1315,8 +1329,8 @@
 				</html>
 			</iframe>
 			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
-			<b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
-			<b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span></p>
+			<!--b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
+			<b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span--></p>
 			<div class="margin-form">
 				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
 			</div>
@@ -1466,14 +1480,14 @@
 <br>
 <fieldset id="hora_entrega" style="display:none;">
 	<legend><img src="../img/t/AdminStatuses.gif" />Hora de entrega</legend>
-	<p>
-		<label>Seleccione el día y la hora de entrega</label>
-		<br>
+	<input type="radio" name="hour_delivery"  value="1" checked><label>Seleccione el día y la hora de entrega</label>
+	<br>
+	<div id="ctn_toogle_hour_delivery" style="">
 		<div class="etiqueta" id="label-dia"><label>Día<span class="purpura">*</span>:<br></label> 
 			{if isset($day_delivered) && isset($js_json_delivered)}
 			{$day_delivered}
 			<br>	
-			{$js_json_delivered}		
+			{$js_json_delivered}
 			{/if}
 		</div>
 
@@ -1483,7 +1497,10 @@
 		</div>
 		
 		<div id="doctor_err" class="warn" style="display:none"></div>
-	</p>
+	</div>
+	<br>
+	<div class="separation"></div>
+	<input type="radio" name="hour_delivery" value="2"><label>Entrega inmediata</label>
 </fieldset>
 <br>
 <fieldset id="address_part" style="display:none;">
@@ -1604,4 +1621,3 @@
 	<div id="loader">
 	</div>
 </div>
-

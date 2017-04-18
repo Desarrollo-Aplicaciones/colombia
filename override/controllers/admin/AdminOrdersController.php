@@ -518,7 +518,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 							/* START mail quality score */
 								if ( $_GET['opcion_cancelacion'] != 4 ) {
 									$order = new Order($this->id_object);
-									$product_list = $order->getProducts();
+									/*$product_list = $order->getProducts();
 									
 									foreach ($product_list as $product) {
 
@@ -539,7 +539,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
 	                                	Db::getInstance()->executeS($sql_new_reserve);
 
-			                        }
+			                        }*/
 			                        
 									$template_vars['{firstname}'] = $this->context->customer->firstname;
 									$template_vars['{lastname}'] = $this->context->customer->lastname;
