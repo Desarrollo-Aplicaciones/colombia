@@ -398,7 +398,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 	{ 
 
 
-
+		date_default_timezone_set('America/Bogota');
 		// /admin8256/index.php?controller=AdminOrders&id_order=16330&vieworder&token=3356a854ebecbf64da66b8ec2cc38c3f&ajax&option_jax=transportador_fm
 		// /admin8256/index.php?controller=AdminOrders&id_order=16330&vieworder&token=3356a854ebecbf64da66b8ec2cc38c3f&ajax&option_jax=transportadora
 		               if(Tools::getIsset('controller') && Tools::getValue('controller') =='AdminOrders' 
@@ -619,6 +619,7 @@ fclose($fp) ;
 
 public function postProcess()
 	{
+		date_default_timezone_set('America/Bogota');
 		if (Tools::isSubmit('submitReport')){
 			$this->generarReporteDetallado();
 		}
