@@ -13,7 +13,7 @@ class AdminHomeController extends AdminHomeControllerCore
 			FROM `'._DB_PREFIX_.'orders`
 			WHERE valid = 1
 				AND `invoice_date` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
-				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).' AND o.current_state IN ('.$valid_state_sale.')
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).' AND current_state IN ('.$valid_state_sale.')
 		');
 
 		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
