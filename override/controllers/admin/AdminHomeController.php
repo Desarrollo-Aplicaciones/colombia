@@ -12,7 +12,7 @@ class AdminHomeController extends AdminHomeControllerCore
 			SELECT IFNULL(SUM(`total_paid_real` / conversion_rate), "0") as total_sales, COUNT(*) as total_orders
 			FROM `'._DB_PREFIX_.'orders`
 			WHERE valid = 1
-				AND `invoice_date` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
+				AND `date_add` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).' AND current_state IN ('.$valid_state_sale.')
 		');
 
