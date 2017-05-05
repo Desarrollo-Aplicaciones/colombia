@@ -724,6 +724,11 @@
 
 				if(res.found)
 				{
+                                    if (!Math.round10) {
+                                            Math.round10 = function(profit, exp) {
+                                            return decimalAdjust('round', profit, exp);
+                                        };
+                                    }
 					if (!customization_errors)
 						$('#products_err').hide();
 					else
@@ -731,8 +736,13 @@
 					$('#products_found').show();
 					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="display_product_attributes();display_product_customizations();">';
 					attributes_html += '<label>{l s='Combination'}</label>';
-					$.each(res.products, function() {
-						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
+                                            $.each(res.products, function() {
+                                                //console.log("price: "+this.unit_price_te+" wholes: "+this.wholesale_price)
+                                                var resultado= this.wholesale_price - this.unit_price_te; 
+                                                var Division = resultado / this.unit_price_te;
+                                                var Percentage = 100;
+                                                var profit = Division * Percentage;
+						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+' Margen Producto - '+Math.round10(profit, -1)+ '%</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
@@ -758,7 +768,7 @@
 							});
 							customization_html += '</fieldset></form>';
 						}
-
+                                                
 						$.each(this.combinations, function() {
 							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
@@ -790,6 +800,25 @@
 			}
 		});
 	}
+        
+        function decimalAdjust(type, value, exp) {
+	   
+	    if (typeof exp === 'undefined' || +exp === 0) {
+	      return Math[type](value);
+	    }
+	    value = +value;
+	    exp = +exp;
+	    
+	    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+	      return NaN;
+	    }
+	    
+	    value = value.toString().split('e');
+	    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+	   
+ 	    value = value.toString().split('e');
+	    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+        }
 
 	function display_product_customizations()
 	{
