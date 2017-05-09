@@ -455,7 +455,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 								$pedido=urlencode($order->id);
 								$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
 								$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
-								$ciudad=urlencode($address->city);
+								$ciudad=urlencode($this->stripAccents($address->city));
 								$direccion=urlencode($address->address1);
 								$doc_cliente=urlencode($customer->identification);
 								$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
@@ -467,9 +467,9 @@ class AdminOrdersController extends AdminOrdersControllerCore
 								$this->generateLogSmartQuickFarmalisto("Url Servicio: ".$url_insercion);
 
 								$result = json_decode(file_get_contents($url_insercion));
-
-								$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".$result);
 								
+								$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
+
 								if($result->status == 'ERROR') {
 									$errorSmart = "error";
 								} else {
@@ -609,13 +609,74 @@ protected function save_opcion_cancelacion($array){
 }	
 
     public function logtxt ($text="")
-{
+	{
             //$contenido="-- lo que quieras escribir en el archivo -- \r\n";
-$fp=fopen("/home/ubuntu/log_payu/log_order_cambio.txt","a+");
-fwrite($fp,$text."\r\n");
-fclose($fp) ;
+		$fp=fopen("/home/ubuntu/log_payu/log_order_cambio.txt","a+");
+		fwrite($fp,$text."\r\n");
+		fclose($fp) ;
             
-        }
+    }
+
+    /**
+     * 
+     * Elimina todos los acentos de una cadena 
+     */   
+	 public function stripAccents($string) {
+	    $string = trim($string);
+
+	    $string = str_replace(
+	        array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+	        array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+	        $string
+	    );
+
+	    $string = str_replace(
+	        array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+	        array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+	        $string
+	    );
+
+	    $string = str_replace(
+	        array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+	        array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+	        $string
+	    );
+
+	    $string = str_replace(
+	        array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+	        array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+	        $string
+	    );
+
+	    $string = str_replace(
+	        array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+	        array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+	        $string
+	    );
+
+	    $string = str_replace(
+	        array('ñ', 'Ñ', 'ç', 'Ç', '&'),
+	        array('n', 'N', 'c', 'C', 'y'),
+	        $string
+	    );
+
+	    //Esta parte se encarga de eliminar cualquier caracter extraño
+	    $string = str_replace(
+	        array( "<br>", "<sup>FM</sup>", "\\", "¨", "º", "-", "~",
+	             "#", "@", "|", "!", "\"",
+	             "·", "$", "%", "&", "/",
+	             "(", ")", "?", "'", "¡",
+	             "¿", "[", "^", "`", "]",
+	             "+", "}", "{", "¨", "´",
+	             ">", "< ", ";", ",", ":",
+	             ".", "♥", "–" ),
+	        '',
+	        $string
+	    );
+
+
+	    return $string;
+	}
 
 public function postProcess()
 	{
@@ -736,7 +797,7 @@ public function postProcess()
 							$pedido=urlencode($order->id);
 							$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
 							$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
-							$ciudad=urlencode($address->city);
+							$ciudad=urlencode($this->stripAccents($address->city));
 							$direccion=urlencode($address->address1);
 							$doc_cliente=urlencode($customer->identification);
 							$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
@@ -749,7 +810,7 @@ public function postProcess()
 
 							$result = json_decode(file_get_contents($url_insercion));
 							
-							$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".$result);
+							$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
 
 							if($result->status == 'ERROR') {
 								$errorSmart = "&smart=false";
