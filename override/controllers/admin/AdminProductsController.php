@@ -121,20 +121,12 @@ class AdminProductsController extends AdminProductsControllerCore
 		$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.') 
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
-                                LEFT JOIN ( 
-                                            SELECT sod.id_product, AVG( sod.unit_price_te  ) AS unit_price_te 
-                                            FROM '._DB_PREFIX_.'supply_order so 
-                                                INNER JOIN '._DB_PREFIX_.'supply_order_detail AS sod ON ( so.id_supply_order = sod.id_supply_order  ) 
-                                            WHERE  so.date_add > "2015-12-31 23:59:59" AND so.id_supply_order_state != 6 
-                                            GROUP BY sod.id_product
-                                          ) AS sodf ON (sa.id_product = sodf.id_product AND sodf.unit_price_te > sa.price * .10 )
-                                LEFT JOIN '._DB_PREFIX_.'product_supplier pss ON ( sa.id_product = pss.id_product )';
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
 		
 		$this->_select .= 'shop.name as shopname, ';
 		/*$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, CONCAT("Inventario:",sav.`quantity`," - Disponible:",(sav.`quantity`-sav.`reserve_on_stock`)) as sav_quantity, '.$alias.'.`active`';*/
 
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`,ROUND(( sa.price - AVG (sodf.unit_price_te)) / (sa.price) * 100,2 ) AS gmc,ROUND(( sa.price - AVG(pss.product_supplier_price_te)) / (sa.price) * 100,2) AS margenPrv';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
 		
 		if ($join_category)
 		{
@@ -173,7 +165,7 @@ class AdminProductsController extends AdminProductsControllerCore
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$this->fields_list['shopname'] = array(
 				'title' => $this->l('Default shop:'),
-				'width' => 210,
+				'width' => 230,
 				'filter_key' => 'shop!name',
 			);
 		else
@@ -181,41 +173,26 @@ class AdminProductsController extends AdminProductsControllerCore
 				'title' => $this->l('Category'),
 				'width' => 'auto',
 				'filter_key' => 'cl!name',
-			);                
+			);
 		$this->fields_list['price'] = array(
 			'title' => $this->l('Base price'),
-			'width' => 80,
+			'width' => 90,
 			'type' => 'price',
 			'align' => 'right',
 			'filter_key' => 'a!price'
 		);
 		$this->fields_list['price_final'] = array(
 			'title' => $this->l('Final price'),
-			'width' => 80,
+			'width' => 90,
 			'type' => 'price',
 			'align' => 'right',
 			'havingFilter' => true,
 			'orderby' => false
 		);
-                
-                $this->fields_list[''] = array(
-			'title' => $this->l('Margen compra'),
-			'width' => 80,
-			'type' => 'percent',
-			'align' => 'right',
-			'filter_key' => 'gmc'
-                );
-                $this->fields_list['margenPrv'] = array(
-                        'title' => $this->l('Margen Prv'),
-			'width' => 80,
-			'type' => 'percent',
-			'align' => 'right'			
-		);
-                
 		if (Configuration::get('PS_STOCK_MANAGEMENT'))
 			$this->fields_list['sav_quantity'] = array(
 				'title' => $this->l('Quantity'),
-				'width' => 80,
+				'width' => 90,
 				'type' => 'int',
 				'align' => 'right',
 				'filter_key' => 'sav!quantity',
@@ -224,7 +201,7 @@ class AdminProductsController extends AdminProductsControllerCore
 			);
 		$this->fields_list['active'] = array(
 			'title' => $this->l('Status'),
-			'width' => 80,
+			'width' => 70,
 			'active' => 'status',
 			'filter_key' => $alias.'!active',
 			'align' => 'center',
@@ -235,7 +212,7 @@ class AdminProductsController extends AdminProductsControllerCore
 		if ($join_category && (int)$this->id_current_category)
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
-				'width' => 80,
+				'width' => 70,
 				'filter_key' => 'cp!position',
 				'align' => 'center',
 				'position' => 'position'

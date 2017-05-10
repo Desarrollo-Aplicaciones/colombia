@@ -715,11 +715,11 @@ class PaymentModule extends PaymentModuleCore {
                         foreach ($product_list as $product) {
                             // if the available quantities depends on the physical stock
                             if (StockAvailable::dependsOnStock($product['product_id'])) {
-                                $sql_reserve = 'UPDATE ' . _DB_PREFIX_ . 'stock_available_mv
+                                /*$sql_reserve = 'UPDATE ' . _DB_PREFIX_ . 'stock_available_mv
                                             SET reserve_on_stock = '.$product['product_quantity_in_stock'].'
                                             WHERE id_product = '.$product['product_id'];
 
-                                Db::getInstance()->executeS($sql_reserve);
+                                Db::getInstance()->executeS($sql_reserve);*/
                                 // synchronizes
                                 StockAvailable::synchronize($product['product_id'], $order->id_shop);
                             }

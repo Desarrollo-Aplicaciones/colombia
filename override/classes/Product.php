@@ -16,8 +16,8 @@ class Product extends ProductCore {
 			$context = Context::getContext();
 
 		$sql = new DbQuery();
-		//$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, stock.reserve_on_stock AS "reserve", product_shop.advanced_stock_management, p.`customizable`');
-		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, stock.reserve_on_stock AS "reserve", product_shop.advanced_stock_management, p.`customizable`,  ROUND(sod.unit_price_te) AS unit_price_te, ROUND(ps.wholesale_price) AS wholesale_price');
+		/*$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, stock.reserve_on_stock AS "reserve", product_shop.advanced_stock_management, p.`customizable`');*/
+		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`,  ROUND(sod.unit_price_te) AS unit_price_te, ROUND(ps.wholesale_price) AS wholesale_price');
 
 		$sql->from('category_product', 'cp');
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
@@ -47,9 +47,9 @@ class Product extends ProductCore {
 		}
 		$sql->where($where);
 		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
-                    //echo $sql->__toString(); exit;
+//echo $sql->__toString(); exit;
 		$result = Db::getInstance()->executeS($sql);
-                    // print_r($result);
+// print_r($result);
 		if (!$result)
 			return false;
 
