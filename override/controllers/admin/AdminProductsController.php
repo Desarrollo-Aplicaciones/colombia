@@ -121,12 +121,19 @@ class AdminProductsController extends AdminProductsControllerCore
 		$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.') 
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
+                                LEFT JOIN ( SELECT sod.id_product, AVG( sod.unit_price_te  ) AS unit_price_te 
+                                            FROM ps_supply_order so 
+                                                INNER JOIN ps_supply_order_detail AS sod ON ( so.id_supply_order = sod.id_supply_order  ) 
+                                            WHERE  so.date_add > "2015-12-31 23:59:59" AND so.id_supply_order_state != 6 
+                                            GROUP BY sod.id_product
+                                          ) AS sodf ON (sa.id_product = sodf.id_product AND sodf.unit_price_te > sa.price * .10 )
+                                LEFT JOIN ps_product_supplier pss ON ( sa.id_product = pss.id_product )';
 		
 		$this->_select .= 'shop.name as shopname, ';
 		/*$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, CONCAT("Inventario:",sav.`quantity`," - Disponible:",(sav.`quantity`-sav.`reserve_on_stock`)) as sav_quantity, '.$alias.'.`active`';*/
 
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`,ROUND( ( sa.price - AVG( sodf.unit_price_te  ) ) / (  sa.price )  * 100,2 )AS gmc, ROUND( ( sa.price - AVG( pss.product_supplier_price_te  ) ) / (  sa.price )  * 100,2) AS gmp';
 		
 		if ($join_category)
 		{
@@ -189,6 +196,23 @@ class AdminProductsController extends AdminProductsControllerCore
 			'havingFilter' => true,
 			'orderby' => false
 		);
+                $this->fields_list['gmc'] = array(
+			'title' => $this->l('Margen compra'),
+			'width' => 90,
+			'type' => 'percent',
+			'align' => 'right',
+			'havingFilter' => true,
+			'orderby' => false
+		);
+                $this->fields_list['gmp'] = array(
+			'title' => $this->l('Margen Prov'),
+			'width' => 90,
+			'type' => 'percent',
+			'align' => 'right',
+			'havingFilter' => true,
+			'orderby' => false
+		);
+                
 		if (Configuration::get('PS_STOCK_MANAGEMENT'))
 			$this->fields_list['sav_quantity'] = array(
 				'title' => $this->l('Quantity'),
