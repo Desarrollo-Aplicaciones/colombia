@@ -196,23 +196,6 @@ class AdminProductsController extends AdminProductsControllerCore
 			'havingFilter' => true,
 			'orderby' => false
 		);
-                $this->fields_list['gmc'] = array(
-			'title' => $this->l('Margen compra'),
-			'width' => 90,
-			'type' => 'percent',
-			'align' => 'right',
-			'havingFilter' => true,
-			'orderby' => false
-		);
-                $this->fields_list['gmp'] = array(
-			'title' => $this->l('Margen Prov'),
-			'width' => 90,
-			'type' => 'percent',
-			'align' => 'right',
-			'havingFilter' => true,
-			'orderby' => false
-		);
-                
 		if (Configuration::get('PS_STOCK_MANAGEMENT'))
 			$this->fields_list['sav_quantity'] = array(
 				'title' => $this->l('Quantity'),
