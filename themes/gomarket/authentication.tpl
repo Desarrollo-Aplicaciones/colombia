@@ -259,7 +259,7 @@ $(function(){ldelim}
 						<input type="checkbox" value="None" id="TOSreg" name="check" />
 						<label for="TOSreg"></label>
 					</div>
-					<div class="TOSlegend">Confirmo que soy mayor de edad y acepto <a href="{$base_uri}?id_cms=3&controller=cms" target="blank">los términos y las condiciones</a> legales.</div>
+					<div class="TOSlegend">Confirmo que soy mayor de edad y acepto <a href="{$base_uri}?id_cms=3&controller=cms" target="blank">los términos y las condiciones</a> legales y la autorización <a href="{$base_uri}?id_cms=3&controller=cms" target="blank">habeas data.</a></div>
 					<div id="errorTOSreg" class="rterror"></div>
 				</div>
 				{*<div class="regform">
