@@ -37,24 +37,25 @@ $status = array(
 foreach($results as $key => $value) {
 
 echo "consultando, Fecha: ".date('Y-m-d H:i:s');
+
 	$jsonResult = json_decode(file_get_contents($urlSq."/restfarmalisto/servicio_rest/MantieneReceptor/consulta_pedidos/".$value['id_order']), true);
 
-	//echo $carrierOrder['id_entity'] . ' -> '. $value['current_state']. ' -> '. $status[$jsonResult['estado']] .'<br>';
+	if(isset($status[$jsonResult['estado']]) && $value['current_state'] != $status[$jsonResult['estado']]) {
+		if($status[$jsonResult['estado']] == 5 || $status[$jsonResult['estado']] == 19 || $status[$jsonResult['estado']] == 4) {
+			echo "\r\n - Orden Cambiada: ".$value['id_order'].", Estado anterior: ".$value['current_state'].', Nuevo estado: '.$status[$jsonResult['estado']].', Fecha: '.date('Y-m-d H:i:s');
+			$carrierOrder = get_mensajero_order($value['id_order']);
 
-	if($status[$jsonResult['estado']] == 5 || $status[$jsonResult['estado']] == 19 || $status[$jsonResult['estado']] == 4) {
-		echo "\r\n - Orden Cambiada: ".$value['id_order'].", Estado anterior: ".$value['current_state'].', Nuevo estado: '.$status[$jsonResult['estado']].', Fecha: '.date('Y-m-d H:i:s');
-		$carrierOrder = get_mensajero_order($value['id_order']);
+			$sqlUpdateOrder = "UPDATE ps_orders SET current_state = '".$status[$jsonResult['estado']]."'  WHERE id_order = '".$value['id_order']."' AND (current_state = 4 OR current_state = 22)";
+			$resultsUpdate = Db::getInstance()->ExecuteS($sqlUpdateOrder);
+			if($resultsUpdate) {
+				echo " | Update: ".$resultsUpdate;
 
-		$sqlUpdateOrder = "UPDATE ps_orders SET current_state = '".$status[$jsonResult['estado']]."'  WHERE id_order = '".$value['id_order']."' AND (current_state = 4 OR current_state = 22)";
-		$resultsUpdate = Db::getInstance()->ExecuteS($sqlUpdateOrder);
-		if($resultsUpdate) {
-			echo " | Update: ".$resultsUpdate;
+				$sqlInsertHistory = "INSERT INTO ps_order_history(id_employee, id_order, id_order_state, date_add)
+					VALUES ('".$carrierOrder['id_entity']."','".$value['id_order']."','".$status[$jsonResult['estado']]."','".date('Y-m-d H:i:s')."')";
 
-			$sqlInsertHistory = "INSERT INTO ps_order_history(id_employee, id_order, id_order_state, date_add)
-				VALUES ('".$carrierOrder['id_entity']."','".$value['id_order']."','".$status[$jsonResult['estado']]."','".date('Y-m-d H:i:s')."')";
-
-			$resultsInsert = Db::getInstance()->ExecuteS($sqlInsertHistory);
-			echo " | Insert: ".$resultsInsert." - Fecha: ".date('Y-m-d H:i:s');
+				$resultsInsert = Db::getInstance()->ExecuteS($sqlInsertHistory);
+				echo " | Insert: ".$resultsInsert." - Fecha: ".date('Y-m-d H:i:s');
+			}
 		}
 	}
 }
