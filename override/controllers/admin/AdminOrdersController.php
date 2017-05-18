@@ -394,6 +394,25 @@ class AdminOrdersController extends AdminOrdersControllerCore
 	    }
 	}
 
+	public function getDaneCities($cities) {
+		$query = "SELECT  dane
+			FROM ps_cities_col
+			WHERE  city_name = '".$cities."' ";
+
+            if ($results = Db::getInstance()->ExecuteS($query)) {
+            	return $results[0]['dane'];
+            }
+	}
+
+	public function getDateTimeDeliveryCart($id_order) {
+		$sql = 'select car.date_delivery, car.time_delivery 
+    	from ps_orders ord INNER JOIN ps_cart car ON(ord.id_cart=car.id_cart) 
+    	WHERE  ord.id_order=' .(int) $id_order;
+
+        if ($results = Db::getInstance()->ExecuteS($sql)) {
+        	return $results[0];
+        }
+	}
 	public function processAjax()
 	{ 
 
@@ -436,44 +455,81 @@ class AdminOrdersController extends AdminOrdersControllerCore
                  			$order = new Order(Tools::getValue('id_order'));
                  			$this->generateLogSmartQuickFarmalisto("Estado: ".$order->current_state);
 							if($order->current_state == 22) {
-								$fechaHora = $order->delivery_date;
-							
-								$hora = strtotime($fechaHora);
+								$server = $this->getEnvironmentSmartQuick(); 
+								//$fechaHora = $order->delivery_date;
+								$fechaHora = $this->getDateTimeDeliveryCart($order->id);
+								
+								if(!empty($fechaHora['time_delivery'])) {
+									$time_delivery = $fechaHora['time_delivery'];
+								} else {
+									$time_delivery = date("H:i:s");
+								}
+
+								if(!empty($fechaHora['date_delivery'])) {
+									$date_delivery = $fechaHora['date_delivery'];
+								} else {
+									$date_delivery = date("Y-m-d");
+								}
+
+								$hora = strtotime($time_delivery);
 								$hora = date("Hi", $hora);
 								
-								$fecha = strtotime($fechaHora);
+								$fecha = strtotime($date_delivery);
 								$fecha = date("Y-m-d", $fecha);
-								
-								$customer = new Customer($order->id_customer);
-								$address = new Address($order->id_address_delivery);
+
+								$resultStateOrder = $this->validateStateOrderUpdate($order->id);
 
 								$getOrderDelivery = $this->get_mensajero_order($order->id);
 								$ccDelivery = explode("@",$getOrderDelivery['email']);
-								
-								$server = $this->getEnvironmentSmartQuick(); 
-								//$server='181.49.224.186';
-								$pedido=urlencode($order->id);
-								$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
-								$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
-								$ciudad=urlencode($this->stripAccents($address->city));
-								$direccion=urlencode($address->address1);
-								$doc_cliente=urlencode($customer->identification);
-								$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
-								$telefono=urlencode($address->phone_mobile);
-								$observacion=urlencode($order->private_message);
-								$doc_mensajero=urlencode($ccDelivery[0]);
-								$url_insercion = $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
-								
-								$this->generateLogSmartQuickFarmalisto("Url Servicio: ".$url_insercion);
 
-								$result = json_decode(file_get_contents($url_insercion));
-								
-								$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
+								if(count($resultStateOrder) > 0 && !empty($resultStateOrder[0]['id_order_state'])) {
+									if($resultStateOrder[0]['id_order_state'] == 19 && $order->current_state == 22) {
+										$url_insercion = $server.'/restfarmalisto/servicio_rest/MantieneReceptor/actualizar_guia/'.$order->id.'/'.$fecha.'/'.$hora.'/SIN_CARGAR//'.$ccDelivery[0];
+										
+										$this->generateLogSmartQuickFarmalisto("Url servicio: ".$url_insercion);
 
-								if($result->status == 'ERROR') {
-									$errorSmart = "error";
+										$result = json_decode(file_get_contents($url_insercion));
+										
+										$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
+										
+										if($result->status != 'OK') {
+											$errorSmart = "error";
+										} else {
+											$errorSmart = "sucesfull";
+										}
+									}
 								} else {
-									$errorSmart = "sucesfull";
+								
+									$customer = new Customer($order->id_customer);
+									$address = new Address($order->id_address_delivery);
+									
+									//$server='181.49.224.186';
+									$pedido=urlencode($order->id);
+									$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
+									$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
+									$ciudad=urlencode($this->getDaneCities($address->city));
+									$direccion=urlencode($address->address1);
+									$doc_cliente=urlencode($customer->identification);
+									$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
+									$telefono=urlencode($address->phone_mobile);
+									$observacion=urlencode($order->private_message);
+									$doc_mensajero=urlencode($ccDelivery[0]);
+									$total_paid=urlencode($order->total_paid);
+									$payment=urlencode($order->payment);
+									
+									$url_insercion = $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero.'/'.round($total_paid).'/'.$payment;
+									
+									$this->generateLogSmartQuickFarmalisto("Url Servicio: ".$url_insercion);
+
+									$result = json_decode(file_get_contents($url_insercion));
+									
+									$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
+
+									if($result->status != 'OK') {
+										$errorSmart = "error";
+									} else {
+										$errorSmart = "sucesfull";
+									}
 								}
 								$success['smart'] = $errorSmart;
 							}
@@ -678,6 +734,19 @@ protected function save_opcion_cancelacion($array){
 	    return $string;
 	}
 
+	public function validateStateOrderUpdate($id_order) {
+		$sql = "SELECT o.id_order, o.current_state, ohh.id_order_state, ohh.date_add
+				FROM ps_orders o
+				LEFT JOIN ps_order_history ohh ON ( o.id_order = ohh.id_order AND (ohh.id_order_state = 19))
+				WHERE o.id_order = ".$id_order;
+
+		if( $result = Db::getInstance()->ExecuteS($sql)) {
+			return $result;
+		}	
+
+		return false;			
+	}
+
 public function postProcess()
 	{
 		date_default_timezone_set('America/Bogota');
@@ -780,42 +849,80 @@ public function postProcess()
 						$getOrderDelivery = $this->get_mensajero_order($order->id);
 						$ccDelivery = explode("@",$getOrderDelivery['email']);
 						$this->generateLogSmartQuickFarmalisto("ID estado: ".$order_state->id.' -> Documento mensajero: '.count($ccDelivery));
-						if($order_state->id == 22 && count($ccDelivery) > 1) {
-							$fechaHora = $order->delivery_date;
 						
-							$hora = strtotime($fechaHora);
-							$hora = date("Hi", $hora);
-							
-							$fecha = strtotime($fechaHora);
-							$fecha = date("Y-m-d", $fecha);
-							
-							$customer = new Customer($order->id_customer);
-							$address = new Address($order->id_address_delivery);
-							
-							$server = $this->getEnvironmentSmartQuick(); 
-							//$server='181.49.224.186';
-							$pedido=urlencode($order->id);
-							$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
-							$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
-							$ciudad=urlencode($this->stripAccents($address->city));
-							$direccion=urlencode($address->address1);
-							$doc_cliente=urlencode($customer->identification);
-							$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
-							$telefono=urlencode($address->phone_mobile);
-							$observacion=urlencode($order->private_message);
-							$doc_mensajero=urlencode($ccDelivery[0]);
-							$url_insercion= $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero;
-							
-							$this->generateLogSmartQuickFarmalisto("Url servicio: ".$url_insercion);
+						$fechaHora = $this->getDateTimeDeliveryCart($order->id);
+								
+						if(!empty($fechaHora['time_delivery'])) {
+							$time_delivery = $fechaHora['time_delivery'];
+						} else {
+							$time_delivery = date("H:i:s");
+						}
 
-							$result = json_decode(file_get_contents($url_insercion));
-							
-							$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
+						if(!empty($fechaHora['date_delivery'])) {
+							$date_delivery = $fechaHora['date_delivery'];
+						} else {
+							$date_delivery = date("Y-m-d");
+						}
 
-							if($result->status == 'ERROR') {
-								$errorSmart = "&smart=false";
-							} else {
-								$errorSmart = "&smart=true";
+						$hora = strtotime($time_delivery);
+						$hora = date("Hi", $hora);
+						
+						$fecha = strtotime($date_delivery);
+						$fecha = date("Y-m-d", $fecha);
+
+						$resultStateOrder = $this->validateStateOrderUpdate($order->id);
+
+						$server = $this->getEnvironmentSmartQuick(); 
+
+						if(count($resultStateOrder) > 0 && !empty($resultStateOrder[0]['id_order_state'])) {
+							if($resultStateOrder[0]['id_order_state'] == 19 && $order_state->id == 22) {
+								$url_insercion = $server.'/restfarmalisto/servicio_rest/MantieneReceptor/actualizar_guia/'.$order->id.'/'.$fecha.'/'.$hora.'/SIN_CARGAR//NINGUNO';
+
+								$this->generateLogSmartQuickFarmalisto("Url servicio: ".$url_insercion);
+
+								$result = json_decode(file_get_contents($url_insercion));
+								
+								$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
+
+								if($result->status != 'OK') {
+									$errorSmart = "&smart=false";
+								} else {
+									$errorSmart = "&smart=true";
+								}
+							}
+						} else {
+							if($order_state->id == 22 && count($ccDelivery) > 1) {
+								
+								$customer = new Customer($order->id_customer);
+								$address = new Address($order->id_address_delivery);
+								
+								//$server='181.49.224.186';
+								$pedido=urlencode($order->id);
+								$fecha_entrega=urlencode($fecha); // Puede ser enviado con o sin guiones;
+								$hora_entrega=urlencode($hora); // Debe ser en hora militar sin (:)
+								$ciudad=urlencode($this->getDaneCities($address->city));
+								$direccion=urlencode($address->address1);
+								$doc_cliente=urlencode($customer->identification);
+								$nom_cliente=urlencode($customer->firstname.' '.$customer->lastname);
+								$telefono=urlencode($address->phone_mobile);
+								$observacion=urlencode($order->private_message);
+								$doc_mensajero=urlencode($ccDelivery[0]);
+								$total_paid=urlencode($order->total_paid);
+								$payment=urlencode($order->payment);
+									
+								$url_insercion = $server.'/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/'.$pedido.'/'.$fecha_entrega.'/'.$hora_entrega.'/'.$ciudad.'/'.$direccion.'/'.$doc_cliente.'/'.$nom_cliente.'/'.$telefono.'/'.$observacion.'/'.$doc_mensajero.'/'.round($total_paid).'/'.$payment;
+								
+								$this->generateLogSmartQuickFarmalisto("Url servicio: ".$url_insercion);
+
+								$result = json_decode(file_get_contents($url_insercion));
+								
+								$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".json_encode($result));
+
+								if($result->status != 'OK') {
+									$errorSmart = "&smart=false";
+								} else {
+									$errorSmart = "&smart=true";
+								}
 							}
 						}
 
