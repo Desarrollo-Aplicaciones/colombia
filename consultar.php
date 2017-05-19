@@ -2,7 +2,7 @@
 echo "\r\nentro\r\n";
 $path = dirname(__FILE__);
 echo "\r\nruta:".$path;
-require($path.'/../config/config.inc.php');
+require($path.'/config/config.inc.php');
 date_default_timezone_set('America/Bogota');
 
 $sqlOrder = "SELECT id_order, current_state FROM "._DB_PREFIX_."orders WHERE current_state = 4 OR current_state = 22";
@@ -29,6 +29,7 @@ if (count($resultsC) > 0) {
 
 $status = array(
                 'EN RUTA' => 4,
+                'LLEGADA' => 4,
                 'ENTREGADO' => 5,
                 'CERRADO CON NOVEDAD' => 19,
                 'CANCELACION' => 19
