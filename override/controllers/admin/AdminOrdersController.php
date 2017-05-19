@@ -457,19 +457,19 @@ class AdminOrdersController extends AdminOrdersControllerCore
 							if($order->current_state == 22) {
 								$server = $this->getEnvironmentSmartQuick(); 
 								//$fechaHora = $order->delivery_date;
-								$fechaHora = $this->getDateTimeDeliveryCart($order->id);
+								//$fechaHora = $this->getDateTimeDeliveryCart($order->id);
 								
-								if(!empty($fechaHora['time_delivery'])) {
-									$time_delivery = $fechaHora['time_delivery'];
-								} else {
+								//if(!empty($fechaHora['time_delivery'])) {
+								//	$time_delivery = $fechaHora['time_delivery'];
+								//} else {
 									$time_delivery = date("H:i:s");
-								}
+								//}
 
-								if(!empty($fechaHora['date_delivery'])) {
-									$date_delivery = $fechaHora['date_delivery'];
-								} else {
+								//if(!empty($fechaHora['date_delivery'])) {
+								//	$date_delivery = $fechaHora['date_delivery'];
+								//} else {
 									$date_delivery = date("Y-m-d");
-								}
+								//}
 
 								$hora = strtotime($time_delivery);
 								$hora = date("Hi", $hora);
@@ -789,19 +789,19 @@ public function postProcess()
 						$ccDelivery = explode("@",$getOrderDelivery['email']);
 						$this->generateLogSmartQuickFarmalisto("ID estado: ".$order_state->id.' -> Documento mensajero: '.count($ccDelivery));
 						
-						$fechaHora = $this->getDateTimeDeliveryCart($order->id);
+						//$fechaHora = $this->getDateTimeDeliveryCart($order->id);
 								
-						if(!empty($fechaHora['time_delivery'])) {
-							$time_delivery = $fechaHora['time_delivery'];
-						} else {
+						//if(!empty($fechaHora['time_delivery'])) {
+						//	$time_delivery = $fechaHora['time_delivery'];
+						//} else {
 							$time_delivery = date("H:i:s");
-						}
+						//}
 
-						if(!empty($fechaHora['date_delivery'])) {
-							$date_delivery = $fechaHora['date_delivery'];
-						} else {
+						//if(!empty($fechaHora['date_delivery'])) {
+						//	$date_delivery = $fechaHora['date_delivery'];
+						//} else {
 							$date_delivery = date("Y-m-d");
-						}
+						//}
 
 						$hora = strtotime($time_delivery);
 						$hora = date("Hi", $hora);
