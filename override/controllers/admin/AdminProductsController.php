@@ -131,9 +131,9 @@ class AdminProductsController extends AdminProductsControllerCore
                                 LEFT JOIN ps_product_supplier pss ON ( sa.id_product = pss.id_product )';
 		
 		$this->_select .= 'shop.name as shopname, ';
-		/*$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, CONCAT("Inventario:",sav.`quantity`," - Disponible:",(sav.`quantity`-sav.`reserve_on_stock`)) as sav_quantity, '.$alias.'.`active`';*/
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, CONCAT("Inventario:",sav.`quantity`," - Disponible:",(sav.`quantity`-sav.`reserve_on_stock`)) as sav_quantity, '.$alias.'.`active`';
 
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`,ROUND( ( sa.price - AVG( sodf.unit_price_te  ) ) / (  sa.price )  * 100,2 )AS gmc, ROUND( ( sa.price - AVG( pss.product_supplier_price_te  ) ) / (  sa.price )  * 100,2) AS gmp';
+//		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`,ROUND( ( sa.price - AVG( sodf.unit_price_te  ) ) / (  sa.price )  * 100,2 )AS gmc, ROUND( ( sa.price - AVG( pss.product_supplier_price_te  ) ) / (  sa.price )  * 100,2) AS gmp';
 		
 		if ($join_category)
 		{
