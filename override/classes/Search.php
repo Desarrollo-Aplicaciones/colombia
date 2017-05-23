@@ -882,7 +882,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')'.
 				($ret_insert ? ' INNER JOIN tmp_search_'.$alenum.' bt ON ( bt.id_product = p.id_product )' : '').'
-				WHERE p.active = 1 AND product_shop.active = 1 AND (stock.quantity > 0 AND stock.quantity IS NOT NULL) AND p.`id_product` '.$product_pool.' 
+				WHERE p.active = 1 AND product_shop.active = 1 AND p.`id_product` '.$product_pool.' 
 				GROUP BY product_shop.id_product
 				'.$orden_bus.' 
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
@@ -898,7 +898,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				)'.Product::sqlStock('p', '', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cat ON (p.`id_category_default` = cat.`id_category`)
-				WHERE p.active = 1 AND product_shop.active = 1 AND (stock.quantity > 0 AND stock.quantity IS NOT NULL) AND  p.`id_product` '.$product_pool;
+				WHERE p.active = 1 AND product_shop.active = 1 AND  p.`id_product` '.$product_pool;
 		$total = $db->getValue($sql);
 
 		if (!$result){
