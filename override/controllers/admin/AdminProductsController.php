@@ -133,7 +133,7 @@ class AdminProductsController extends AdminProductsControllerCore
 		
 		$this->_select .= 'shop.name as shopname, ';
 		//$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, CONCAT("Inventario:",sav.`quantity`," - Disponible:",(sav.`quantity`-sav.`reserve_on_stock`)) as sav_quantity, '.$alias.'.`active`';
-                $this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`,a.reference, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`,ROUND(((a.price - sod.unit_price_te) / a.price )*100,2) AS  gmc';
+                $this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`,ROUND(((a.price - sod.unit_price_te) / a.price )*100,2) AS  gmc';
 
 		
 		if ($join_category)
@@ -167,7 +167,8 @@ class AdminProductsController extends AdminProductsControllerCore
 		$this->fields_list['reference'] = array(
 			'title' => $this->l('Reference'),
 			'align' => 'left',
-			'width' => 80
+			'width' => 80,
+			'filter_key' => 'a!reference'
 		);
 
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
@@ -234,6 +235,9 @@ class AdminProductsController extends AdminProductsControllerCore
 				'align' => 'center',
 				'position' => 'position'
 			);
+//                echo "<pre>";
+//                var_dump($this->fields_list);
+//                echo "</pre>";
 	}
 
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
