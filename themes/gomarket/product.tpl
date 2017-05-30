@@ -683,6 +683,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 	<div id="conconImage">
 		<div id="more_info_block" class="clear">
 			<ul id="more_info_tabs" class="idTabs idTabsShort clearfix">
+        
 				{if $product->description}<li><a id="more_info_tab_more_info" href="#idTab1">{l s='More info'}</a></li>{/if}
 				{if $product->description_short}<li><a id="info_tab_info" href="#idTab0">{l s='Información'}</a></li>{/if}
 				{*if $features}<li><a id="more_info_tab_data_sheet" href="#idTab2">{l s='Data sheet'}</a></li>{/if*}
@@ -699,7 +700,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 					{* <div class="title_hide_show">{l s='Información'}</div> *}
 					<!--info-->
 					<div id="idTab0" class="rte content_hide_show">
-						<div id="scro">{$product->description_short}</div>
+                       <div id="scro"><b>{$disponibilidad}</b><p style="text-align: justify;" align="justify">&nbsp;</p>{$product->description_short}</div>
 					</div>
 				{/if}
 
