@@ -394,128 +394,188 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		<div class="ctn-product-name" >
 			<h1 id="name_unico_sin_estilo">{$product->name|lower|capitalize}</h1>
 		</div>
+		{if empty($product->motivo)}
+			<div id="qty_content">
+				
+				<div class="ctn-price">
+					<span class="word_price">Precio:</span>
 
-		<div id="qty_content">
-			
-			<div class="ctn-price">
-				<span class="word_price">Precio:</span>
-
-				<div class="ctn-price-old-new">
-					{* Precio tachado por descuento *}
-					{if !$priceDisplay || $priceDisplay == 2}
-						{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-						{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
-					{elseif $priceDisplay == 1}
-						{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-						{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
-					{/if}
-					{if $product->on_sale}
-						<img  src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
-						<span class="on_sale">{l s='On sale!'}</span>
-					{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
-						{* <span class="discount">{l s='Reduced price!'}</span> *}
-					{/if}
-					{if $priceDisplay == 2}
-						<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}</span>
-					{/if}
-					{* CUANTO FUE EL DESCUENTO--> <p id="reduction_percent" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}>
-					<span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
-					<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}><span id="reduction_amount_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}-{convertPrice price=$product->specificPrice.reduction|floatval}{/if}</span></p> *}
-					{if $product->specificPrice AND $product->specificPrice.reduction}
-						<span id="old_price">
-						{if $priceDisplay >= 0 && $priceDisplay <= 2}
-						{if $productPriceWithoutReduction > $productPrice}
-							<span id="old_price_display">{convertPrice price=$productPriceWithoutReduction}</span>
-							{* {if $tax_enabled && $display_tax_label == 1}
-							{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
-							{/if} *}
+					<div class="ctn-price-old-new">
+						{* Precio tachado por descuento *}
+						{if !$priceDisplay || $priceDisplay == 2}
+							{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
+							{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+						{elseif $priceDisplay == 1}
+							{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
+							{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 						{/if}
+						{if $product->on_sale}
+							<img  src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
+							<span class="on_sale">{l s='On sale!'}</span>
+						{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
+							{* <span class="discount">{l s='Reduced price!'}</span> *}
 						{/if}
-						</span>
-					{/if}
-					{if isset($packItems) && isset($productPrice) && isset($product) && $packItems|@count && $productPrice < $product->getNoPackPrice()}
-					<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
-					<br class="clear" />
-					{/if}
-					{if $product->ecotax != 0}
-					<p class="price-ecotax">{l s='include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='for green tax'}
-					{if $product->specificPrice AND $product->specificPrice.reduction}
-					<br />{l s='(not impacted by the discount)'}
-					{/if}
-					</p>
-					{/if}
-					{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
-					{math equation="pprice / punit_price" pprice=$productPrice punit_price=$product->unit_price_ratio assign=unit_price}
-					<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'htmlall':'UTF-8'}</p>
-					{/if}
-					{* / Precio tachado por descuento *}
+						{if $priceDisplay == 2}
+							<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}</span>
+						{/if}
+						{* CUANTO FUE EL DESCUENTO--> <p id="reduction_percent" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}>
+						<span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
+						<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}><span id="reduction_amount_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}-{convertPrice price=$product->specificPrice.reduction|floatval}{/if}</span></p> *}
+						{if $product->specificPrice AND $product->specificPrice.reduction}
+							<span id="old_price">
+							{if $priceDisplay >= 0 && $priceDisplay <= 2}
+							{if $productPriceWithoutReduction > $productPrice}
+								<span id="old_price_display">{convertPrice price=$productPriceWithoutReduction}</span>
+								{* {if $tax_enabled && $display_tax_label == 1}
+								{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
+								{/if} *}
+							{/if}
+							{/if}
+							</span>
+						{/if}
+						{if isset($packItems) && isset($productPrice) && isset($product) && $packItems|@count && $productPrice < $product->getNoPackPrice()}
+						<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
+						<br class="clear" />
+						{/if}
+						{if $product->ecotax != 0}
+						<p class="price-ecotax">{l s='include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='for green tax'}
+						{if $product->specificPrice AND $product->specificPrice.reduction}
+						<br />{l s='(not impacted by the discount)'}
+						{/if}
+						</p>
+						{/if}
+						{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
+						{math equation="pprice / punit_price" pprice=$productPrice punit_price=$product->unit_price_ratio assign=unit_price}
+						<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'htmlall':'UTF-8'}</p>
+						{/if}
+						{* / Precio tachado por descuento *}
 
-					{* Precio normalito o con el descuento aplicado (si lo tiene)*}
-					<div class="our_price_display" id="our_price_display2">
-						{if $priceDisplay >= 0 && $priceDisplay <= 2}{convertPrice price=$productPrice}{/if}
+						{* Precio normalito o con el descuento aplicado (si lo tiene)*}
+						<div class="our_price_display" id="our_price_display2">
+							{if $priceDisplay >= 0 && $priceDisplay <= 2}{convertPrice price=$productPrice}{/if}
+						</div>
+						{* / Precio normalito o con el descuento aplicado (si lo tiene) *}
 					</div>
-					{* / Precio normalito o con el descuento aplicado (si lo tiene) *}
+				</div>
+
+				
+
+				<div class="ctn-quantity">
+					<div id="cantidad">{l s='Quantity2:'}</div>
+					<div class="quantity_input">
+						<a rel="nofollow" class="cart_quantity_down" id="" href="javascript:void(0)" title="{l s='Subtract'}">
+							<div class="btn-cant-sumarrestar"> <span>-</span></div>
+							<!--img  src="{$img_dir}pdp/quantity_down.png" alt="{l s='Subtract'}"/-->
+						</a>
+						<input type="text" name="qty" id="quantity_wanted" class="number-quantity" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" maxlength="3" style="width: 28px;min-width:28px; text-align:center;" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
+
+						<a rel="nofollow" class="cart_quantity_up" href="javascript:void(0)" title="{l s='Add'}">
+							<div class="btn-cant-sumarrestar"> <span>+</span></div>
+							<!--img  src="{$img_dir}pdp/quantity_up.png" alt="{l s='Add'}"/-->
+						</a>
+					</div>
 				</div>
 			</div>
 
-			
+			<!--div class="beneficio">
+				<span class="shipping_val">
+					Envío por compras menores {* a <b>{convertPrice price=$envio_gratis}</b>: Bogotá <b>{convertPrice price=1000}</b> resto del país <b>{convertPrice price=5000}</b> *}
+				</span>
+				<span class="free_shipping">
+					<b>¡Envío Gratuito!</b>
+				</span>
+			</div-->
+			{if ($productPrice > 0) AND !((!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE)}
+				<div id="add_to_cart" class="buttons_bottom_block" >
+					<input type="hidden" name="token" />
+					<input type="hidden" name="id_product" value="{$product->id|intval}" id="product_page_product_id" />
+					<input type="hidden" name="add" value="1" />
+					<input type="hidden" name="id_product_attribute" id="idCombination" value="" />
+					<div class="proceed">
+						<input type="submit" id="btnComprar" name="Submit" value="{l s='Comprar'}" class="exclusive"  />
+					</div>
+					<div class="continue_shopping">
+						<button class="btn-default " id="btnAgregar1">
+							<span id="txt-btn-agregar">Agregar</span>
+							<img id="img-cart" src="{$img_dir}pdp/img-cart.png">
+							<img id="img-check" src="{$img_dir}pdp/img-check.png" style=" display: none ">
+							<img id="img-cart-2" src="{$img_dir}pdp/img-cart-2.png" style=" display: none ">
+							</button>
+						<input type="hidden" id="btnAgregar" value="Agregar"/>
+					</div>
+				</div>
+			{/if}
 
-			<div class="ctn-quantity">
-				<div id="cantidad">{l s='Quantity2:'}</div>
-				<div class="quantity_input">
-					<a rel="nofollow" class="cart_quantity_down" id="" href="javascript:void(0)" title="{l s='Subtract'}">
-						<div class="btn-cant-sumarrestar"> <span>-</span></div>
-						<!--img  src="{$img_dir}pdp/quantity_down.png" alt="{l s='Subtract'}"/-->
-					</a>
-					<input type="text" name="qty" id="quantity_wanted" class="number-quantity" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" maxlength="3" style="width: 28px;min-width:28px; text-align:center;" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
-
-					<a rel="nofollow" class="cart_quantity_up" href="javascript:void(0)" title="{l s='Add'}">
-						<div class="btn-cant-sumarrestar"> <span>+</span></div>
-						<!--img  src="{$img_dir}pdp/quantity_up.png" alt="{l s='Add'}"/-->
-					</a>
+			<div class="ctn-contact-lap" id="contact-lap">
+				<div class="ctn-img-call">
+					<img src="{$img_dir}pdp/faceCall1.jpg" class="img-call">
+				</div>
+				<div class="borde-bajo">
+					<span class="txt-gray">¿Tienes algúna duda?</span>
+					<span class="txt-green">Contáctanos</span>
+					<span class="txt-green"><strong>+</strong></span>
 				</div>
 			</div>
-		</div>
-		<!--div class="beneficio">
-			<span class="shipping_val">
-				Envío por compras menores {* a <b>{convertPrice price=$envio_gratis}</b>: Bogotá <b>{convertPrice price=1000}</b> resto del país <b>{convertPrice price=5000}</b> *}
-			</span>
-			<span class="free_shipping">
-				<b>¡Envío Gratuito!</b>
-			</span>
-		</div-->
-		{if ($productPrice > 0) AND !((!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE)}
-			<div id="add_to_cart" class="buttons_bottom_block" >
-				<input type="hidden" name="token" />
-				<input type="hidden" name="id_product" value="{$product->id|intval}" id="product_page_product_id" />
-				<input type="hidden" name="add" value="1" />
-				<input type="hidden" name="id_product_attribute" id="idCombination" value="" />
-				<div class="proceed">
-					<input type="submit" id="btnComprar" name="Submit" value="{l s='Comprar'}" class="exclusive"  />
+		{else}
+			<div id="qty_content_black_list">
+				<div class="ctn-price">
+					<div class="color-font-top">
+						<div class="ctn-black-list color-title-open-regular">
+							Producto no disponible
+						</div>
+						<div class="ctn-black-list color-title-open-bold"> 
+						{if $product->motivo == 1}
+							Está temporalmente agotado por laboratorio.
+						{else if $product->motivo == 10}
+							Desabastecimiento por parte del proveedor.
+						{/if}
+						</div>
+					</div>
+					<div class="color-font-medium">
+						<div class="color-open-regular">
+							¿Deseas que te notifiquemos cuando el producto esté <b>disponible de nuevo</b>?
+						</div>
+						<br>
+
+						<input type="button" class="buttom-open-bold" value="Deseo ser notificado" name="modal" href="#dialog">
+
+					</div>
+					<div class="color-font-bottom">
+						<div class="text-left-bottom">
+							<b>¿Dudas?</b> contáctanos en cualquiera de nuestros canales.
+						</div>
+						<div class="icon-right-bottom">
+							<img src="{$img_dir}Lineas.jpg" id="img1">
+							<img src="{$img_dir}Contacto.jpg" id="img1">
+							<img src="{$img_dir}Chat.jpg" id="img1">
+							<img src="{$img_dir}wasap.jpg" id="img1">
+						</div>
+					</div>
 				</div>
-				<div class="continue_shopping">
-					<button class="btn-default " id="btnAgregar1">
-						<span id="txt-btn-agregar">Agregar</span>
-						<img id="img-cart" src="{$img_dir}pdp/img-cart.png">
-						<img id="img-check" src="{$img_dir}pdp/img-check.png" style=" display: none ">
-						<img id="img-cart-2" src="{$img_dir}pdp/img-cart-2.png" style=" display: none ">
-						</button>
-					<input type="hidden" id="btnAgregar" value="Agregar"/>
-				</div>
+			</div>
+
+			<div id="boxes">
+				<div id="mask"></div> 
+
+	    		<div id="dialog" class="window"> 
+
+	    			<!--a href="#" class="close">Cerrar</a-->
+	    			<div class="header-lightbox">
+	    				<div class="img-header-lightbox">
+		    				<img src="{$img_dir}Capsula_lightbox_captura.jpg" id="img1">
+		    			</div>
+
+		    			<div class="title-header-lightbox">
+			    			<span class="title-lightbox">
+			    				<b>Dejanos tus datos de contacto</b>
+			    			</span>
+		    			</div>
+		    			
+	    			</div>
+	    		</div>
+	 
 			</div>
 		{/if}
-
-		<div class="ctn-contact-lap" id="contact-lap">
-			<div class="ctn-img-call">
-				<img src="{$img_dir}pdp/faceCall1.jpg" class="img-call">
-			</div>
-			<div class="borde-bajo">
-				<span class="txt-gray">¿Tienes algúna duda?</span>
-				<span class="txt-green">Contáctanos</span>
-				<span class="txt-green"><strong>+</strong></span>
-			</div>
-		</div>
-
 
 
 	</div>

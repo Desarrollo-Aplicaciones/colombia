@@ -238,6 +238,43 @@ ul#thumbs_list_frame img {
 	margin-right: 44px;
 }
 
+.ctn-black-list {
+	margin-right: 44px;
+	font-size: 17px;
+	text-align: left;
+}
+
+.color-title-open-regular {
+	color: #a43800;
+	font-size: 17px;
+}
+
+.color-title-open-bold {
+	color: #00441b;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.color-open-regular {
+	color: #43475a;
+	font-size: 14px;
+}
+
+.buttom-open-bold {
+	background-color: white;
+	border:0;
+	border-radius: 10px;
+	color: #3a9b37;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: bold;
+	height: 30%;
+	width: 50%;
+	-webkit-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.75);
+	box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.75);
+}
+
 #price{
 	margin-top: 20px;
 	height: 18px;
@@ -784,6 +821,50 @@ div#more_info_sheets {
 #qty_content {
     display: inline-block;
     width: 100%;
+}
+
+#qty_content_black_list {
+    display: inline-block;
+    float: left;
+    width: 90%;
+}
+
+.color-font-top {
+	background-color: #f0f0f0;
+	height: 50px;
+    padding: 10px;
+}
+
+.color-font-medium {
+	background-color: #dcdcdc;
+	border-top: 2px solid #AEAEAE;
+	height: 120px;
+    padding: 10px;
+}
+
+.color-font-bottom {
+	background-color: #f0f0f0;
+    height: 45px;
+    padding: 10px;
+    text-align: left;
+    width: 95%;
+}
+
+.text-left-bottom {
+	float: left;
+    margin-left: 0;
+    width: 49%;
+}
+
+.icon-right-bottom {
+	float: right;
+	margin-right: 0;
+    width: 48%;	
+}
+
+.icon-right-bottom img{
+	border-radius: 20px;
+	width: 40px;
 }
 
 #qty_content .ctn-price {
@@ -1368,4 +1449,81 @@ div#more_info_sheets {
 
 .btn-discount-purple-text {
 	font-size: 20px;
+}
+
+
+/**
+Modal
+**/
+#mask {
+  position:fixed;
+ left:0;
+ top:0;
+ background-color:#000;
+ opacity:0.6;
+ filter:alpha(opacity=60);
+}
+ 
+#boxes .window {
+  position:absolute;
+  width:280px;
+  height:350px;
+  display:none;
+  z-index:9999;
+  padding:5px;
+}
+ 
+ 
+/* Customize your modal window here, you can add background image too */
+#boxes #dialog {
+	position:fixed; 
+ 	font-family:arial;
+	font-size:1em;
+	border:0.05em solid black;
+	overflow:auto;
+	background-color:#fff;
+}
+
+.info-inventory-provider {
+	background: white;
+	border: 1px solid #585A69;
+	border-radius: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.hide-info-inventory {
+	display: none;
+}
+
+.name-provider {
+	background: #3293D6;
+	border: 1px solid gray;
+    margin-bottom: 5px;
+    padding: 10px;
+}
+
+.title-lightbox {
+	font-size: 16px;
+	position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.header-lightbox {
+	width: 100%;
+}
+
+.img-header-lightbox {
+	float: left;
+	width: 35%;
+}
+
+.title-header-lightbox {
+	float: right;
+	height: 70px;
+	position: relative;
+	text-align: left;
+	width: 63%;
 }
