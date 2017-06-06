@@ -2,7 +2,9 @@
   
 class Product extends ProductCore {  
 
-  
+  	/** @var string Product motivo */
+	public $motivo = '';
+
 	/**
 	* Admin panel product search
 	*
