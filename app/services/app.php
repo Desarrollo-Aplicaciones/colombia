@@ -672,6 +672,17 @@ private function orderDetail($id_order = NULL){
 		$this->response(json_encode($images), 200);
 	}
 
+	public function getTerms()
+	{
+		if ($this->get_request_method() != "GET") {
+		$this->response('', 406);
+		}
+
+		$model = new Model();
+		$this->response($this->json($model->getTerms()),200);
+
+	}
+
 	/**
 	   * Miera si la dirección dada se encuentra en otras ciudades para denegarle acceso a pago contraentrega
 	   * @return [type] [description]
