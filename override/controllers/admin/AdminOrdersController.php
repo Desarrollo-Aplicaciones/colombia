@@ -398,7 +398,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 	{ 
 
 
-
+		date_default_timezone_set('America/Bogota');
 		// /admin8256/index.php?controller=AdminOrders&id_order=16330&vieworder&token=3356a854ebecbf64da66b8ec2cc38c3f&ajax&option_jax=transportador_fm
 		// /admin8256/index.php?controller=AdminOrders&id_order=16330&vieworder&token=3356a854ebecbf64da66b8ec2cc38c3f&ajax&option_jax=transportadora
 		               if(Tools::getIsset('controller') && Tools::getValue('controller') =='AdminOrders' 
@@ -467,6 +467,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
 								$this->generateLogSmartQuickFarmalisto("Url Servicio: ".$url_insercion);
 
 								$result = json_decode(file_get_contents($url_insercion));
+
+								$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".$result);
 								
 								if($result->status == 'ERROR') {
 									$errorSmart = "error";
@@ -516,6 +518,29 @@ class AdminOrdersController extends AdminOrdersControllerCore
 							/* START mail quality score */
 								if ( $_GET['opcion_cancelacion'] != 4 ) {
 									$order = new Order($this->id_object);
+									/*$product_list = $order->getProducts();
+									
+									foreach ($product_list as $product) {
+
+			                            $sql_reserve = 'SELECT reserve_on_stock FROM ' . _DB_PREFIX_ . 'stock_available_mv
+                                        WHERE id_product = '.$product['product_id'];
+
+                                        $resultReserve = Db::getInstance()->executeS($sql_reserve);
+                                        
+                                        $newReserveOnStock = $resultReserve[0]['reserve_on_stock'] - $product['product_quantity_in_stock'];
+
+                                        if($newReserveOnStock < 0) {
+                                        	$newReserveOnStock = 0;
+                                        }
+
+										$sql_new_reserve = 'UPDATE ' . _DB_PREFIX_ . 'stock_available_mv
+	                                        SET reserve_on_stock = '.$newReserveOnStock.'
+	                                        WHERE id_product = '.$product['product_id'];
+
+	                                	Db::getInstance()->executeS($sql_new_reserve);
+
+			                        }*/
+			                        
 									$template_vars['{firstname}'] = $this->context->customer->firstname;
 									$template_vars['{lastname}'] = $this->context->customer->lastname;
 									$template_vars['{order_name}'] = $order->reference;
@@ -594,6 +619,7 @@ fclose($fp) ;
 
 public function postProcess()
 	{
+		date_default_timezone_set('America/Bogota');
 		if (Tools::isSubmit('submitReport')){
 			$this->generarReporteDetallado();
 		}
@@ -723,6 +749,8 @@ public function postProcess()
 
 							$result = json_decode(file_get_contents($url_insercion));
 							
+							$this->generateLogSmartQuickFarmalisto("Resultado servicio: ".$result);
+
 							if($result->status == 'ERROR') {
 								$errorSmart = "&smart=false";
 							} else {
