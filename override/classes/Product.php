@@ -2,7 +2,9 @@
   
 class Product extends ProductCore {  
 
-  
+  	/** @var string Product motivo */
+	public $motivo = '';
+
 	/**
 	* Admin panel product search
 	*
@@ -17,20 +19,28 @@ class Product extends ProductCore {
 
 		$sql = new DbQuery();
 		/*$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, stock.reserve_on_stock AS "reserve", product_shop.advanced_stock_management, p.`customizable`');*/
-		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`,  ROUND(sod.unit_price_te) AS unit_price_te, ROUND(ps.wholesale_price) AS wholesale_price');
+//		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`,  ROUND(sod.unit_price_te) AS unit_price_te, ROUND(ps.wholesale_price) AS wholesale_price');
+		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, stock.reserve_on_stock AS "reserve", product_shop.advanced_stock_management, p.`customizable`, ROUND(((p.price - sod.unit_price_te) / p.price )*100,2) AS gmc');
 
 		$sql->from('category_product', 'cp');
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->join(Shop::addSqlAssociation('product', 'p'));
                 
                 $sql->innerJoin('product_shop', 'ps', 'ps.`id_product`  =  p.`id_product`');
-                $sql->innerJoin('supply_order_detail', 'sod', 'sod.`id_product` = ps.`id_product`');
                 $sql->leftJoin('product_black_list', 'prod_black', 'prod_black.`reference`  =  p.`reference`');
 		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
-		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
+                $subQuery = "LEFT JOIN ( SELECT MAX(sod.id_supply_order_detail) AS id_supply_order_detail, sod.id_product 
+                            FROM  ps_supply_order so 
+                            INNER JOIN ps_supply_order_detail sod ON ( so.id_supply_order = sod.id_supply_order )
+                            LEFT JOIN ps_product_shop psh ON ( sod.id_product = psh.id_product)
+                            WHERE so.date_add >= curdate() - interval 2 YEAR  AND so.id_supply_order_state IN ( 4, 5 ) AND psh.active = 1
+                            GROUP BY sod.id_product 
+                            ) order_date ON (  order_date.id_product = p.id_product ) ";
+		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer` '.$subQuery);
+                $sql->leftJoin( 'supply_order_detail', 'sod', ' sod.`id_supply_order_detail` = order_date.`id_supply_order_detail`');
 
 		$where = ' p.active=1 AND ps.active=1 AND  prod_black.`reference` IS NULL AND  (pl.`name` LIKE \'%'.pSQL($query).'%\'
 		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
@@ -49,7 +59,7 @@ class Product extends ProductCore {
 		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
 //echo $sql->__toString(); exit;
 		$result = Db::getInstance()->executeS($sql);
-// print_r($result);
+//print_r($result);
 		if (!$result)
 			return false;
 
