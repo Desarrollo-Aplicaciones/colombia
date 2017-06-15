@@ -447,16 +447,33 @@
 	function displayQtyInStock(id)
 	{
 		var id_product = $('#id_product').val();
-		/*var reservados = 0;
-		var disponibles = 0;*/
-		if ($('#ipa_' + id_product + ' option').length)
-			var id_product_attribute = $('#ipa_' + id_product).val();
-		else
-			var id_product_attribute = 0;
-		/*disponibles = parseInt(stock[id_product][id_product_attribute]) - parseInt(restock[id_product][id_product_attribute]);*/
-		$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
-		/*$('#qty_in_restock').html(parseInt(restock[id_product][id_product_attribute]));
-		$('#qty_in_disstock').html(disponibles);*/
+
+		if(motivo[id_product] == null) {
+			$("#add-cart").show();
+			$("#hide-product").hide();
+			$("#hide-product").html('');
+			/*var reservados = 0;
+			var disponibles = 0;*/
+			if ($('#ipa_' + id_product + ' option').length)
+				var id_product_attribute = $('#ipa_' + id_product).val();
+			else
+				var id_product_attribute = 0;
+			/*disponibles = parseInt(stock[id_product][id_product_attribute]) - parseInt(restock[id_product][id_product_attribute]);*/
+			$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
+			/*$('#qty_in_restock').html(parseInt(restock[id_product][id_product_attribute]));
+			$('#qty_in_disstock').html(disponibles);*/
+		} else {
+			if(motivo[id_product] == 1) {
+				var text = "AGOTADO POR LABORARIO";
+			}
+			if(motivo[id_product] == 10) {
+				var text = "DESABASTECIMIENTO POR PROVEEDOR";
+			}
+			$("#add-cart").hide();
+			$("#hide-product").show();
+			$("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+text+'</b></div>');
+		}
+
 	}
 	function duplicateOrder(id_order)
 	{
@@ -701,6 +718,7 @@
 				var attributes_html = '';
 				var customization_html = '';
 				stock = {};
+				motivo = {};
 				//restock = {};
 				if(res.found)
 				{
@@ -713,12 +731,13 @@
 					attributes_html += '<label>{l s='Combination'}</label>';
 					$.each(res.products, function() {
 						var gmc = this.gmc !== null ? this.gmc : "0";
-                                                console.log("Holaaaaa");
-                                                console.log(this);
-                                                products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+' Margen producto: '+gmc+' %</option>';
+
+                                                products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
+
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
+						motivo[id_product] = this.motivo;
 						//restock[id_product] = new Array();
 						if (this.customizable == '1')
 						{
@@ -1281,12 +1300,15 @@
 				</body>
 				</html>
 			</iframe>
-			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
-			<!--b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
-			<b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span--></p>
-			<div class="margin-form">
-				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
+			<div id="add-cart">
+				<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
+				<!--b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
+				<b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span--></p>
+				<div class="margin-form">
+					<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
+				</div>
 			</div>
+			<div id="hide-product" style="display: none;"></div>
 		</div>
 	</div>
 	<div id="products_err" class="warn" style="display:none;"></div>
