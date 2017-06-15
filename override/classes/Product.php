@@ -5,6 +5,61 @@ class Product extends ProductCore {
   	/** @var string Product motivo */
 	public $motivo = '';
 
+	public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
+	{
+		parent::__construct($id_product, $id_lang, $id_shop);
+		if (!$context)
+			$context = Context::getContext();
+
+		if ($full && $this->id)
+		{
+			$this->isFullyLoaded = $full;
+			$this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
+			$this->manufacturer_name = Manufacturer::getNameById((int)$this->id_manufacturer);
+			$this->supplier_name = Supplier::getNameById((int)$this->id_supplier);
+			$address = null;
+			if (is_object($context->cart) && $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null)
+				$address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+
+			$this->tax_rate = $this->getTaxesRate(new Address($address));
+
+			$this->new = $this->isNew();
+
+			// keep base price
+			$this->base_price = $this->price;
+
+			$this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
+			$this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
+			if ($this->id)
+				$this->tags = Tag::getProductTags((int)$this->id);
+
+			$this->loadStockData();
+		}
+
+		$this->black_list = self::getMessagesBlackListProduct($id_product);
+
+		if ($this->id_category_default)
+			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
+	}
+
+	/**
+	* Se obtiene el mensaje del producto si se encuentra en lista negra.
+	*/
+	public static function getMessagesBlackListProduct($id_product) {
+		$sql = new DbQuery();
+		$sql->select("bm.name");
+		$sql->from("product_black_list","pbl");
+		$sql->innerJoin("black_motivo","bm","bm.id_black_motivo = pbl.motivo");
+		$sql->where("pbl.id_product='".$id_product."'");
+		$result = Db::getInstance()->executeS($sql);
+		if(count($result) > 0) {
+			$message = $result[0]['name'];
+		} else {
+			$message = null;
+		}
+        return $message;
+    }
+
 	/**
 	* Admin panel product search
 	*
@@ -19,21 +74,30 @@ class Product extends ProductCore {
 
 		$sql = new DbQuery();
 		/*$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, stock.reserve_on_stock AS "reserve", product_shop.advanced_stock_management, p.`customizable`');*/
-		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
+//		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`,  ROUND(sod.unit_price_te) AS unit_price_te, ROUND(ps.wholesale_price) AS wholesale_price');
+		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, stock.reserve_on_stock AS "reserve", product_shop.advanced_stock_management, p.`customizable`, /*ROUND(((p.price - sod.unit_price_te) / p.price )*100,2) AS gmc*/ prod_black.motivo AS motivo');
 
 		$sql->from('category_product', 'cp');
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->join(Shop::addSqlAssociation('product', 'p'));
                 
-                 $sql->innerJoin('product_shop', 'ps', 'ps.`id_product`  =  p.`id_product`');
+                $sql->innerJoin('product_shop', 'ps', 'ps.`id_product`  =  p.`id_product`');
                 $sql->leftJoin('product_black_list', 'prod_black', 'prod_black.`reference`  =  p.`reference`');
 		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
-		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
+                $subQuery = "LEFT JOIN ( SELECT MAX(sod.id_supply_order_detail) AS id_supply_order_detail, sod.id_product 
+                            FROM  ps_supply_order so 
+                            INNER JOIN ps_supply_order_detail sod ON ( so.id_supply_order = sod.id_supply_order )
+                            LEFT JOIN ps_product_shop psh ON ( sod.id_product = psh.id_product)
+                            WHERE so.date_add >= curdate() - interval 2 YEAR  AND so.id_supply_order_state IN ( 4, 5 ) AND psh.active = 1
+                            GROUP BY sod.id_product 
+                            ) order_date ON (  order_date.id_product = p.id_product ) ";
+		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer` ');
+        //$sql->leftJoin( 'supply_order_detail', 'sod', ' sod.`id_supply_order_detail` = order_date.`id_supply_order_detail`');
 
-		$where = ' p.active=1 AND ps.active=1 AND  prod_black.`reference` IS NULL AND  (pl.`name` LIKE \'%'.pSQL($query).'%\'
+		$where = ' p.active=IF(prod_black.motivo = 1 OR prod_black.motivo = 10,  0,  1) AND ps.active=IF(prod_black.motivo = 1 OR prod_black.motivo = 10,  0,  1)  /*AND  prod_black.`reference` IS NULL*/ AND  (pl.`name` LIKE \'%'.pSQL($query).'%\'
 		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 		OR  p.`id_product` IN (SELECT id_product FROM '._DB_PREFIX_.'product_supplier sp WHERE `product_supplier_reference` LIKE \'%'.pSQL($query).'%\') )';
@@ -48,9 +112,9 @@ class Product extends ProductCore {
 		}
 		$sql->where($where);
 		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
-
+//echo $sql->__toString(); exit;
 		$result = Db::getInstance()->executeS($sql);
-
+//print_r($result);
 		if (!$result)
 			return false;
 
