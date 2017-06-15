@@ -554,12 +554,11 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				</div>
 			</div>
 
-			<div id="boxes">
+			<div id="boxes" >
 				<div id="mask"></div> 
 
-	    		<div id="dialog" class="window"> 
-
-	    			<!--a href="#" class="close">Cerrar</a-->
+                                <div id="dialog" class="window"> 
+                                    
 	    			<div class="header-lightbox">
 	    				<div class="img-header-lightbox">
 		    				<img src="{$img_dir}Capsula_lightbox_captura.jpg" id="img1">
@@ -572,13 +571,67 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		    			</div>
 		    			
 	    			</div>
-	    		</div>
-	 
-			</div>
-		{/if}
-
-
-	</div>
+                                <div class="body-lightbox">
+                                    <form class="form-lightbox" id="modal-form" method="post" action="{$base_dir_ssl}ajaxs/ajax_customer_product.php">
+                                       <div class="content-form">
+                                            <label for="name">Nombre</label>
+                                            <input type="text" class="input-form" id="name" name="name" placeholder="Tu nombre" />
+                                            <div class="error error_form" id="error_name">Olvidaste ingresar tu nombre</div>
+                                       </div>   
+                                            <div class="content-form">
+                                                <label for="email">Correo electrónico</label>
+                                                <input type="email" class="input-form" id="email" name="email" placeholder="mail@ejemplo.com" />
+                                                <div class="error error_form" id="error_email">Olvidaste ingresar tu correo electrónico</div>
+                                            </div>            
+                                            <div class="content-form">
+                                                <label for="telefono">Número teléfonico</label>
+                                                <input type="number" class="input-form" id="telefono" name="telefono" placeholder="Fijo o celular" />
+                                                <div class="error error_form" id="error_telefono">Olvidaste ingresar tu número telefónico</div>
+                                            </div>
+                                            <div class="button-form">
+                                                <input type="submit" class="enviar-form" id="enviar" name="enviar" value="enviar"/>
+                                                <input type="hidden" id="product" name="product" value="{$product->id}"/>
+                                            </div>
+                                            <div class="close_modal"> <a href="#" class="close">Cerrar</a> </div>
+                                        </form>        
+                                </div>
+                                <div class="response-modal" id="modal-thanks" style="display:none">
+                                    <div class="response-modal-header">
+                                            <div class="img-response">
+                                                    <img src="{$img_dir}Ok lightbox confirmación.jpg" id="ok_img">
+                                            </div>
+                                            <div class="response-modal-title">
+                                                    <span class="modal-title">
+                                                        Tus datos se registraron con <span class="title">éxito.</span>  
+                                                    </span>
+                                            </div>		    			
+                                    </div> 
+                                    <div class="modal-message">
+                                       
+                                        <div  class="message">
+                                            <span class="message-alert"> Hemos creado una alerta en nuestro sistema que te notificará automáticamente cuando el producto</span>
+                                        </div>
+                                        <div  class="message">
+                                            <span class="m-id_product"> {$product->name} </span>
+                                        </div>
+                                        <div  class="message">
+                                            <img class="img-product-m" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'medium_default')}"/>
+                                        </div>
+                                        <div class="message">  
+                                            <span class="message-alert"> esté disponible de nuevo en nuestro Catálogo </span>
+                                            
+                                        </div>
+                                        <div class="message"> 
+                                            <span class="message-Thank"> Gracias por confiar en nosotros</span>
+                                        </div>   
+                                        <div class="button-close"> 
+                                            <button type="button" class=" close enviar-form" id="Cerrar" style=" margin-top: 25px !important"> Cerrar </button>
+                                        </div> 
+                                    </div> 
+                                </div>
+                            {/if}
+                        </div>    
+                        </div>
 	<!--/product info-->
 
 	{* Contactanos *}

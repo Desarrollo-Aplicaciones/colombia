@@ -729,6 +729,7 @@ $(document).ready(function() {
  
     //select all the a tag with name equal to modal  
     $('.buttom-open-bold').click(function(e) {  
+        $("body").css("overflow-y","hidden");
         //Cancel the link behavior  
         e.preventDefault();  
         //Get the A tag  
@@ -745,30 +746,81 @@ $(document).ready(function() {
         $('#mask').fadeIn(1000);      
         $('#mask').fadeTo("slow",0.8);    
      
-        //Get the window height and width  
-        var winH = $(window).height();  
-        var winW = $(window).width();  
-               
-        //Set the popup window to center  
-        $(id).css('top',  winH/2-$(id).height()/2);  
-        $(id).css('left', winW/2-$(id).width()/2);  
-     
-        //transition effect  
-        $(id).fadeIn(2000);  
+                //transition effect  
+        $(id).fadeIn(2000); 
      
     });  
      
     //if close button is clicked  
     $('.window .close').click(function (e) {  
         //Cancel the link behavior  
+        $("body").attr("style","");
         e.preventDefault();  
         $('#mask, .window').hide();  
-    });      
-     
-    //if mask is clicked  
-    /*$('#mask').click(function () {  
-        $(this).hide();  
-        $('.window').hide();  
-    });   */
-});  
- 
+    }); 
+    
+$("#modal-form").submit(function () {
+        var validateInput = true;
+        $("#name").removeClass('input-form-error');
+        $("#name").addClass('input-form');
+        
+       $("#modal-form .content-form input").each(function(index) {
+           var nameInputForm = $(this).attr('id');
+           if(!validateInputsForm(nameInputForm)) {
+               validateInput = false;
+           }
+       });
+       
+        if(validateInput) {
+            var url = $(this).attr('action');
+            
+            $.ajax({                        
+                type: "POST",                 
+                url: url, 
+                dataType:"json",
+                data: $("#modal-form").serialize(), 
+                success: function(data)             
+                {
+                    if(data.success == true) {                     
+                        $("#boxes").attr('id','boxes_responce');                                                                                            
+                        $(".response-modal").show();
+                        $(".header-lightbox").hide();
+                        $(".body-lightbox").hide();
+                        $(".response-modal").show(); 
+                        
+                    }
+                    
+                }
+            });
+            
+            return false;
+        } else {
+            return false;
+        }
+    });
+    
+    $(".input-form").blur(function() {
+        var nameInput = $(this).attr('id');
+        validateInputsForm(nameInput);
+        
+			
+    });
+        
+    });
+    
+    function validateInputsForm(nameInput) {
+        if( $("#"+nameInput).val() == "" ){
+            $("#error_"+nameInput).css("display","block");
+            $("#"+nameInput).addClass('input-form-error');
+            //$("#"+nameInput).addClass('error_form');
+            return false;
+        } else if( $("#"+nameInput).val() != "" ){
+            $("#error_"+nameInput).text('');
+            $("#"+nameInput).removeClass('input-form-error'); 
+            //$("#"+nameInput).addClass('error_form');
+            return true;
+        } else {
+            return true;
+        }
+        
+    }
