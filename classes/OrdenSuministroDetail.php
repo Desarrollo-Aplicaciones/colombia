@@ -545,7 +545,50 @@ class OrdenSuministroDetail {
             ON ( i.id_icr = ol.id_icr ) 
             SET i.id_estado_icr = ' . $this->status_icr;
 
-    DB::getInstance()->execute($query);
+    if(DB::getInstance()->execute($query)){
+      
+      $query2 = "SELECT i.id_icr AS id_icr, i.id_estado_icr AS id_estado_icr FROM ps_icr i 
+        INNER JOIN `ps_supply_order_load_icr` ol
+        ON ( i.id_icr = ol.id_icr )";
+      
+      if($result = DB::getInstance()->executeS($query2)){
+        
+        foreach ($result as $res) {
+          if (isset($res['id_icr'])) {
+
+            $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+              FROM `ps_stock_available_mv` samv 
+              INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+              INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+              WHERE soi.id_icr = " . $res['id_icr'];
+
+            if($result3 = DB::getInstance()->executeS($query3)){
+              
+         
+  //      return var_dump("result3 t", var_dump($result3));
+              var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
+              if (isset($result3[0]['reserve_on_stock'])) {
+
+                if ($res['id_estado_icr'] == 2) {
+                  $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ")";
+                }
+
+    //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+
+                if (DB::getInstance()->execute($query5)) {
+//                  $update_ok = true;
+                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
+                } else {
+                  return false;
+                }
+              }
+            }
+          }
+        }
+        
+      }
+      
+    }
 
     $ins_history = "
         INSERT INTO ps_supply_order_receipt_history (id_supply_order_detail, id_employee, employee_lastname, 
@@ -782,12 +825,12 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
 
 
     $query = "select s_order_d.id_product, COUNT(s_order_d.id_product) as total from ps_supply_order_detail s_order_d 
-INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-where s_order_d.id_product IN( select order_d.product_id  from ps_orders orders
-INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
-WHERE order_d.id_order =" . $id_order . " ) and icr.id_estado_icr=2
-GROUP BY s_order_d.id_product";
+      INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      where s_order_d.id_product IN( select order_d.product_id  from ps_orders orders
+      INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
+      WHERE order_d.id_order =" . $id_order . " ) and icr.id_estado_icr=2
+      GROUP BY s_order_d.id_product";
 
     if ($results = Db::getInstance()->ExecuteS($query)) {
       return $results;
@@ -809,10 +852,10 @@ GROUP BY s_order_d.id_product";
     if (strlen($icr) == 6 && !preg_match('/[^A-Za-z]/', substr($icr, 0, 3)) && is_numeric(substr($icr, 3, 3))) {
 
       $query = "select COUNT(1) as total, icr.id_icr, icr.cod_icr,s_order_d.name,s_order_d.reference,s_order_d.id_product from ps_supply_order_detail  orderdtl 
-INNER JOIN ps_supply_order_icr ordericr ON(orderdtl.id_supply_order_detail= ordericr.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (ordericr.id_icr= icr.id_icr) 
-INNER JOIN ps_supply_order_detail s_order_d ON (ordericr.id_supply_order_detail=s_order_d.id_supply_order_detail)
-WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
+        INNER JOIN ps_supply_order_icr ordericr ON(orderdtl.id_supply_order_detail= ordericr.id_supply_order_detail)
+        INNER JOIN ps_icr icr ON (ordericr.id_icr= icr.id_icr) 
+        INNER JOIN ps_supply_order_detail s_order_d ON (ordericr.id_supply_order_detail=s_order_d.id_supply_order_detail)
+        WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
 
       if ($results = Db::getInstance()->ExecuteS($query))
         foreach ($results as $row) {
@@ -882,7 +925,7 @@ WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
     }
   }
 
-// paso 3 almcenar relacion de icr's y prodcutos relacionados a la orden de salida 
+// paso 3 Almacenando relacion de icr's y prodcutos relacionados a la orden de salida 
   /**
    * Guarda el listado de icr's relacionados a la orden de salida 
    *
@@ -900,77 +943,74 @@ WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
     Context::getContext()->employee->lastname = $employee->lastname;
     Context::getContext()->employee->id_profile = $employee->id_profile;
 
-    $query = 'INSERT INTO `' . _DB_PREFIX_ . 'order_picking` (`id_order_icr`, `id_order_supply_icr`, `id_order_detail`, `date`, `id_employee`)
-        
-';
+    $query = 'INSERT INTO `' . _DB_PREFIX_ . 'order_picking` (`id_order_icr`, `id_order_supply_icr`, `id_order_detail`, `date`, `id_employee`)';
 
     $query .= "SELECT t2.id_order_icr,t2.id_order_supply_icr, t2.id_order_detail, t2.date,t2.id_employee
+      FROM
+      (
+      select  if(tablita.completado='no' AND tablita.disponible='si' AND tablita.permitido='si',tablita.ord_product_id,NULL) as id_product 
+      FROM
+      (SELECT  *,IF(orden.ord_total<=cargado.car_cantidad, 'si', 'no') as completado,
+      IF(pedido.ped_total<=bodega.bod_total, 'si', 'no') as disponible,
+      IF(( IF(ISNULL(cargado.car_cantidad),0,cargado.car_cantidad)+pedido.ped_total)<=orden.ord_total, 'si', 'no') as permitido
 
-FROM
-(
-select  if(tablita.completado='no' AND tablita.disponible='si' AND tablita.permitido='si',tablita.ord_product_id,NULL) as id_product 
-FROM
-(SELECT  *,IF(orden.ord_total<=cargado.car_cantidad, 'si', 'no') as completado,
-IF(pedido.ped_total<=bodega.bod_total, 'si', 'no') as disponible,
-IF(( IF(ISNULL(cargado.car_cantidad),0,cargado.car_cantidad)+pedido.ped_total)<=orden.ord_total, 'si', 'no') as permitido
-
-FROM
--- prudctos requeridos en la orden 
-(select order_d.product_id ord_product_id,order_d.product_quantity ord_total  from ps_orders orders
-INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
-WHERE order_d.id_order =" . $id_order . ") as orden
-LEFT JOIN
--- Productos disponibles
-(
-select s_order_d.id_product bod_id_product, COUNT(s_order_d.id_product) as bod_total from ps_supply_order_detail s_order_d 
-INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-where s_order_d.id_product IN( select order_d.product_id  from ps_orders orders
-INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
-WHERE order_d.id_order =" . $id_order . " ) and icr.id_estado_icr=2
-GROUP BY s_order_d.id_product) as bodega
-ON(orden.ord_product_id=bodega.bod_id_product)
--- total de productos a incertar
-INNER JOIN
-(select  orders_d.product_id ped_product_id, COUNT(orders_d.product_id) ped_total 
-from ps_orders orders
-INNER JOIN ps_order_detail orders_d ON(orders.id_order=orders_d.id_order)
-INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-WHERE icr.id_estado_icr=2 and cod_icr in ('" . implode("','", (array) $array_icr) . "')  AND orders.id_order=" . $id_order . "
-GROUP BY orders_d.product_id) as pedido
-on(bodega.bod_id_product=pedido.ped_product_id)
+      FROM
+      -- prudctos requeridos en la orden 
+      (select order_d.product_id ord_product_id,order_d.product_quantity ord_total  from ps_orders orders
+      INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
+      WHERE order_d.id_order =" . $id_order . "
+        ) as orden
+      LEFT JOIN
+      -- Productos disponibles
+      (
+      select s_order_d.id_product bod_id_product, COUNT(s_order_d.id_product) as bod_total from ps_supply_order_detail s_order_d 
+      INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      where s_order_d.id_product IN( select order_d.product_id  from ps_orders orders
+      INNER JOIN ps_order_detail  order_d ON(orders.id_order=order_d.id_order)
+      WHERE order_d.id_order =" . $id_order . " ) and icr.id_estado_icr=2
+      GROUP BY s_order_d.id_product) as bodega
+      ON(orden.ord_product_id=bodega.bod_id_product)
+      -- total de productos a incertar
+      INNER JOIN
+      (select  orders_d.product_id ped_product_id, COUNT(orders_d.product_id) ped_total 
+      from ps_orders orders
+      INNER JOIN ps_order_detail orders_d ON(orders.id_order=orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      WHERE icr.id_estado_icr=2 and cod_icr in ('" . implode("','", (array) $array_icr) . "')  AND orders.id_order=" . $id_order . "
+      GROUP BY orders_d.product_id) as pedido
+      on(bodega.bod_id_product=pedido.ped_product_id)
 
 
--- pructos en la orden
-LEFT JOIN 
-(SELECT  s_order_d.id_product car_id_product, COUNT(s_order_d.id_product) as car_cantidad
-from ps_orders orders 
-INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
-INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_order . "
-GROUP BY s_order_d.id_product) as cargado
-ON (orden.ord_product_id=cargado.car_id_product)) tablita
-) as t1
+      -- pructos en la orden
+      LEFT JOIN 
+      (SELECT  s_order_d.id_product car_id_product, COUNT(s_order_d.id_product) as car_cantidad
+      from ps_orders orders 
+      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+      WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_order . "
+      GROUP BY s_order_d.id_product) as cargado
+      ON (orden.ord_product_id=cargado.car_id_product)) tablita
+      ) as t1
 
-INNER JOIN
-(
-select COUNT(icr.id_icr) as prod, orders_d.product_id, icr.id_icr as id_order_icr, s_order_i.id_supply_order_icr as id_order_supply_icr,orders_d.id_order_detail,NOW() as date ," . $id_emp . " as id_employee  
-from ps_orders orders
-INNER JOIN ps_order_detail orders_d ON(orders.id_order=orders_d.id_order)
-INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-WHERE icr.id_estado_icr=2 and cod_icr in ('" . implode("','", (array) $array_icr) . "')  AND orders.id_order=" . $id_order . "
-GROUP BY icr.id_icr
-) as t2
+      INNER JOIN
+      (
+      select COUNT(icr.id_icr) as prod, orders_d.product_id, icr.id_icr as id_order_icr, s_order_i.id_supply_order_icr as id_order_supply_icr,orders_d.id_order_detail,NOW() as date ," . $id_emp . " as id_employee  
+      from ps_orders orders
+      INNER JOIN ps_order_detail orders_d ON(orders.id_order=orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON(s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      WHERE icr.id_estado_icr=2 and cod_icr in ('" . implode("','", (array) $array_icr) . "')  AND orders.id_order=" . $id_order . "
+      GROUP BY icr.id_icr
+      ) as t2
 
-ON(t1.id_product =t2.product_id);";
-
+      ON(t1.id_product =t2.product_id);";
 
     error_log($query, 0);
 
@@ -978,6 +1018,7 @@ ON(t1.id_product =t2.product_id);";
 
     if (DB::getInstance()->execute($query)) {
 //      var_dump("ENTRO : ");
+      //    Paso 4.- Actualiza el estado de los icr asociados a la orden de salida     //
       if ($this->updateStausIcrsOrder($id_order)) {
         /*
           $employee = new Employee((int)$id_emp);
@@ -1053,67 +1094,84 @@ ON(t1.id_product =t2.product_id);";
   }
 
   /**
-   * actualiza el estado de los icr asociados a la orden de salida
+   * Paso 4.- Actualiza el estado de los icr asociados a la orden de salida
    *
    * @array array_icr
    * @return boolean
    */
   public function updateStausIcrsOrder($id_order) {
-//    var_dump($id_order);
-//    $query = "UPDATE ps_icr icrU 
-//      INNER JOIN
-//      (
-//      SELECT  icr.cod_icr
-//      from ps_orders orders 
-//      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
-//      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-//      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-//      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-//      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-//      WHERE icr.id_estado_icr=2 and orders.id_order=" . $id_order . "
-//      ) as actualizar
-//      ON(icrU.cod_icr=actualizar.cod_icr)
-//
-//      SET icrU.id_estado_icr=3";
-//
-//    if ($result = DB::getInstance()->execute($query)) {
-//      return var_dump("RESULT",$result);
-    $query2 = "SELECT  icr.id_icr
+
+    $query = "UPDATE ps_icr icrU 
+      INNER JOIN
+      (
+      SELECT  icr.cod_icr
+      from ps_orders orders 
+      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+      WHERE icr.id_estado_icr=2 and orders.id_order=" . $id_order . "
+      ) as actualizar
+      ON(icrU.cod_icr=actualizar.cod_icr)
+
+      SET icrU.id_estado_icr=3";
+
+    if (DB::getInstance()->execute($query)) {
+
+      $query2 = "SELECT  icr.id_icr, icr.id_estado_icr
         from ps_orders orders 
         INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
         INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
         INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
         INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
         INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-        WHERE icr.id_estado_icr=2 and orders.id_order=" . $id_order ;
+        WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_order;
 
-    $result2 = DB::getInstance()->executeS($query2);
+      $result2 = DB::getInstance()->executeS($query2);
 
-    if (isset($result2[0]['id_icr'])) {
+      $update_ok = false; 
+//      return var_dump(count($result2), var_dump($result2));
+      foreach ($result2 as $res) {
+        if (isset($res['id_icr'])) {
 
+          $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+        FROM `ps_stock_available_mv` samv 
+        INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+        INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+        WHERE soi.id_icr = " . $res['id_icr'];
 
-      $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
-			FROM `ps_stock_available_mv` samv 
-			INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
-			INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
-			WHERE soi.id_icr = " . $result2[0]['id_icr'];
+          $result3 = DB::getInstance()->executeS($query3);
+//      return var_dump("result3 t", var_dump($result3));
+          var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
+          if (isset($result3[0]['reserve_on_stock'])) {
 
-    $result3 = DB::getInstance()->executeS($query3);
-    
-      return var_dump("result3 t", var_dump($result3));
-    
-      if (isset($result3[0]['reserve_on_stock'])) {
-        
-        return var_dump("RESULT2", $result2[0]['id_icr'], $id_order, $result3[0]['reserve_on_stock']);
+//            $query4 = "SELECT count(icr.cod_icr) as quantity_icrs_update 
+//              from ps_orders orders 
+//              INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+//              INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+//              INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+//              INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+//              INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+//              WHERE icr.id_estado_icr=3 and orders.id_order=".$id_order;
+
+          
+            if ($res['id_estado_icr'] == 3) {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . ($result3[0]['reserve_on_stock'] - 1) . ")";
+            }
+//            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+
+            if (DB::getInstance()->execute($query5)) {
+              $update_ok = true;
+//            return var_dump("RESULT2 SI", $result2[0]['id_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+            } else {
+              return false;
+            }
+          }
+        }
       }
-
-
-      return var_dump("RESULT2 t", var_dump($result2));
+      return $update_ok;
     }
-    return var_dump("query2", $query2);
-
-//      return true;
-//    }
     return false;
   }
 
@@ -1127,14 +1185,14 @@ ON(t1.id_product =t2.product_id);";
    */
   public function totalOrderDetail($id_orders) {
     $query = "SELECT  s_order_d.id_product, orders_d.product_name,SUM(s_order_d.price_te) as total, COUNT(s_order_d.id_product) as cantidad
-from ps_orders orders 
-INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
-INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_orders . " 
-GROUP BY s_order_d.id_product;";
+      from ps_orders orders 
+      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+      WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_orders . " 
+      GROUP BY s_order_d.id_product;";
 
     if ($results = Db::getInstance()->ExecuteS($query)) {
       return $results;
@@ -1153,14 +1211,14 @@ GROUP BY s_order_d.id_product;";
    */
   public function contarProductosOrdenSalida($id_orders) {
     $query = "SELECT  s_order_d.id_product, COUNT(s_order_d.id_product) as cantidad
-from ps_orders orders 
-INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
-INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_orders . " 
-GROUP BY s_order_d.id_product;";
+      from ps_orders orders 
+      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+      WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_orders . " 
+      GROUP BY s_order_d.id_product;";
 
     if ($results = Db::getInstance()->ExecuteS($query)) {
       return $results;

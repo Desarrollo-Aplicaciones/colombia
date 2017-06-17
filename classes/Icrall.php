@@ -251,6 +251,7 @@ class IcrallCore extends ObjectModel {
   }
 
   public function insertarPicking() {
+    self::debug_to_console(implode(",", $this->id_orders_actualizar), " Entro cambiar insertarPicking ");
     //..echo "<br>7";
     $insertar_query = "INSERT INTO `" . _DB_PREFIX_ . "order_picking` (`id_order_icr`, `id_order_supply_icr`, `id_order_detail`, `date`, `id_employee`)                      
               SELECT t1.id_order_icr,t1.id_order_supply_icr, t1.id_order_detail, t1.date,t1.id_employee
@@ -307,14 +308,14 @@ class IcrallCore extends ObjectModel {
   }
 
   /**
-   * Change to ICRS status 3
+   * Change to ICRS status 3 in ICR out
    * 
    * @return void ICRS status 3
    */
   public function cambiarIcrEstado() {
     //..echo "<br>8"; 
-    var_dump($this->id_orders_actualizar);
-    self::debug_to_console(implode(",", $this->id_orders_actualizar), " Entro cambiar estado ");
+//    var_dump($this->id_orders_actualizar);
+    self::debug_to_console(implode(",", $this->id_orders_actualizar), " Entro cambiar cambiarIcrEstado ");
     $query = "UPDATE ps_icr icrU 
                   INNER JOIN
                   (
@@ -332,11 +333,73 @@ class IcrallCore extends ObjectModel {
                   SET icrU.id_estado_icr=3";
 
     if ($result = DB::getInstance()->execute($query)) {
-//      return var_dump($result);
-      var_dump($result);
-      die();
+      
+      if (DB::getInstance()->execute($query)) {
 
-      return true;
+      $query2 = "SELECT  icr.id_icr AS id_icr, icr.id_estado_icr AS id_estado_icr
+                  FROM ps_orders orders 
+                  INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+                  INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+                  INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+                  INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+                  INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+                  WHERE icr.id_estado_icr=3 AND orders.id_order IN (" . implode(",", $this->id_orders_actualizar) . ")";
+
+      $result2 = DB::getInstance()->executeS($query2);
+    self::debug_to_console(print_r($result2), " Query2 ");
+      $update_ok = false; 
+//      return var_dump(count($result2), var_dump($result2));
+      foreach ($result2 as $res) {
+        if (isset($res['id_icr'])) {
+
+          $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+        FROM `ps_stock_available_mv` samv 
+        INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+        INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+        WHERE soi.id_icr = " . $res['id_icr'];
+
+          $result3 = DB::getInstance()->executeS($query3);
+//      return var_dump("result3 t", var_dump($result3));
+          self::debug_to_console($res['id_icr'], " ID ICR ");
+          self::debug_to_console($result3[0]['reserve_on_stock'], " Reserve_on_stock ");
+          
+//          var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
+          if (isset($result3[0]['reserve_on_stock'])) {
+
+//            $query4 = "SELECT count(icr.cod_icr) as quantity_icrs_update 
+//              from ps_orders orders 
+//              INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+//              INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+//              INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+//              INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+//              INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+//              WHERE icr.id_estado_icr=3 and orders.id_order=".$id_order;
+
+          
+            if ($res['id_estado_icr'] == 3) {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . ($result3[0]['reserve_on_stock'] - 1) . ")";
+          self::debug_to_console($query5, " Query5 ");
+            }
+//            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+
+            if (DB::getInstance()->execute($query5)) {
+              $update_ok = true;
+//            return var_dump("RESULT2 SI", $result2[0]['id_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+            } else {
+              $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: ".$res['id_icr'];
+            self::debug_to_console($this->errores_cargue[], " Errores_cargue ");
+              return false;
+            }
+          }
+        }
+      }
+//      return $update_ok;
+    }
+      
+//      var_dump($result);
+//      die();
+
+      return $update_ok;
     } else {
       $this->errores_cargue[] = "No se pudo cambiar el estado de los ICR. Contacte a su administrador del sistema. 
            <br> orders  (" . implode(",", $this->id_orders_actualizar) . ").";
@@ -860,18 +923,73 @@ class IcrallCore extends ObjectModel {
    */
   public function updateIcrStatusEntrada() {
     //..echo "<br>10";
+    
+    self::debug_to_console(true, " Entro updateIcrStatusEntrada ");
+    
     $query = "UPDATE " . _DB_PREFIX_ . "icr i INNER JOIN " . _DB_PREFIX_ . "tmp_cargue_entrada_icr ol
             ON ( i.id_icr = ol.id_icr ) SET i.id_estado_icr = 2"; // cambiar estado del icr a asignado
 
-    if ($upicr = DB::getInstance()->execute($query)) {
+    
+    if(DB::getInstance()->execute($query)){
       
-      self::debug_to_console($query, "Se asigno el icr");
-      var_dump($upicr);die();
-      return true;
+      $query2 = "SELECT i.id_icr AS id_icr, i.id_estado_icr AS id_estado_icr FROM ps_icr i 
+        INNER JOIN `ps_tmp_cargue_entrada_icr` ol
+        ON ( i.id_icr = ol.id_icr )";
+      
+      if($result = DB::getInstance()->executeS($query2)){
+        
+        foreach ($result as $res) {
+          if (isset($res['id_icr'])) {
+
+            $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+              FROM `ps_stock_available_mv` samv 
+              INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+              INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+              WHERE soi.id_icr = " . $res['id_icr'];
+
+            if($result3 = DB::getInstance()->executeS($query3)){
+              
+         
+  //      return var_dump("result3 t", var_dump($result3));
+//              var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
+              if (isset($result3[0]['reserve_on_stock'])) {
+
+                if ($res['id_estado_icr'] == 2) {
+                  $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ")";
+                }
+
+    //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+
+                if (DB::getInstance()->execute($query5)) {
+                  return true;
+//                  $update_ok = true;
+//                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
+                } else {
+                  $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: ".$res['id_icr'];
+                  return false;
+                }
+              }
+            }
+          }
+        }
+        
+      }
+      
     } else {
-      $this->errores_cargue[] = "Error cambiando el estado de los ICR.";
+      $this->errores_cargue[] = "Error cambiando el estado de los ICRs";
       return false;
     }
+    
+    
+//    if ($upicr = DB::getInstance()->execute($query)) {
+//      
+//      self::debug_to_console($query, "Se asigno el icr");
+//      var_dump($upicr);die();
+//      return true;
+//    } else {
+//      $this->errores_cargue[] = "Error cambiando el estado de los ICR.";
+//      return false;
+//    }
   }
 
   /**
