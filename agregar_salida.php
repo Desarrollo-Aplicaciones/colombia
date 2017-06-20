@@ -22,16 +22,16 @@ if (isset($id_order) && $id_order && $id_order != '' && isset($id_cart) && $id_c
   /* validaciones de cantidades diponibles de productos, cantidad de productos requeridos en la orden de salida y cantidades seleccionadas en la orden.
    * 
    */
-  echo '<pre> ORDEN: <br>' .
-  $id_order;
-  echo '<hr> Cantidades Disponibles: <br>' .
+//  echo '<pre> ORDEN: <br>' .
+//  $id_order;
+//  echo '<hr> Cantidades Disponibles: <br>' .
   $cantidades_disponibles = $ordsum->cantidadDisponibleProductos($id_order);
-  echo '<hr> Cantidades requeridas: <br>' .
+//  echo '<hr> Cantidades requeridas: <br>' .
   $cantidades_requeridas = $ordsum->numProducts($id_order);
-  echo '<hr> Cantidades Productos de orden de salida: <br>' .
+//  echo '<hr> Cantidades Productos de orden de salida: <br>' .
   $cantidades_en_la_orden = $ordsum->contarProductosOrdenSalida($id_order);
-  echo '<hr> Count: <br>' .
-  count($cantidades_en_la_orden);
+//  echo '<hr> Count: <br>' .
+//  count($cantidades_en_la_orden);
 
   $cantidades_faltantes = NULL;
 

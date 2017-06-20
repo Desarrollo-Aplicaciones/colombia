@@ -160,13 +160,13 @@ if (isset($_POST)) {
 
       if ($_POST['opcion'] == "save") {  // Agregando los ICRs a la orden de suministro  //
 
-        echo "<br>cant_pro:" . count($arrprods);
-        echo "<br>prods validos:" .
+//        echo "<br>cant_pro:" . count($arrprods);
+//        echo "<br>prods validos:" .
         $prodsValidos = $ordsum->validarProductosOrden("add");
 
-        echo "<pre><br>prods_icr:";
-        print_r($ordsum->productoicr);
-        echo "<br>icr validos:" .
+//        echo "<pre><br>prods_icr:";
+//        print_r($ordsum->productoicr);
+//        echo "<br>icr validos:" .
         $icrValidos = $ordsum->validarIcrOrden();
 
         if ($prodsValidos == 1 && $icrValidos == 1) {
