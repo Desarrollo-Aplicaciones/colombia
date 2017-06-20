@@ -420,7 +420,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               if ($resultStateOrder[0]['id_order_state'] == 19 && $order->current_state == 22) {
                   
                  $url_insercion = $server . '/restfarmalisto/servicio_rest/MantieneReceptor/actualizar_guia/' . $order->id . '/' . $fecha . '/' . $hora . '/SIN_CARGAR//' . $ccDelivery[0];
-//print_r($url_insercion);echo "1";
+
                 $this->generateLogSmartQuickFarmalisto("Url servicio: " . $url_insercion);
                 $result = json_decode(file_get_contents($url_insercion));
 
