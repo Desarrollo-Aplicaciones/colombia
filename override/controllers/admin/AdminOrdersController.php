@@ -388,29 +388,39 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           if ($order->current_state == 22) {
             $server = $this->getEnvironmentSmartQuick();
             //$fechaHora = $order->delivery_date;
-            //$fechaHora = $this->getDateTimeDeliveryCart($order->id);
-            //if(!empty($fechaHora['time_delivery'])) {
-            //	$time_delivery = $fechaHora['time_delivery'];
-            //} else {
-            $time_delivery = date("H:i:s");
-            //}
-            //if(!empty($fechaHora['date_delivery'])) {
-            //	$date_delivery = $fechaHora['date_delivery'];
-            //} else {
-            $date_delivery = date("Y-m-d");
-            //}
+            $fechaHora = $this->getDateTimeDeliveryCart($order->id);
+           
+            if(!empty($fechaHora['time_delivery'])) {
+            	$time_delivery = $fechaHora['time_delivery'];
+                  
+            } else {
+                $time_delivery = date("H:i" ,(strtotime ("+ 3 hours")));
+                    
+            }
+            if(!empty($fechaHora['date_delivery'])) {
+            	$date_delivery = $fechaHora['date_delivery'];
+                  
+            } else {
+                $date_delivery = date("Y-m-d");
+            } 
             $hora = strtotime($time_delivery);
-            $hora = date("Hi", $hora);
+            $time_delivery = date("Hi", $hora);
+            //print_r($time_delivery);
 
+            
+            
             $fecha = strtotime($date_delivery);
             $fecha = date("Y-m-d", $fecha);
             $resultStateOrder = $this->validateStateOrderUpdate($order->id);
             $getOrderDelivery = $this->get_mensajero_order($order->id);
             $ccDelivery = explode("@", $getOrderDelivery['email']);
             if (count($resultStateOrder) > 0 && !empty($resultStateOrder[0]['id_order_state'])) {
-              if ($resultStateOrder[0]['id_order_state'] == 19 && $order->current_state == 22) {
-                $url_insercion = $server . '/restfarmalisto/servicio_rest/MantieneReceptor/actualizar_guia/' . $order->id . '/' . $fecha . '/' . $hora . '/SIN_CARGAR//' . $ccDelivery[0];
+                              //print_r($resultStateOrde);                  exit();
 
+              if ($resultStateOrder[0]['id_order_state'] == 19 && $order->current_state == 22) {
+                  
+                 $url_insercion = $server . '/restfarmalisto/servicio_rest/MantieneReceptor/actualizar_guia/' . $order->id . '/' . $fecha . '/' . $hora . '/SIN_CARGAR//' . $ccDelivery[0];
+//print_r($url_insercion);echo "1";
                 $this->generateLogSmartQuickFarmalisto("Url servicio: " . $url_insercion);
                 $result = json_decode(file_get_contents($url_insercion));
 
@@ -430,7 +440,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               //$server='181.49.224.186';
               $pedido = urlencode($order->id);
               $fecha_entrega = urlencode($fecha); // Puede ser enviado con o sin guiones;
-              $hora_entrega = urlencode($hora); // Debe ser en hora militar sin (:)
+              $hora_entrega = urlencode($time_delivery); // Debe ser en hora militar sin (:)
               $ciudad = urlencode($this->getDaneCities($address->city));
               $direccion = urlencode($address->address1);
               $doc_cliente = urlencode($customer->identification);
@@ -440,9 +450,9 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               $doc_mensajero = urlencode($ccDelivery[0]);
               $total_paid = urlencode($order->total_paid);
               $payment = urlencode($order->payment);
-
+        //print_r($hora);    exit;         // print_r($fecha_entrega); 
               $url_insercion = $server . '/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/' . $pedido . '/' . $fecha_entrega . '/' . $hora_entrega . '/' . $ciudad . '/' . $direccion . '/' . $doc_cliente . '/' . $nom_cliente . '/' . $telefono . '/' . $observacion . '/' . $doc_mensajero . '/' . round($total_paid) . '/' . $payment;
-
+       // print_r($url_insercion);
               $this->generateLogSmartQuickFarmalisto("Url Servicio: " . $url_insercion);
               $result = json_decode(file_get_contents($url_insercion));
 
@@ -570,7 +580,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     fclose($fp);
   }
 
-  public function validateStateOrderUpdate($id_order) {
+    public function validateStateOrderUpdate($id_order) {
     $sql = "SELECT o.id_order, o.current_state, ohh.id_order_state, ohh.date_add
 				FROM ps_orders o
 				LEFT JOIN ps_order_history ohh ON ( o.id_order = ohh.id_order AND (ohh.id_order_state = 19))
@@ -661,19 +671,20 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $ccDelivery = explode("@", $getOrderDelivery['email']);
             $this->generateLogSmartQuickFarmalisto("ID estado: " . $order_state->id . ' -> Documento mensajero: ' . count($ccDelivery));
 
-            //$fechaHora = $this->getDateTimeDeliveryCart($order->id);
-            //if(!empty($fechaHora['time_delivery'])) {
-            //	$time_delivery = $fechaHora['time_delivery'];
-            //} else {
+            $fechaHora = $this->getDateTimeDeliveryCart($order->id);
+            if(!empty($fechaHora['time_delivery'])) {
+            	$time_delivery = $fechaHora['time_delivery'];
+            } else {
             $time_delivery = date("H:i:s");
-            //}
-            //if(!empty($fechaHora['date_delivery'])) {
-            //	$date_delivery = $fechaHora['date_delivery'];
-            //} else {
+            }
+            if(!empty($fechaHora['date_delivery'])) {
+              $date_delivery = $fechaHora['date_delivery'];
+            } else {
             $date_delivery = date("Y-m-d");
-            //}
+            }
             $hora = strtotime($time_delivery);
             $hora = date("Hi", $hora);
+           // print_r($hora);
 
             $fecha = strtotime($date_delivery);
             $fecha = date("Y-m-d", $fecha);
