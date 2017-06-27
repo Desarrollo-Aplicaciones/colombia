@@ -171,7 +171,7 @@ return $urlValidation='http://'.$_SERVER['HTTP_HOST'].$nombre_archivo.'/validati
           
           $mysqldate = date("Y-m-d H:i:s"); 
           
-        $log='Fecha de transacción-WS: '.$mysqldate.'\r\nRequest:\r\n'.$json_request.'\r\nResponse: \r\n'.json_encode($json_response);  
+        $log='Fecha de transacciï¿½n-WS: '.$mysqldate.'\r\nRequest:\r\n'.$json_request.'\r\nResponse: \r\n'.json_encode($json_response);  
         $this->logtxt($log);
      
       Db::getInstance()->autoExecute('ps_pagos_payu', array(
@@ -259,7 +259,7 @@ try {
 public function logtxt ($text="")
 {
             //$contenido="-- lo que quieras escribir en el archivo -- \r\n";
-$fp=fopen("/home/ubuntu/log_payu/log_payu.txt","a+");
+$fp=fopen(_ROUTE_FILE_."/log_payu/log_payu.txt","a+");
 fwrite($fp,$text."\r\n");
 fclose($fp) ;
             

@@ -1153,7 +1153,7 @@ echo "<hr>";*/
 					}
 
 				}
-				error_log($al_log, 3, "/home/ubuntu/nevera_error.log");
+				error_log($al_log, 3, _ROUTE_FILE_."/nevera_error.log");
 				
 			}
 

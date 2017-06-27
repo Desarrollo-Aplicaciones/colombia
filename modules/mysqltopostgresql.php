@@ -14,15 +14,15 @@ ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
 sleep(3);
-$command = "ls -ln /home/ubuntu/bk_bd_search/";
+$command = "ls -ln "._ROUTE_FILE_."/bk_bd_search/";
 $output = shell_exec($command);
 echo "<pre>Anterior: $output</pre>";
 
-$command = "rm -rf /home/ubuntu/bk_bd_search/bk_mysq_prod.sql";
+$command = "rm -rf "._ROUTE_FILE_."/bk_bd_search/bk_mysq_prod.sql";
 $output = shell_exec($command);
 //echo "<pre>$output</pre>";
 
-$command = "ls -ln /home/ubuntu/bk_bd_search/";
+$command = "ls -ln "._ROUTE_FILE_."/bk_bd_search/";
 $output = shell_exec($command);
 echo "<pre>Luego borrar $output</pre>";
 
@@ -32,17 +32,17 @@ $command = "mysqldump -u farmalisto  -pF4rm4l1st02015** -hcolombia.cuznbgafgkfl.
 $output = shell_exec($command);*/
 //echo "<pre>bk mysql: $output</pre>";
 
-$command = "ls -ln /home/ubuntu/bk_bd_search/";
+$command = "ls -ln "._ROUTE_FILE_."/bk_bd_search/";
 $output = shell_exec($command);
 echo "<pre>Nuevo Generado: $output</pre>";
 
 
-$command = "sed -i \"1i set schema 'search'; TRUNCATE TABLE  ps_search_index; TRUNCATE TABLE ps_search_word;\" /home/ubuntu/bk_bd_search/bk_mysq_prod.sql";
+$command = "sed -i \"1i set schema 'search'; TRUNCATE TABLE  ps_search_index; TRUNCATE TABLE ps_search_word;\" "._ROUTE_FILE_."/bk_bd_search/bk_mysq_prod.sql";
 $output = shell_exec($command);
 echo "<br><pre>insertar texto truncate: $output</pre>";
 
 
-$command = "export PGPASSWORD='nyT.19*xS'; psql -U bus_col -h search.cuznbgafgkfl.us-east-1.rds.amazonaws.com -d farmalisto_colombia < /home/ubuntu/bk_bd_search/bk_mysq_prod.sql";
+$command = "export PGPASSWORD='nyT.19*xS'; psql -U bus_col -h search.cuznbgafgkfl.us-east-1.rds.amazonaws.com -d farmalisto_colombia < "._ROUTE_FILE_."/bk_bd_search/bk_mysq_prod.sql";
 $output = shell_exec($command);
 echo "<pre>insertar postgresql $output</pre>";
 
