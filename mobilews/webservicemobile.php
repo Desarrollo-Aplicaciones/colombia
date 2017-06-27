@@ -125,7 +125,7 @@ function getProductos($args)
     $obj = new Lib();
     
   
-    error_log(date( 'Y-m-d H:i:s').": ".print_r($args['Buscar'],true).PHP_EOL, 3, "/home/ubuntu/modules/Ordenes_de_Suministros_FTP/my-errors.log");
+    error_log(date( 'Y-m-d H:i:s').": ".print_r($args['Buscar'],true).PHP_EOL, 3, _ROUTE_FILE_."/modules/Ordenes_de_Suministros_FTP/my-errors.log");
 
         $args['Buscar'] = utf8_decode($args['Buscar']);
         if (is_numeric($obj->remomeCharSql($args['Pagina']))) {

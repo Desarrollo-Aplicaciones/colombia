@@ -146,11 +146,11 @@ margin: 3px;
     }
     });
   
-      // Ejecutar submit con el botón save    
+      // Ejecutar submit con el botï¿½n save    
       $( "#save" ).click(function() {
     $( "#form_target" ).submit();
     });
- // Ejecutar submit con el botón update    
+ // Ejecutar submit con el botï¿½n update    
       $( "#save" ).click(function() {
       $( "#update" ).click(function() {
      $( "#form_target" ).submit();
@@ -166,7 +166,7 @@ margin: 3px;
                 var id = $(this).attr('id');
               
                var position = jQuery.inArray(id, codigos_icr );
-               console.log("codígos: "+codigos_icr.toString());
+               console.log("codï¿½gos: "+codigos_icr.toString());
                console.log("id: "+id);
                console.log("position: "+position);
                
@@ -229,7 +229,7 @@ $(this).parents('tr:eq(0)').remove();
 
 
                     var position = jQuery.inArray(obj, codigos_icr );
-                   console.log("codígos: "+codigos_icr.toString());
+                   console.log("codï¿½gos: "+codigos_icr.toString());
                    console.log("id: "+id);
                    console.log("position: "+position);
                    
@@ -373,7 +373,7 @@ $("#txtSearch").keyup(function(event){
                        
                            $('#alert_producto').get(0).play();
            // $("#txtSearch").prop("readonly",true);
-            alert("Selecciona un producto antes de ingresar los Código ICR");
+            alert("Selecciona un producto antes de ingresar los Cï¿½digo ICR");
             
             } // seleccion No producto
             

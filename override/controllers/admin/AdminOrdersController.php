@@ -379,7 +379,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 	}
 
 	public function generateLogSmartQuickFarmalisto($data) {
-		if($archivo = fopen("/home/ubuntu/ordenes/logs_crear_guia_smartQuick_farmalisto.txt", "a"))
+		if($archivo = fopen(_ROUTE_FILE_."/ordenes/logs_crear_guia_smartQuick_farmalisto.txt", "a"))
 	    {
 	        if(fwrite($archivo, date("d m Y H:i:s"). " -> ". $data. "\n"))
 	        {
@@ -667,7 +667,7 @@ protected function save_opcion_cancelacion($array){
     public function logtxt ($text="")
 	{
             //$contenido="-- lo que quieras escribir en el archivo -- \r\n";
-		$fp=fopen("/home/ubuntu/log_payu/log_order_cambio.txt","a+");
+		$fp=fopen(_ROUTE_FILE_."/log_payu/log_order_cambio.txt","a+");
 		fwrite($fp,$text."\r\n");
 		fclose($fp) ;
             
