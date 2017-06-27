@@ -1,0 +1,9 @@
+28 03 2017 11:03:56 -> 20 -> 1
+28 03 2017 11:03:24 -> 22
+28 03 2017 11:03:24 -> http://181.49.224.186/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/84042/2017-02-23/1101/Bogot%C3%A1%2C+D.C./Calle+false+123/1200417899/Leidy+Tatiana+Castiblanco+Moreno/3123398212/ggg/79573081
+28 03 2017 11:03:26 -> 22
+28 03 2017 11:03:26 -> http://181.49.224.186/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/84042/2017-02-23/1101/Bogot%C3%A1%2C+D.C./Calle+false+123/1200417899/Leidy+Tatiana+Castiblanco+Moreno/3123398212/ggg/79573081
+28 03 2017 11:03:15 -> 22
+28 03 2017 11:03:15 -> http://181.49.224.186/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/84042/2017-02-23/1101/Bogot%C3%A1%2C+D.C./Calle+false+123/1200417899/Leidy+Tatiana+Castiblanco+Moreno/3123398212/ggg/79573081
+28 03 2017 11:03:43 -> 22
+28 03 2017 11:03:43 -> http://181.49.224.186/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/84042/2017-02-23/1101/Bogot%C3%A1%2C+D.C./Calle+false+123/1200417899/Leidy+Tatiana+Castiblanco+Moreno/3123398212/ggg/79573081

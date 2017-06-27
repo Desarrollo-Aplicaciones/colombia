@@ -1,6 +1,5 @@
 <?php
 $host = $_SERVER['HTTP_HOST'];
-
 if (isset($_GET['id_supply_order'])) {
   header('Content-Type: text/html; charset=UTF-8');
   ?>
@@ -28,13 +27,9 @@ if (isset($_GET['id_supply_order'])) {
         border-left: 15px solid transparent;
         border-right: 20px solid transparent;
       }
-
       .input_fous:focus{
-
         background-color:yellow;   
       }
-
-
     </style>
 
 
@@ -43,20 +38,15 @@ if (isset($_GET['id_supply_order'])) {
       #tablaprod { background-color:#FFFFE0; border-collapse:collapse; }
       #tablaprod th { background-color:gainsboro; color:darkgreen; }
       #tablaprod td, #tablaprod th { padding:5px;border:1px solid #BDB76B; }
-
-
       #icrstable { background-color:#FFFFE0; border-collapse:collapse; }
       #icrstable th { background-color:gainsboro; color:darkgreen; }
       #icrstable td, #icrstable th { padding:5px;border:1px solid #BDB76B; }
-
-
       h3{
         font-family: verdana;
         font-size: 12px;
         line-height:0px;
         color: darkgreen;
         background:aliceblue;
-
       }
     </style>
 
@@ -138,7 +128,6 @@ if (isset($_GET['id_supply_order'])) {
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 
   <script type="text/javascript">
-
     var product_infos = null;
     var debug = null;
     var ruta = "icrassoc.php";
@@ -150,7 +139,6 @@ if (isset($_GET['id_supply_order'])) {
     var product_ids = [];
     var product_ids_to_delete = [];
     var bandera_prod = 0;
-
     // evitar submit al pulsar enter   
     $(document).ready(function () {
       $(window).keydown(function (event) {
@@ -159,7 +147,6 @@ if (isset($_GET['id_supply_order'])) {
           return false;
         }
       });
-
       // Ejecutar submit con el bot�n save    
       $("#save").click(function () {
         $("#form_target").submit();
@@ -169,139 +156,91 @@ if (isset($_GET['id_supply_order'])) {
         $("#update").click(function () {
           $("#form_target").submit();
         });
-
       });
-
     });
-
-
     // add click event on just created delete item link
     $('a.quitaicr').live('click', function () {
       var id = $(this).attr('id');
-
       var position = jQuery.inArray(id, codigos_icr);
       console.log("cod�gos: " + codigos_icr.toString());
       console.log("id: " + id);
       console.log("position: " + position);
-
       if (position !== -1)
       {
-
         //remove the id from the array
         codigos_icr.splice(position, 1);
         console.log("Rm Array " + codigos_icr.toString());
       }
-
-
       var product_id = id.split('|')[1];
-
-
       //find the position of the product id in product_id array
       var position = jQuery.inArray(product_id, product_ids);
       if (position != -1)
       {
         //remove the id from the array
         product_ids.splice(position, 1);
-
         var input_id = $('input[name~="input_id_' + product_id + '"]');
         if (input_id != 'undefined')
           if (input_id.length > 0)
             product_ids_to_delete.push(product_id);
-
         // update the product_ids hidden field
         $('#product_ids').val(product_ids.join('|'));
         $('#product_ids_to_delete').val(product_ids_to_delete.join('|'));
-
         //remove the table row
         $(this).parents('tr:eq(0)').remove();
       }
       $(this).parents('tr:eq(0)').remove();
       return false;
     });
-
-
-
-
   // add click event on just created delete item link
     $('a.quitaprodicr').live('click', function () {
       var id = $(this).attr('id');
       alert(id);
-
       for (var key in ref_product_icr[id]) {
         console.log("prod: " + key);
         var obj = ref_product_icr[id][key];
         console.log("obj: " + obj);
-
-
-
-
-
-
-
-
-
-
-
         var position = jQuery.inArray(obj, codigos_icr);
         console.log("cod�gos: " + codigos_icr.toString());
         console.log("id: " + id);
         console.log("position: " + position);
-
         if (position !== -1)
         {
-
           //remove the id from the array
           codigos_icr.splice(position, 1);
           console.log("Rm Array " + codigos_icr.toString());
         }
-
-
         var product_id = id.split('|')[1];
-
-
         //find the position of the product id in product_id array
         var position = jQuery.inArray(product_id, product_ids);
         if (position != -1)
         {
           //remove the id from the array
           product_ids.splice(position, 1);
-
           var input_id = $('input[name~="input_id_' + product_id + '"]');
           if (input_id != 'undefined')
             if (input_id.length > 0)
               product_ids_to_delete.push(product_id);
-
           // update the product_ids hidden field
           $('#product_ids').val(product_ids.join('|'));
           $('#product_ids_to_delete').val(product_ids_to_delete.join('|'));
-
         }
         $("#" + obj).parents('tr:eq(0)').remove();
       }
       delete ref_product_icr[id];
       $(this).parents('tr:eq(0)').remove();
-
       /*
        
        return false;
        */
     });
-
-
-
     $("#txtSearch").keyup(function (event) {
       if (event.keyCode == 13) {
-
-
         var icr = $("#txtSearch").val();
         $("#txtSearch").val("");
         // $('#txtSearch').attr('readonly', true);
         //$("#txtSearch").prop("readonly",true);
-
-
         // valida si se ha seleccionado en producto
         if ($('#prodsel').length) {
-
           if (icr != '')  // fin campo vacio
           {
             var product = parseInt($("#prodsel").val());
@@ -320,8 +259,6 @@ if (isset($_GET['id_supply_order'])) {
                 "referencia": product
               },
               success: function (response) {
-
-
                 if (response != 'No')
                 {
                   // valida si el codigo ICR esta en la lista       
@@ -330,20 +267,15 @@ if (isset($_GET['id_supply_order'])) {
                   {
                     var retornado = response.split('|');
                     codigos_icr[count_icr] = retornado[1];
-
-
                     if (typeof (ref_product_icr[product]) == 'undefined') { // si el producto no tiene ningun icr asociado
                       ref_product_icr[product] = {};
                     }
                     ref_product_icr[product][count_icr] = retornado[1];
-
                     if (bandera_prod == 0) {
                       $("#icrstable").append("<tr><td> " + $("#referencepr").val() + " <a class=\"quitaprodicr\" id=\"" + $("#prodsel").val() + "\"  href='#'> X  </a> </td></tr>");
                       bandera_prod = 1;
                     }
-
                     count_icr++;
-
                     console.log("retornado: " + product + " | arr: " + JSON.stringify(retornado).toString());
                     $("#icrstable").append("<tr><td>" + count_icr + " <input readonly type='text' name='pr_" + $("#prodsel").val() + "_pri_" + retornado[0] + "[]' value='" + retornado[1] + "'> <a class=\"quitaicr\" id=\"" + retornado[1] + "\"  href='#'> X </a> </td></tr>");
                     $("#icrstable").append("<tr><td>Lote <input type='text' name='pr_" + $("#prodsel").val() + "_pri_" + retornado[0] + "_lote[]' value=''></td></tr>");
@@ -351,10 +283,8 @@ if (isset($_GET['id_supply_order'])) {
                     //$('#txtSearch').attr('readonly', false); +1.9
                     //$("#txtSearch").prop("readonly",false); jquery -1.9
                     //console.log("json:::: - prod: " + product + " | arr: "+ JSON.stringify(ref_product_icr).toString() );
-
                     count_products++;
                     console.log("In Array: " + codigos_icr.toString());
-
                   } else {
                     $('#alert_irc_list').get(0).play();
                     alert("Este Codigo ya esta en la lista " + codigos_icr[count_icr] + "");
@@ -375,38 +305,22 @@ if (isset($_GET['id_supply_order'])) {
                 //$("#txtSearch").removeAttr("readonly");
               }
             });
-
-
-
-
-
-
           } //fin vacio
         }// seleccion de producto
-
         else {
-
-
           $('#alert_producto').get(0).play();
           // $("#txtSearch").prop("readonly",true);
           alert("Selecciona un producto antes de ingresar los C�digo ICR");
-
         } // seleccion No producto
-
       }
-
     });
-
     $("#producto").keyup(function (event) {
       if (event.keyCode == 13) {
         var product = $(this).val();
-
         $("#producto").val("");
-
         if (product != "")
         {
           var orden = <?php echo $_GET['id_supply_order']; ?>;
-
           // $('#city').empty();
           $.ajax({
             type: "post",
@@ -422,18 +336,15 @@ if (isset($_GET['id_supply_order'])) {
             success: function (response) {
               if (response == 0)
               {
-
                 $('#product_not_in_order').get(0).play();
                 alert("Referencia de producto no encontrada en la Orden Actual.");
               } else
               {
                 /* var json = $.parseJSON(response);
                  alert(json);*/
-
                 $('#dato_prod').html(response);
                 reference_prod = $("#prodsel").val();
                 // $("#txtSearch").removeAttr("readonly");
-
               }
               bandera_prod = 0;
             },
@@ -441,17 +352,11 @@ if (isset($_GET['id_supply_order'])) {
               alert(err.responseText);
             }
           });
-
         }
-
       }
-
     });
-
   </script>
 
   <?php
 }
 ?>
-
-
