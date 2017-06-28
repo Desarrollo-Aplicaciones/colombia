@@ -392,7 +392,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 	<!--product info-->
 	<div class="buy_block">
 		<div class="ctn-product-name" >
-			<h1 id="name_unico_sin_estilo">{$product->name|lower|capitalize}</h1>
+			<h1 id="name_unico_sin_estilo">{$product->name}</h1>
 		</div>
 
 		<div id="qty_content">
