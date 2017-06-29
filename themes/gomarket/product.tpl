@@ -545,10 +545,10 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							<b>¿Dudas?</b> contáctanos en cualquiera de nuestros canales.
 						</div>
 						<div class="icon-right-bottom">
-							<img src="{$img_dir}Lineas.jpg" id="img1">
-							<img src="{$img_dir}Contacto.jpg" id="img1">
-							<img src="{$img_dir}Chat.jpg" id="img1">
-							<img src="{$img_dir}wasap.jpg" id="img1">
+							<img src="{$img_dir}Lineas.jpg"  id="contact-lap">
+                                                        <a href="{$base_dir}contactenos" class="txt-gray link"><img src="{$img_dir}Contacto.jpg" id="img1"></a>
+                                                        <a href="https://secure.livechatinc.com/licence/6077601/open_chat.cgi?groups=4" target="_blank"><img src="{$img_dir}Chat.jpg" id="img1"></a>
+							<img src="{$img_dir}wasap.jpg" id="contact-lap">
 						</div>
 					</div>
 				</div>
