@@ -18,29 +18,29 @@ include_once(dirname(__FILE__) . "/../config/config.inc.php");
 class OrdenSuministroDetail {
 
   private $id_employee = null;
-  // nombre del empleado
+// nombre del empleado
   public $firstnameEmployee;
-  // apellido del empleado
+// apellido del empleado
   public $lastnameEmployee;
-  // Listado de productos en formulario
+// Listado de productos en formulario
   public $productos = array();
-  // Listado de icr en formulario
+// Listado de icr en formulario
   public $icr = array();
-  // Listado de productosIcrs en formulario
+// Listado de productosIcrs en formulario
   public $productoicr = array();
-  // Id de la orden a modificar
+// Id de la orden a modificar
   public $supply_order;
-  // Accion a realizar en el proceso: adicionar/eliminar asociacion icr
+// Accion a realizar en el proceso: adicionar/eliminar asociacion icr
   public $accion_icr;
-  // Estado que deben tomar los icr en el proceso
+// Estado que deben tomar los icr en el proceso
   public $status_icr;
 
-  //obtener id del empleado
+//obtener id del empleado
   public function getId_employee() {
     return $this->id_employee;
   }
 
-  // asignar id del empleado
+// asignar id del empleado
   public function setId_employee($id_employee) {
     $this->id_employee = $id_employee;
   }
@@ -387,7 +387,7 @@ class OrdenSuministroDetail {
         $quantity_received_todayI = array();
 
         foreach ($items as $item) {
-          //echo "<br>item:".$item['suordetail']." | cantidad:".$item['cant'];
+//echo "<br>item:".$item['suordetail']." | cantidad:".$item['cant'];
           $supply_order_detailBoxI[] = $item['suordetail'];
 
           if ($way == '+') {
@@ -397,17 +397,8 @@ class OrdenSuministroDetail {
           }
         }
 
-        //$supply_order->postProcessUpdateReceipt($supply_order_detailBoxI, $quantity_received_todayI, $this->supply_order, " (".$this->accion_icr.")");                       
+//$supply_order->postProcessUpdateReceipt($supply_order_detailBoxI, $quantity_received_todayI, $this->supply_order, " (".$this->accion_icr.")");                       
       }
-
-
-
-
-
-
-
-
-
 
       Context::getContext();
       Context::getContext()->employee = new Employee($this->getId_employee());
@@ -424,14 +415,14 @@ class OrdenSuministroDetail {
 
 
         if (Validate::isLoadedObject($supply_order_detail) && Validate::isLoadedObject($supply_order)) {
-          //echo "<br>paso la validacion";
-          // checks if quantity is valid
-          // It's possible to receive more quantity than expected in case of a shipping error from the supplier
+//echo "<br>paso la validacion";
+// checks if quantity is valid
+// It's possible to receive more quantity than expected in case of a shipping error from the supplier
           if (!Validate::isInt($quantity) || $quantity <= 0) {
-            //printf('Quantity (%d) for product #%d is not valid', (int)$quantity, (int)$id_supply_order_detail);
+//printf('Quantity (%d) for product #%d is not valid', (int)$quantity, (int)$id_supply_order_detail);
           } else { // everything is valid :  updates
-            //$this->getId_employee().", '".$this->lastnameEmployee."', '".$this->firstnameEmployee." (".$this->accion_icr.")
-            //echo "<br> creates the history";
+//$this->getId_employee().", '".$this->lastnameEmployee."', '".$this->firstnameEmployee." (".$this->accion_icr.")
+//echo "<br> creates the history";
             $supplier_receipt_history = new SupplyOrderReceiptHistory();
             $supplier_receipt_history->id_supply_order_detail = (int) $id_supply_order_detail;
             $supplier_receipt_history->id_employee = (int) $this->getId_employee();
@@ -440,43 +431,43 @@ class OrdenSuministroDetail {
             $supplier_receipt_history->id_supply_order_state = (int) $supply_order->id_supply_order_state;
             $supplier_receipt_history->quantity = (int) $quantity;
 
-            // updates quantity received
+// updates quantity received
             if ($way == '+') {
               $supply_order_detail->quantity_received += (int) $quantity;
             } else {
               $supply_order_detail->quantity_received -= (int) $quantity;
             }
 
-            // if current state is "Pending receipt", then we sets it to "Order received in part"
+// if current state is "Pending receipt", then we sets it to "Order received in part"
             if (3 == $supply_order->id_supply_order_state)
               $supply_order->id_supply_order_state = 4;
 
-            //echo "<br>  Adds to stock";
+//echo "<br>  Adds to stock";
             $warehouse = new Warehouse($supply_order->id_warehouse);
             if (!Validate::isLoadedObject($warehouse)) {
-              //echo "<br> error warehouse";
+//echo "<br> error warehouse";
               $this->errors[] = Tools::displayError($this->l('The warehouse could not be loaded.'));
               return;
             }
-            //echo "<br> precio";
+//echo "<br> precio";
             $price = $supply_order_detail->unit_price_te;
-            // converts the unit price to the warehouse currency if needed
+// converts the unit price to the warehouse currency if needed
             if ($supply_order->id_currency != $warehouse->id_currency) {
-              //echo "<br> convertir precios";
-              // first, converts the price to the default currency
+//echo "<br> convertir precios";
+// first, converts the price to the default currency
               $price_converted_to_default_currency = Tools::convertPrice($supply_order_detail->unit_price_te, $supply_order->id_currency, false);
 
-              // then, converts the newly calculated pri-ce from the default currency to the needed currency
+// then, converts the newly calculated pri-ce from the default currency to the needed currency
               $price = Tools::ps_round(Tools::convertPrice($price_converted_to_default_currency, $warehouse->id_currency, true), 6);
             }
-            //echo "<br> StockManagerFactory_getManager";
+//echo "<br> StockManagerFactory_getManager";
             $manager = StockManagerFactory::getManager();
-            //echo "<br> Manager";
+//echo "<br> Manager";
 
             $res = $manager->addProduct($supply_order_detail->id_product, $supply_order_detail->id_product_attribute, $warehouse, (int) $quantity, Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'), $price, true, $supply_order->id);
-            //echo "<br>res";
+//echo "<br>res";
             if (!$res) {
-              //echo "<br> error res";
+//echo "<br> error res";
               $this->errors[] = Tools::displayError($this->l('Something went wrong when adding products to the warehouse.'));
             }
 
@@ -485,7 +476,7 @@ class OrdenSuministroDetail {
             $res = Warehouse::setProductlocation($supply_order_detail->id_product, $supply_order_detail->id_product_attribute, $warehouse->id, $location ? $location : '');
 
             if ($res) {
-              //echo "<br> entro a adicionar";
+//echo "<br> entro a adicionar";
               $supplier_receipt_history->add();
 
               $last_inserted = Db::getInstance()->Insert_ID();
@@ -502,22 +493,12 @@ class OrdenSuministroDetail {
               $supply_order_detail->save();
               $supply_order->save();
             } else {
-              //echo "<br> error final";
+//echo "<br> error final";
               $this->errors[] = Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
             }
           }
         }
       }
-
-
-
-
-
-
-
-
-
-
 
       if ($way == '-') {
         $query = 'UPDATE `' . _DB_PREFIX_ . 'supply_order_detail` od INNER JOIN ( SELECT id_supply_order, id_product, COUNT(id_product) AS cant FROM `' . _DB_PREFIX_ . 'supply_order_load_icr` 
@@ -540,28 +521,74 @@ class OrdenSuministroDetail {
   }
 
   public function updateIcrStatus() {
+    self::debug_to_console(" ENTRO  updateIcrStatus");
 
     $query = 'UPDATE `' . _DB_PREFIX_ . 'icr` i INNER JOIN `' . _DB_PREFIX_ . 'supply_order_load_icr` ol
             ON ( i.id_icr = ol.id_icr ) 
             SET i.id_estado_icr = ' . $this->status_icr;
+    self::debug_to_console($query, " query ");
+    $update_ok = false;
+    if (DB::getInstance()->execute($query)) {
+      $query2 = "SELECT i.id_icr AS id_icr, i.id_estado_icr AS id_estado_icr, i.cod_icr AS cod_icr 
+        FROM ps_icr i 
+        INNER JOIN `ps_supply_order_load_icr` ol
+        ON ( i.id_icr = ol.id_icr )";
+      self::debug_to_console($query2, " query 2");
+      if ($result = DB::getInstance()->executeS($query2)) {
+        foreach ($result as $res) {
+          self::debug_to_console($res['id_icr'], " res[id_icr]");
+          if (isset($res['id_icr'])) {
+            $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+              FROM `ps_stock_available_mv` samv 
+              INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+              INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+              WHERE soi.id_icr = " . $res['id_icr'];
+            self::debug_to_console($query3, " Query 3");
 
-    DB::getInstance()->execute($query);
-
-    $ins_history = "
-        INSERT INTO ps_supply_order_receipt_history (id_supply_order_detail, id_employee, employee_lastname, 
-        employee_firstname, id_supply_order_state, quantity, date_add)
-
-        SELECT od.id_supply_order_detail, " . $this->getId_employee() . ", '" . $this->lastnameEmployee . "', '" . $this->firstnameEmployee . " (" . $this->accion_icr . ")', IF (od.quantity_expected = od.quantity_received, 5, 
-        IF(od.quantity_expected > od.quantity_received, 4, 
-        IF(od.quantity_expected < od.quantity_received, 4, 3) ) ) AS state,
-        COUNT(oli.id_product) AS canti, NOW()
-        FROM ps_supply_order_detail od
-        INNER JOIN ps_supply_order_load_icr oli 
-        ON (oli.id_supply_order = od.id_supply_order AND oli.id_product = od.id_product) 
-        WHERE oli.id_supply_order = " . (int) $this->supply_order . "
-        GROUP BY (od.id_supply_order_detail)";
-
-    // DB::getInstance()->execute($ins_history);
+            $result3 = DB::getInstance()->executeS($query3);
+            //      return var_dump("result3 t", var_dump($result3));
+//              var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
+//              if (isset($result3)) {
+            self::debug_to_console($result3[0]['reserve_on_stock'], " result3[0][reserve_on_stock]  ");
+            if ($res['id_estado_icr'] == 2 && $result3[0]['reserve_on_stock'] != NULL) {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ")";
+            } else {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . ",0)";
+            }
+            self::debug_to_console($query5, " Query5 ");
+            //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+            if (DB::getInstance()->execute($query5)) {
+//                  return true;
+              self::debug_to_console($update_ok, " Update_ok ");
+              $update_ok = true;
+//                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
+            } else {
+              $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
+              return false;
+            }
+//              }
+//            }
+          }
+        }
+      }
+    }
+    if ($update_ok) {
+      $ins_history = "INSERT INTO ps_supply_order_receipt_history (id_supply_order_detail, id_employee, employee_lastname, 
+          employee_firstname, id_supply_order_state, quantity, date_add)
+          SELECT od.id_supply_order_detail, " . $this->getId_employee() . ", '" . $this->lastnameEmployee . "', '" . $this->firstnameEmployee . " (" . $this->accion_icr . ")', IF (od.quantity_expected = od.quantity_received, 5, 
+          IF(od.quantity_expected > od.quantity_received, 4, 
+          IF(od.quantity_expected < od.quantity_received, 4, 3) ) ) AS state,
+          COUNT(oli.id_product) AS canti, NOW()
+          FROM ps_supply_order_detail od
+          INNER JOIN ps_supply_order_load_icr oli 
+          ON (oli.id_supply_order = od.id_supply_order AND oli.id_product = od.id_product) 
+          WHERE oli.id_supply_order = " . (int) $this->supply_order . "
+          GROUP BY (od.id_supply_order_detail)";
+      self::debug_to_console($ins_history, " ins_history ");
+      DB::getInstance()->execute($ins_history);
+    } else {
+      $this->errors[] = Tools::displayError($this->l("Error Actualizando el Stock disponible y los reservados, No se pudo ingresar registro en Histórico orden de suministro recibida"));
+    }
   }
 
   public function eliminarIcrProducto() {
@@ -597,9 +624,9 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
     StockAvailable::synchronize($id_product);
   }
 
-  // buscar el producto enviado, asociado a la orden y retornar los detalles del mismo en la orden
+// buscar el producto enviado, asociado a la orden y retornar los detalles del mismo en la orden
   public function ajaxProductoOrden($orden, $reference) {
-    //echo $orden .' - '. $reference;
+//echo $orden .' - '. $reference;
 
     $query = new DbQuery();
 
@@ -648,7 +675,7 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
     }
   }
 
-  // buscar el icr enviado y retornar true si existe o false si no esta disponible
+// buscar el icr enviado y retornar true si existe o false si no esta disponible
   public function ajaxIcrAdd($icr) {
 
     $query = new DbQuery();
@@ -659,7 +686,7 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
 
     if ($icr) {
       $items = Db::getInstance()->executeS($query);
-      //print_r($items);
+//print_r($items);
     }
 
     if (isset($items) && isset($items[0]['id_icr']) && $items[0]['id_icr'] != '') {
@@ -670,7 +697,7 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
     }
   }
 
-  // buscar el producto enviado, asociado a la orden y retornar los detalles del mismo en la orden
+// buscar el producto enviado, asociado a la orden y retornar los detalles del mismo en la orden
   public function ajaxProductoOrdenDel($orden, $reference) {
 
     $query = new DbQuery();
@@ -699,9 +726,9 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
 
 
     if ($orden && $reference) {
-      //$status_query = DB::getInstance()->execute($query);
+//$status_query = DB::getInstance()->execute($query);
       $items = Db::getInstance()->executeS($query);
-      //print_r($items);
+//print_r($items);
     }
 
     if ($items) {
@@ -735,7 +762,7 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
     }
   }
 
-  // buscar el icr enviado y retornar true si existe o false si no esta disponible
+// buscar el icr enviado y retornar true si existe o false si no esta disponible
   public function ajaxIcrDel($icr, $orden, $product) {
 
     /*
@@ -759,7 +786,7 @@ WHERE oi1.id_supply_order_icr = oi2.id_supply_order_icr';
 
     if ($icr && $orden && $product) {
       $items = Db::getInstance()->executeS($query);
-      //print_r($items);
+//print_r($items);
     }
 
     if (isset($items) && isset($items[0]['id_icr']) && $items[0]['id_icr'] != '') {
@@ -796,7 +823,7 @@ GROUP BY s_order_d.id_product";
     }
   }
 
-  // paso 2 agrgando icrs( productos a la orden de salida) 
+// paso 2 agrgando icrs( productos a la orden de salida) 
   /**
    * Valida si un icr esta asociado a un producto y si el estado del icr es disponible (2) 
    * respuesta ajax formulario aosciaci�n productos orden de salida 
@@ -829,7 +856,7 @@ WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
    * @return [type] mixed     [array / true]
    */
   public function icrFechaVencida($icr) {
-    // valida si es un cod�go icr es valido
+// valida si es un cod�go icr es valido
     if (strlen($icr) == 6 && !preg_match('/[^A-Za-z]/', substr($icr, 0, 3)) && is_numeric(substr($icr, 3, 3))) {
 
       $query = "select COUNT(1) as total, ordericr.fecha_vencimiento, icr.id_icr, icr.cod_icr,s_order_d.name,s_order_d.reference,s_order_d.id_product 
@@ -841,7 +868,7 @@ WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
                 AND ordericr.fecha_vencimiento <> '0000-00-00' 
                 AND ordericr.fecha_vencimiento <> '1969-12-31' 
                 AND DATEDIFF(ordericr.fecha_vencimiento,NOW()) >= 90";
-      //AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
+//AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
 
       if ($results = Db::getInstance()->ExecuteS($query)) {
         foreach ($results as $row) {
@@ -859,7 +886,7 @@ WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
    * @return [type] mixed     [array / true]
    */
   public function icrLoteFechaVencimiento($icr) {
-    // valida si es un cod�go icr es valido
+// valida si es un cod�go icr es valido
     if (strlen($icr) == 6 && !preg_match('/[^A-Za-z]/', substr($icr, 0, 3)) && is_numeric(substr($icr, 3, 3))) {
 
       $query = "select COUNT(1) as total
@@ -870,7 +897,7 @@ WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2";
         WHERE icr.cod_icr='" . $icr . "' AND icr.id_estado_icr=2
                 AND ordericr.fecha_vencimiento <> '0000-00-00'
                 AND ordericr.lote <> ''";
-      //AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
+//AND STR_TO_DATE(ordericr.fecha_vencimiento, '%Y-%m-%d') < NOW()";
 
       if ($results = Db::getInstance()->ExecuteS($query)) {
         foreach ($results as $row) {
@@ -1058,63 +1085,100 @@ ON(t1.id_product =t2.product_id);";
    * @array array_icr
    * @return boolean
    */
+  public static function debug_to_console($data, $texto = NULL) {
+    if (is_array($data)) {
+      $formato = 'Array: %s ->  %s';
+      $message = sprintf($formato, $texto, json_encode($cars));
+      $output = "<script>console.log( '" . $message . "' );</script>";
+    } else {
+      $cadenalimpia = preg_replace("[\n|\r|\n\r]", "", $data);
+      $formato = "%s ->  %s";
+      $message = sprintf($formato, $texto, $cadenalimpia);
+      $output = "<script>console.log( '" . $message . "' );</script>";
+    }
+    echo $output;
+  }
+
   public function updateStausIcrsOrder($id_order) {
-//    var_dump($id_order);
-//    $query = "UPDATE ps_icr icrU 
-//      INNER JOIN
-//      (
-//      SELECT  icr.cod_icr
-//      from ps_orders orders 
-//      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
-//      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-//      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-//      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-//      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-//      WHERE icr.id_estado_icr=2 and orders.id_order=" . $id_order . "
-//      ) as actualizar
-//      ON(icrU.cod_icr=actualizar.cod_icr)
-//
-//      SET icrU.id_estado_icr=3";
-//
-//    if ($result = DB::getInstance()->execute($query)) {
-//      return var_dump("RESULT",$result);
-    $query2 = "SELECT  icr.id_icr
+    $query = "UPDATE ps_icr icrU 
+      INNER JOIN
+      (
+      SELECT  icr.cod_icr
+      from ps_orders orders 
+      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+      WHERE icr.id_estado_icr=2 and orders.id_order=" . $id_order . "
+      ) as actualizar
+      ON(icrU.cod_icr=actualizar.cod_icr)
+      SET icrU.id_estado_icr=3";
+    
+    if (DB::getInstance()->execute($query)) {
+      $query2 = "SELECT  icr.id_icr, icr.id_estado_icr
         from ps_orders orders 
         INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
         INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
         INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
         INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
         INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-        WHERE icr.id_estado_icr=2 and orders.id_order=" . $id_order ;
+        WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_order;
+      $result2 = DB::getInstance()->executeS($query2);
+      $update_ok = false;
+//      return var_dump(count($result2), var_dump($result2));
+      foreach ($result2 as $res) {
+        if (isset($res['id_icr'])) {
 
-    $result2 = DB::getInstance()->executeS($query2);
+          self::debug_to_console($res['id_icr'], " Registrando ICR: ");
+          $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+        FROM `ps_stock_available_mv` samv 
+        INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+        INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+        WHERE soi.id_icr = " . $res['id_icr'];
 
-    if (isset($result2[0]['id_icr'])) {
+          self::debug_to_console($query3, " Query3 ");
+//          $result3 = DB::getInstance()->executeS($query3);
+//      return var_dump("result3 t", var_dump($result3));
+//          var_dump("ID ICR: ", $res['id_icr'], "reserve_on_stock: ", $result3[0]['reserve_on_stock']);
+          if ($result3 = DB::getInstance()->executeS($query3)) {
+//            return var_dump(json_encode($result3)); die();
+//                  return var_dump("result3 t", $result3['reserve_on_stock'], " JSON", $result3[0]['reserve_on_stock']);
+//              var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
+            self::debug_to_console(print_r($result3), " TRUE Result3: ");
+            self::debug_to_console($res['id_estado_icr'], " Id_estado_icr: ");
+            self::debug_to_console($result3[0]['reserve_on_stock'], " Reserve_on_stock: ");
+            if ($res['id_estado_icr'] == 3 && $result3[0]['reserve_on_stock'] != NULL && $result3[0]['reserve_on_stock'] > 0) {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . ($result3[0]['reserve_on_stock'] - 1) . ")";
+            } else {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . ",0)";
+            }
+            self::debug_to_console($query5, " Query5 ");
 
-
-      $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
-			FROM `ps_stock_available_mv` samv 
-			INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
-			INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
-			WHERE soi.id_icr = " . $result2[0]['id_icr'];
-
-    $result3 = DB::getInstance()->executeS($query3);
-    
-      return var_dump("result3 t", var_dump($result3));
-    
-      if (isset($result3[0]['reserve_on_stock'])) {
-        
-        return var_dump("RESULT2", $result2[0]['id_icr'], $id_order, $result3[0]['reserve_on_stock']);
+            //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
+            if (DB::getInstance()->execute($query5)) {
+//                  return true;
+              self::debug_to_console($update_ok, " Update_ok ");
+              $update_ok = true;
+//                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
+            } else {
+              self::debug_to_console($update_ok, " ERROR update ");
+              $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
+              return false;
+            }
+          }
+        }
       }
-
-
-      return var_dump("RESULT2 t", var_dump($result2));
+      if ($update_ok) {
+        return true;
+      } else {
+        $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados";
+        return false;
+      }
+    } else {
+      $this->errores_cargue[] = "Error Actualizando el estado de los ICRs asociados a la orden de salida";
+      return false;
     }
-    return var_dump("query2", $query2);
-
-//      return true;
-//    }
-    return false;
   }
 
 // Orden de Salida   
@@ -1143,7 +1207,7 @@ GROUP BY s_order_d.id_product;";
     }
   }
 
-  // Orden de Salida   
+// Orden de Salida   
   /**
    * Lista los productos por id y cantiad, de la orden actual
    *
@@ -1169,7 +1233,7 @@ GROUP BY s_order_d.id_product;";
     }
   }
 
-  // Comprobante de salida   
+// Comprobante de salida   
   /**
    * Lista de prooductos con icrs asociados
    *
@@ -1304,6 +1368,6 @@ ON(t1.car_id_product=t2.ord_product_id)) as incompleta";
     }
   }
 
-  //$this->context->smarty->register_function('date_now', 'print_current_date');
+//$this->context->smarty->register_function('date_now', 'print_current_date');
 //$smarty->register_function('date_now', 'print_current_date');
 }

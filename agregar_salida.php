@@ -22,12 +22,12 @@ header('Content-Type: text/html; charset=UTF-8');
  * 
  */
 $cantidades_disponibles=$ordsum->cantidadDisponibleProductos($id_order);
-echo '<pre> Cantidades requeridas <br>'.
+//echo '<pre> Cantidades requeridas <br>'.
 $cantidades_requeridas=$ordsum->numProducts($id_order);
-echo '<hr> Cantidades seleccionadas <br>'.
+//echo '<hr> Cantidades seleccionadas <br>'.
 $cantidades_en_la_orden=$ordsum->contarProductosOrdenSalida($id_order);
-echo "<br>--|".var_dump($cantidades_en_la_orden, "Aqui",$cantidades_requeridas)."|--";
-echo "<br>cant: ".count($cantidades_en_la_orden) ;
+//echo "<br>--|".var_dump($cantidades_en_la_orden, "Aqui",$cantidades_requeridas)."|--";
+//echo "<br>cant: ".count($cantidades_en_la_orden) ;
 
 $cantidades_faltantes=NULL;
 

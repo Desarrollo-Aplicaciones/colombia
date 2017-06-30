@@ -90,7 +90,6 @@ class loadicrsalida extends Module {
   public function getContent() {
     
     $icr_all = new Icrall();
-    die();
     
     $output = '<h2>' . $this->displayName . '</h2>';
     if (Tools::isSubmit('submitloadicrsalida')) {
@@ -147,7 +146,7 @@ class loadicrsalida extends Module {
         $output .= $this->displayError("Este tipo de archivo no es valido.");
       }
     }
-    var_dump($output . $this->displayForm());
+//    var_dump($output . $this->displayForm());
     return $output . $this->displayForm();
   }
 
