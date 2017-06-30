@@ -257,7 +257,6 @@
 			WHERE mediosp.nombre = '".$mediop."' AND datos.produccion != (SELECT `value` from ". _DB_PREFIX_ ."configuration WHERE `name` = 'PAYU_DEMO');";
 
 			$result = Db::getInstance()->getRow($sql);
-
 			if ( $result ) {
 				return $result;
 			} else {
@@ -803,6 +802,7 @@
 		 	} else {
 		 		$_deviceSessionId = md5($context->cookie->timestamp);
 		 	}
+
 
 		 	$total_tax = self::get_total_tax((int)$args['id_cart']);
 

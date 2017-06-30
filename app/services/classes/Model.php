@@ -642,7 +642,7 @@ public function set_address($arg){
 		WHERE id_customer ='.(int) $arg['id_customer'];
 		$total = (Db::getInstance()->getValue($sql)) + 1;		
 		$address->alias = 'Dirección '.$total;	
-	}	
+	}
 
 	$customer = new Customer((int) $arg['id_customer']);
 	$address->lastname = $customer->lastname;
@@ -1016,6 +1016,7 @@ public function pay($args){
 			break;
 		}
 	}
+	
 	// Enviando el pago a una pasarela de pago
 	if($flg){
 
@@ -1541,5 +1542,20 @@ $responseObj = json_decode($json_response);
 return $responseObj;       
 
 }
+
+  public function getTerms()
+  {
+      $array_img = array();
+      $query = "SELECT content FROM ps_cms_lang WHERE id_cms = 3";
+      $contenido = '';
+
+      if ($results = Db::getInstance()->ExecuteS($query)) {
+        foreach ($results as $value) {
+          $contenido = $value;
+        }
+      }
+
+    return $contenido;
+  }
 
 }

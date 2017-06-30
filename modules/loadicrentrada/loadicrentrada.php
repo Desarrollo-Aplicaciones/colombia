@@ -105,8 +105,8 @@ class loadicrentrada extends Module {
 
           if (is_array($names) && $names[0] != '' && $names[0] != false && $names[2] != false) {
             $retorno_cargue = $guardar_archivo->loadicrentrada($names[2]);
-            if ($retorno_cargue == true) {
 
+            if ($retorno_cargue == true) {
               if ($guardar_archivo->validarIcrDuplicadosEntrada() && $guardar_archivo->validarLoteFechavencimientoVaciosEntrada() && $guardar_archivo->validarIcrCargadoVsIngresadoEntrada() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcr() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcrCantidades() && $guardar_archivo->ValidateFechaVencEntrada() && $guardar_archivo->cambiarFechasVaciasyNulas() && $guardar_archivo->validarEstadoRegistrosCargadosEntrada() && $guardar_archivo->OrdenesProductosEntrada() && $guardar_archivo->IcrCargadosEntrada() && $guardar_archivo->ValidateRegistroInvima() && $guardar_archivo->validarProductosOrdenEntrada()) { // validar icr duplicados  // actualizar registros con respecto a ordenes, productos e icr 
                 if ($guardar_archivo->InsertarProductosIcrOrdenEntrada()) { // si inserta en ps_supply_order_icr
 //                  echo "<br> listo hasta aca. inserto en supply icr";
