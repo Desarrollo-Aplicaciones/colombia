@@ -5,7 +5,7 @@
 		/* theme */
 		form#searchbox{width:506px;}
 		.sf-menu{padding-left:0}
-		#menu{z-index:10}
+                #menu{z-index:10}
 		#seguridadTitulo {margin-top: 8px;font-size: 11px;}
 		#featured-products_block_center{width:748px;}
 		.cat_banner{width:428px;}
@@ -165,12 +165,7 @@
 
 
 ******************* fin mejora busqueda   **********************/
-/******************* Modal   **********************/
-       /* #boxes #dialog {width: 26%;} 
-        .title-header-lightbox {position: relative; width: 130%; float: inherit; }
-        .img-header-lightbox {width: 40%;}
-        #boxes_responce #dialog {width: 29%;}*/
- /******************* Fin Modal   **********************/
+
 
 	}
 	/* Tablet Portrait size to standard 960 (devices and browsers) */
@@ -534,27 +529,16 @@
 
 /******************** fin mejora busqueda   **********************/
 
-/******************** Modal product info  **********************/
-    
-    .ctn-product-imgs { width: 48%; display: inline-block; }
-    .color-title-open-regular {float: left;}    
-    .color-open-regular { margin-top: 15px;}   
-    .text-left-bottom { width: 44%;}
-    .icon-right-bottom {float: right; width: 56%;}
-    .color-font-bottom { margin-top: 15px; padding: 0px; width: 100%;}
-    .color-font-top { background-color: #dcdcdc; }
-    .buttom-open-bold {width: 80%;}
-    #qty_content_black_list { margin-top: 10px; }
-        /****************** Modal form ****************/
-    #boxes #dialog { width: 28%;}
-    .title-header-lightbox {float: inherit; width: 130%;}
-    .img-header-lightbox {padding-right: 4px; width: 38%;}
-    #boxes_responce #dialog {width: 31%;}
-/******************** Fin modal product info  **********************/   
-
-}
-	
-	
+        .icon-right-bottom {
+            width: 320px;
+        }
+        .icon-right-bottom img {
+           width: 35px;
+        }
+        .buttom-open-bold {    
+            width: 70%;
+        }
+}		
 	/* Small Tablet Portrait size to standard 600 (devices and browsers) */
 	@media only screen and (min-width: 480px) and (max-width: 767px) {
 		/*theme*/
@@ -1130,29 +1114,9 @@
 
 /******************** fin mejora busqueda   **********************/
 
-/******************** Modal productos  **********************/
-       
-      #boxes #dialog {width: 34%;}
-      .header-lightbox {width: 30%;}
-       .ctn-product-name { margin: 10px 10px 3px 17px;}
-       #qty_content_black_list { margin: 10px 10px 10px 15px; width: 97%;}
-       .color-font-medium { padding: 10px 14px 10px 12px;   text-align: left; height: 90px;}
-       .color-open-regular { width: 63%; float: left; margin-top: 13px;}       
-       .buttom-open-bold {width: 35%; height: 33%;}
-       .icon-right-bottom {display: none;}
-       .text-left-bottom { text-align: center; width: 90%; color: #00441b;}
-       .color-font-bottom { background-color: #fff; height: 30px;}
-       .row-tittle{display: none;}
-       #boxes { margin-left: 98px;}
-       #boxes_responce { margin-left: 98px; margin-top: -58px;}
-       #boxes_responce #dialog {width: 40%;margin-top: 10px;}
-       #mask {height: 100% !important;}
-
-       
-      
-   
-/******************** fin modal productos    **********************/
-
+        .icon-right-bottom img {
+            width: 51px;
+        }
 
 }
 
@@ -1842,29 +1806,29 @@
 	.bus_boton .link_line_top_bus_mas a {
 		width: 19px;
 	}
-
-
-
 /******************** fin mejora busqueda   **********************/
 
-/******************** Modal productos  **********************/
-       
-      #qty_content_black_list {width: 100%; margin-top: 22px;}
-      .buttom-open-bold { width: 70%; margin-top: 10px;}
-      .icon-right-bottom {display: none;}
-      .text-left-bottom { text-align: center; width: 90%;}
-      .color-font-bottom { background-color: #fff;}
-      .row-tittle{display: none;}
-      #boxes { margin-top:-128px; margin-left: 8px;}  
-      #boxes #dialog {width: 68%; margin-top: -165px; }
-      #mask { height: 100% !important;}
-      .header-lightbox {width: 63%;padding: 0px;}
-      #boxes_responce {margin-top: -196px; margin-left: 15px;}
-      #boxes_responce #dialog { width: 62%; margin-top: -96px;  }
-      .message-alert { font-size: 12px;}
-      .m-id_product {font-size: 12px;}
-      
-/******************** fin modal productos    **********************/
-
-
-}
+/* modal*/
+        
+        #qty_content_black_list {
+            width: 100%;
+        }
+        .buy_block .ctn-product-name {
+            width: 100%;
+        }
+        .buttom-open-bold {}
+            width: 70%;
+        .icon-right-bottom {
+            width: 296px;
+        }
+        .icon-right-bottom img {
+            width: 33px;
+        }
+        .buttom-open-bold {
+            width: 80%;
+        }
+        .color-font-bottom {
+            width: 94%;
+        }
+        
+     }
