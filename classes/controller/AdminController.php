@@ -2372,11 +2372,7 @@ class AdminControllerCore extends Controller
 			$this->_list_error = Db::getInstance()->getMsgError();
 		else
 			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
-	
-                   // echo "<pre>";
-                  //  var_dump($this->_listsql);
-                  // exit();
-                        }
+	}
 	
 	public function getModulesList($filter_modules_list)
 	{
@@ -2879,7 +2875,7 @@ class AdminControllerCore extends Controller
 					$delete_ok = true;
 					if ($this->deleted)
 					{
-						$to_delete->deleted = 1;  
+						$to_delete->deleted = 1;
 						if (!$to_delete->update())
 						{
 							$result = false;

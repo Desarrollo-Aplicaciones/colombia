@@ -191,6 +191,7 @@ margin: 3px;
         <div style="width: 100%; margin: 46% 0 0 0; text-align: center;"><input id="save" type="button" value="Guardar" > <input style="display: none;" id="update" type="button" value="Actualizar y permancer"></div>    
 </div>
     
+    
 </form> 
     
 <audio id="alert_producto" src="//<?php echo $host; ?>/sound/beam.wav" type="audio/wav"></audio>  
