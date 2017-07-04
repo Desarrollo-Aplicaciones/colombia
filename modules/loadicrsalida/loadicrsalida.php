@@ -90,7 +90,6 @@ class loadicrsalida extends Module {
   public function getContent() {
 
     $icr_all = new Icrall();
-//    die();
 
     $output = '<h2>' . $this->displayName . '</h2>';
     if (Tools::isSubmit('submitloadicrsalida')) {
