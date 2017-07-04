@@ -848,7 +848,7 @@ div#more_info_sheets {
     height: 45px;
     padding: 10px;
     text-align: left;
-    width: 100%;
+    width: 95%;
 }
 
 .text-left-bottom {
@@ -1468,6 +1468,8 @@ div#more_info_sheets {
 }
 
 /* Modal Content/Box */
+
+
 .farma-modal .modal-content {
     background-color: #fefefe;
     margin: 10% auto; 
@@ -1488,6 +1490,12 @@ div#more_info_sheets {
 }
 .farma-modal .modal-table-cell {
     display:table-cell; 
+}
+.close-x {
+    float: right;
+    margin-top: -17px;
+    margin-bottom: -20px;
+    opacity: .5;
 }
 .farma-modal .modal-title {
     text-align: left;
@@ -1581,14 +1589,26 @@ div#more_info_sheets {
     display: none;
 }
 .response-title {
-    color:#3A9A37;
-    font-family: sans-serif ;
-    font-size: 18px;    
+    font-family: Montserrat;
+    font-size: 18px;
+    color: #3A9A37;    
 }
 .message-response {
     margin-top: 16px;
 }
 .message-alert {
-    font-family:sans-serif ;
-    font-size:14px; 
-}    
+    color: #43475A;
+    font-size:14px;
+    font-family: Open sans;
+} 
+.message-mod{
+    font-weight: bold;
+    font-family: Open sans;
+    font-size: 14px;
+}
+.img-modal-r{
+    color: #3A9A37;
+    font-size: 14px;
+    font-family: open sans;
+    font-weight: bold;
+}

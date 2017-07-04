@@ -556,10 +556,10 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 
                    <div id="modal-register-product" class="farma-modal">
                     <div class="modal-content">
-                      <div class="modal-table">
+                      <div class="close-x modal-close"><span>&times;</span></div>
+                      <div class="modal-table">                          
                         <div class="modal-table-cell"><img src="{$img_dir}Capsula_lightbox_captura.jpg" class="icon-ligh"></div>
-                        <div class="modal-table-cell modal-title">Dejanos tus datos de <br> contacto</div>
-                        <div class="modal-table-cell modal-close"><span>&times;</span></div>
+                        <div class="modal-table-cell modal-title">Déjanos tus datos de <br> contacto</div>
                       </div>
                       <div class="body-modal">
                         <form method="post" action="{$base_dir_ssl}ajaxs/ajax_customer_product.php">
@@ -592,14 +592,14 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
                         
                       <div class="response-modal" id="modal-thanks">
                         <div class="header-response-modal">
-                          <div class="modal-table-cell"><img src="{$img_dir}Ok lightbox confirmacion.jpg" id="ok_img"></div>
+                          <div class="modal-table-cell"><img src="{$img_dir}Ok lightbox confirmacion2.jpg" id="ok_img"></div>
                           <div class="modal-table-cell modal-title">Tus datos se <br>registraron con <span class="response-title"> éxito.</span>  </div>
                         </div>
                         <div  class="message-response">
                           <span class="message-alert"> Hemos creado una alerta en nuestro sistema que te notificará automáticamente cuando el producto</span>
                         </div>
                         <div  class="message-response">
-                            <span style="color:#3A9A37;font-size:14px;"> {$product->name} </span>
+                            <span class="img-modal-r"> {$product->name} </span>
                         </div>
                         <div  class="message-response">
                           <img class="img-product-m" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'medium_default')}"/>
@@ -608,7 +608,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
                           <span class="message-alert"> esté disponible de nuevo en nuestro Catálogo </span>
                         </div>
                         <div class="message-response"> 
-                          <span style="font-weight:bold;">Gracias por confiar en nosotros</span>
+                          <span class="message-mod">Gracias por confiar en nosotros</span>
                         </div>
                         <button type="button" class="modal-close enviar-form" id="Cerrar" style=" margin-top: 25px !important">Cerrar</button>
                       </div>
