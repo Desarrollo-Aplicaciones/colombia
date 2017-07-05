@@ -592,7 +592,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
                         
                       <div class="response-modal" id="modal-thanks">
                         <div class="header-response-modal">
-                          <div class="modal-table-cell"><img src="{$img_dir}Ok lightbox confirmacion2.jpg" id="ok_img"></div>
+                          <div class="modal-table-cell"><img src="{$img_dir}Ok_lightbox_confirmacion2.jpg" id="ok_img"></div>
                           <div class="modal-table-cell modal-title">Tus datos se <br>registraron con <span class="response-title"> éxito.</span>  </div>
                         </div>
                         <div  class="message-response">
