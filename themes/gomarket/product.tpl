@@ -562,7 +562,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
                         <div class="modal-table-cell modal-title">Déjanos tus datos de <br> contacto</div>
                       </div>
                       <div class="body-modal">
-                        <form method="post" action="{$base_dir_ssl}ajaxs/ajax_customer_product.php">
+                        <form id="form-modal" method="post" action="{$base_dir_ssl}ajaxs/ajax_customer_product.php">
                           <div class="form-group">
                             <label for="name">Nombre</label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="Tu nombre" />
@@ -579,7 +579,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
                           </div>
                           <div class="form-group">
                             <label for="telefono">Número teléfonico</label>
-                            <input type="number" class="form-control" id="telefono" name="telefono" placeholder="Fijo o celular" />
+                            <input type="text" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'');" class="form-control" id="telefono" name="telefono" placeholder="Fijo o celular" />
                             <div class="error form-error" id="error_telefono">
                               Olvidaste ingresar tu número telefónico
                             </div>
