@@ -452,18 +452,14 @@
 			$("#add-cart").show();
 			$("#hide-product").hide();
 			$("#hide-product").html('');
-			var reservados = 0;
-			var disponibles = 0;
+
 			if ($('#ipa_' + id_product + ' option').length)
 				var id_product_attribute = $('#ipa_' + id_product).val();
 			else
 				var id_product_attribute = 0;
-
-		this.disponibles = parseInt(stock[id_product][id_product_attribute]) - parseInt(restock[id_product][id_product_attribute]);
-
+			
 			$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
-			$('#qty_in_restock').html(parseInt(restock[id_product][id_product_attribute]));
-			$('#qty_in_disstock').html(this.disponibles);
+
 		} else {
 			if(motivo[id_product] == 1) {
 				var text = "AGOTADO POR LABORARIO";
