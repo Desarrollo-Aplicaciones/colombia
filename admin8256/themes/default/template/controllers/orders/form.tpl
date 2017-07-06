@@ -732,7 +732,7 @@
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
 						motivo[id_product] = this.motivo;
-						motivo[id_product] = this.motivo;
+						
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
@@ -759,7 +759,7 @@
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
 						stock[this.id_product][0] = this.stock[0];
-						//restock[this.id_product][0] = this.reserve;
+						
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
