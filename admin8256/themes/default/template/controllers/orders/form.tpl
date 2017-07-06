@@ -715,7 +715,7 @@
 				var customization_html = '';
 				stock = {};
 				motivo = {};
-				//restock = {};
+				
 				if(res.found)
 				{
 					if (!customization_errors)
@@ -732,7 +732,7 @@
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
 						motivo[id_product] = this.motivo;
-						//restock[id_product] = new Array();
+						motivo[id_product] = this.motivo;
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
