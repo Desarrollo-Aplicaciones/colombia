@@ -471,6 +471,7 @@
 			$("#add-cart").hide();
 			$("#hide-product").show();
 			$("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+text+'</b></div>');
+                        
 		}
 	}
 	function duplicateOrder(id_order)
