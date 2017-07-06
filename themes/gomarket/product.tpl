@@ -605,7 +605,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
                           <img class="img-product-m" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'medium_default')}"/>
                         </div>
                         <div class="message-response">  
-                          <span class="message-alert"> esté disponible de nuevo en nuestro Catálogo </span>
+                          <span class="message-alert"> esté disponible de nuevo en nuestro catálogo </span>
                         </div>
                         <div class="message-response"> 
                           <span class="message-mod">Gracias por confiar en nosotros</span>
