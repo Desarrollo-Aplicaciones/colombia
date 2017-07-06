@@ -744,7 +744,7 @@
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
-                        			motivo[id_product] = this.motivo;
+						motivo[id_product] = this.motivo;
                                                 
 						if (this.customizable == '1')
 						{
@@ -772,7 +772,7 @@
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
 						stock[this.id_product][0] = this.stock[0];
-						restock[this.id_product][0] = this.reserve;
+
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
