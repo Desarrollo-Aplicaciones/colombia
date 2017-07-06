@@ -727,7 +727,7 @@
 					attributes_html += '<label>{l s='Combination'}</label>';
 					$.each(res.products, function() {
 						var gmc = this.gmc !== null ? this.gmc : "0";
-                                                products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
+                                                products_found += '<option '+(this.active == 0 ? 'style="color:#EA6074; font-weight: bold;"' : '')+' '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
