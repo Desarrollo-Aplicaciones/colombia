@@ -556,7 +556,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 
                    <div id="modal-register-product" class="farma-modal">
                     <div class="modal-content">
-                      <div class="close-x modal-close"><span>&times;</span></div>
+                      <div class="close-x modal-close"><span class="exit">&times;</span></div>
                       <div class="modal-table">                          
                         <div class="modal-table-cell"><img src="{$img_dir}Capsula_lightbox_captura.jpg" class="icon-ligh"></div>
                         <div class="modal-table-cell modal-title">Déjanos tus datos de <br> contacto</div>
