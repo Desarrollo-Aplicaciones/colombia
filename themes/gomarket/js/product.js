@@ -771,7 +771,8 @@ $(document).ready(function() {
                   var $modalRegisterProduct = $("#modal-register-product .modal-content");
                   $modalRegisterProduct.children(".modal-table, .body-modal").fadeOut( "slow", function() {
                     // Animation complete.
-                    $modalRegisterProduct.children("#modal-thanks").fadeIn( "fast" );  
+                    $modalRegisterProduct.children("#modal-thanks").fadeIn( "fast" );
+                     $( ".exit" ).remove();
                   });
                 } else {
                     alert("Ocurrió un error interno, por favor intente más tarde.");
