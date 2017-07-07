@@ -524,11 +524,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							Producto no disponible
 						</div>
 						<div class="ctn-black-list color-title-open-bold"> 
-						{if $product->motivo == 1}
-							Está temporalmente agotado por laboratorio.
-						{else if $product->motivo == 10}
-							Desabastecimiento por parte del proveedor.
-						{/if}
+						{$product->motivo_name}
 						</div>
 					</div>
 					<div class="color-font-medium">

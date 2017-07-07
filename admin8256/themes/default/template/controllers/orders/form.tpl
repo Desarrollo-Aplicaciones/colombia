@@ -461,15 +461,10 @@
 			$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
 
 		} else {
-			if(motivo[id_product] == 1) {
-				var text = "AGOTADO POR LABORARIO";
-			}
-			if(motivo[id_product] == 10) {
-				var text = "DESABASTECIMIENTO POR PROVEEDOR";
-			}
+			
 			$("#add-cart").hide();
 			$("#hide-product").show();
-			$("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+text+'</b></div>');
+			$("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+motivo[id_product]+'</b></div>');
                         
 		}
 
@@ -745,7 +740,7 @@
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
-						motivo[id_product] = this.motivo;
+						motivo[id_product] = this.motivo_name;
                                                 
 						if (this.customizable == '1')
 						{

@@ -75,7 +75,8 @@ class Category extends CategoryCore
 					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
-						DAY)) > 0 AS new, product_shop.price AS orderprice
+						DAY)) > 0 AS new, product_shop.price AS orderprice,
+                                        black_motivo.name AS motivo_name
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
@@ -99,6 +100,7 @@ class Category extends CategoryCore
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				LEFT JOIN ps_product_black_list product_black ON (product_black.id_product = product_shop.id_product)
+                                LEFT JOIN ps_black_motivo black_motivo ON black_motivo.id_black_motivo = product_black.motivo
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = IF(product_black.motivo = 1 OR product_black.motivo = 10,  0,  1)' : '')
