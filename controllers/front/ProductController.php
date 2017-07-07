@@ -150,6 +150,7 @@ class ProductControllerCore extends FrontController
 			else
 			{
 				$this->product->motivo = $reasonProduct[0]['motivo'];
+                                $this->product->motivo_name = $reasonProduct[0]['motivo_name'];
 				// Load category
 				if (isset($_SERVER['HTTP_REFERER'])
 					&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
@@ -341,8 +342,10 @@ class ProductControllerCore extends FrontController
 	}
 
 	public function getStatusTypeReason($id_product) {
-		$sql = 'SELECT product_black.motivo, product_shop.* FROM ps_product_shop product_shop
+		$sql = 'SELECT product_black.motivo, product_shop.*, black_motivo.name AS motivo_name
+                                FROM ps_product_shop product_shop
 				INNER JOIN ps_product_black_list product_black ON (product_black.id_product = product_shop.id_product)
+                                LEFT JOIN ps_black_motivo black_motivo ON black_motivo.id_black_motivo = product_black.motivo
 				WHERE product_shop.`active` = IF(product_black.motivo = 1 OR product_black.motivo = 10,  0,  1)
 				AND product_shop.id_product = '.$id_product;
 
