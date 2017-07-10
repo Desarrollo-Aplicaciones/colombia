@@ -220,22 +220,22 @@ class IcrallCore extends ObjectModel {
     }
   }
 
-  public static function debug_to_console($data, $texto = NULL) {
-    if (is_array($data)) {
-      $formato = 'Array: %s ->  %s';
-      $message = sprintf($formato, $texto, json_encode($cars));
-      $output = "<script>console.log( '" . $message . "' );</script>";
-    } else {
-      $cadenalimpia = preg_replace("[\n|\r|\n\r]", "", $data);
-      $formato = "%s ->  %s";
-      $message = sprintf($formato, $texto, $cadenalimpia);
-      $output = "<script>console.log( '" . $message . "' );</script>";
-    }
-    echo $output;
-  }
+//  public static function debug_to_console($data, $texto = NULL) {
+//    if (is_array($data)) {
+//      $formato = 'Array: %s ->  %s';
+//      $message = sprintf($formato, $texto, json_encode($cars));
+//      $output = "<script>console.log( '" . $message . "' );</script>";
+//    } else {
+//      $cadenalimpia = preg_replace("[\n|\r|\n\r]", "", $data);
+//      $formato = "%s ->  %s";
+//      $message = sprintf($formato, $texto, $cadenalimpia);
+//      $output = "<script>console.log( '" . $message . "' );</script>";
+//    }
+//    echo $output;
+//  }
 
   public function insertarPicking() {
-//    self::debug_to_console(implode(",", $this->id_orders_actualizar), " Entro cambiar insertarPicking ");
+    // self::debug_to_console(implode(",", $this->id_orders_actualizar), " Entro insertarPicking ");
     //..echo "<br>7";
     $insertar_query = "INSERT INTO `" . _DB_PREFIX_ . "order_picking` (`id_order_icr`, `id_order_supply_icr`, `id_order_detail`, `date`, `id_employee`)                      
               SELECT t1.id_order_icr,t1.id_order_supply_icr, t1.id_order_detail, t1.date,t1.id_employee
@@ -255,8 +255,8 @@ class IcrallCore extends ObjectModel {
               WHERE icr.id_estado_icr=2 
               GROUP BY tis.id_orden, tis.id_product, icr.id_icr 
               ORDER BY orders.id_order, orders_d.product_id ) as t1 ";
-//    self::debug_to_console($this->empledado->id, "ID ");
-//    self::debug_to_console($this->icr_actualizar, "Icr_actualizar ");
+    // self::debug_to_console($this->empledado->id, "ID ");
+    // self::debug_to_console($this->icr_actualizar, "Icr_actualizar ");
     if ($result = DB::getInstance()->execute($insertar_query)) {
       $validar_insert_picking = "SELECT COUNT(`id_order_icr`) AS cant FROM `" . _DB_PREFIX_ . "order_picking` WHERE id_order_icr IN (" . implode(",", $this->icr_actualizar) . ")";
       if ($result2 = DB::getInstance()->executeS($validar_insert_picking)) { // validar insertar picking
@@ -285,79 +285,80 @@ class IcrallCore extends ObjectModel {
    * @return void ICRS status 3
    */
   public function cambiarIcrEstado() {
-    //..echo "<br>8"; 
-//    var_dump($this->id_orders_actualizar);
-//    self::debug_to_console(implode(",", $this->id_orders_actualizar), " Entro cambiar cambiarIcrEstado ");
+
+    // self::debug_to_console(implode(",", $this->id_orders_actualizar), " Entro cambiar cambiarIcrEstado ");
     $query = "UPDATE ps_icr icrU 
-                  INNER JOIN
-                  (
-                  SELECT  icr.cod_icr
-                  FROM ps_orders orders 
-                  INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
-                  INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-                  INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-                  INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-                  INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-                  WHERE icr.id_estado_icr=2 AND orders.id_order IN (" . implode(",", $this->id_orders_actualizar) . ")
-                  ) as actualizar
-                  ON(icrU.cod_icr=actualizar.cod_icr)
-                  SET icrU.id_estado_icr=3";
-    if ($result = DB::getInstance()->execute($query)) {
-      if (DB::getInstance()->execute($query)) {
-        $query2 = "SELECT  icr.id_icr AS id_icr, icr.id_estado_icr AS id_estado_icr
-                  FROM ps_orders orders 
-                  INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
-                  INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
-                  INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
-                  INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
-                  INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
-                  WHERE icr.id_estado_icr=3 AND orders.id_order IN (" . implode(",", $this->id_orders_actualizar) . ")";
-        $result2 = DB::getInstance()->executeS($query2);
-//    self::debug_to_console(print_r($result2), " Query2 ");
-        $update_ok = false;
-//      return var_dump(count($result2), var_dump($result2));
-        foreach ($result2 as $res) {
-          if (isset($res['id_icr'])) {
-            $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
-        FROM `ps_stock_available_mv` samv 
-        INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
-        INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
-        WHERE soi.id_icr = " . $res['id_icr'];
-            
-            self::debug_to_console($res['id_icr'], " ID ICR ");
-            self::debug_to_console($result3[0]['reserve_on_stock'], " Reserve_on_stock ");
-            
-            self::debug_to_console($query3, " Query3 Actualizando a 3 status");
-            if ($result3 = DB::getInstance()->executeS($query3)) {
-              
-          
-                if ($res['id_estado_icr'] == 3 && $result3[0]['reserve_on_stock'] != NULL && $result3[0]['reserve_on_stock'] > 0) {
-                  $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . ($result3[0]['reserve_on_stock'] - 1) . ")";
-                } else {
-                  $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . ",0)";
-                }
-                self::debug_to_console($query5, " Query5 ");
-                //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
-                if (DB::getInstance()->execute($query5)) {
-//                  return true;
-                  self::debug_to_console($update_ok, " Update_ok ");
-                  $update_ok = true;
-//                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
-                } else {
-                  self::debug_to_console($update_ok, " ERROR update ");
-                  $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
-                  return false;
-                }
-           
-            }
-          }
-        }
-        if ($update_ok) {
-          return true;
-        } else {
-          $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados";
-        }
+      INNER JOIN
+      (
+      SELECT  icr.cod_icr
+      FROM ps_orders orders 
+      INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+      INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+      INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+      INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+      INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+      WHERE icr.id_estado_icr=2 AND orders.id_order IN (" . implode(",", $this->id_orders_actualizar) . ")
+      ) as actualizar
+      ON(icrU.cod_icr=actualizar.cod_icr)
+      SET icrU.id_estado_icr=3";
+
+    if (DB::getInstance()->execute($query)) {
+
+      $query2 = "SELECT  icr.id_icr AS id_icr, icr.id_estado_icr AS id_estado_icr
+          FROM ps_orders orders 
+          INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
+          INNER JOIN ps_supply_order_detail s_order_d ON(orders_d.product_id=s_order_d.id_product)
+          INNER JOIN ps_supply_order_icr s_order_i ON (s_order_d.id_supply_order_detail=s_order_i.id_supply_order_detail)
+          INNER JOIN ps_icr icr ON (s_order_i.id_icr=icr.id_icr)
+          INNER JOIN ps_order_picking o_picking ON (orders_d.id_order_detail= o_picking.id_order_detail AND s_order_i.id_supply_order_icr =o_picking.id_order_supply_icr)
+          WHERE icr.id_estado_icr=3 AND orders.id_order IN (" . implode(",", $this->id_orders_actualizar) . ")";
+
+      $result2 = DB::getInstance()->executeS($query2);
+
+      if ($this->updateStockAvailableMv($result2)) {
+        return true;
+      } else {
+        $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados";
       }
+//      $update_ok = false;
+//      foreach ($result2 as $res) {
+//
+//        if (isset($res['id_icr'])) {
+//
+//          $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+//              FROM `ps_stock_available_mv` samv 
+//              INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+//              INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+//              WHERE soi.id_icr = " . $res['id_icr'];
+//
+//          self::debug_to_console($res['id_icr'], " ID ICR ");
+//          self::debug_to_console($result3[0]['reserve_on_stock'], " Reserve_on_stock ");
+//          self::debug_to_console($query3, " Query3 Actualizando a 3 status");
+//
+//          if ($result3 = DB::getInstance()->executeS($query3)) {
+//
+//            if ($res['id_estado_icr'] == 3 && $result3[0]['reserve_on_stock'] != NULL && $result3[0]['reserve_on_stock'] > 0) {
+//              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . ($result3[0]['reserve_on_stock'] - 1) . ")";
+//            } else {
+//              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . ",0)";
+//            }
+//            self::debug_to_console($query5, " Query5 ");
+//            if (DB::getInstance()->execute($query5)) {
+//              self::debug_to_console($update_ok, " Update_ok ");
+//              $update_ok = true;
+//            } else {
+//              self::debug_to_console($res['cod_icr'], " ERROR update ICR");
+//              $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
+//              return false;
+//            }
+//          }
+//        }
+//      }
+//      if ($update_ok) {
+//        return true;
+//      } else {
+//        $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados";
+//      }
     } else {
       $this->errores_cargue[] = "No se pudo cambiar el estado de los ICR. Contacte a su administrador del sistema. 
            <br> orders  (" . implode(",", $this->id_orders_actualizar) . ").";
@@ -432,14 +433,17 @@ class IcrallCore extends ObjectModel {
    * @return [type] [bool]
    */
   public function validarIcrDuplicadosEntrada() {
+    // self::debug_to_console(" ENTRO validarIcrDuplicadosEntrada ");
     //..-echo "<br>1";
     $query_icr_duplicado = "SELECT cod_icr , COUNT(cod_icr) as cant FROM ps_tmp_cargue_entrada_icr
           GROUP BY cod_icr 
           HAVING COUNT(cod_icr) > 1";
     if ($results_icr = Db::getInstance()->ExecuteS($query_icr_duplicado)) {
+      // self::debug_to_console($results_icr, "Existen errores en cargue, hay ICR duplicados");
       $this->errores_cargue[] = "Existen errores en cargue, hay ICR duplicados.";
       return false;
     } else {
+      // self::debug_to_console("validarIcrDuplicadosEntrada TRUE");
       return true;
     }
   }
@@ -449,14 +453,18 @@ class IcrallCore extends ObjectModel {
    * @return [type] [bool]
    */
   public function validarLoteFechavencimientoVaciosEntrada() {
+    
+    // self::debug_to_console(" ENTRO validarLoteFechavencimientoVaciosEntrada ");
     //..-echo "<br>1";
     $query_lote_fecha_vacios = "SELECT cod_icr , COUNT(cod_icr) as cant FROM ps_tmp_cargue_entrada_icr
         WHERE lote = '' OR (DATE(fecha_vencimiento) = DATE('0000-00-00') OR fecha_vencimiento ='' )
           GROUP BY cod_icr";
     if ($results_icr = Db::getInstance()->ExecuteS($query_lote_fecha_vacios)) {
+      // self::debug_to_console($results_icr, "Existen errores en el lote o la fecha de vencimiento, no pueden estar vacios.");
       $this->errores_cargue[] = "Existen errores en el lote o la fecha de vencimiento, no pueden estar vacios.";
       return false;
     } else {
+      // self::debug_to_console("validarLoteFechavencimientoVaciosEntrada TRUE");
       return true;
     }
   }
@@ -484,6 +492,7 @@ class IcrallCore extends ObjectModel {
    * @return [type] [bool]
    */
   public function validarIcrCargadoVsIngresadoEntrada() {
+    // self::debug_to_console("ENTRO validarIcrCargadoVsIngresadoEntrada");
     //..-echo "<br>2: ".
     $query_icr_compara = "UPDATE ps_tmp_cargue_entrada_icr tcei
             INNER JOIN 
@@ -504,28 +513,36 @@ class IcrallCore extends ObjectModel {
             tcei.id_icr = list.id_icr,
             tcei.flag = 'i';";
     if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
+      // self::debug_to_console("validarIcrCargadoVsIngresadoEntrada TRUE");
       return true;
     } else {
+      // self::debug_to_console($query_icr_compara, "Error en la actualización de los ICR cargados. QUERY :FALSE");
       $this->errores_cargue[] = "Error en la actualización de los ICR cargados.";
       return false;
     }
   }
 
   public function validarIcrCargadoVsSupplyOrderIcr() {
+    // self::debug_to_console("ENTRO validarIcrCargadoVsSupplyOrderIcr");
     //..-echo "<br>2.5";
     $query_icr_compara = "UPDATE ps_tmp_cargue_entrada_icr tcei
             INNER JOIN ps_supply_order_icr soi ON (tcei.id_icr = soi.id_icr)
             SET             
             tcei.flag = 'n'";
+    // self::debug_to_console($query_icr_compara, "ENTRO query_icr_compara : ");
+
     if ($results_icr = Db::getInstance()->Execute($query_icr_compara)) {
+      // self::debug_to_console("RETURN validarIcrCargadoVsSupplyOrderIcr : TRUE");
       return true;
     } else {
+      // self::debug_to_console("RETURN validarIcrCargadoVsSupplyOrderIcr : FALSE: Error en la actualización del cargue Vs Supply Order Icr.");
       $this->errores_cargue[] = "Error en la actualización del cargue Vs Supply Order Icr.";
       return false;
     }
   }
 
   public function validarIcrCargadoVsSupplyOrderIcrCantidades() {
+    // self::debug_to_console("ENTRO validarIcrCargadoVsSupplyOrderIcrCantidades");
     //..-echo "<br>3: ";
     $query_icr_comparacant = "UPDATE ps_tmp_cargue_entrada_icr tcei2
             INNER JOIN ps_supply_order_detail sod ON ( sod.id_supply_order = tcei2.id_orden_suministro AND tcei2.reference = sod.reference)
@@ -541,36 +558,51 @@ class IcrallCore extends ObjectModel {
             (CAST( sod.quantity_expected AS SIGNED) - CAST( sod.quantity_received AS SIGNED) )  
             - CAST( datcar.cantcarg AS SIGNED)
           ) < 0";
+
+    // self::debug_to_console($query_icr_comparacant, "ENTRO query_icr_comparacant : ");
     if ($results_icr_c = Db::getInstance()->Execute($query_icr_comparacant)) {
+      // self::debug_to_console("RETURN validarIcrCargadoVsSupplyOrderIcr : TRUE");
       return true;
     } else {
+      // self::debug_to_console("RETURN validarIcrCargadoVsSupplyOrderIcr : FALSE: Error en la actualización del cargue Vs Supply Order Icr verificando cantidades.");
       $this->errores_cargue[] = "Error en la actualización del cargue Vs Supply Order Icr verificando cantidades.";
       return false;
     }
   }
 
   public function validarEstadoRegistrosCargadosEntrada() {
-    //..-echo "<br>4";
+    
+    // self::debug_to_console("ENTRO validarEstadoRegistrosCargadosEntrada");
     $errores = 0;
     $query_icr_flag = "SELECT id_orden_suministro, reference, cod_icr, flag FROM ps_tmp_cargue_entrada_icr 
             WHERE flag = 'n' OR flag = 'd'";
+    // self::debug_to_console($query_icr_flag, "ENTRO query_icr_flag : ");
+
     if ($results_icr_flag = Db::getInstance()->ExecuteS($query_icr_flag)) {
+      
       $this->errores_cargue[] = "Error de datos en el archivo de Entrada cargado. Posibles causas: <br>Ordenes de suministro en estado diferende a pendiente recepción,
             <br>Icr aún no creados, <br>Productos asociados incorrectamente a una orden, <br>Proveedor asociado incorrectamente a una orden.";
+      // self::debug_to_console("Error de datos en el archivo de Entrada cargado. Posibles causas: <br>Ordenes de suministro en estado diferende a pendiente recepción,
+//            <br>Icr aún no creados, <br>Productos asociados incorrectamente a una orden, <br>Proveedor asociado incorrectamente a una orden.");
       foreach ($results_icr_flag as $row) {
         if ($row['flag'] == 'd') {
           $this->errores_cargue[] = "Cantidad a insertar, superior a la esperada, id_orden_suministro: " . $row['id_orden_suministro'] . ", Referencia: " . $row['reference'] . ", Icr: " . $row['cod_icr'];
+          // self::debug_to_console("Cantidad a insertar, superior a la esperada, id_orden_suministro: " . $row['id_orden_suministro'] . ", Referencia: " . $row['reference'] . ", Icr: " . $row['cod_icr']);
         } else {
           $this->errores_cargue[] = "Existen errores en los registros, id_orden_suministro: " . $row['id_orden_suministro'] . ", Referencia: " . $row['reference'] . ", Icr: " . $row['cod_icr'];
+          // self::debug_to_console("Existen errores en los registros, id_orden_suministro: " . $row['id_orden_suministro'] . ", Referencia: " . $row['reference'] . ", Icr: " . $row['cod_icr']);
         }
       }
+      // self::debug_to_console("RETURN validarEstadoRegistrosCargadosEntrada : FALSE");
       return false;
     } else {
+      // self::debug_to_console("RETURN validarEstadoRegistrosCargadosEntrada : TRUE");
       return true;
     }
   }
 
   public function OrdenesProductosEntrada() {
+    // self::debug_to_console("ENTRO OrdenesProductosEntrada");
     //..-echo "<br>5: ";
     //..-//echo "<br>1: ".
     $query_prods = " SELECT sod.id_supply_order, sod.id_product, sod.quantity_expected, sod.quantity_received,
@@ -582,24 +614,30 @@ class IcrallCore extends ObjectModel {
                   AND tcei2.id_proveedor = so.id_supplier AND tcei2.id_product = sod.id_product 
                 )
                GROUP BY sod.id_supply_order, sod.id_product, sod.quantity_expected, sod.quantity_received";
+    // self::debug_to_console($query_prods, "QUERY query_prods : ");
     if ($results = Db::getInstance()->ExecuteS($query_prods)) {
       foreach ($results as $row) {
         $this->productos_oren[$row['id_supply_order']][$row['id_product']] = $row['disponible'];
       }
+      // self::debug_to_console("RETURN OrdenesProductosEntrada : TRUE");
       return true;
     } else {
       $this->errores_cargue[] = "No se pudieron obtener los productos de las ordenes cargadas, o los productos ingresados ya poseen todos los ICR asociados.
             <br>Contacte a su administrador.";
+      // self::debug_to_console($this->errores_cargue[], "this->errores_cargue[]");
+      // self::debug_to_console("RETURN : FALSE");
       return false;
     }
   }
 
   public function IcrCargadosEntrada() {
+    // self::debug_to_console("ENTRO IcrCargadosEntrada");
     //..-echo "<br>6";
     //..-//echo "<br>2: ".
     $query_icr_table = " SELECT tcei2.id_orden_suministro, tcei2.id_product, tcei2.id_icr, tcei2.cod_icr FROM
             ps_tmp_cargue_entrada_icr tcei2
             GROUP BY tcei2.id_orden_suministro, tcei2.id_product";
+    // self::debug_to_console($query_icr_table, "QUERY query_icr_table : ");
     if ($results_icr = Db::getInstance()->ExecuteS($query_icr_table)) {
       foreach ($results_icr as $row) {
         $this->productos_arca_icr[$row['id_orden_suministro']][$row['id_product']][$row['id_icr']] = $row['cod_icr'];
@@ -614,8 +652,11 @@ class IcrallCore extends ObjectModel {
           $this->productos_arca[$row['id_orden_suministro']][$row['id_product']] = 1;
         }
       }
+      // self::debug_to_console("RETURN IcrCargadosEntrada : TRUE");
       return true;
     } else {
+      // self::debug_to_console("RETURN IcrCargadosEntrada : FALSE");
+      // self::debug_to_console($this->errores_cargue[], "this->errores_cargue[]");
       $this->errores_cargue[] = "No se pudieron obtener las Ordenes, productos y/o ICR del archivo cargado. Contacte a su administrador.";
       return false;
     }
@@ -627,6 +668,7 @@ class IcrallCore extends ObjectModel {
    * @return bool         verdadero o falso según la validación realizada
    */
   public function validarProductosOrdenEntrada() {
+    // self::debug_to_console("ENTRO validarProductosOrdenEntrada");
     //..-echo "<br>7";     
     $error = 0;
     foreach ($this->productos_oren as $id_orden) { //SI ARRAYS TIENEN MISMOS PRODUCTOS Y MISMAS CANTIDADES
@@ -648,11 +690,14 @@ class IcrallCore extends ObjectModel {
         }
       }
       if (count($this->errores_cargue) > 0) {
+        // self::debug_to_console("RETURN validarProductosOrdenEntrada: FALSE");
         return false;
       } else {
+        // self::debug_to_console("RETURN validarProductosOrdenEntrada: TRUE 1");
         return true;
       }
     } else {
+      // self::debug_to_console("RETURN validarProductosOrdenEntrada: TRUE 2");
       return true;
     }
   }
@@ -661,6 +706,7 @@ class IcrallCore extends ObjectModel {
    * InsertarProductosIcrOrden    inserta los icr por cada producto almacenado en el formulario
    */
   public function InsertarProductosIcrOrdenEntrada() {
+    // self::debug_to_console("ENTRO InsertarProductosIcrOrdenEntrada");
     //..-echo "<br>8";
     $query = 'INSERT INTO `' . _DB_PREFIX_ . 'supply_order_icr` (`id_supply_order_detail`, `id_icr`, `id_employee`, `fecha`, `lote`, `fecha_vencimiento`, `id_warehouse`) ';
     $query .= ' SELECT sod.id_supply_order_detail, cei.id_icr, "' . $this->empledado->id . '", now(), cei.lote, cei.fecha_vencimiento, so.id_warehouse
@@ -669,10 +715,13 @@ class IcrallCore extends ObjectModel {
             ON (cei.id_orden_suministro = sod.id_supply_order AND cei.id_product = sod.id_product )
             INNER JOIN `ps_supply_order` so ON ( so.id_supply_order = sod.id_supply_order )
             ORDER BY sod.id_supply_order_detail, cei.id_icr';
+    // self::debug_to_console($query, "QUERY query:");
     if ($retorno = DB::getInstance()->execute($query)) {
+      // self::debug_to_console("RETURN InsertarProductosIcrOrdenEntrada: TRUE");
       return true;
     } else {
       $this->errores_cargue[] = "No se pudieron ingresar los registros del archivo a la tabla de asociación de ICR.";
+      // self::debug_to_console($this->errores_cargue[], "this->errores_cargue[]");
       return false;
     }
   }
@@ -682,6 +731,7 @@ class IcrallCore extends ObjectModel {
    * @return string si la actualización es correcta retorna '1' si no retorna '0'
    */
   public function updateIcrProductoOrderEntrada() {
+    // self::debug_to_console("ENTRO updateIcrProductoOrderEntrada");
     $way = '+';
     $this->status_icr = 2;
     $query = new DbQuery();
@@ -788,6 +838,7 @@ class IcrallCore extends ObjectModel {
               $supply_order->save();
             } else {
               $this->errores_cargue[] = "Error 3. " . Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
+              // self::debug_to_console("Something went wrong when setting warehouse on product record");
               return false;
             }
           }
@@ -798,9 +849,71 @@ class IcrallCore extends ObjectModel {
       }
     } else {
       $this->errores_cargue[] = "Error en el query reduciendo el stock.";
+      // self::debug_to_console("Error en el query reduciendo el stock.");
       return false;
     }
+    // self::debug_to_console("RETURN updateIcrProductoOrderEntrada TRUE");
     return true;
+  }
+
+  /**
+   * Update Stock Available 
+   * 
+   * @param array $updateIcrs
+   * @return boolean
+   */
+  public function updateStockAvailableMv($updateIcrs) {
+
+    // self::debug_to_console("ENTRO updateStockAvailableMv ");
+    $update_ok;
+    foreach ($updateIcrs as $res) {
+
+      $update_ok = false;
+      // self::debug_to_console($res['id_icr'], " Res[id_icr] ");
+      if (isset($res['id_icr'])) {
+
+        $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+          FROM `ps_stock_available_mv` samv 
+          INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
+          INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
+          WHERE soi.id_icr = " . $res['id_icr'];
+
+        // self::debug_to_console($query3, " Query3 ");
+        if ($result3 = DB::getInstance()->executeS($query3)) {
+
+          if (isset($result3)) {
+
+            // self::debug_to_console($res['id_icr'], "ICR actualizado: ");
+            // self::debug_to_console($res['id_estado_icr'], "Estado actual: ");
+            // self::debug_to_console($result3[0]['reserve_on_stock'], "Reservados: ");
+
+            if ($res['id_estado_icr'] == 2 && $result3[0]['reserve_on_stock'] != NULL && $result3[0]['reserve_on_stock'] > 0) {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ")";
+            } else if ($res['id_estado_icr'] == 3 && $result3[0]['reserve_on_stock'] != NULL && $result3[0]['reserve_on_stock'] > 0) {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . ($result3[0]['reserve_on_stock'] - 1) . ")";
+            } else {
+              $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . ",0)";
+            }
+            // self::debug_to_console($query5, "Query5");
+            if (DB::getInstance()->execute($query5)) {
+
+              $update_ok = true;
+              // self::debug_to_console($update_ok, "Update_ok ");
+              // self::debug_to_console(" ");
+            } else {
+
+              $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
+              return false;
+            }
+          } else {
+
+            $this->errores_cargue[] = "Error Consultando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
+            return false;
+          }
+        }
+      }
+    }
+    return $update_ok;
   }
 
   /**
@@ -809,52 +922,22 @@ class IcrallCore extends ObjectModel {
    * @return boolean when the value is successful or failed
    */
   public function updateIcrStatusEntrada() {
-    //..echo "<br>10";
-//    self::debug_to_console(true, " Entro updateIcrStatusEntrada ");
+
+    // self::debug_to_console(" ENTRO updateIcrStatusEntrada ");
     $query = "UPDATE " . _DB_PREFIX_ . "icr i INNER JOIN " . _DB_PREFIX_ . "tmp_cargue_entrada_icr ol
             ON ( i.id_icr = ol.id_icr ) SET i.id_estado_icr = 2"; // cambiar estado del icr a asignado
+
     if (DB::getInstance()->execute($query)) {
+
       $query2 = "SELECT i.id_icr AS id_icr, i.id_estado_icr AS id_estado_icr, i.cod_icr AS cod_icr
         FROM ps_icr i 
-        INNER JOIN `ps_tmp_cargue_entrada_icr` ol
+        INNER JOIN ps_tmp_cargue_entrada_icr ol
         ON ( i.id_icr = ol.id_icr )";
-      self::debug_to_console($query2, " Query2 ");
+
+      // self::debug_to_console($query2, " Query2 ");
       if ($result = DB::getInstance()->executeS($query2)) {
-        $update_ok = false;
-        foreach ($result as $res) {
-          self::debug_to_console($res['id_icr'], " Res['id_icr'] ");
-          if (isset($res['id_icr'])) {
-            $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
-              FROM `ps_stock_available_mv` samv 
-              INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
-              INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
-              WHERE soi.id_icr = " . $res['id_icr'];
-            self::debug_to_console($query3, " Query3 ");
-            if ($result3 = DB::getInstance()->executeS($query3)) {
-              //      return var_dump("result3 t", var_dump($result3));
-//              var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
-              if (isset($result3)) {
-                if ($res['id_estado_icr'] == 2 && $result3[0]['reserve_on_stock'] != NULL) {
-                  $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ")";
-                } else {
-                  $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . ",0)";
-                }
-                self::debug_to_console($query5, " Query5 ");
-                //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
-                if (DB::getInstance()->execute($query5)) {
-//                  return true;
-                  self::debug_to_console($update_ok, " Update_ok ");
-                  $update_ok = true;
-//                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
-                } else {
-                  $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
-                  return false;
-                }
-              }
-            }
-          }
-        }
-        if ($update_ok) {
+
+        if ($this->updateStockAvailableMv($result)) {
           return true;
         } else {
           $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados";
@@ -876,6 +959,7 @@ class IcrallCore extends ObjectModel {
    * @return Array [0] =>'Nuevo nombre', [1] =>'Nombre original', [2]=>'Ruta completa'
    */
   public function saveFile($array_file, $name_file, $employee, $module) {
+    // self::debug_to_console(" Entro saveFile");
     $this->empledado = $employee;
     $full_path = null;
     // Sustituir especios por guion
@@ -886,6 +970,7 @@ class IcrallCore extends ObjectModel {
     $flag = true;
     while ($flag) {
       $this->nuevo_archivo = $this->randString() . '_' . $employee->id . '_' . '_' . $employee->firstname . '_' . $employee->lastname . $extencion; //.$extencion;
+      // self::debug_to_console($this->nuevo_archivo, "this->nuevo_archivo");
       $full_path = $this->pathFiles($module) . $this->nuevo_archivo;
       if (!file_exists($this->pathFiles($module) . $this->nuevo_archivo)) {
         $flag = false;
@@ -893,11 +978,24 @@ class IcrallCore extends ObjectModel {
     }
     //Validar caracteristicas del archivo
     try {
+      // self::debug_to_console($this->nuevo_archivo, "this->nuevo_archivo ");
+      // self::debug_to_console("Antes de mover  el archivo");
+      // self::debug_to_console($array_file[$name_file]['tmp_name'], "array_file[name_file][tmp_name]");
+//      self::debug_to_console($this->pathFiles($module), "this->pathFiles(module) ");
       if (move_uploaded_file($array_file[$name_file]['tmp_name'], $this->pathFiles($module) . $this->nuevo_archivo)) {
-        chmod($this->pathFiles($module) . $this->nuevo_archivo, 0755);
+        if (chmod($this->pathFiles($module) . $this->nuevo_archivo, 0755)) {
+          // self::debug_to_console("Permisos concedidos 0755");
+        } else {
+
+          // self::debug_to_console(" No fueron concedidos los permisos  0755");
+        }
+
+        // self::debug_to_console(array($this->nuevo_archivo, $nombre_archivo, $full_path), " Array respuesta");
         //retorna array en [0]=>'nombre original', [1]=>'nuevo nombre', [2]=>'ruta del archivo'
         return $vector = array($this->nuevo_archivo, $nombre_archivo, $full_path);
       } else {
+
+        // self::debug_to_console("Nose  pudo mover el archivo");
         // retorna un arrar con elementos en false
         return $vector = array(false, false, false);
       }
@@ -945,24 +1043,32 @@ class IcrallCore extends ObjectModel {
    */
 
   public function pathFiles($sub_dir) {
+
     // Definir directorio donde almacenar los archivos, debe terminar en "/" 
     // $directorio = "C:/wamp/www/prod.farmalisto.com.co/filesX/";
+    // self::debug_to_console($sub_dir, "ENTRO pathFiles 2");
     $directorio = Configuration::get('PATH_UP_LOAD');
     if (isset($sub_dir) && $sub_dir != '') {
       $directorio .= $sub_dir . '/';
     }
-    try {
-      $path = "" . $directorio;
-      if (!file_exists($path)) {
-        mkdir($path, 0755, TRUE);
+    // self::debug_to_console($directorio, "Directorio");
+    $path = "" . $directorio;
+    if (!file_exists($path)) {
+
+      // self::debug_to_console($path, "NO existe path");
+      if (mkdir($path, 0755, TRUE)) {
+        // self::debug_to_console($path, "Se creo el directorio RETURN TRUE");
+        return true;
+      } else {
+
+        $this->errores_cargue[] = "Error crear el archivo temporal, consulte con su administrador ";
+        // self::debug_to_console($path, "NO se creo el directorio RETURN FALSE");
+        return false;
       }
-      return $path;
-    } catch (Exception $e) {
-      $this->errores_cargue[] = "Error crear el archivo tempral, consulte con su administrador " . $e->getMessage();
-      return false;
+    } else {
+      // self::debug_to_console($path, "Ya existe el directorio ");
     }
-    $this->errores_cargue[] = "Error crear el archivo tempral, consulte con su administrador ";
-    return false;
+    return $path;
   }
 
   /*
@@ -1009,6 +1115,8 @@ class IcrallCore extends ObjectModel {
    */
 
   public function loadicrentrada($path_file_load_db) {
+
+    // self::debug_to_console($path_file_load_db, "Entro loadicrentrada y el  path_file_load_db: ");
     $mysqli_1 = mysqli_init();
     mysqli_options($mysqli_1, MYSQLI_OPT_LOCAL_INFILE, true);
     $url_post = explode(':', _DB_SERVER_);
@@ -1025,6 +1133,7 @@ class IcrallCore extends ObjectModel {
       $this->errores_cargue[] = "Error al truncar la tabla (ps_tmp_cargue_entrada_icr). Mensaje error: " . mysqli_error($mysqli_1);
       return false;
     }
+    // self::debug_to_console(1, "TRUNCATE TABLE ps_tmp_cargue_entrada_icr ");
     $cargadat = "LOAD DATA LOCAL INFILE '" . $path_file_load_db . "'
         INTO TABLE ps_tmp_cargue_entrada_icr
         FIELDS TERMINATED BY ';'
@@ -1032,6 +1141,7 @@ class IcrallCore extends ObjectModel {
         LINES TERMINATED BY '\\r\\n'
         IGNORE 1 LINES 
         (id_orden_suministro, id_proveedor, reference, @dummy, cod_icr, @dummy, @dummy, @dummy, @dummy, lote, fecha_vencimiento)";
+    // self::debug_to_console($cargadat, "cargadat ");
     if (!mysqli_query($mysqli_1, $cargadat)) {
       $this->errores_cargue[] = "Error al subir el archivo (estructura no valida). Mensaje error: " . mysqli_error($mysqli_1);
       return false;
