@@ -9,13 +9,13 @@
 include(dirname(__FILE__) . '/../config/config.inc.php');
 include(dirname(__FILE__) . '/../init.php');
 
+header('Content-Type: application/json');
 
 $name_registry = Tools::getValue('name');
 $email_registry = Tools::getValue('email');
 $telefono_registry = Tools::getValue('telefono');
 $id_product_registry = Tools::getValue('product');
 
-//echo $id_product_registry;
 $sql = "SELECT cr.*, rgl.state, rgl.id_product FROM ps_customer_registry cr "
         . "LEFT JOIN ps_registry_product_list rgl ON (rgl.id_registry = cr.id_registry AND rgl.state = 1 AND rgl.id_product = ".$id_product_registry.") "
         . "WHERE cr.email_registry = '".$email_registry."';";
