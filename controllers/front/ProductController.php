@@ -341,11 +341,12 @@ class ProductControllerCore extends FrontController
 	}
         
         public function getStatusTypeReason($id_product) {
+                $productBlackList = Configuration::get('PRODUCT_BLACK_LIST_SHOW');
 		$sql = 'SELECT product_black.motivo, product_shop.*, black_motivo.name AS motivo_name
                                 FROM ps_product_shop product_shop
 				INNER JOIN ps_product_black_list product_black ON (product_black.id_product = product_shop.id_product)
                                 LEFT JOIN ps_black_motivo black_motivo ON black_motivo.id_black_motivo = product_black.motivo
-				WHERE product_shop.`active` = IF(product_black.motivo = 1 OR product_black.motivo = 10,  0,  1)
+				WHERE product_shop.`active` = IF(product_black.motivo IN ('.$productBlackList.'),  0,  1)
 				AND product_shop.id_product = '.$id_product;
 		$resultado=Db::getInstance()->executeS($sql);
 		return $resultado;

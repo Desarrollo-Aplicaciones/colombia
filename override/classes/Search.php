@@ -560,6 +560,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
 		$max_possibilities = $total_languages * count(Shop::getShops(true));
 		$limit = max($max_possibilities, floor($limit / $max_possibilities) * $max_possibilities);
+                $productBlackList = Configuration::get('PRODUCT_BLACK_LIST_SHOW');
+                
 		$query = '
 			SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
 				pl.description_short, pl.description, cl.name cname, m.name mname, l.iso_code
@@ -573,12 +575,14 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				ON m.id_manufacturer = p.id_manufacturer
 			LEFT JOIN '._DB_PREFIX_.'lang l
 				ON l.id_lang = pl.id_lang
+                        LEFT JOIN '._DB_PREFIX_.'product_black_list product_black ON (product_black.id_product = p.id_product)
 			WHERE product_shop.indexed = 0
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '');
 			if(Configuration::get('SEARCH_INDEX_ACTIVE') && Configuration::get('SEARCH_INDEX_ACTIVE') == 1){
-				$query .= ' AND p.active = '.Configuration::get('SEARCH_INDEX_ACTIVE');
+				$query .= ' AND p.active = IF(product_black.motivo IN ('.$productBlackList.'),  0, '.Configuration::get('SEARCH_INDEX_ACTIVE').')';
 			}
+                        
 		return Db::getInstance()->executeS($query);
 	}
 

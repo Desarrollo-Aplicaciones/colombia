@@ -63,6 +63,7 @@ class Category extends CategoryCore
 					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
+                $productBlackList = Configuration::get('PRODUCT_BLACK_LIST_SHOW');
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
 					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
@@ -96,7 +97,7 @@ class Category extends CategoryCore
                                 LEFT JOIN ps_black_motivo black_motivo ON black_motivo.id_black_motivo = product_black.motivo
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 					AND cp.`id_category` = '.(int)$this->id
-					.($active ? ' AND product_shop.`active` = IF(product_black.motivo = 1 OR product_black.motivo = 10,  0,  1)' : '')
+					.($active ? ' AND product_shop.`active` = IF(product_black.motivo IN ('.$productBlackList.'),  0,  1)' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
 					.' GROUP BY product_shop.id_product';
