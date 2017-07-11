@@ -392,7 +392,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 	<!--product info-->
 	<div class="buy_block">
 		<div class="ctn-product-name" >
-			<h1 id="name_unico_sin_estilo">{$product->name|lower|capitalize}</h1>
+			<h1 id="name_unico_sin_estilo">{$product->name}</h1>
 		</div>
             {if empty($product->motivo)}    
 		<div id="qty_content">
@@ -791,7 +791,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 					{* <div class="title_hide_show">{l s='Información'}</div> *}
 					<!--info-->
 					<div id="idTab0" class="rte content_hide_show">
-						<div id="scro">{$product->description_short}</div>
+            <div id="scro"><span class="font-3"><b>{$disponibilidad}</b></span><p style="text-align: justify;" align="justify">&nbsp;</p>{$product->description_short}</div>
 					</div>
 				{/if}
 

@@ -11,8 +11,7 @@ class AdminHomeController extends AdminHomeControllerCore
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT IFNULL(SUM(`total_paid_tax_excl` / conversion_rate), "0") as total_sales, COUNT(*) as total_orders
 			FROM `'._DB_PREFIX_.'orders`
-			WHERE valid = 1
-				AND `date_add` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
+			WHERE `date_add` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).' AND current_state IN ('.$valid_state_sale.')
 		');
 

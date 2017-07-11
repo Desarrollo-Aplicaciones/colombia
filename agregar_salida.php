@@ -190,7 +190,7 @@ margin: 3px;
   </div>      
         <div style="width: 100%; margin: 46% 0 0 0; text-align: center;"><input id="save" type="button" value="Guardar" > <input style="display: none;" id="update" type="button" value="Actualizar y permancer"></div>    
 </div>
-
+    
     
 </form> 
     

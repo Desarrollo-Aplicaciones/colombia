@@ -2752,7 +2752,7 @@ class ProductCore extends ObjectModel
 		$price = Tools::ps_round($price, $decimals);
 		if ($price < 0)
 			$price = 0;
-		
+
 		self::$_prices[$cache_id] = $price;
 		return self::$_prices[$cache_id];
 	}

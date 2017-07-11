@@ -212,7 +212,7 @@ function aplicar_cancelacion(){
           
 
 $(".fancybox").fancybox();
-console.log(jQuery.fn.jquery);
+{*console.log(jQuery.fn.jquery);*}
 /* mostrar lista de operarios y empresas de transporte  */
     $('input[type=radio][name=tipo_transportador]').change(function() {
 
