@@ -457,6 +457,10 @@
 		var id_product = $('#id_product').val();
 		/*var reservados = 0;
 		var disponibles = 0;*/
+            if(motivo[id_product] == null) {
+                $("#add-cart").show();
+                $("#hide-product").hide();
+                $("#hide-product").html('');
 		if ($('#ipa_' + id_product + ' option').length)
 			var id_product_attribute = $('#ipa_' + id_product).val();
 		else
@@ -467,7 +471,12 @@
 		$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
 		/*$('#qty_in_restock').html(parseInt(restock[id_product][id_product_attribute]));
 		$('#qty_in_disstock').html(disponibles);*/
-	}
+            } else {
+                $("#add-cart").hide();
+                $("#hide-product").show();
+                $("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+motivo[id_product]+'</b></div>');
+            }
+        }
 
 	function duplicateOrder(id_order)
 	{
@@ -721,6 +730,7 @@
 				var customization_html = '';
 				stock = {};
 				//restock = {};
+                                motivo = {};
 
 				if(res.found)
 				{
@@ -732,11 +742,13 @@
 					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="display_product_attributes();display_product_customizations();">';
 					attributes_html += '<label>{l s='Combination'}</label>';
 					$.each(res.products, function() {
-						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
+						products_found += '<option '+(this.active == 0 ? 'style="color:#EA6074; font-weight: bold;"' : '')+' '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
 						//restock[id_product] = new Array();
+                                                motivo[id_product] = this.motivo_name;
+                                                
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
@@ -1328,12 +1340,15 @@
 				</body>
 				</html>
 			</iframe>
-			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
-			<!--b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
-			<b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span--></p>
-			<div class="margin-form">
-				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
-			</div>
+                        <div id="add-cart">
+                            <p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
+                            <!--b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
+                            <b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span--></p>
+                            <div class="margin-form">
+                                    <p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
+                            </div>
+                        </div>
+                        <div id="hide-product" style="display: none;"></div>
 		</div>
 	</div>
 	<div id="products_err" class="warn" style="display:none;"></div>

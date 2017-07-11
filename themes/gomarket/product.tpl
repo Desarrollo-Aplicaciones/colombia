@@ -394,7 +394,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		<div class="ctn-product-name" >
 			<h1 id="name_unico_sin_estilo">{$product->name|lower|capitalize}</h1>
 		</div>
-
+            {if empty($product->motivo)}    
 		<div id="qty_content">
 			
 			<div class="ctn-price">
@@ -515,10 +515,102 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				<span class="txt-green"><strong>+</strong></span>
 			</div>
 		</div>
+            {else}
+			<div id="qty_content_black_list">
+				<div class="ctn-price">
+					<div class="color-font-top">
+						<div class="ctn-black-list color-title-open-regular">
+							Producto no disponible
+						</div>
+						<div class="ctn-black-list color-title-open-bold"> 
+						{$product->motivo_name}
+						</div>
+					</div>
+					<div class="color-font-medium">
+						<div class="color-open-regular">
+							¿Deseas que te notifiquemos cuando el producto esté <b>disponible de nuevo</b>?
+						</div>
+						<br>
 
+						<input type="button" class="buttom-open-bold" value="Deseo ser notificado" name="modal" href="#modal-register-product">
 
+					</div>
+					<div class="color-font-bottom">
+						<div class="text-left-bottom">
+							<b>¿Dudas?</b> contáctanos en cualquiera de nuestros canales.
+						</div>
+						<div class="icon-right-bottom">
+							<img src="{$img_dir}Lineas.jpg"  id="contact-lap" style="cursor:pointer;">
+                                                        <a href="{$base_dir}contactenos" class="txt-gray link"><img src="{$img_dir}Contacto.jpg" id="img1"></a>
+                                                        <a href="https://secure.livechatinc.com/licence/6077601/open_chat.cgi?groups=4" target="_blank"><img src="{$img_dir}Chat.jpg" id="img1"></a>
+                                                        <img src="{$img_dir}wasap.jpg" id="contact-lap" style="cursor:pointer;">
+						</div>
+					</div>
+				</div>
+			</div>
 
-	</div>
+                   <div id="modal-register-product" class="farma-modal">
+                    <div class="modal-content">
+                      <div class="close-x modal-close"><span class="exit">&times;</span></div>
+                      <div class="modal-table">                          
+                        <div class="modal-table-cell"><img src="{$img_dir}Ok_lightbox_confirmacion.jpg" class="icon-ligh"></div>
+                        <div class="modal-table-cell modal-title">Déjanos tus datos de <br> contacto</div>
+                      </div>
+                      <div class="body-modal">
+                        <form id="form-modal" method="post" action="{$base_dir_ssl}ajaxs/ajax_customer_product.php">
+                          <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Tu nombre" />
+                            <div class="error form-error" id="error_name">
+                              Olvidaste ingresar tu nombre
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="mail@ejemplo.com" />
+                            <div class="error form-error" id="error_email">
+                              Olvidaste ingresar tu correo electrónico
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="telefono">Número teléfonico</label>
+                            <input type="text" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'');" class="form-control" id="telefono" name="telefono" placeholder="Fijo o celular" />
+                            <div class="error form-error" id="error_telefono">
+                              Olvidaste ingresar tu número telefónico
+                            </div>
+                          </div>
+                           <input type="hidden" id="product" name="product" value="{$product->id}"/>
+                          <input type="submit" class="enviar-form" id="enviar" name="Enviar" value="Enviar"/>
+                          
+                        </form>
+                      </div>
+                        
+                      <div class="response-modal" id="modal-thanks">
+                        <div class="header-response-modal">
+                          <div class="modal-table-cell"><img src="{$img_dir}Ok-lightbox-confirmacion-2.jpg" id="ok_img"></div>
+                          <div class="modal-table-cell modal-title">Tus datos se <br>registraron con <span class="response-title"> éxito.</span>  </div>
+                        </div>
+                        <div  class="message-response">
+                          <span class="message-alert"> Hemos creado una alerta en nuestro sistema que te notificará automáticamente cuando el producto</span>
+                        </div>
+                        <div  class="message-response">
+                            <span class="img-modal-r"> {$product->name} </span>
+                        </div>
+                        <div  class="message-response">
+                          <img class="img-product-m" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'medium_default')}"/>
+                        </div>
+                        <div class="message-response">  
+                          <span class="message-alert"> esté disponible de nuevo en nuestro catálogo </span>
+                        </div>
+                        <div class="message-response"> 
+                          <span class="message-mod">Gracias por confiar en nosotros</span>
+                        </div>
+                        <button type="button" class="modal-close enviar-form" id="Cerrar" style=" margin-top: 25px !important">Cerrar</button>
+                      </div>
+                        {/if} 
+                    </div>
+                  </div>                  
+
 	<!--/product info-->
 
 	{* Contactanos *}

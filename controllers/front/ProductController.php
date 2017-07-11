@@ -94,6 +94,8 @@ class ProductControllerCore extends FrontController
 		}
 		else
 		{
+                        $reasonProduct = $this->getStatusTypeReason($this->product->id);
+                        
 			$this->canonicalRedirection();
 			/*
 			 * If the product is associated to the shop
@@ -101,7 +103,7 @@ class ProductControllerCore extends FrontController
 			 * allow showing the product
 			 * In all the others cases => 404 "Product is no longer available"
 			 */
-			if (!$this->product->isAssociatedToShop() || !$this->product->active)
+			if (!$this->product->isAssociatedToShop() || (!$this->product->active && count($reasonProduct) == 0))
 			{
 				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
 				{
@@ -144,6 +146,9 @@ class ProductControllerCore extends FrontController
 			}
 			else
 			{
+                                $this->product->motivo = $reasonProduct[0]['motivo'];
+                                $this->product->motivo_name = $reasonProduct[0]['motivo_name'];
+                                
 				// Load category
 				if (isset($_SERVER['HTTP_REFERER'])
 					&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
@@ -332,6 +337,17 @@ class ProductControllerCore extends FrontController
 
 		$this->context->smarty->assign('errors', $this->errors);
 		$this->setTemplate(_PS_THEME_DIR_.'product.tpl');
+	}
+        
+        public function getStatusTypeReason($id_product) {
+		$sql = 'SELECT product_black.motivo, product_shop.*, black_motivo.name AS motivo_name
+                                FROM ps_product_shop product_shop
+				INNER JOIN ps_product_black_list product_black ON (product_black.id_product = product_shop.id_product)
+                                LEFT JOIN ps_black_motivo black_motivo ON black_motivo.id_black_motivo = product_black.motivo
+				WHERE product_shop.`active` = IF(product_black.motivo = 1 OR product_black.motivo = 10,  0,  1)
+				AND product_shop.id_product = '.$id_product;
+		$resultado=Db::getInstance()->executeS($sql);
+		return $resultado;
 	}
 
 	/**
