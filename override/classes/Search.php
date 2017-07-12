@@ -163,7 +163,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		    	pg_close($dbconn4);
 		    	$conn_open = 0;
 			}
-
+                        $productBlackList = Configuration::get('PRODUCT_BLACK_LIST_SHOW');
 			$sql = "SELECT DISTINCT p.id_product, pl.name pname, cl.name cname, cl.link_rewrite crewrite, pl.link_rewrite prewrite, position2.peso, IF(position2.porc = 100 ,".$reference_load.",0) AS ref_fnd, GROUP_CONCAT(DISTINCT im.id_image SEPARATOR ',') AS imgs, p.id_tax_rules_group AS taxgr, t.rate,
 				CASE p.id_tax_rules_group
 					WHEN 0 THEN ROUND(p.price,0)
@@ -171,9 +171,10 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 					END
 					AS price
 				FROM ps_product p
-				INNER JOIN ps_product_lang pl ON (p.active = 1 AND p.id_product = pl.id_product AND pl.id_lang = 1 AND pl.id_shop = 1  )
-				INNER JOIN ps_product_shop product_shop ON ( product_shop.active = 1 AND product_shop.visibility IN ('both', 'search')
-									AND product_shop.indexed = 1 AND product_shop.id_product = p.id_product AND product_shop.id_shop = 1 )
+                                LEFT JOIN ps_product_black_list product_black ON (product_black.id_product = p.id_product)
+				INNER JOIN ps_product_lang pl ON (p.active = IF(product_black.motivo IN (".$productBlackList."),  0,  1) AND p.id_product = pl.id_product AND pl.id_lang = 1 AND pl.id_shop = 1  )
+				INNER JOIN ps_product_shop product_shop ON ( product_shop.active = IF(product_black.motivo IN (".$productBlackList."),  0,  1) AND product_shop.visibility IN ('both', 'search')
+									AND product_shop.indexed = IF(product_black.motivo IN (".$productBlackList."),  0,  1) AND product_shop.id_product = p.id_product AND product_shop.id_shop = 1 )
 				INNER JOIN ps_category_lang cl ON ( product_shop.id_category_default = cl.id_category AND cl.id_lang = 1 AND cl.id_shop = 1  )
 				INNER JOIN tmp_search_".$alenum." position2 ON ( position2.id_product = p.id_product)
 				LEFT JOIN `ps_tax_rule` tr ON (product_shop.id_tax_rules_group = tr.id_tax_rules_group AND tr.id_tax != 0)
