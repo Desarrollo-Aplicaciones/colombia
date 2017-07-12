@@ -457,25 +457,27 @@ class AdminOrdersController extends AdminOrdersControllerCore
 							if($order->current_state == 22) {
 								$server = $this->getEnvironmentSmartQuick(); 
 								//$fechaHora = $order->delivery_date;
-								//$fechaHora = $this->getDateTimeDeliveryCart($order->id);
-								
-								//if(!empty($fechaHora['time_delivery'])) {
-								//	$time_delivery = $fechaHora['time_delivery'];
-								//} else {
-									$time_delivery = date("H:i:s");
-								//}
+								$fechaHora = $this->getDateTimeDeliveryCart($order->id);
+           
+                                                                if(!empty($fechaHora['time_delivery'])) {
+                                                                    $time_delivery = $fechaHora['time_delivery'];
 
-								//if(!empty($fechaHora['date_delivery'])) {
-								//	$date_delivery = $fechaHora['date_delivery'];
-								//} else {
-									$date_delivery = date("Y-m-d");
-								//}
+                                                                } else {
+                                                                    $time_delivery = date("H:i" ,(strtotime ("+ 3 hours")));
+
+                                                                }
+                                                                if(!empty($fechaHora['date_delivery'])) {
+                                                                    $date_delivery = $fechaHora['date_delivery'];
+
+                                                                } else {
+                                                                    $date_delivery = date("Y-m-d");
+                                                                } 
 
 								$hora = strtotime($time_delivery);
 								$hora = date("Hi", $hora);
 								
 								$fecha = strtotime($date_delivery);
-								$fecha = date("Y-m-d", $fecha);
+                                                                $fecha = date("Y-m-d", $fecha);
 
 								$resultStateOrder = $this->validateStateOrderUpdate($order->id);
 
@@ -850,22 +852,23 @@ public function postProcess()
 						$ccDelivery = explode("@",$getOrderDelivery['email']);
 						$this->generateLogSmartQuickFarmalisto("ID estado: ".$order_state->id.' -> Documento mensajero: '.count($ccDelivery));
 						
-						//$fechaHora = $this->getDateTimeDeliveryCart($order->id);
-								
-						//if(!empty($fechaHora['time_delivery'])) {
-						//	$time_delivery = $fechaHora['time_delivery'];
-						//} else {
-							$time_delivery = date("H:i:s");
-						//}
+						$fechaHora = $this->getDateTimeDeliveryCart($order->id);
+           
+                                                if(!empty($fechaHora['time_delivery'])) {
+                                                    $time_delivery = $fechaHora['time_delivery'];
 
-						//if(!empty($fechaHora['date_delivery'])) {
-						//	$date_delivery = $fechaHora['date_delivery'];
-						//} else {
-							$date_delivery = date("Y-m-d");
-						//}
+                                                } else {
+                                                    $time_delivery = date("H:i" ,(strtotime ("+ 3 hours")));
 
-						$hora = strtotime($time_delivery);
-						$hora = date("Hi", $hora);
+                                                }
+                                                if(!empty($fechaHora['date_delivery'])) {
+                                                    $date_delivery = $fechaHora['date_delivery'];
+
+                                                } else {
+                                                    $date_delivery = date("Y-m-d");
+                                                } 
+                                                $hora = strtotime($time_delivery);
+                                                $hora = date("Hi", $hora);
 						
 						$fecha = strtotime($date_delivery);
 						$fecha = date("Y-m-d", $fecha);
