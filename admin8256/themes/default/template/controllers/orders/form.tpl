@@ -452,6 +452,8 @@
 			$("#add-cart").show();
 			$("#hide-product").hide();
 			$("#hide-product").html('');
+      var reservados = 0;
+		var disponibles = 0;
 
 			if ($('#ipa_' + id_product + ' option').length)
 				var id_product_attribute = $('#ipa_' + id_product).val();
@@ -459,13 +461,8 @@
 				var id_product_attribute = 0;
 			
 			$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
-
-		} else {
-			
-			$("#add-cart").hide();
-			$("#hide-product").show();
-			$("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+motivo[id_product]+'</b></div>');
-                        
+		$('#qty_in_restock').html(parseInt(restock[id_product][id_product_attribute]));
+		$('#qty_in_disstock').html(disponibles);
 		}
 
 	}
@@ -713,6 +710,7 @@
 				var customization_html = '';
 				stock = {};
 				motivo = {};
+        restock ={};
 
 				if(res.found)
 				{
@@ -730,18 +728,13 @@
 					attributes_html += '<label>{l s='Combination'}</label>';
 					$.each(res.products, function() {
 
-                                                //console.log("price: "+this.unit_price_te+" wholes: "+this.wholesale_price)
-                                                var resultado= this.wholesale_price - this.unit_price_te; 
-                                                var Division = resultado / this.unit_price_te;
-                                                var Percentage = 100;
-                                                var profit = Division * Percentage;
-
-                                                products_found += '<option '+(this.active == 0 ? 'style="color:#EA6074; font-weight: bold;"' : '')+' '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
+                        products_found += '<option '+(this.active == 0 ? 'style="color:#EA6074; font-weight: bold;"' : '')+' '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
 						motivo[id_product] = this.motivo_name;
-                                                
+                        restock[id_product] = new Array();
+                              
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
@@ -764,11 +757,11 @@
 							customization_html += '</fieldset></form>';
 						}
 						$.each(this.combinations, function() {
-							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'  '+this.gmc+'</option>';
+							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
 						stock[this.id_product][0] = this.stock[0];
-
+						restock[this.id_product][0] = this.reserve;
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
@@ -828,9 +821,6 @@ $('#products_err').html('{l s='No products found'}');
 	}
 	function display_product_attributes()
 	{
-{*    console.log("Longitud D: ");*}
-    var va = $('#id_product option:selected').val();
-{*    console.log(va);*}
 		if ($('#ipa_'+$('#id_product option:selected').val()+' option').length === 0)
 			$('#attributes_list').hide();
 		else
@@ -1329,9 +1319,8 @@ $('#products_err').html('{l s='No products found'}');
 			</iframe>
 			<div id="add-cart">
 				<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
-
-				</p>
-                                
+			<b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
+			<b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span></p>
 				<div class="margin-form">
 					<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
 				</div>
