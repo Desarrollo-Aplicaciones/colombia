@@ -219,7 +219,7 @@ class serverWsPs extends FrontController {
                 'id_order' => $this->context->smarty->tpl_vars['order']->value->id,
                 'reference' => $this->context->smarty->tpl_vars['order']->value->reference);
                               
-            // se crea la relación entre el empleado y la orden
+            // se crea la relaciï¿½n entre el empleado y la orden
               $emp_data=Utilities::get_data_employee($this->array_obj['id_employee']);
               Utilities::add_message($this->context->cart->id,$this->array_obj['content']['id_customer'], $emp_data['id_employee'] , $this->context->smarty->tpl_vars['order']->value->id ,"Pedido Sugar -- ".$emp_data['firstname'].' '.$emp_data['lastname'],1,$this->context->smarty->tpl_vars['order']->value->date_add);
         } catch (Exception $exc) {
@@ -313,7 +313,7 @@ public function sync_tracker($_array_obj){
             switch ($_array_obj['entity']) {
             case 'customer':
                 /*
-                 * Validar parametros de sincronización de customer
+                 * Validar parametros de sincronizaciï¿½n de customer
                  */
                 if (!empty($module_cd)&& !empty($key1) && !empty($value1) && !empty($key2) && !empty($value2) && !empty($modifiedtime) ) {
                     $obj_sync_tracker= new Sync_tracker();
