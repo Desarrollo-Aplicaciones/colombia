@@ -138,8 +138,6 @@
             		url  : "{$currentIndex}&id_order={$order->id}&vieworder&token={$smarty.get.token}&ajax&option_jax=opciones_cancelacion",
             		type : 'GET'  
                 	}).done(function(data, status, xhr){
-                  console.log(data);
-                  console.log($.parseJSON(data));
 	                	var json = $.parseJSON(data);
                    			 	
                    			 	 			$("#target_opciones").html(json.results);
@@ -214,7 +212,7 @@ function aplicar_cancelacion(){
           
 
 $(".fancybox").fancybox();
-{*console.log(jQuery.fn.jquery);*}
+console.log(jQuery.fn.jquery);
 /* mostrar lista de operarios y empresas de transporte  */
     $('input[type=radio][name=tipo_transportador]').change(function() {
 

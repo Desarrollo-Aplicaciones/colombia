@@ -803,7 +803,6 @@
 		 		$_deviceSessionId = md5($context->cookie->timestamp);
 		 	}
 
-
 		 	$total_tax = self::get_total_tax((int)$args['id_cart']);
 
 		 	$data = '{

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * 2007-2013 PrestaShop
  *
@@ -24,11 +23,8 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 class AdminOrdersController extends AdminOrdersControllerCore {
-
   protected $extra_vars_tpl = array();
-
   public function __construct() {
     $this->table = 'order';
     $this->className = 'Order';
@@ -137,7 +133,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     AdminController::__construct();
   }
-
   public function printPDFIcons($id_order, $tr) {
     $order = new Order($id_order);
     $order_state = $order->getCurrentOrderState();
@@ -163,7 +158,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     ));
     return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
   }
-
   /**
    * [removeProductsOrder description]
    * @param  [type] $id_order [description]
@@ -173,7 +167,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     $loggin = new Registrolog();
     $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "Ingreso Eliminar ICR de la Orden: " . $id_order . " - empleado:" . $this->context->employee->id);
     if ($this->addProductStock($id_order)) {
-
       $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "Si se actualizo stock ");
       $query = "SELECT  picking.id_order_picking, id_icr 
 			FROM ps_icr icr 
@@ -200,7 +193,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "Query delete: " . $query_2);
           $query_3 = "UPDATE ps_icr SET id_estado_icr=2 WHERE id_icr IN ('" . implode("','", $array_icr) . "')";
           $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "Query Update: " . $query_3);
-
           if ($results = Db::getInstance()->Execute($query_2) && $results3 = Db::getInstance()->Execute($query_3)) {
             $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "ICR actualizados ");
             return true;
@@ -240,7 +232,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "Query delete: " . $query_2);
           $query_3 = "UPDATE ps_icr SET id_estado_icr=2 WHERE id_icr IN ('" . implode("','", $array_icr) . "')";
           $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "Query Update: " . $query_3);
-
           if ($results = Db::getInstance()->Execute($query_2) && $results3 = Db::getInstance()->Execute($query_3)) {
             $loggin->lwrite("AdminOrdersController", "remover_productos.txt", "ICR actualizados ");
             return true;
@@ -256,7 +247,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false;
   }
-
   public function initToolbar() {  //exit('<pre>'.print_r($this->context->cookie->{'id_employee'},true));
     // procesamiento de peticiones ajax 
     $this->processAjax();
@@ -269,7 +259,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       else
         $type = $this->l('Cancel products');
       if (Configuration::get('PS_ORDER_EDIT') == '1') {
-
         if (!$order->hasBeenShipped() && !$this->lite_display) {
           $this->toolbar_btn['new'] = array(
           'short' => 'Create',
@@ -286,7 +275,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           'class' => 'process-icon-standardRefund'
           );
         }
-
         if ($order->hasInvoice() && !$this->lite_display) {
           $this->toolbar_btn['partial_refund'] = array(
           'short' => 'Create',
@@ -302,12 +290,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       unset($this->toolbar_btn['new']);
     return $res;
   }
-
   public function getEnvironmentSmartQuick() {
     $sql = 'SELECT  value, name FROM ps_configuration WHERE name="PS_URL_TEST_SQ"
 		 OR name="PS_URL_PROD_SQ" OR name="PS_ENVIRONMENT"';
     $results = Db::getInstance()->ExecuteS($sql);
-
     $nameUrl = "";
     $urlSq = "";
     if (count($results) > 0) {
@@ -323,7 +309,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return $urlSq;
   }
-
   public function generateLogSmartQuickFarmalisto($data) {
     if ($archivo = fopen(_ROUTE_FILE_."/ordenes/logs_crear_guia_smartQuick_farmalisto.txt", "a")) {
       if (fwrite($archivo, date("d m Y H:i:s") . " -> " . $data . "\n")) {
@@ -331,11 +316,9 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       } else {
         //echo "Ha habido un problema al crear el archivo";
       }
-
       fclose($archivo);
     }
   }
-
   public function getDaneCities($cities) {
     $query = "SELECT  dane
 			FROM ps_cities_col
@@ -344,7 +327,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       return $results[0]['dane'];
     }
   }
-
   public function getDateTimeDeliveryCart($id_order) {
     $sql = 'select car.date_delivery, car.time_delivery 
     	from ps_orders ord INNER JOIN ps_cart car ON(ord.id_cart=car.id_cart) 
@@ -353,7 +335,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       return $results[0];
     }
   }
-
   public function processAjax() {
     date_default_timezone_set('America/Bogota');
     // /admin8256/index.php?controller=AdminOrders&id_order=16330&vieworder&token=3356a854ebecbf64da66b8ec2cc38c3f&ajax&option_jax=transportador_fm
@@ -406,7 +387,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $hora = strtotime($time_delivery);
             $time_delivery = date("Hi", $hora);
             //print_r($time_delivery);
-
             
             
             $fecha = strtotime($date_delivery);
@@ -416,16 +396,12 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $ccDelivery = explode("@", $getOrderDelivery['email']);
             if (count($resultStateOrder) > 0 && !empty($resultStateOrder[0]['id_order_state'])) {
                               //print_r($resultStateOrde);                  exit();
-
               if ($resultStateOrder[0]['id_order_state'] == 19 && $order->current_state == 22) {
                   
                  $url_insercion = $server . '/restfarmalisto/servicio_rest/MantieneReceptor/actualizar_guia/' . $order->id . '/' . $fecha . '/' . $hora . '/SIN_CARGAR//' . $ccDelivery[0];
-
                 $this->generateLogSmartQuickFarmalisto("Url servicio: " . $url_insercion);
                 $result = json_decode(file_get_contents($url_insercion));
-
                 $this->generateLogSmartQuickFarmalisto("Resultado servicio: " . json_encode($result));
-
                 if ($result->status != 'OK') {
                   $errorSmart = "error";
                 } else {
@@ -433,10 +409,8 @@ class AdminOrdersController extends AdminOrdersControllerCore {
                 }
               }
             } else {
-
               $customer = new Customer($order->id_customer);
               $address = new Address($order->id_address_delivery);
-
               //$server='181.49.224.186';
               $pedido = urlencode($order->id);
               $fecha_entrega = urlencode($fecha); // Puede ser enviado con o sin guiones;
@@ -455,7 +429,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
        // print_r($url_insercion);
               $this->generateLogSmartQuickFarmalisto("Url Servicio: " . $url_insercion);
               $result = json_decode(file_get_contents($url_insercion));
-
               $this->generateLogSmartQuickFarmalisto("Resultado servicio: " . json_encode($result));
               if ($result->status != 'OK') {
                 $errorSmart = "error";
@@ -502,12 +475,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           if ($_GET['opcion_cancelacion'] != 4) {
             $order = new Order($this->id_object);
             $product_list = $order->getProducts();
-
             foreach ($product_list as $product) {
               $sql_reserve = 'SELECT reserve_on_stock FROM ' . _DB_PREFIX_ . 'stock_available_mv
               WHERE id_product = ' . $product['product_id'];
               $resultReserve = Db::getInstance()->executeS($sql_reserve);
-
               $newReserveOnStock = $resultReserve[0]['reserve_on_stock'] - $product['product_quantity_in_stock'];
               if ($newReserveOnStock < 0) {
                 $newReserveOnStock = 0;
@@ -517,7 +488,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               WHERE id_product = ' . $product['product_id'];
               Db::getInstance()->executeS($sql_new_reserve);
             }
-
             $template_vars['{firstname}'] = $this->context->customer->firstname;
             $template_vars['{lastname}'] = $this->context->customer->lastname;
             $template_vars['{order_name}'] = $order->reference;
@@ -535,7 +505,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       }
     }
   }
-
   protected function getListIcrs($array) {
     $sql = 'SELECT  	s_order_d.reference,s_order_d.`name`,icr.cod_icr
 					FROM ps_orders orders 
@@ -551,7 +520,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false;
   }
-
   protected function opciones_cancelacion() {
     $sql = 'SELECT id_motivo_cancelacion,nombre FROM
 			ps_motivo_cancelacion
@@ -562,7 +530,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false;
   }
-
   protected function save_opcion_cancelacion($array) {
     if (isset($array['opcion_cancelacion']) && isset($this->context->employee->id) && isset($array['id_order']) && (int) $array['opcion_cancelacion'] > 0 && (int) $this->context->employee->id > 0) {
       $sql = "INSERT INTO `" . _DB_PREFIX_ . "order_motivo_cancelacion` (`id_motivo_cancelacion`, `id_order`, `id_employee`, `comentario`, `motivo_personalizado`, `fecha`) 
@@ -572,14 +539,12 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return FALSE;
   }
-
   public function logtxt($text = "") {
     //$contenido="-- lo que quieras escribir en el archivo -- \r\n";
     $fp = fopen(_ROUTE_FILE_."/log_payu/log_order_cambio.txt", "a+");
     fwrite($fp, $text . "\r\n");
     fclose($fp);
   }
-
     public function validateStateOrderUpdate($id_order) {
     $sql = "SELECT o.id_order, o.current_state, ohh.id_order_state, ohh.date_add
 				FROM ps_orders o
@@ -590,7 +555,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false;
   }
-
   public function postProcess() {
     date_default_timezone_set('America/Bogota');
     if (Tools::isSubmit('submitReport')) {
@@ -600,7 +564,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     if (Tools::isSubmit('id_order') && Tools::getValue('id_order') > 0) {
       $order = new Order(Tools::getValue('id_order'));
       //$this->logtxt ('linea 373 '.print_r($order,true));
-
       if (!Validate::isLoadedObject($order))
         throw new PrestaShopException('Can\'t load Order object');
       ShopUrl::cacheMainDomainForShop((int) $order->id_shop);
@@ -665,12 +628,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $history = new OrderHistory();
             $history->id_order = $order->id;
             $history->id_employee = (int) $this->context->employee->id;
-
             $errorSmart = null;
             $getOrderDelivery = $this->get_mensajero_order($order->id);
             $ccDelivery = explode("@", $getOrderDelivery['email']);
             $this->generateLogSmartQuickFarmalisto("ID estado: " . $order_state->id . ' -> Documento mensajero: ' . count($ccDelivery));
-
             $fechaHora = $this->getDateTimeDeliveryCart($order->id);
             if(!empty($fechaHora['time_delivery'])) {
             	$time_delivery = $fechaHora['time_delivery'];
@@ -685,7 +646,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $hora = strtotime($time_delivery);
             $hora = date("Hi", $hora);
            // print_r($hora);
-
             $fecha = strtotime($date_delivery);
             $fecha = date("Y-m-d", $fecha);
             $resultStateOrder = $this->validateStateOrderUpdate($order->id);
@@ -695,7 +655,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
                 $url_insercion = $server . '/restfarmalisto/servicio_rest/MantieneReceptor/actualizar_guia/' . $order->id . '/' . $fecha . '/' . $hora . '/SIN_CARGAR//NINGUNO';
                 $this->generateLogSmartQuickFarmalisto("Url servicio: " . $url_insercion);
                 $result = json_decode(file_get_contents($url_insercion));
-
                 $this->generateLogSmartQuickFarmalisto("Resultado servicio: " . json_encode($result));
                 if ($result->status != 'OK') {
                   $errorSmart = "&smart=false";
@@ -705,10 +664,8 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               }
             } else {
               if ($order_state->id == 22 && count($ccDelivery) > 1) {
-
                 $customer = new Customer($order->id_customer);
                 $address = new Address($order->id_address_delivery);
-
                 //$server='181.49.224.186';
                 $pedido = urlencode($order->id);
                 $fecha_entrega = urlencode($fecha); // Puede ser enviado con o sin guiones;
@@ -722,12 +679,9 @@ class AdminOrdersController extends AdminOrdersControllerCore {
                 $doc_mensajero = urlencode($ccDelivery[0]);
                 $total_paid = urlencode($order->total_paid);
                 $payment = urlencode($order->payment);
-
                 $url_insercion = $server . '/restfarmalisto/servicio_rest/MantieneReceptor/insertar_visita/' . $pedido . '/' . $fecha_entrega . '/' . $hora_entrega . '/' . $ciudad . '/' . $direccion . '/' . $doc_cliente . '/' . $nom_cliente . '/' . $telefono . '/' . $observacion . '/' . $doc_mensajero . '/' . round($total_paid) . '/' . $payment;
-
                 $this->generateLogSmartQuickFarmalisto("Url servicio: " . $url_insercion);
                 $result = json_decode(file_get_contents($url_insercion));
-
                 $this->generateLogSmartQuickFarmalisto("Resultado servicio: " . json_encode($result));
                 if ($result->status != 'OK') {
                   $errorSmart = "&smart=false";
@@ -742,13 +696,11 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $this->logtxt('linea 462 ' . print_r($order, true));
             $history->changeIdOrderState((int) $order_state->id, $order, $use_existings_payment);
             error_log("\n\n Paso por aqui fofio..!! " . print_r($order_state->id, true), 3, "/tmp/states.log");
-
             $products = $this->getProducts($order);
             $flagOutStock = false;
             foreach ($products as &$product) {
               $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
               //error_log("\n\n Paso por aqui fofio..!! ",3,"/tmp/states.log");
-
               if (Configuration::get('PS_STOCK_MANAGEMENT') && $product['current_stock'] < $product['product_quantity'] && $order_state->id == 3) {
                 $flagOutStock = true;
               }
@@ -947,15 +899,12 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           $productList = Tools::getValue('id_order_detail');
           if ($productList)
             $productList = array_map('intval', $productList);
-
           $customizationList = Tools::getValue('id_customization');
           if ($customizationList)
             $customizationList = array_map('intval', $customizationList);
-
           $qtyList = Tools::getValue('cancelQuantity');
           if ($qtyList)
             $qtyList = array_map('intval', $qtyList);
-
           $customizationQtyList = Tools::getValue('cancelCustomizationQuantity');
           if ($customizationQtyList)
             $customizationQtyList = array_map('intval', $customizationQtyList);
@@ -1000,7 +949,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
                 $order_detail = new OrderDetail((int) ($id_order_detail));
                 if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $qty_cancel_product > 0)
                   $this->reinjectQuantity($order_detail, $qty_cancel_product);
-
                 // Delete product
                 $order_detail = new OrderDetail((int) $id_order_detail);
                 if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
@@ -1149,7 +1097,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       $query_update_employee = "UPDATE ps_cart
                     SET id_employee = " . (int) Context::getContext()->cookie->id_employee . "
                     WHERE id_cart = " . (int) $id_cart;
-
       if ($this->tabAccess['edit'] === '1') {
         $payment_module = Module::getInstanceByName($module_name);
         $cart = new Cart((int) $id_cart);
@@ -1158,7 +1105,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
         $employee = new Employee((int) Context::getContext()->cookie->id_employee);
         $cod_pagar = Tools::getValue('cod_pagar');
         $private_message = stripslashes(Tools::getValue('private_message'));
-
         if ($payment_module->validateOrder(
         (int) $cart->id, (int) $id_order_state, $cart->getOrderTotal(true, Cart::BOTH), !empty($cod_pagar) ? $cod_pagar : $payment_module->displayName, $this->l('Manual order -- Employee:') .
         substr($employee->firstname, 0, 1) . '. ' . $employee->lastname, array(), null, false, $cart->secure_key, null, $private_message
@@ -1174,26 +1120,20 @@ class AdminOrdersController extends AdminOrdersControllerCore {
         Address::update_date_delivered();
         if ($payment_module->currentOrder) {
           // Genrenando el descuento de los reservados en el stock
-
           $sql = new DbQuery();
           $sql->select('pp.id_product, pp.quantity');
           $sql->from('orders', 'po');
           $sql->leftJoin('cart_product', 'pp', 'po.id_cart = pp.id_cart');
           $sql->where('po.id_cart = ' . pSQL($id_cart));
-
           $result = Db::getInstance()->executeS($sql);
-
           foreach ($result as $row) {
             $sql = new DbQuery();
             $sql->select('s.quantity, s.reserve_on_stock');
             $sql->from('stock_available_mv', 's');
             $sql->where('s.id_product = ' . pSQL($row['id_product']));
-
             $result2 = Db::getInstance()->executeS($sql);
             if (isset($result2[0])) {
-
               if ($result2[0]['quantity'] > 0) {
-
                 $newReserveOnStock = $result2[0]['reserve_on_stock'] + $row['quantity'];
                 $sql_new_reserve = 'UPDATE ' . _DB_PREFIX_ . 'stock_available_mv
 	                                        SET reserve_on_stock = ' . $newReserveOnStock . '
@@ -1202,13 +1142,11 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               }
             }
           }
-
           Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $payment_module->currentOrder . '&vieworder' . '&token=' . $this->token);
         }
       } else
         $this->errors[] = Tools::displayError('You do not have permission to add this.');
     }
-
     elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order)) {
       if ($this->tabAccess['edit'] === '1') {
         $address = new Address(Tools::getValue('id_address'));
@@ -1232,7 +1170,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           if (!Validate::isLoadedObject($currency))
             throw new PrestaShopException('Can\'t load Currency object');
           // Update order detail amount
-
           foreach ($order->getOrderDetailList() as $row) {
             $order_detail = new OrderDetail($row['id_order_detail']);
             $fields = array(
@@ -1305,7 +1242,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       } else
         $this->errors[] = Tools::displayError('You do not have permission to edit this.');
     } elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order)) {
-
       if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop))
         $this->errors[] = Tools::displayError('Invoice management has been disabled.');
       elseif ($order->hasInvoice())
@@ -1495,11 +1431,9 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     parent::postProcess();
   }
-
   public function generarReporteDetallado() {
     Utilities::exportDetailReport();
   }
-
   public function getNameStatusOrder($id_state_order) {
     $query = "	select conf.`name` 
 					from ps_order_state_lang o_state_l
@@ -1512,9 +1446,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false;
   }
-
   public function addProductStock($id_order) {
-
     $query = "SELECT  s_order_d.id_product , COUNT(s_order_d.id_product) as cantidad,so.id_warehouse,s_order_d.unit_price_te,s_order_d.id_supply_order
 			FROM ps_orders orders 
 			INNER JOIN ps_order_detail orders_d ON( orders.id_order= orders_d.id_order)
@@ -1525,13 +1457,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
 			INNER JOIN  ps_supply_order so ON( so.id_supply_order = s_order_d.id_supply_order )
 			WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_order . " 
 			GROUP BY so.id_warehouse,s_order_d.id_product;";
-
     if ($results = Db::getInstance()->ExecuteS($query)) {
       $stock_manager = StockManagerFactory::getManager();
-
       foreach ($results as $value) {
         $warehouse = new Warehouse($value['id_warehouse']);
-
         $id_stock_mvt_reason = Configuration::get('PS_STOCK_MVT_INC_REASON_DEFAULT');
         $usable = true;
         if ($stock_manager->addProduct($value['id_product'], 0, $warehouse, $value['cantidad'], $id_stock_mvt_reason, $value['unit_price_te'], $usable)) {
@@ -1542,7 +1471,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false;
   }
-
   function parse_classname($name) {
     return array('classname' => join('', array_slice(explode('\\', $name), -1)));
     /// ----> Dynamically create PHP object based on string
@@ -1558,7 +1486,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     //$reflection = new ReflectionClass($classname);
     //$object = $reflection->newInstanceArgs($args);
   }
-
   /**
    * Valida el estado de una orden de la lista
    */
@@ -1596,16 +1523,13 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return $array;
   }
-
   /*
    *  valida el estado de una orden de salida y los estados que dependen de esta
    * 
    */
-
   protected function statusOrder($OrderStates, $select) {
     $array = array();
     $array['detener_estado'] = 'false';
-
     $query = "SELECT 	confdes.`value`,
                         estado.`name`,
                         confdes.`name` as status_name, 
@@ -1659,12 +1583,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     //error_log("Este es array FINAL: ".print_r($array, true),3, "/tmp/states.log" );
     return false;
   }
-
   public static function complemento_estado($id_profile) {
     $complement = Profile::getProfile($id_profile);
     $estado = Configuration::get('ps_complemento_estado');
     $array = explode(",", $estado);
-
     foreach ($array as $key => $value) {
       //echo "<br>---".$complement['name']. "_-".$value;
       if (strpos(strtolower($complement['name']), strtolower($value)) !== FALSE) {
@@ -1673,7 +1595,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return ('');
   }
-
   /**
    * Validación de condiciones 
    */
@@ -1701,7 +1622,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       } */
     return $array_errors;
   }
-
   /**
    * Valida una condición asociada a estado de orden 
    */
@@ -1729,12 +1649,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return true; // si todas las condiciones son verdaderas              
   }
-
   /**
    * valida si una orden tiene asociado un mensajero de envió o una empresa transportadora
    */
   protected function is_sassociate_carrier_order($id_order = NULL) {
-
     if ($id_order == NULL) {
       $id_order = $this->id_object;
     }
@@ -1749,16 +1667,13 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false; // en cualquier otro caso se retorna falso.
   }
-
   /*
     Valida si una orden de salida tiene todos los ICRS asociados.
    */
-
   public function ordenCompleta($id_order = NULL) {
     if ($id_order == NULL) {
       $id_order = $this->id_object;
     }
-
     $query = "SELECT 'NO' in
                         (SELECT if(t1.car_cantidad=t2.ord_total,'SI','NO') as completo
 			FROM
@@ -1776,17 +1691,13 @@ class AdminOrdersController extends AdminOrdersControllerCore {
 					WHERE icr.id_estado_icr=3 and orders.id_order=" . $id_order . " and orders.id_order>1813
 					GROUP BY s_order_d.id_product) as t1
                                         ON(t1.car_id_product=t2.ord_product_id)) as incompleta";
-
     if ($results = Db::getInstance()->ExecuteS($query)) {
       if ($results[0]['incompleta'] == 0)
         return true;
     }
-
     return false;
   }
-
   public function transportista($order) {
-
     if (isset($order) && $order->module === 'cashondelivery') {
       $query = " SELECT nombre,`value`FROM
                             ps_transporte_opciones; ";
@@ -1801,11 +1712,9 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       $this->context->smarty->assign(array('opcion_transportador' => FALSE));
     }
   }
-
   /*
    * Almacena la opción de COD Farmalisto
    */
-
   public function opcionTransportista($request) {   //exit(json_encode(array('result'=>$request)));
     if ($this->is_sassociate_carrier_order()) {
       $query = " UPDATE `ps_associate_carrier` SET  `entity`='" . ucwords($request['entity']) . "', `propertis_entity`='{}', `id_entity`=" . (int) $request['id_entity'] . ", `id_employee`=" . $this->context->cookie->{'id_employee'} . ", date_update='" . date('Y-m-d H:i:s') . "', `id_shop`='1' WHERE (`id_order`=" . (int) $this->id_object . ");";
@@ -1818,7 +1727,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       // Insert
       $query = "INSERT INTO `ps_associate_carrier` (`entity`, `id_entity`,  `id_order`,  `date`, `id_shop`,`id_employee`) VALUES ('" . $request['entity'] . "', " . $request['id_entity'] . ", " . (int) $this->id_object . ", '" . date('Y-m-d H:i:s') . "', '1', " . $this->context->cookie->{'id_employee'} . ");";
       //exit(json_encode(array('results' => $query)));
-
       if ($results = Db::getInstance()->ExecuteS($query)) {
         $this->add_sassociate_carrier_history();
         return true;
@@ -1826,14 +1734,12 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return false;
   }
-
   protected function get_sassociate_carrier_order() {
     $sql = "SELECT  ascar.* FROM
 				" . _DB_PREFIX_ . "associate_carrier ascar
 				INNER JOIN " . _DB_PREFIX_ . "orders ordenes ON (ascar.id_order = ordenes.id_order) 
 				WHERE ascar.id_order = " . $this->id;
   }
-
   protected function add_sassociate_carrier_history() {
     $sql = "INSERT INTO `ps_sassociate_carrier_history` (`id_employee`, `id_order`, `log`, `date`) VALUES (" . $this->context->cookie->{'id_employee'} . ", " . (int) $this->id_object . ", '', '" . date('Y-m-d H:i:s') . "');";
     //exit(json_encode(array('results' => $sql)));
@@ -1841,7 +1747,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       return true;
     }
   }
-
   protected function add_smarty_vars($ps_conf_var = NULL, $smarty_var, $order = NULL) {
     if ((isset($this->{'object'}) || !empty($order)) && $ps_conf_var != NULL) {
       $current_state = 0;
@@ -1878,12 +1783,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       }
     }
   }
-
   protected function motivo_cancelcion($order = NULL) {
     $this->add_smarty_vars('PS_OS_CANCELED', 'motivo_cancelcion', $order);
     return TRUE;
   }
-
   protected function get_mensajero_order($id_order) {
     $sql = "SELECT 
 					CASE asoc.entity
@@ -1903,7 +1806,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     return NULL;
   }
-
   public function renderView() {
     $id_order = Tools::getValue('id_order');
     if (!isset($id_order) || empty($id_order)) // Si el id_order no existe en la solicitud se toma del contexto de PS
@@ -1911,7 +1813,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     $order = new Order($id_order);
     if (!Validate::isLoadedObject($order))
       throw new PrestaShopException('object can\'t be loaded');
-
     //error_log("\n\n\nORDER: n".print_r($order,true),3,"/tmp/states.log");
     $order->private_message = addslashes($order->private_message);
     $customer = new Customer($order->id_customer);
@@ -1972,14 +1873,12 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     $flagStockDisplayOption = false;
     foreach ($products as &$product) {
       $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
-
       $resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
       $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
       $product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
       $product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
       $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
       $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
-
       //error_log("\n\n si entro ".print_r($product, true),3,"/tmp/states.log");
       // if the current stock requires a warning
       if ($product['current_stock'] < $product['product_quantity']) {
@@ -2002,19 +1901,13 @@ class AdminOrdersController extends AdminOrdersControllerCore {
         $product['warehouse_name'] = '--';
     }
     $gender = new Gender((int) $customer->id_gender, $this->context->language->id);
-
     //error_log("\n\n Variable display_out_of_stock_warning: ".print_r($display_out_of_stock_warning,true),3,"/tmp/states.log");
-
-
     $estados = $this->statusOrder(OrderState::getOrderStates((int) Context::getContext()->language->id, (int) $this->context->employee->id_profile), $order->current_state);
     $this->fields_list['osname']['list'] = $estados['osname'];
-
     //error_log("\n\n\n\n\n\n\n orderCurrentState: ".print_r($order->getCurrentOrderState(),true),3,"/tmp/states.log");
     //error_log("\n\n Estos son los estados: ".print_r($estados['status_order'],true),3,"/tmp/states.log");
-
     $estadosValidos = explode(",", Configuration::get('PS_STATUS_AFTER_OUTSTOCK'));
     //error_log("\n\n\n\n\n\n\n estadosValidos: ".print_r($estadosValidos,true),3,"/tmp/states.log");
-
     $cart = new Cart($order->id_cart);
     // Smarty assign
     $this->tpl_view_vars = array(
@@ -2073,11 +1966,9 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     $this->get_mensajero_order($this->id_object);
     $this->get_employee_to_cart($order->id_cart);
     $this->tpl_view_vars = array_merge_recursive($this->tpl_view_vars, $this->extra_vars_tpl);
-
     //exit('<pre>'.print_r($this->tpl_view_vars,true));
     return AdminController::renderView();
   }
-
   public function renderForm() {
     $this->context->smarty->assign(Address::horaDeEntrega());
     $this->context->smarty->assign('expressEnabled', Configuration::get('ENVIO_EXPRESS'));
@@ -2119,7 +2010,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     ));
     $this->content .= $this->createTemplate('form.tpl')->fetch();
   }
-
   /**
    * Para mostrar el empleado asociado a un pedido.
    */
@@ -2129,12 +2019,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     	" . _DB_PREFIX_ . "cart c INNER JOIN " . _DB_PREFIX_ . "employee e ON(c.id_employee = e.id_employee)
     	WHERE c.id_cart = " . (int) $id_cart;
     //echo $sql;      
-
     $employee_name = Db::getInstance()->getValue($sql);
     if (isset($employee_name) && !empty($employee_name)) {
       $this->extra_vars_tpl['employee_name'] = $employee_name;
       //echo '<br><br>ENTRA 1<br><br>';   
     }
   }
-
 }

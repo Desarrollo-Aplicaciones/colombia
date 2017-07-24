@@ -1,5 +1,4 @@
 <?php
-
 class AdminProductsController extends AdminProductsControllerCore
 {
 	public function __construct()
@@ -9,18 +8,14 @@ class AdminProductsController extends AdminProductsControllerCore
 		$this->lang = true;
 		$this->explicitSelect = true;
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-
 		if (!Tools::getValue('id_product'))
 			$this->multishop_context_group = false;
-
 		AdminController::__construct();
-
 		$this->imageType = 'jpg';
 		$this->_defaultOrderBy = 'position';
 		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 		$this->allow_export = true;
-
 		// @since 1.5 : translations for tabs
 		$this->available_tabs_lang = array(
 			'Informations' => $this->l('Information'),
@@ -39,7 +34,6 @@ class AdminProductsController extends AdminProductsControllerCore
 			'Suppliers' => $this->l('Suppliers'),
 			'Warehouses' => $this->l('Warehouses'),
 		);
-
 		$this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
 		if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP)
 			$this->available_tabs = array_merge($this->available_tabs, array(
@@ -57,10 +51,8 @@ class AdminProductsController extends AdminProductsControllerCore
 				'Attachments' => 12,
 				'Suppliers' => 13,
 			));
-
 		// Sort the tabs that need to be preloaded by their priority number
 		asort($this->available_tabs, SORT_NUMERIC);
-
 		/* Adding tab if modules are hooked */
 		$modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
 		if (is_array($modules_list) && count($modules_list) > 0)
@@ -69,7 +61,6 @@ class AdminProductsController extends AdminProductsControllerCore
 				$this->available_tabs['Module'.ucfirst($m['module'])] = 23;
 				$this->available_tabs_lang['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
 			}
-
 		if (Tools::getValue('reset_filter_category'))
 			$this->context->cookie->id_category_products_filter = false;
 		if (Shop::isFeatureActive() && $this->context->cookie->id_category_products_filter)
@@ -105,15 +96,11 @@ class AdminProductsController extends AdminProductsControllerCore
 		$join_category = false;
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$join_category = true;
-
-
 //SELECT  @rownum := @rownum + 1 AS rank, id_product from ps_product, ( select @rownum :=0 ) as pepe LIMIT 15;
-
 		$this->_join .= '
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product`) 
 		LEFT JOIN `'._DB_PREFIX_.'stock_available_mv` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
-
 		$alias = 'sa';
 		$alias_image = 'image_shop';
 				
@@ -134,14 +121,12 @@ class AdminProductsController extends AdminProductsControllerCore
 		$this->_select .= 'shop.name as shopname, ';
 		//$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, CONCAT("Inventario:",sav.`quantity`," - Disponible:",(sav.`quantity`-sav.`reserve_on_stock`)) as sav_quantity, '.$alias.'.`active`';
                 $this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`,ROUND(((a.price - sod.unit_price_te) / a.price )*100,2) AS  gmc';
-
 		
 		if ($join_category)
 		{
 			$this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
 			$this->_select .= ' , cp.`position`, ';
 		}
-
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
                 
 		$this->fields_list = array();
@@ -170,7 +155,6 @@ class AdminProductsController extends AdminProductsControllerCore
 			'width' => 80,
 			'filter_key' => 'a!reference'
 		);
-
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$this->fields_list['shopname'] = array(
 				'title' => $this->l('Default shop:'),
@@ -225,7 +209,6 @@ class AdminProductsController extends AdminProductsControllerCore
 			'type' => 'bool',
 			'orderby' => false
 		);
-
 		
                 if ($join_category && (int)$this->id_current_category)
 			$this->fields_list['position'] = array(
@@ -239,14 +222,12 @@ class AdminProductsController extends AdminProductsControllerCore
 //                var_dump($this->fields_list);
 //                echo "</pre>";
 	}
-
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
 	{
 		if( isset($_REQUEST) && isset($_REQUEST['productOrderby']) && $_REQUEST['productOrderby'] == 'quantity')  {
 			$_REQUEST['productOrderby'] = 'sav!quantity';
 			$orderBy = 'sav!quantity';
 		}
-
 		$orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
 		$orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
 		if ($orderByPriceFinal == 'price_final')
@@ -255,7 +236,6 @@ class AdminProductsController extends AdminProductsControllerCore
 			$orderWay = 'ASC';
 		}
 		AdminController::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
-
 		/* update product quantity with attributes ...*/
 		$nb = count($this->_list);
 		if ($this->_list)
@@ -268,7 +248,6 @@ class AdminProductsController extends AdminProductsControllerCore
 				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true);
 			}
 		}
-
 		if ($orderByPriceFinal == 'price_final')
 		{
 			if (strtolower($orderWayPriceFinal) == 'desc')
@@ -282,5 +261,4 @@ class AdminProductsController extends AdminProductsControllerCore
 			unset($this->_list[$i]['price_tmp']);
 		}
 	}
-
 }

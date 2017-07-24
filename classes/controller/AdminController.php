@@ -1497,7 +1497,7 @@ class AdminControllerCore extends Controller
 			'currentIndex' => self::$currentIndex
 		));
                 $country = $this->selectCountry();
-                $no_permitidas= array ("á","é","í","ó","ú","�?","É","�?","Ó","Ú","ñ","À","Ã","Ì","Ò","Ù","Ã™","Ã ","Ã¨","Ã¬","Ã²","Ã¹","ç","Ç","Ã¢","ê","Ã®","Ã´","Ã»","Ã‚","ÃŠ","ÃŽ","Ã�?","Ã›","ü","Ã¶","Ã–","Ã¯","Ã¤","«","Ò","Ã�?","Ã„","Ã‹");
+                $no_permitidas= array ("á","é","í","ó","ú","�?","É","�?","Ó","Ú","ñ","À","Ã","Ì","Ò","Ù","Ã™","Ã ","Ã¨","Ã¬","Ã²","Ã¹","ç","Ç","Ã¢","ê","Ã®","Ã´","Ã»","Ã‚","ÃŠ","ÃŽ","Ã�?","Ã›","ü","Ã¶","Ã–","Ã¯","Ã¤","«","Ò","Ã�?","Ã„","Ã‹");
                 $permitidas= array ("a","e","i","o","u","A","E","I","O","U","n","N","A","E","I","O","U","a","e","i","o","u","c","C","a","e","i","o","u","A","E","I","O","U","u","o","O","i","a","e","U","I","A","E");
                 $country = str_replace($no_permitidas, $permitidas ,$country);
                 if (!file_exists("../img/flags/".$country.".png")){
@@ -2372,11 +2372,7 @@ class AdminControllerCore extends Controller
 			$this->_list_error = Db::getInstance()->getMsgError();
 		else
 			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
-	
-                   // echo "<pre>";
-                  //  var_dump($this->_listsql);
-                  // exit();
-                        }
+	}
 	
 	public function getModulesList($filter_modules_list)
 	{
@@ -2879,7 +2875,7 @@ class AdminControllerCore extends Controller
 					$delete_ok = true;
 					if ($this->deleted)
 					{
-						$to_delete->deleted = 1;  
+						$to_delete->deleted = 1;
 						if (!$to_delete->update())
 						{
 							$result = false;

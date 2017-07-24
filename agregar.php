@@ -359,4 +359,3 @@ if (isset($_GET['id_supply_order'])) {
 
   <?php
 }
-?>

@@ -319,7 +319,7 @@
 		resetBind();
 		
 		$('input[name="hour_delivery"]').on('change', function(e) {
-{*			console.log($(this).val());*}
+			console.log($(this).val());
 			if ( $(this).val() == 2 ){
 				$('#ctn_toogle_hour_delivery').hide();
 				$('#day_delivered, #hour_delivered').prop('disabled', true);
@@ -447,8 +447,11 @@
 	function displayQtyInStock(id)
 	{
 		var id_product = $('#id_product').val();
+<<<<<<< HEAD
 		var reservados = 0;
 		var disponibles = 0;
+=======
+>>>>>>> JuanValdes
 		if(motivo[id_product] == null) {
       
 			$("#add-cart").show();
@@ -727,15 +730,14 @@
 				var customization_html = '';
 				stock = {};
 				motivo = {};
+<<<<<<< HEAD
         restock ={};
 
+=======
+				
+>>>>>>> JuanValdes
 				if(res.found)
 				{
-                                    if (!Math.round10) {
-                                            Math.round10 = function(profit, exp) {
-                                            return decimalAdjust('round', profit, exp);
-                                        };
-                                    }
 					if (!customization_errors)
 						$('#products_err').hide();
 					else
@@ -750,8 +752,12 @@
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
 						motivo[id_product] = this.motivo_name;
+<<<<<<< HEAD
                         restock[id_product] = new Array();
                               
+=======
+						
+>>>>>>> JuanValdes
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
@@ -778,7 +784,11 @@
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
 						stock[this.id_product][0] = this.stock[0];
+<<<<<<< HEAD
 						restock[this.id_product][0] = this.reserve;
+=======
+						
+>>>>>>> JuanValdes
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
@@ -803,6 +813,7 @@
 			}
 		});
 	}
+<<<<<<< HEAD
         
     function decimalAdjust(type, value, exp) {
 	   
@@ -823,6 +834,8 @@
 	    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
     }
 
+=======
+>>>>>>> JuanValdes
 	function display_product_customizations()
 	{
 		if ($('#products_found #customization_list').contents().find('#customization_'+$('#id_product option:selected').val()).children().length === 0)

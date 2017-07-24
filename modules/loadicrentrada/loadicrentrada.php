@@ -1,5 +1,4 @@
 <?php
-
 /*
  * 2007-2013 PrestaShop
  *
@@ -27,13 +26,10 @@
 //require_once(_PS_ROOT_DIR_.'/classes/seveFileClass.php');
 if (!defined('_PS_VERSION_'))
   exit;
-
 class loadicrentrada extends Module {
-
   private $_html = '';
   private $_postErrors = array();
   private $_msg = '';
-
   function __construct() {
     $this->name = 'loadicrentrada';
     $this->tab = 'administration';
@@ -44,7 +40,6 @@ class loadicrentrada extends Module {
     $this->displayName = $this->l('Cague masivo Entrada ICR ');
     $this->description = $this->l('Actualiza las ordenes de entrada asociando los ICR desde un archivo (CSV)');
   }
-
   public function install() {
     if (!$id_tab = Tab::getIdFromClassName('AdminIcrEntrada')) {
       $tab = new Tab();
@@ -60,7 +55,6 @@ class loadicrentrada extends Module {
 		  `id_icr` int(11) DEFAULT NULL,
 		  `flag` enum('n','i','d','c') DEFAULT 'n'
 		) ENGINE=Aria DEFAULT CHARSET=utf8;";
-
       if (!$results = Db::getInstance()->ExecuteS($query1)) {
         echo '<br><b>Error creando tablas .</b><br>';
       }
@@ -75,12 +69,10 @@ class loadicrentrada extends Module {
       return false;
     return true;
   }
-
   public function uninstall() {
     $this->_clearCache('loadicrentrada.tpl');
     return parent::uninstall();
   }
-
 //  public static function debug_to_console($data, $texto = NULL) {
 //    if (is_array($data)) {
 //      $formato = 'Array: %s ->  %s';
@@ -94,31 +86,25 @@ class loadicrentrada extends Module {
 //    }
 //    echo $output;
 //  }
-
   public function getContent() {
-
     $icr_all = new Icrall();
     $output = '<h2>' . $this->displayName . '</h2>';
     
     if (Tools::isSubmit('submitloadicrentrada')) {
       /* validar subida de archivo */
       $allowedExts = array("txt", "csv");
-
       $temp = explode(".", $_FILES["fileloadicrentrada"]["name"]);
       $extension = end($temp);
       if ((($_FILES["fileloadicrentrada"]["type"] == "text/csv") || ($_FILES["fileloadicrentrada"]["type"] == "text/plain") || ($_FILES["fileloadicrentrada"]["type"] == "text/comma-separated-values") || ($_FILES["fileloadicrentrada"]["type"] == "application/csv") || ($_FILES["fileloadicrentrada"]["type"] == "application/excel") || ($_FILES["fileloadicrentrada"]["type"] == "application/vnd.ms-excel") || ($_FILES["fileloadicrentrada"]["type"] == "application/vnd.msexcel") || ($_FILES["fileloadicrentrada"]["type"] == "application/octet-stream") || ($_FILES["fileloadicrentrada"]["type"] == "text/anytext")) && ($_FILES["fileloadicrentrada"]["size"] < (1024 * 5000)) && in_array($extension, $allowedExts)) {
         if ($_FILES["fileloadicrentrada"]["error"] > 0) {
-
           $this->_msg = "Error: " . $_FILES["fileloadicrentrada"]["error"];
         } else {
 //          return var_dump($_FILES);die();
           $guardar_archivo = new Icrall();
           // self::debug_to_console($_FILES, "_FILES ");
           $names = $guardar_archivo->saveFile($_FILES, 'fileloadicrentrada', new Employee($this->context->cookie->id_employee), 'loadicrentrada');
-
           if (is_array($names) && $names[0] != '' && $names[0] != false && $names[2] != false) {
             $retorno_cargue = $guardar_archivo->loadicrentrada($names[2]);
-
             if ($retorno_cargue == true) {
               
               if ($guardar_archivo->validarIcrDuplicadosEntrada() && $guardar_archivo->validarLoteFechavencimientoVaciosEntrada() && $guardar_archivo->validarIcrCargadoVsIngresadoEntrada() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcr() && $guardar_archivo->validarIcrCargadoVsSupplyOrderIcrCantidades() && $guardar_archivo->ValidateFechaVencEntrada() && $guardar_archivo->cambiarFechasVaciasyNulas() && $guardar_archivo->validarEstadoRegistrosCargadosEntrada() && $guardar_archivo->OrdenesProductosEntrada() && $guardar_archivo->IcrCargadosEntrada() && $guardar_archivo->ValidateRegistroInvima() && $guardar_archivo->validarProductosOrdenEntrada()) { // validar icr duplicados  // actualizar registros con respecto a ordenes, productos e icr 
@@ -154,11 +140,9 @@ class loadicrentrada extends Module {
     }
     return $output . $this->displayForm();
   }
-
   public function displayForm() {
     $impuestos = TaxRulesGroup::getTaxRulesGroups(true);
     $imp_show = '';
-
     $output = ' <p><b>' . $this->_msg . '</b></p>
 		<form action="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '" enctype="multipart/form-data" method="post">
 			<fieldset><legend><img src="' . $this->_path . 'logo.gif" alt="" title="" />' . $this->l('Settings') . '</legend>
@@ -171,5 +155,4 @@ class loadicrentrada extends Module {
 		</form>';
     return $output;
   }
-
 }
