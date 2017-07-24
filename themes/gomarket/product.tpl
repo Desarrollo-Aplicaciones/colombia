@@ -419,7 +419,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}</span>
 						{/if}
 						{* CUANTO FUE EL DESCUENTO--> <p id="reduction_percent" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}>
-						<span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
+						<span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPricesty.reduction*100}%{/if}</span></p>
 						<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}><span id="reduction_amount_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}-{convertPrice price=$product->specificPrice.reduction|floatval}{/if}</span></p> *}
 						{if $product->specificPrice AND $product->specificPrice.reduction}
 							<span id="old_price">
@@ -533,7 +533,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 						</div>
 						<br>
 
-						<input type="button" class="buttom-open-bold" value="Deseo ser notificado" name="modal" href="#dialog">
+						<input type="button" class="buttom-open-bold" value="Deseo ser notificado" name="modal" href="#modal-register-product">
 
 					</div>
 					<div class="color-font-bottom">
@@ -541,40 +541,78 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							<b>¿Dudas?</b> contáctanos en cualquiera de nuestros canales.
 						</div>
 						<div class="icon-right-bottom">
-							<img src="{$img_dir}Lineas.jpg" id="img1">
-							<img src="{$img_dir}Contacto.jpg" id="img1">
-							<img src="{$img_dir}Chat.jpg" id="img1">
-							<img src="{$img_dir}wasap.jpg" id="img1">
+							<img src="{$img_dir}Lineas.jpg"  id="contact-lap">
+                                                        <a href="{$base_dir}contactenos" class="txt-gray link"><img src="{$img_dir}Contacto.jpg" id="img1"></a>
+                                                        <a href="https://secure.livechatinc.com/licence/6077601/open_chat.cgi?groups=4" target="_blank"><img src="{$img_dir}Chat.jpg" id="img1"></a>
+							<img src="{$img_dir}wasap.jpg" id="contact-lap">
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div id="boxes">
-				<div id="mask"></div> 
-
-	    		<div id="dialog" class="window"> 
-
-	    			<!--a href="#" class="close">Cerrar</a-->
-	    			<div class="header-lightbox">
-	    				<div class="img-header-lightbox">
-		    				<img src="{$img_dir}Capsula_lightbox_captura.jpg" id="img1">
-		    			</div>
-
-		    			<div class="title-header-lightbox">
-			    			<span class="title-lightbox">
-			    				<b>Dejanos tus datos de contacto</b>
-			    			</span>
-		    			</div>
-		    			
-	    			</div>
-	    		</div>
-	 
-			</div>
-		{/if}
-
-
-	</div>
+                   <div id="modal-register-product" class="farma-modal">
+                    <div class="modal-content">
+                      <div class="close-x modal-close"><span class="exit">&times;</span></div>
+                      <div class="modal-table">                          
+                        <div class="modal-table-cell"><img src="{$img_dir}Capsula_lightbox_captura.jpg" class="icon-ligh"></div>
+                        <div class="modal-table-cell modal-title">Déjanos tus datos de <br> contacto</div>
+                      </div>
+                      <div class="body-modal">
+                        <form id="form-modal" method="post" action="{$base_dir_ssl}ajaxs/ajax_customer_product.php">
+                          <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Tu nombre" />
+                            <div class="error form-error" id="error_name">
+                              Olvidaste ingresar tu nombre
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="mail@ejemplo.com" />
+                            <div class="error form-error" id="error_email">
+                              Olvidaste ingresar tu correo electrónico
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="telefono">Número teléfonico</label>
+                            <input type="text" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'');" class="form-control" id="telefono" name="telefono" placeholder="Fijo o celular" />
+                            <div class="error form-error" id="error_telefono">
+                              Olvidaste ingresar tu número telefónico
+                            </div>
+                          </div>
+                           <input type="hidden" id="product" name="product" value="{$product->id}"/>
+                          <button type="submit" class="enviar-form"id="enviar" name="enviar" value="enviar">Enviar</button>
+                          
+                        </form>
+                      </div>
+                        
+                      <div class="response-modal" id="modal-thanks">
+                        <div class="header-response-modal">
+                          <div class="modal-table-cell"><img src="{$img_dir}Ok_lightbox_confirmacion2.jpg" id="ok_img"></div>
+                          <div class="modal-table-cell modal-title">Tus datos se <br>registraron con <span class="response-title"> éxito.</span>  </div>
+                        </div>
+                        <div  class="message-response">
+                          <span class="message-alert"> Hemos creado una alerta en nuestro sistema que te notificará automáticamente cuando el producto</span>
+                        </div>
+                        <div  class="message-response">
+                            <span class="img-modal-r"> {$product->name} </span>
+                        </div>
+                        <div  class="message-response">
+                          <img class="img-product-m" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'medium_default')}"/>
+                        </div>
+                        <div class="message-response">  
+                          <span class="message-alert"> esté disponible de nuevo en nuestro catálogo </span>
+                        </div>
+                        <div class="message-response"> 
+                          <span class="message-mod">Gracias por confiar en nosotros</span>
+                        </div>
+                        <button type="button" class="modal-close enviar-form" id="Cerrar" style=" margin-top: 25px !important">Cerrar</button>
+                      </div>
+                        {/if} 
+                    </div>
+                  </div>                  
+                                                
+                                              
 	<!--/product info-->
 
 	{* Contactanos *}
@@ -739,6 +777,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 	<div id="conconImage">
 		<div id="more_info_block" class="clear">
 			<ul id="more_info_tabs" class="idTabs idTabsShort clearfix">
+        
 				{if $product->description}<li><a id="more_info_tab_more_info" href="#idTab1">{l s='More info'}</a></li>{/if}
 				{if $product->description_short}<li><a id="info_tab_info" href="#idTab0">{l s='Información'}</a></li>{/if}
 				{*if $features}<li><a id="more_info_tab_data_sheet" href="#idTab2">{l s='Data sheet'}</a></li>{/if*}
@@ -755,7 +794,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 					{* <div class="title_hide_show">{l s='Información'}</div> *}
 					<!--info-->
 					<div id="idTab0" class="rte content_hide_show">
-						<div id="scro">{$product->description_short}</div>
+            <div id="scro"><span class="font-3"><b>{$disponibilidad}</b></span><p style="text-align: justify;" align="justify">&nbsp;</p>{$product->description_short}</div>
 					</div>
 				{/if}
 

@@ -447,25 +447,37 @@
 	function displayQtyInStock(id)
 	{
 		var id_product = $('#id_product').val();
+<<<<<<< HEAD
+		var reservados = 0;
+		var disponibles = 0;
+=======
+>>>>>>> JuanValdes
 		if(motivo[id_product] == null) {
+      
 			$("#add-cart").show();
 			$("#hide-product").hide();
 			$("#hide-product").html('');
+
 			if ($('#ipa_' + id_product + ' option').length)
 				var id_product_attribute = $('#ipa_' + id_product).val();
 			else
 				var id_product_attribute = 0;
-			
-			$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
-			
-		} else {
-			
-			$("#add-cart").hide();
-			$("#hide-product").show();
-			$("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+motivo[id_product]+'</b></div>');
-                        
+      
+			stock_actual = stock[id_product][id_product_attribute];
+            reservados = parseInt(restock[id_product][id_product_attribute]);
+            disponibles = (stock_actual - reservados);
+            
+			$('#qty_in_stock').html(stock_actual);
+            $('#qty_in_restock').html(reservados);
+            $('#qty_in_disstock').html(disponibles);
+            
+        } else {
+            $("#add-cart").hide();
+            $("#hide-product").show();
+            $("#hide-product").html('<div class="error">TEMPORALMENTE NO DISPONIBLE, <b>'+motivo[id_product]+'</b></div>');
 		}
 	}
+  
 	function duplicateOrder(id_order)
 	{
 		$.ajax({
@@ -489,6 +501,7 @@
 			}
 		});
 	}
+  
 	function useCart(id_new_cart)
 	{
 		id_cart = id_new_cart;
@@ -513,10 +526,12 @@
 			}
 		});
 	}
+  
 	function getSummary()
 	{
 		useCart(id_cart);
 	}
+  
 	function deleteVoucher(id_cart_rule)
 	{
 		$.ajax({
@@ -540,6 +555,7 @@
 			}
 		});
 	}
+  
 	function deleteProduct(id_product, id_product_attribute, id_customization)
 	{
 		$.ajax({
@@ -564,6 +580,7 @@
 			}
 		});
 	}
+  
 	function searchCustomers()
 	{
 		$.ajax({
@@ -602,6 +619,7 @@
 			}
 		});
 	}
+  
 	function setupCustomer(arg)
 	{   
             var arreglo = arg.split("|");
@@ -668,6 +686,7 @@
                 }
                 $("#customers").html('<div class="'+fraud+'"> <b> Cliente seleccionado: ' + arreglo[1] + ' - ' + arreglo[2] + ' - ' + arreglo[3]+ concatMessage +'</b></div>');
 	}
+  
 	function updateDeliveryOptionList(delivery_option_list)
 	{
 		var html = '';
@@ -686,6 +705,7 @@
 			$('#carriers_err').show().html('{l s='No carrier can be applied to this order'}');
 		}
 	}
+  
 	function searchProducts()
 	{
                 $('#products_part').show();
@@ -710,7 +730,12 @@
 				var customization_html = '';
 				stock = {};
 				motivo = {};
+<<<<<<< HEAD
+        restock ={};
+
+=======
 				
+>>>>>>> JuanValdes
 				if(res.found)
 				{
 					if (!customization_errors)
@@ -721,13 +746,18 @@
 					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="display_product_attributes();display_product_customizations();">';
 					attributes_html += '<label>{l s='Combination'}</label>';
 					$.each(res.products, function() {
-						var gmc = this.gmc !== null ? this.gmc : "0";
-                                                products_found += '<option '+(this.active == 0 ? 'style="color:#EA6074; font-weight: bold;"' : '')+' '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
+
+                        products_found += '<option '+(this.active == 0 ? 'style="color:#EA6074; font-weight: bold;"' : '')+' '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+/*+' Margen producto: '+gmc+*/'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
 						motivo[id_product] = this.motivo_name;
+<<<<<<< HEAD
+                        restock[id_product] = new Array();
+                              
+=======
 						
+>>>>>>> JuanValdes
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
@@ -750,11 +780,15 @@
 							customization_html += '</fieldset></form>';
 						}
 						$.each(this.combinations, function() {
-							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'  '+this.gmc+'</option>';
+							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
 						stock[this.id_product][0] = this.stock[0];
+<<<<<<< HEAD
+						restock[this.id_product][0] = this.reserve;
+=======
 						
+>>>>>>> JuanValdes
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
@@ -772,13 +806,36 @@
 				else
 				{
 					$('#products_found').hide();
-					$('#products_err').html('{l s='No products found'}');
+                    $('#products_err').html('{l s='No products found'}');
 					$('#products_err').show();
 				}
 				resetBind();
 			}
 		});
 	}
+<<<<<<< HEAD
+        
+    function decimalAdjust(type, value, exp) {
+	   
+	    if (typeof exp === 'undefined' || +exp === 0) {
+	      return Math[type](value);
+	    }
+	    value = +value;
+	    exp = +exp;
+	    
+	    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+	      return NaN;
+	    }
+	    
+	    value = value.toString().split('e');
+	    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+	   
+ 	    value = value.toString().split('e');
+	    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+    }
+
+=======
+>>>>>>> JuanValdes
 	function display_product_customizations()
 	{
 		if ($('#products_found #customization_list').contents().find('#customization_'+$('#id_product option:selected').val()).children().length === 0)
@@ -791,6 +848,7 @@
 			$('#products_found #customization_list').css('height',$('#products_found #customization_list').contents().find('#customization_'+$('#id_product option:selected').val()).height()+95+'px');
 		}
 	}
+  
 	function display_product_attributes()
 	{
 		if ($('#ipa_'+$('#id_product option:selected').val()+' option').length === 0)
@@ -802,6 +860,7 @@
 			$('#ipa_'+$('#id_product option:selected').val()).show();
 		}
 	}
+  
 	function updateCartProducts(products, gifts, id_address_delivery)
 	{
 		var cart_content = '';
@@ -851,6 +910,7 @@
 		});
 		$('#customer_cart tbody').html(cart_content);
 	}
+  
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
@@ -864,10 +924,12 @@
 		else
 			$('#voucher_list').show();
 	}
+  
 	function updateCartPaymentList(payment_list)
 	{
 		$('#payment_list').html(payment_list);
 	}
+  
 	function displaySummary(jsonSummary)
 	{
 		jsonSummary.summary.total_products = jsonSummary.summary.total_products.replace(".","");
@@ -922,6 +984,7 @@
 		$('#order_message').val(jsonSummary.order_message);
 		resetBind();
 	}
+  
 	function updateQty(id_product, id_product_attribute, id_customization, qty)
 	{
 		$.ajax({
@@ -961,11 +1024,13 @@
 			}
 		});
 	}
+  
 	function resetShippingPrice()
 	{
 		$('#shipping_price').val(shipping_price_selected_carrier);
 		changed_shipping_price = false;
 	}
+  
 	function addProduct()
 	{
 		var id_product = $('#id_product option:selected').val();
@@ -978,6 +1043,7 @@
 			updateQty(id_product, $('#ipa_'+id_product+' option:selected').val(), 0, $('#qty').val());
 		}
 	}
+  
 	function updateCurrency()
 	{
 		$.ajax({
@@ -1000,6 +1066,7 @@
 			}
 		});
 	}
+  
 	function updateLang()
 	{
 		$.ajax({
@@ -1022,6 +1089,7 @@
 			}
 		});
 	}
+  
 	function updateDeliveryOption()
 	{
 		$.ajax({
@@ -1048,6 +1116,7 @@
 			}
 		});
 	}
+  
 	function updateDeliveryExpress(id)
 	{
 		$.ajax({
@@ -1076,6 +1145,7 @@
 			}
 		});
 	}
+  
 	function sendMailToCustomer()
 	{
 		$.ajax({
@@ -1101,6 +1171,7 @@
 			}
 		});
 	}
+  
 	function updateAddressesList(addresses, id_address_delivery, id_address_invoice)
 	{
 		var addresses_delivery_options = '';
@@ -1157,6 +1228,7 @@
 		$('#address_delivery_detail').html(address_delivery_detail);
 		$('#address_invoice_detail').html(address_invoice_detail);
 	}
+  
 	function updateAddresses()
 	{
 		$.ajax({
@@ -1182,6 +1254,7 @@
 			}
 		});
 	}
+  
 	function updateEnvio(id)
 	{
 		$.ajax({
@@ -1206,6 +1279,7 @@
 			}
 		});
 	}
+  
 	function validarCodPago(obj){
 			var error = false;
 			if(obj.id == 'cod_pagar' && $('#payment_module_name').val() == 'cashondelivery'){
@@ -1243,6 +1317,7 @@
 			}
 		}
 }
+
 </script>
 
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
@@ -1290,8 +1365,16 @@
 				</html>
 			</iframe>
 			<div id="add-cart">
-				<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
-				</p>
+				<p>
+                  <label for="qty">{l s='Quantity:'}</label>
+                    <input type="text" name="qty" id="qty" value="1" />
+                      &nbsp;<b>{l s='In stock'}</b>
+                      &nbsp;<span id="qty_in_stock"></span>
+                      <b>{l s='Solicitados'}</b>
+                      &nbsp;<span id="qty_in_restock"></span>
+                      <b>{l s='Disponibles'}</b>
+                      &nbsp;<span id="qty_in_disstock"></span>
+                </p>
 				<div class="margin-form">
 					<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
 				</div>

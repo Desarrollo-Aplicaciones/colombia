@@ -45,10 +45,8 @@ public function keys()
 
 public function sendJson($data)
 {
-
   $responseData ='';
 
-// error_log(print_r(json_decode($data, TRUE), TRUE));
   try {
     $ch =NULL;
 
@@ -189,7 +187,7 @@ public function pago_payu($id_order, $id_customer, $json_request, $json_response
 
     $mysqldate = date("Y-m-d H:i:s");
 
-    $log = 'Fecha de transacción-WS: ' . $mysqldate . '\r\nRequest: \r\n' . $json_request . '\r\nResponse: \r\n' . json_encode($json_response);
+    $log = 'Fecha de transacciï¿½n-WS: ' . $mysqldate . '\r\nRequest: \r\n' . $json_request . '\r\nResponse: \r\n' . json_encode($json_response);
     $this->logtxt($log);
     
 
@@ -228,7 +226,7 @@ public function error_payu($id_order, $id_customer, $json_request, $json_respons
 
     $mysqldate = date("Y-m-d H:i:s");
 
-    $log = 'Fecha de transacción-WS: ' . $mysqldate . '\r\nRequest: \r\n' . $json_request . '\r\nResponse: \r\n' . json_encode($json_response);
+    $log = 'Fecha de transacciï¿½n-WS: ' . $mysqldate . '\r\nRequest: \r\n' . $json_request . '\r\nResponse: \r\n' . json_encode($json_response);
     $this->logtxt($log);
 
     Db::getInstance()->autoExecute('ps_error_payu', array(

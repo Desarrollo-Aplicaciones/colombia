@@ -4,7 +4,7 @@ class AdminCustomersController extends AdminCustomersControllerCore
 public function __construct()
 	{
 		$this->required_database = true;
-		$this->required_fields = array('newsletter','optin');
+		$this->required_fields = array('newsletter','optin', 'verificado');
 		$this->table = 'customer';
 		$this->className = 'Customer';
 		$this->lang = false;
@@ -65,6 +65,14 @@ public function __construct()
 				'title' => $this->l('Email address'),
 				'width' => 140,
 			),
+			'verificado' => array(
+ 				'title' => $this->l('verificado'),
+ 				'width' => 70,
+ 				'align' => 'center',
+ 				'type' => 'bool',
+ 				'callback' => 'printValidateIcon',
+ 				'orderby' => false
+ 			),
 			'date_add' => array(
 				'title' => $this->l('Registration'),
 				'width' => 150,
@@ -247,6 +255,27 @@ public function __construct()
 					),
 					'desc' => $this->l('Customer will receive your ads via email.')
 				),
+				array(
+ 					'type' => 'radio',
+ 					'label' => $this->l('Verificado:'),
+ 					'name' => 'verificado',
+ 					'required' => false,
+ 					'class' => 't',
+ 					'is_bool' => true,
+ 					'values' => array(
+ 						array(
+ 							'id' => 'verificado_on',
+ 							'value' => 1,
+ 							'label' => $this->l('Enabled')
+ 						),
+ 						array(
+ 							'id' => 'verificado_off',
+ 							'value' => 0,
+ 							'label' => $this->l('Disabled')
+ 						)
+ 					),
+ 					'desc' => $this->l('Verifica el cliente.')
+ 				),
 			)
 		);
 

@@ -1542,4 +1542,19 @@ return $responseObj;
 
 }
 
+  public function getTerms()
+  {
+      $array_img = array();
+      $query = "SELECT content FROM ps_cms_lang WHERE id_cms = 3";
+      $contenido = '';
+
+      if ($results = Db::getInstance()->ExecuteS($query)) {
+        foreach ($results as $value) {
+          $contenido = $value;
+        }
+      }
+
+    return $contenido;
+  }
+
 }
