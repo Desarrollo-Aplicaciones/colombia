@@ -288,8 +288,7 @@ public function init(){
 		$this->context->smarty->assign(array(
 			'id_currency_cookie' => (int)$currency->id,
 			'logged' => $this->context->customer->isLogged(),
-			'customerName' => ($this->context->customer->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false),
-            'customerEmail' => ($this->context->customer->logged ? $this->context->customer->email : false)
+			'customerName' => ($this->context->customer->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
 		));
 
 		$assign_array = array(

@@ -81,7 +81,7 @@ public $progreso = '';
 			}
 		}
 
-		$handle = fopen("/home/ubuntu/modules/regenerate/log_reg_".date("Ymd").".txt", 'a+');
+		$handle = fopen(_ROUTE_FILE_."/modules/regenerate/log_reg_".date("Ymd").".txt", 'a+');
 	    fwrite($handle,"\r\n".$this->progreso);
 	    fclose($handle);
 		return (count($this->errors) > 0 ? false : true);

@@ -145,7 +145,7 @@ else{
  function pathFiles()
 {
   # Definir directorio donde almacenar los archivos, debe terminar en "/" 
-    $directorio="/home/ubuntu/ordensuministro/";
+    $directorio=_ROUTE_FILE_."/ordensuministro/";
 
     try { 
     $path="".$directorio; 

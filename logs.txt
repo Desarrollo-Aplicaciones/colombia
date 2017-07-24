@@ -1,0 +1,3 @@
+23 02 2017 10:02:01 El Archivo /var/www/html/colombia/logs.txt se ha creado
+23 02 2017 10:02:01 El Archivo /var/www/html/colombia/logs.txt se ha modificado
+23 02 2017 10:02:01 El Archivo /var/www/html/colombia/logs.txt se ha modificado

@@ -725,73 +725,50 @@ function checkUrl()
 	}
 }
 
-$(document).ready(function() { 
-    // Abre farma-modal 
-    $('.buttom-open-bold').click(function(event) {  
-        event.preventDefault();  
-
-        //transition effect      
-        $('#modal-register-product').fadeIn();      
-    });  
-
-    // Cierra modal 
-    $('.farma-modal .modal-close').click(function (e) {  
+$(document).ready(function() {    
+ 
+    //select all the a tag with name equal to modal  
+    $('.buttom-open-bold').click(function(e) {  
         //Cancel the link behavior  
         e.preventDefault();  
-        $('#modal-register-product').fadeOut();
-    }); 
-    
-    $("#modal-register-product form").submit(function (e) {
-        //Cancel the link behavior  
-        e.preventDefault(); 
-        
-        // Cacheando objeto formulario
-        var $this = $(this);
-        
-        // Oculta todos los errores
-        $this.find('.error').hide();
-        
-        // Recorre los input del formulario
-        $this.find('input').each(function( key, input ) {
-            // Cacheando objeto input
-            var $formInput = $(input);
-            $formInput.removeClass("line-error");
-            // Si el input esta vacio, muestra el error
-            if (!$formInput.val()) {
-                $formInput.parent().children(".error").show();
-                $formInput.addClass("line-error");
-            }
-        });
-        
-        // Si no hay ningun error envia el formulario
-        if (!$this.find('.error').is(":visible")) {
-            $.post( $this.attr('action'), $this.serialize(), function( data ) {
-                if(data.success) {
-                  // Cacheando objeto modal-content
-                  var $modalRegisterProduct = $("#modal-register-product .modal-content");
-                  $modalRegisterProduct.children(".modal-table, .body-modal").fadeOut( "slow", function() {
-                    // Animation complete.
-                    $modalRegisterProduct.children("#modal-thanks").fadeIn( "fast" );
-                     $( ".exit" ).remove();
-                  });
-                } else {
-                    alert("Ocurrió un error interno, por favor intente más tarde.");
-                }
-            });
-        }
-    });
+        //Get the A tag  
+        var id = $(this).attr('href');  
+     
+        //Get the screen height and width  
+        var maskHeight = $(document).height();  
+        var maskWidth = $(window).width();
 
-    // Valida el texto de los input del formulario
-    $("#modal-register-product form input").keyup(function() {
-        var inputVal = $(this).val();
-        console.log(inputVal);
-        if (inputVal.length) {
-            $(this).removeClass("line-error");
-            $(this).parent().children(".error").slideUp();
-        } else {
-            $(this).addClass("line-error");
-            $(this).parent().children(".error").slideDown();
-        }
-    });
-    
-});
+        $('#mask').css("width", maskHeight);
+ 		$('#mask').css("height", maskWidth);
+
+        //transition effect      
+        $('#mask').fadeIn(1000);      
+        $('#mask').fadeTo("slow",0.8);    
+     
+        //Get the window height and width  
+        var winH = $(window).height();  
+        var winW = $(window).width();  
+               
+        //Set the popup window to center  
+        $(id).css('top',  winH/2-$(id).height()/2);  
+        $(id).css('left', winW/2-$(id).width()/2);  
+     
+        //transition effect  
+        $(id).fadeIn(2000);  
+     
+    });  
+     
+    //if close button is clicked  
+    $('.window .close').click(function (e) {  
+        //Cancel the link behavior  
+        e.preventDefault();  
+        $('#mask, .window').hide();  
+    });      
+     
+    //if mask is clicked  
+    /*$('#mask').click(function () {  
+        $(this).hide();  
+        $('.window').hide();  
+    });   */
+});  
+ 

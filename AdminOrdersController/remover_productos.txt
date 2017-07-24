@@ -1,0 +1,12 @@
+[06/Apr/2017:14:12:02] (index) Ingreso Eliminar ICR de la Orden: 84051 - empleado:201
+[06/Apr/2017:14:12:02] (index) No se actualizo stock 
+[06/Apr/2017:14:12:02] (index) No se ejecuto correctamente el query Select
+[07/Apr/2017:13:45:52] (index) Ingreso Eliminar ICR de la Orden: 84055 - empleado:201
+[07/Apr/2017:13:45:52] (index) No se actualizo stock 
+[07/Apr/2017:13:45:52] (index) No se ejecuto correctamente el query Select
+[10/Apr/2017:12:32:28] (index) Ingreso Eliminar ICR de la Orden: 84060 - empleado:201
+[10/Apr/2017:12:32:28] (index) No se actualizo stock 
+[10/Apr/2017:12:32:28] (index) No se ejecuto correctamente el query Select
+[10/Apr/2017:12:34:38] (index) Ingreso Eliminar ICR de la Orden: 84061 - empleado:201
+[10/Apr/2017:12:34:38] (index) No se actualizo stock 
+[10/Apr/2017:12:34:38] (index) No se ejecuto correctamente el query Select

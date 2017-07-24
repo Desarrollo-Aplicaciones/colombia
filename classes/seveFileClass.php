@@ -87,7 +87,7 @@ public function exist_file($name_file)
 public function pathFiles()
 {
   // Definir directorio donde almacenar los archivos, debe terminar en "/" 
-    $directorio="/home/ubuntu/updateprice/";
+    $directorio= _ROUTE_FILE_."/updateprice/";
 
     try { 
     $path="".$directorio; 

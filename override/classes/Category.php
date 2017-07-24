@@ -27,11 +27,13 @@ class Category extends CategoryCore
 			$front = false;
 			
 		if ($p < 1) $p = 1;
+
 		if (empty($order_by))
 			$order_by = 'position';
 		else
 			/* Fix for all modules which are now using lowercase values for 'orderBy' parameter */
 			$order_by = strtolower($order_by);
+
 		if (empty($order_way))
 			$order_way = 'ASC';
 		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
@@ -45,11 +47,15 @@ class Category extends CategoryCore
 		}
 		elseif ($order_by == 'position')
 			$order_by_prefix = 'cp';
+
 		if ($order_by == 'price')
 			$order_by = 'orderprice';
+
 		if (!Validate::isBool($active) || !Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
+
 		$id_supplier = (int)Tools::getValue('id_supplier');
+
 		/* Return only the number of products */
 		if ($get_total)
 		{
@@ -63,7 +69,7 @@ class Category extends CategoryCore
 					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
-                $productBlackList = Configuration::get('PRODUCT_BLACK_LIST_SHOW');
+
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
 					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
@@ -97,10 +103,11 @@ class Category extends CategoryCore
                                 LEFT JOIN ps_black_motivo black_motivo ON black_motivo.id_black_motivo = product_black.motivo
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 					AND cp.`id_category` = '.(int)$this->id
-					.($active ? ' AND product_shop.`active` = IF(product_black.motivo IN ('.$productBlackList.'),  0,  1)' : '')
+					.($active ? ' AND product_shop.`active` = IF(product_black.motivo = 1 OR product_black.motivo = 10,  0,  1)' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
 					.' GROUP BY product_shop.id_product';
+
 		if ($random === true)
 		{
 			$sql .= ' ORDER BY RAND()';
@@ -109,11 +116,14 @@ class Category extends CategoryCore
 		else
 			$sql .= ' ORDER BY '.(isset($order_by_prefix) ? $order_by_prefix.'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
 			LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
+
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if ($order_by == 'orderprice')
 			Tools::orderbyPrice($result, $order_way);
+
 		if (!$result)
 			return array();
+
 		/* Modify SQL result */
 		return Product::getProductsProperties($id_lang, $result);
 	}
