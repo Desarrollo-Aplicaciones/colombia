@@ -7,7 +7,7 @@ require($path.'/../config/config.inc.php');
 
 include_once($path."/../tools/phpexcel/PHPExcel.php");
 require_once $path."/../tools/phpexcel/PHPExcel/IOFactory.php"; 
-
+echo "\r\nlibrerias"; 
 date_default_timezone_set('America/Bogota');
 
 $sqlC = 'SELECT cr.*, p.reference, rpl.id_product_registry, pl.`name`, pbl.motivo FROM ps_customer_registry AS cr 
@@ -18,11 +18,12 @@ LEFT JOIN ps_product_black_list AS pbl ON (pbl.id_product=pl.id_product)
 WHERE rpl.state = 1';
 
 $resultsC = Db::getInstance()->ExecuteS($sqlC); 
-
+echo "\r\nejecuta query"; 
 $objPHPExcel = new PHPExcel();
 $sheet_number = 0;
 
 if(COUNT($resultsC) > 0) {
+    echo "\r\nconsulta"; 
 	foreach($resultsC AS $key) {
 		if($key['motivo'] == 1 || $key['motivo'] == 10) {
 			
@@ -30,11 +31,11 @@ if(COUNT($resultsC) > 0) {
 			//$objPHPExcel->setActiveSheetIndex($sheet_number)->mergeCells('A1:G1');
 			
 			$style = array(
-                'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                )
-            );
-
+                            'alignment' => array(
+                            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            )
+                        );
+                        echo "\r\nnombre: ".$key['name_registry']; 
             $objPHPExcel->getActiveSheet()->getCell("A1")->setValue(' NOMBRE ');
             $objPHPExcel->getActiveSheet()->getCell("B1")->setValue(' E-MAIL ');
             $objPHPExcel->getActiveSheet()->getCell("C1")->setValue(' TELEFONO ');
@@ -83,5 +84,6 @@ if(COUNT($resultsC) > 0) {
 
 	Mail::Send(1, 'send_mail_black_list', 'Clientes interesados', '', ['juan.valdes@farmalisto.com.co','contacto@farmalisto.com.co','eiver.gomez@farmalisto.com.co'], '',
 					null, null, $fileAttachment, null, _PS_MAIL_DIR_, false, 1);
+        echo "\r\nEnvia"; 
 
 }
