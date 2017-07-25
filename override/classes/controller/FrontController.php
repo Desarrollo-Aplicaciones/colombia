@@ -565,6 +565,7 @@ function is_bot(){
 		if (Tools::file_exists_cache(_PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, _THEME_CSS_DIR_.'grid_prestashop.css')))
 			$this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
+                $this->addCSS(_THEME_CSS_DIR_.'1200.css', 'all');
 		// $this->addjquery(); // in header.tpl
 			
 		$this->addjqueryPlugin('easing');
