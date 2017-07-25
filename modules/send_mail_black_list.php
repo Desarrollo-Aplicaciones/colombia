@@ -62,6 +62,8 @@ if(COUNT($resultsC) > 0) {
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB('00FFDE00');
+            
+            $objPHPExcel->createSheet();
 
 			$sheet_number++;
 
