@@ -21,6 +21,7 @@ $resultsC = Db::getInstance()->ExecuteS($sqlC);
 echo "\r\nejecuta query"; 
 $objPHPExcel = new PHPExcel();
 $sheet_number = 0;
+$sheet_reg = 0;
 
 if(COUNT($resultsC) > 0) {
     echo "\r\nconsulta"; 
@@ -51,6 +52,8 @@ if(COUNT($resultsC) > 0) {
             $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(35);
             $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(80);
             
+            $line = $sheet_reg + 2;
+            
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$line, $key['name_registry']);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$line, $key['email_registry']);
             $objPHPExcel->getActiveSheet()->setCellValue('C'.$line, $key['phone_registry']);
@@ -67,7 +70,9 @@ if(COUNT($resultsC) > 0) {
 			$sqlUpdate = 'UPDATE ps_registry_product_list SET state= 0 WHERE id_product_registry = '.$key['id_product_registry'];
 
 			Db::getInstance()->Execute($sqlUpdate);
-		}
+                        
+                $sheet_reg ++;
+            }
 	}
 
 	$objPHPExcel->setActiveSheetIndex(0);
