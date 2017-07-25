@@ -24,18 +24,21 @@ $sheet_number = 0;
 
 if(COUNT($resultsC) > 0) {
     echo "\r\nconsulta"; 
+        
+        $objPHPExcel->createSheet();
+        
 	foreach($resultsC AS $key) {
-		if($key['motivo'] == 1 || $key['motivo'] == 10) {
+            if($key['motivo'] == 1 || $key['motivo'] == 10) {
 			
-			$objPHPExcel->setActiveSheetIndex($sheet_number);
-			//$objPHPExcel->setActiveSheetIndex($sheet_number)->mergeCells('A1:G1');
-			
-			$style = array(
-                            'alignment' => array(
-                            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                            )
-                        );
-                        echo "\r\nnombre: ".$key['name_registry']; 
+                $objPHPExcel->setActiveSheetIndex($sheet_number);
+                //$objPHPExcel->setActiveSheetIndex($sheet_number)->mergeCells('A1:G1');
+
+                $style = array(
+                    'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    )
+                );
+                echo "\r\nnombre: ".$key['name_registry']; 
             $objPHPExcel->getActiveSheet()->getCell("A1")->setValue(' NOMBRE ');
             $objPHPExcel->getActiveSheet()->getCell("B1")->setValue(' E-MAIL ');
             $objPHPExcel->getActiveSheet()->getCell("C1")->setValue(' TELEFONO ');
@@ -70,7 +73,6 @@ if(COUNT($resultsC) > 0) {
 			Db::getInstance()->Execute($sqlUpdate);
 		}
 	}
-        $objPHPExcel->createSheet();
 
 	$objPHPExcel->setActiveSheetIndex(0);
 	@ob_start();
