@@ -50,8 +50,6 @@ if(COUNT($resultsC) > 0) {
             $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
             $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(35);
             $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(80);
-
-            $line = $sheet_number + 2;
             
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$line, $key['name_registry']);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$line, $key['email_registry']);
@@ -65,8 +63,6 @@ if(COUNT($resultsC) > 0) {
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB('00FFDE00');
-
-			$sheet_number++;
 
 			$sqlUpdate = 'UPDATE ps_registry_product_list SET state= 0 WHERE id_product_registry = '.$key['id_product_registry'];
 
