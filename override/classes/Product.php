@@ -59,7 +59,8 @@ class Product extends ProductCore {
 	* @return array Matching products
 	*/
 	public static function searchByName($id_lang, $query, Context $context = null)
-	{
+	{   
+            $productBlackList = Configuration::get('PRODUCT_BLACK_LIST_SHOW');
 		if (!$context)
 			$context = Context::getContext();
 		$sql = new DbQuery();
@@ -77,7 +78,7 @@ class Product extends ProductCore {
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
-		$where = ' p.active=IF(prod_black.motivo = 1 OR prod_black.motivo = 10,  0,  1) AND ps.active=IF(prod_black.motivo = 1 OR prod_black.motivo = 10,  0,  1) /*AND  prod_black.`reference` IS NULL*/ AND  (pl.`name` LIKE \'%'.pSQL($query).'%\'
+		$where = ' p.active=IF(prod_black.motivo IN ('.$productBlackList.'),  0,  1) AND ps.active=IF(prod_black.motivo IN ('.$productBlackList.'),  0,  1) /*AND  prod_black.`reference` IS NULL*/ AND  (pl.`name` LIKE \'%'.pSQL($query).'%\'
 		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 		OR  p.`id_product` IN (SELECT id_product FROM '._DB_PREFIX_.'product_supplier sp WHERE `product_supplier_reference` LIKE \'%'.pSQL($query).'%\') )';
