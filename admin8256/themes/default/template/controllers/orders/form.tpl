@@ -1329,7 +1329,7 @@ $('#products_err').html('{l s='No products found'}');
 			</iframe>
 			<div id="add-cart">
 				<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span>
-				<b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
+				<!--b>{l s='Solicitados'}</b>&nbsp;<span id="qty_in_restock"></span>
 				<b>{l s='Disponibles'}</b>&nbsp;<span id="qty_in_disstock"></span--></p>
 				<div class="margin-form">
 					<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
