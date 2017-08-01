@@ -445,8 +445,8 @@ public function __construct()
 		// $var15 = in_array( 4, Tools::getValue('groupBox'));
 		// print_r((bool)$var15);
 		// die();
-
-		if(!Tools::validateIdentification()) {
+                $id_customer = isset($_POST['id_customer']) ? $_POST['id_customer'] : '';
+		if(!Tools::validateIdentification($id_customer)) {
 			$this->errors[] = Tools::displayError('Ya existe un cliente con el número de identificación: '. $_POST['identification'].'.');
 		}
 		
