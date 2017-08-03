@@ -52,9 +52,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'orders_transporte` ot ON (a.`id_order` = ot.`id_order`)
 		LEFT JOIN `' . _DB_PREFIX_ . 'address` ad ON (a.`id_address_delivery` = ad.`id_address`)';
-    $this->_where = 'a.date_add >= "'.date("Y").'-01-01 00:00:00"';
+    $this->_where = ' AND a.date_add >= "'.date("Y").'-01-01 00:00:00"';
     $this->_orderBy = 'id_order';
     $this->_orderWay = 'DESC';
+    
     $statuses_array = array();
     $statuses = OrderState::getOrderStates((int) $this->context->language->id, (int) $this->context->employee->id_profile);
     foreach ($statuses as $status)
