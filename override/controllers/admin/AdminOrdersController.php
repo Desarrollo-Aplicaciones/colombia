@@ -419,12 +419,13 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               
               $customer = new Customer($order->id_customer);
               $address = new Address($order->id_address_delivery);
+              $replace_address = str_replace(['#','/'],'',$address->address1);
               //$server='181.49.224.186';
               $pedido = urlencode($order->id);
               $fecha_entrega = urlencode($fecha); // Puede ser enviado con o sin guiones;
               $hora_entrega = urlencode($time_delivery); // Debe ser en hora militar sin (:)
               $ciudad = urlencode($this->getDaneCities($address->city));
-              $direccion = urlencode($address->address1);
+              $direccion = urlencode($replace_address);
               $doc_cliente = urlencode($customer->identification);
               $nom_cliente = urlencode($customer->firstname . ' ' . $customer->lastname);
               $telefono = urlencode($address->phone_mobile);
@@ -679,12 +680,13 @@ class AdminOrdersController extends AdminOrdersControllerCore {
                 
                 $customer = new Customer($order->id_customer);
                 $address = new Address($order->id_address_delivery);
+                $replace_address = str_replace(['#','/'],' ',$address->address1);
                 //$server='181.49.224.186';
                 $pedido = urlencode($order->id);
                 $fecha_entrega = urlencode($fecha); // Puede ser enviado con o sin guiones;
                 $hora_entrega = urlencode($hora); // Debe ser en hora militar sin (:)
                 $ciudad = urlencode($this->getDaneCities($address->city));
-                $direccion = urlencode($address->address1);
+                $direccion = urlencode($replace_address);
                 $doc_cliente = urlencode($customer->identification);
                 $nom_cliente = urlencode($customer->firstname . ' ' . $customer->lastname);
                 $telefono = urlencode($address->phone_mobile);
