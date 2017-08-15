@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-Hay un problema con el pago del pedido: {order_name}. Por favor, póngase en contacto con nosotros lo más pronto posible.
+Hay un problema con el pago del pedido:  #{id_order}. Por favor, póngase en contacto con nosotros lo más pronto posible.
 
 Agradecemos su comprensión.
 

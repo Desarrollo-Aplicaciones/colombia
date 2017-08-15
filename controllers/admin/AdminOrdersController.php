@@ -58,6 +58,7 @@ class AdminOrdersControllerCore extends AdminController {
 		LEFT JOIN `' . _DB_PREFIX_ . 'orders_transporte` ot ON (a.`id_order` = ot.`id_order`)';
     $this->_orderBy = 'id_order';
     $this->_orderWay = 'DESC';
+    $this->_limit = '50000';
 
     $statuses_array = array();
     $statuses = OrderState::getOrderStates((int) $this->context->language->id, (int) $this->context->employee->id_profile);

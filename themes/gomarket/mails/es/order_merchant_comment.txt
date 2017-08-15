@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-Ha recibido un mensaje de {shop_name} sobre el pedido con referencia {order_name}.
+Ha recibido un mensaje de {shop_name} sobre el pedido con referencia  #{id_order}.
 
 Mensaje:
 {message}

@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 		
-Uno o más productos de su pedido {order_name} no están en el inventario. Esto puede originar un retraso en el envío.
+Uno o más productos de su pedido  #{id_order} no están en el inventario. Esto puede originar un retraso en el envío.
 
 Trabajeremos lo más rápido posible para solucionarlo. Por favor acepte nuestras disculpas.
 

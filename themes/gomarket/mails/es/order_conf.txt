@@ -2,7 +2,7 @@
 		
 Detalles del Pedido
 
-Pedido: {order_name} realizado el {date}
+Pedido:  #{id_order} realizado el {date}
 Forma de Pago: {payment}
 
 Total Productos: {total_products}

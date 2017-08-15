@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-Su pedido {order_name} ha sido enviado.
+Su pedido  #{id_order} ha sido enviado.
 
 En caso de haber elegido correo expreso, pronto recibirá un enlace para realizar el seguimiento de su paquete.
 

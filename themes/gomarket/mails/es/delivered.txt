@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-Su pedido {order_name} ha sido entregado.
+Su pedido #{id_order} ha sido entregado.
 
 Puede revisar su pedido y descargar la factura en la sección: "Historia y detalles de mis pedidos" dentro de su cuenta.
 

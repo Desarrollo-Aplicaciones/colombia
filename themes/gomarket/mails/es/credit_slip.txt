@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-Se ha generado un vale de compra a su favor con la referencia: {order_name}.
+Se ha generado un vale de compra a su favor con la referencia:  #{id_order}.
 
 Puede revisar este vale y descargar la factura en la sección: "Seguimiento de pedido" dentro de su cuenta.
 

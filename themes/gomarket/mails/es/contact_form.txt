@@ -6,7 +6,7 @@ Su mensaje:
 
 {message}
 
-Referencia del pedido: {order_name}
+Referencia del pedido:  #{id_order}
 
 Archivo: {attached_file}
 

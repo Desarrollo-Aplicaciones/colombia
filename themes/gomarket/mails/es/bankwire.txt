@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-Su pedido con la referencia: {order_name} ha sido recibido correctamente y será enviado en cuanto recibamos el pago.
+Su pedido con la referencia:  #{id_order} ha sido recibido correctamente y será enviado en cuanto recibamos el pago.
 
 Por favor, recuerde que ha seleccionado transferencia bancaria como forma de pago.
 

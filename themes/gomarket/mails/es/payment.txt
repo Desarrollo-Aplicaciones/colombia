@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-El pago de su pedido {order_name} fué procesado exitósamente. 
+El pago de su pedido  #{id_order} fué procesado exitósamente. 
 
 Puede revisar su pedido y descargar la factura en la sección: "Historia y detalles de mis pedidos" dentro de su cuenta.
 

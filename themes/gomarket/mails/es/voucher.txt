@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 
-Se ha creado un cupón de descuento para usted como resultado de su pedido {order_name}.
+Se ha creado un cupón de descuento para usted como resultado de su pedido  #{id_order}.
 
 Código del cupón: {voucher_num}, por la cantidad de: {voucher_amount}.
 

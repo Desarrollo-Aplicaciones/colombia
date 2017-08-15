@@ -1,6 +1,6 @@
 Hola {firstname} {lastname},
 	
-Estamos preparando su pedido con la referencia: {order_name}.
+Estamos preparando su pedido con la referencia:  #{id_order}.
 
 Puede revisar su pedido y descargar la factura en la sección: "Historia y detalles de mis pedidos" dentro de su cuenta.
 
