@@ -52,7 +52,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'orders_transporte` ot ON (a.`id_order` = ot.`id_order`)
 		LEFT JOIN `' . _DB_PREFIX_ . 'address` ad ON (a.`id_address_delivery` = ad.`id_address`)';
-    $this->_where = '';
     $this->_orderBy = 'id_order';
     $this->_orderWay = 'DESC';
     
@@ -146,13 +145,18 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       if ($total > 0 ) */
 /*
     $sqlPayu = "SELECT id_cart FROM " . _DB_PREFIX_ . "pagos_payu WHERE id_cart = " . $order->id_cart;
+=======
+    /*$sqlPayu = "SELECT id_cart FROM " . _DB_PREFIX_ . "pagos_payu WHERE id_cart = " . $order->id_cart;
+>>>>>>> 604ad8b5947b41e6f296b762485096608e4430f9
     $results = Db::getInstance()->ExecuteS($sqlPayu);
     if (empty($results[0]['id_cart'])) {
       $validacionPagoPayu = "empty";
     } else {
       $validacionPagoPayu = "full";
     }*/
-$validacionPagoPayu = "full";
+
+    $validacionPagoPayu = "full";
+
     $this->context->smarty->assign(array(
     'order' => $order,
     'order_state' => $order_state,
