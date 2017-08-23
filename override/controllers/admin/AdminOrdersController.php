@@ -44,7 +44,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
 		os.`color`,
 		ot.`extras` AS `extras`,
 		ad.city as city_delivery,
-		IF((SELECT COUNT(so.id_order) FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.date_add >= "'.date("Y").'-07-01 00:00:00" AND so.id_customer = a.id_customer) > 1, 0, 1) as `new`';
+		IF((SELECT COUNT(so.id_order) FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as `new`';
     $this->_join = '
 		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = a.`id_customer`)
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_invoice` oi ON (oi.`id_order` = a.`id_order`)
@@ -52,7 +52,6 @@ class AdminOrdersController extends AdminOrdersControllerCore {
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'orders_transporte` ot ON (a.`id_order` = ot.`id_order`)
 		LEFT JOIN `' . _DB_PREFIX_ . 'address` ad ON (a.`id_address_delivery` = ad.`id_address`)';
-    $this->_where = ' AND a.date_add >= "'.date("Y").'-07-01 00:00:00"';
     $this->_orderBy = 'id_order';
     $this->_orderWay = 'DESC';
     
@@ -144,13 +143,14 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     /* 				$sqlPayu = "SELECT  COUNT(pp.id_cart) as total FROM "._DB_PREFIX_."pagos_payu pp INNER JOIN "._DB_PREFIX_."orders o ON(pp.id_cart = o.id_cart) WHERE o.id_order = " . (int) $id_order;
       $total = (int) Db::getInstance()->getValue($sqlPayu);
       if ($total > 0 ) */
-    $sqlPayu = "SELECT id_cart FROM " . _DB_PREFIX_ . "pagos_payu WHERE id_cart = " . $order->id_cart;
+    /*$sqlPayu = "SELECT id_cart FROM " . _DB_PREFIX_ . "pagos_payu WHERE id_cart = " . $order->id_cart;
     $results = Db::getInstance()->ExecuteS($sqlPayu);
     if (empty($results[0]['id_cart'])) {
       $validacionPagoPayu = "empty";
     } else {
       $validacionPagoPayu = "full";
-    }
+    }*/
+    $validacionPagoPayu = "full";
     $this->context->smarty->assign(array(
     'order' => $order,
     'order_state' => $order_state,
