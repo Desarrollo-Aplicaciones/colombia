@@ -44,7 +44,7 @@
 		<div class="ctn-superior-product">
 			<div class="cart_description" id="ProductoDescription">
 				<p class="s_title_block producto">
-					<a id="descripcioNombre" {if !isset($smarty.cookies.validamobile)}href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}"{/if}>{$product.name|truncate:50:'...'|lower|capitalize|escape:'htmlall':'UTF-8'}</a>
+					<a id="descripcioNombre" {if !isset($smarty.cookies.validamobile)}href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}"{/if}>{$product.name|truncate:50:'...'|capitalize|escape:'htmlall':'UTF-8'}</a>
 				</p>
 				{if isset($product.attributes) && $product.attributes}
 					<a {if !isset($smarty.cookies.validamobile)}href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}"{/if}>{$product.attributes|escape:'htmlall':'UTF-8'}</a>

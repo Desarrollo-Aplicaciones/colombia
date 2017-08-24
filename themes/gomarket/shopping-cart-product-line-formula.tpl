@@ -36,7 +36,7 @@
 	</div>
 <!---------------------------- Nombre Producto ------------------------------>
 <div class="borde_bajo_gris">
-<div class="nombre"><a id="descripcioNombre" {if !isset($smarty.cookies.validamobile)}href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}"{/if}>{$product.name|truncate:30:'...'|lower|capitalize|escape:'htmlall':'UTF-8'}</a></div>
+<div class="nombre"><a id="descripcioNombre" {if !isset($smarty.cookies.validamobile)}href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}"{/if}>{$product.name|truncate:30:'...'|capitalize|escape:'htmlall':'UTF-8'}</a></div>
 
 
 
