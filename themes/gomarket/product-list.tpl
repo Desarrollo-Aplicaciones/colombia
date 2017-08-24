@@ -44,7 +44,7 @@ function addcartlightbox( element ) {
 	var pricepro = Math.round( element.attr('pricepro') );
 
 	var namepro = element.attr('namepro');
-	namepro = namepro.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+	namepro = namepro.replace(/\b[a-z]/g, function(letter) {
 		return letter.toUpperCase();
 	});
 
