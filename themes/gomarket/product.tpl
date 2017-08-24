@@ -1019,7 +1019,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 	<div class="lightbox_resume">
 		<img class="lightbox_img"  src={if $have_image}"{$link->getImageLink($product->link_rewrite, $cover.id_image, 'small_default')}"{else}"{$img_prod_dir}{$lang_iso}-default-small_default.jpg"{/if} alt="{$product->name|escape:'htmlall':'UTF-8'}" />
 		<div class="lightbox_desc">
-			<div class="lightbox_pname">{$product->name|lower|capitalize}</div>
+			<div class="lightbox_pname">{$product->name|capitalize}</div>
 			<div style="text-align:center">Cantidad: &nbsp;&nbsp; <span id="lightbox_qty"></span> &nbsp;Total: &nbsp;&nbsp; <span id="lightbox_subtotal"></span></div>
 		</div>
 	</div>
