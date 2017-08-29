@@ -509,7 +509,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 
 				<div id="redirect_landpage" class="buttons_bottom_block" >					
 					<div class="proceed">
-						<a href="{$prods_redireccion[$product.id_product]}"><input type="submit" id="btnComprar" name="Submit" value="{l s='Comprar'}" class="exclusive"  /></a>
+						<a href="{$prods_redireccion[$product->id]}"><input type="submit" id="btnComprar" name="Submit" value="{l s='Comprar'}" class="exclusive"  /></a>
 					</div>					
 				</div>
 

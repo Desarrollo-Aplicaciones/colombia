@@ -57,7 +57,7 @@ class SearchControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		$prods_redireccion = array( '39473' => 'http://info.farmalisto.com/freestyle-libre/', '39474' => 'https://info.farmalisto.com.co/prod2.html');
+		$prods_redireccion = array( '39473' => 'http://info.farmalisto.com/freestyle-libre/', '39474' => 'http://info.farmalisto.com/freestyle-libre/');
 
 			$this->context->smarty->assign(array(
 				'prods_redireccion' =>  $prods_redireccion
