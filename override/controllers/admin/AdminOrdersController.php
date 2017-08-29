@@ -143,14 +143,20 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     /* 				$sqlPayu = "SELECT  COUNT(pp.id_cart) as total FROM "._DB_PREFIX_."pagos_payu pp INNER JOIN "._DB_PREFIX_."orders o ON(pp.id_cart = o.id_cart) WHERE o.id_order = " . (int) $id_order;
       $total = (int) Db::getInstance()->getValue($sqlPayu);
       if ($total > 0 ) */
+/*
+    $sqlPayu = "SELECT id_cart FROM " . _DB_PREFIX_ . "pagos_payu WHERE id_cart = " . $order->id_cart;
+=======
     /*$sqlPayu = "SELECT id_cart FROM " . _DB_PREFIX_ . "pagos_payu WHERE id_cart = " . $order->id_cart;
+>>>>>>> 604ad8b5947b41e6f296b762485096608e4430f9
     $results = Db::getInstance()->ExecuteS($sqlPayu);
     if (empty($results[0]['id_cart'])) {
       $validacionPagoPayu = "empty";
     } else {
       $validacionPagoPayu = "full";
     }*/
+
     $validacionPagoPayu = "full";
+
     $this->context->smarty->assign(array(
     'order' => $order,
     'order_state' => $order_state,

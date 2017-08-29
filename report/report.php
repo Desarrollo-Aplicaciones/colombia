@@ -23,7 +23,7 @@ class Ventas {
   private function conectar()
   {
   	$i=0;
-      $con = new mysqli("colombia-repo.cuznbgafgkfl.us-east-1.rds.amazonaws.com","farmalisto",/*"F4rm4l1st02015**"*/"","farmalisto_colombia", "3808");
+      $con = new mysqli("col1-repo.cuznbgafgkfl.us-east-1.rds.amazonaws.com:3808","farmalisto","F4rm4l1st02015**","farmalisto_colombia", "3808");
    if ($con->connect_errno) {
      printf("Conexión fallida: %s\n", $con->connect_errno);
      return false;
@@ -40,7 +40,7 @@ class Ventas {
 		where SUBSTRING(invoice_date,6,2) = ". $this->hoy['mon'] ."
 		and SUBSTRING(invoice_date,1,4) = ".$this->hoy['year']."
 		-- and invoice_date >= DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
-		and po.current_state IN (2,3,4,5,9,20)
+		and po.current_state IN (2,3,4,5,9,12,20,22)
 		group by SUBSTRING(invoice_date,1,4),
 		SUBSTRING(invoice_date,6,2),
 		SUBSTRING(invoice_date,9,2) ORDER BY invoice_date ASC");
@@ -64,7 +64,7 @@ class Ventas {
   			where SUBSTRING(invoice_date,9,2) = ".$this->hoy['mday']." and
 			SUBSTRING(invoice_date,6,2) = ". $this->hoy['mon'] ."
   			and SUBSTRING(invoice_date,1,4) = ".$this->hoy['year']."
-  			and po.current_state IN (2,3,4,5,9,20) group by SUBSTRING(invoice_date,12,2) ORDER BY invoice_date ASC");
+  			and po.current_state IN (2,3,4,5,9,12,20,22) group by SUBSTRING(invoice_date,12,2) ORDER BY invoice_date ASC");
   	//if(!( mysql_fetch_array($result, MYSQL_ASSOC)))
   	/*{
   		$this->dia['cantidad'][$i]=1;
