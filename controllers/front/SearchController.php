@@ -57,6 +57,12 @@ class SearchControllerCore extends FrontController
 	{
 		parent::initContent();
 
+		$prods_redireccion = array( '39473' => 'http://info.farmalisto.com/freestyle-libre/', '39474' => 'https://info.farmalisto.com.co/prod2.html');
+
+			$this->context->smarty->assign(array(
+				'prods_redireccion' =>  $prods_redireccion
+				));
+
 		$query = Tools::replaceAccentedChars(urldecode(Tools::getValue('q')));
 		if ($this->ajax_search)
 		{

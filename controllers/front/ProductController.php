@@ -250,6 +250,9 @@ class ProductControllerCore extends FrontController
 				$val_restante = $gratis_envio_precio;	
 			}
 			/****************** FIN  CALCULAR VALOR RESTANTE PARA EL ENVIO GRATUITO   *****************/
+
+			$prods_redireccion = array( '39473' => 'http://info.farmalisto.com/freestyle-libre/', '39474' => 'http://info.farmalisto.com/freestyle-libre/');
+
  $img_manufacturer='./img/m/farmalisto-laboratorios.jpg'; 
   if (file_exists('./img/m/'.$this->product->id_manufacturer.'-small_lab_pdp.jpg')) {
       $img_manufacturer='./img/m/'.$this->product->id_manufacturer.'-small_lab_pdp.jpg';
@@ -292,6 +295,7 @@ class ProductControllerCore extends FrontController
         		'url_manufacturer'=> $url_manufacturer,
         		'HOOK_BANNER' => Hook::exec('prodmain'),
 				'disponibilidad' => Configuration::get('PS_SUBJECT_INVENTORY'),
+				'prods_redireccion' =>  $prods_redireccion,
 			));
 		}
 		$this->context->smarty->assign('errors', $this->errors);

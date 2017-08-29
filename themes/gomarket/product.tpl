@@ -485,7 +485,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 					<b>¡Envío Gratuito!</b>
 				</span>
 			</div-->
-			{if ($productPrice > 0) AND !((!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE)}
+			{if ($productPrice > 0) AND !((!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE) AND (array_key_exists($product->id,$prods_redireccion)) == 0}
 				<div id="add_to_cart" class="buttons_bottom_block" >
 					<input type="hidden" name="token" />
 					<input type="hidden" name="id_product" value="{$product->id|intval}" id="product_page_product_id" />
@@ -504,6 +504,15 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 						<input type="hidden" id="btnAgregar" value="Agregar"/>
 					</div>
 				</div>
+
+			{elseif array_key_exists($product->id,$prods_redireccion)}
+
+				<div id="redirect_landpage" class="buttons_bottom_block" >					
+					<div class="proceed">
+						<a href="{$prods_redireccion[$product.id_product]}"><input type="submit" id="btnComprar" name="Submit" value="{l s='Comprar'}" class="exclusive"  /></a>
+					</div>					
+				</div>
+
 			{/if}
 
 			<div class="ctn-contact-lap" id="contact-lap">
