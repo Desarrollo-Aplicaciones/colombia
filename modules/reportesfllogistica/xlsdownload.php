@@ -24,6 +24,7 @@ if (isset($_GET['opc_sel']) ) {
                 $sql = 'SELECT           o.id_order,
                         o.invoice_number,
                         CONCAT(c.firstname, " ", c.lastname) AS cliente,
+                        c.identification as cedula,
                         a.address1,
                         a.address2,
                         o.date_add,
@@ -42,6 +43,7 @@ if (isset($_GET['opc_sel']) ) {
                             IF ( cr.reduction_product != 0, IF ( cr.reduction_product = od.product_id, "*", ""), ""), "") AS producto_con_descuento,
                         od.product_quantity,
                         i.cod_icr,
+                        soi.lote,
                         tro.nombre,
                         osl.name,
                         CONCAT( "$ ", REPLACE(sod.price_with_order_discount_te,".",",") / (quantity_expected)) AS costo_icr,
@@ -85,7 +87,7 @@ if (isset($_GET['opc_sel']) ) {
                 if ($results = Db::getInstance_slv()->ExecuteS($sql)) {
                     
                     $output = fopen('php://output', 'w');
-                    fputcsv($output, array('NUM PEDIDO', 'NUM FACTURA', 'CLIENTE', 'DIRECCION 1', 'DIRECCION 2', 'CIUDAD DESTINO', 'FECHA', 'REFERENCIA', 'DESCRIPCION', 'PRECIO', 'PRECIO CON IMPUESTO', 'VALOR DESCUENTO', 'CUPON DESCUENTO', 'DESCUENTO A', 'TIPO DESCUENTO', 'PRODUCTO CON DESCUENTO', 'CANTIDAD', 'ICR', 'TRANSPORTADORA', 'ESTADO ORDEN', 'COSTO ICR', 'ORDEN SUMINISTRO', 'IVA PROVEEDOR', 'FECHA DE ENTREGA', 'HORA DE ENTREGA', 'METODO DE PAGO', 'TRANSPORTADOR'));
+                    fputcsv($output, array('NUM PEDIDO', 'NUM FACTURA', 'CLIENTE','CEDULA', 'DIRECCION 1', 'DIRECCION 2', 'CIUDAD DESTINO', 'FECHA', 'REFERENCIA', 'DESCRIPCION', 'PRECIO', 'PRECIO CON IMPUESTO', 'VALOR DESCUENTO', 'CUPON DESCUENTO', 'DESCUENTO A', 'TIPO DESCUENTO', 'PRODUCTO CON DESCUENTO', 'CANTIDAD', 'ICR', 'LOTE','TRANSPORTADORA', 'ESTADO ORDEN', 'COSTO ICR', 'ORDEN SUMINISTRO', 'IVA PROVEEDOR', 'FECHA DE ENTREGA', 'HORA DE ENTREGA', 'METODO DE PAGO', 'TRANSPORTADOR'));
                             
                     /*echo "<table border='1'>
                             <tr>
@@ -137,7 +139,7 @@ if (isset($_GET['opc_sel']) ) {
                                     </tr>
                                 ";*/
 
-                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['valor_descuento'], $dat_print['cupon_descuento'], $dat_print['descuento_a'], $dat_print['tipo_descuento'], $dat_print['producto_con_descuento'], $dat_print['product_quantity'],  $dat_print['product_quantity'], $dat_print['cod_icr'], utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'] ));
+                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['cedula']), utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['valor_descuento'], $dat_print['cupon_descuento'], $dat_print['descuento_a'], $dat_print['tipo_descuento'], $dat_print['producto_con_descuento'], $dat_print['product_quantity'],  $dat_print['product_quantity'], $dat_print['cod_icr'], $dat_print['lote'],utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'] ));
 
                             }
                     //echo "</table>";
