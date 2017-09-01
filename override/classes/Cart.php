@@ -1171,6 +1171,172 @@ echo "<hr>";*/
 
 		
 
+
+
+
+//----------------------  INICIO  ----------------------------   ABBOTT   -------------------------------------  EWING  -------------//
+
+			//////error_log("|override getOrderTotal prods:|".count($products).'-|-'.debug_backtrace()[1]['class'], 0);
+			//////error_log(print_r($products,true), 0);
+
+			
+		if (  /*$this->id_customer == 250 && */ !is_null($products) && count($products) > 0 
+			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRule" && debug_backtrace()[1]['function'] != "getContextualValue") 
+			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRuleCore" && debug_backtrace()[1]['function'] != "checkValidity") ) {
+
+			$al_log = "\n";
+
+			//////--$al_log .= ("in c:".debug_backtrace()[1]['class']."-f:".debug_backtrace()[1]['function']);
+			
+			$nevBD = array();
+
+			$pabbottflete = 39492;//39492; //cobro flete abbott
+
+			$pabbottsensor = 39473; //Sensor * 2
+			$pabbottlector = 39474; //Lector * 1
+
+			$abtBD[ $pabbottflete ] = 0; 
+
+			$cantpros_sensor = 0;
+			$cantpros_lector = 0;
+
+			$cantmax_sensor = 2;
+                        $cantmax_lector = 1;
+
+
+			if ( $this->id != 0 && $this->id != '' ) {
+				$query_pabbotts_cart = "SELECT id_product, quantity FROM ps_cart_product cpp
+					WHERE cpp.id_cart = ".$this->id."
+					AND id_product IN (".$pabbottflete.")";					
+
+				if ( $result_pabbotts_cart = Db::getInstance()->ExecuteS($query_pabbotts_cart) ) {
+					foreach ($result_pabbotts_cart as $key => $value) {	
+
+						if ( array_key_exists( $value['id_product'], $abtBD ) ) {
+
+							$abtBD[ $value['id_product'] ] = $value['quantity'];
+						}
+					}
+				}
+			}
+
+
+			foreach ($products as $key => $product) {
+
+				if ( ( $product["id_product"] != $pabbottflete ) 
+						&& ( $product["id_product"] ==  $pabbottsensor ) ) { // Validar sensor y cantidad
+
+					$cantpros_sensor += $product["cart_quantity"];
+
+				} elseif ( ( $product["id_product"] != $pabbottflete ) 
+						&& ( $product["id_product"] ==  $pabbottlector ) ) { // validar lector y cantidad
+
+					$cantpros_lector += $product["cart_quantity"];
+				}
+			}
+
+			//////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
+
+			if ( $cantpros_sensor != 0 ||  $cantpros_lector != 0  || $abtBD[ $pabbottflete ] != 0 ) {
+
+				$al_log .= ("c:".$this->id."-");
+				//////--usleep(200000); // para dar tiempo de quitar el producto
+				$alenum = rand(0,99);
+				$al_log .= ("-N:".$alenum );
+
+					$qr_nev = "";
+
+					if ( ( $cantpros_sensor < 2 || $cantpros_lector < 1 ) && 
+						( ( $cantpros_sensor != 2 || $cantpros_lector != 1 ) && $abtBD[ $pabbottflete ] == 0 ) ) {
+						
+						$qr_nev = "INSERT INTO ps_cart_product (id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES ( '".$this->id."', '".$pabbottflete."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '1', '".date("Y-m-d H:i:s")."')";
+					}
+
+					if ( $cantpros_sensor >= 2 && $cantpros_lector >= 1 && $abtBD[ $pabbottflete ] != 0 ) {
+						
+						$qr_nev = 'DELETE FROM ps_cart_product WHERE id_cart = '.$this->id.' AND id_product = '.$pabbottflete;
+
+					} 
+					/*elseif ( $cantpros_sensor != 2 || $cantpros_lector != 1  && $abtBD[ $pabbottflete ] == 0  ) {
+						
+						$qr_nev = "UPDATE ps_cart_product SET quantity = 1 WHERE id_cart = ".$this->id." AND id_product = ".$pabbottflete;	
+
+					} */
+					
+						$al_log .= $qr_nev;
+
+					if ( $qr_nev != "" ) {
+
+						if ( !Db::getInstance()->execute($qr_nev) /*!$this->CartQueryExecute($qr_nev)*/ ) {
+							$al_log .= '_RNO';
+						} else {
+							$al_log .= '_RSI';
+						}
+
+					}
+
+					$qr_nev_lector = "";
+
+					if ( $cantpros_lector > $cantmax_lector ) {
+						
+						$qr_nev_lector = "UPDATE ps_cart_product SET quantity = ".$cantmax_lector." WHERE id_cart = ".$this->id." AND id_product = ".$pabbottlector;	
+
+					}
+					
+						$al_log .= $qr_nev_lector;
+
+					if ( $qr_nev_lector != "" ) {
+
+						if ( !Db::getInstance()->execute($qr_nev_lector) /*!$this->CartQueryExecute($qr_nev)*/ ) {
+							$al_log .= '_RLNO';
+						} else {
+							$al_log .= '_RLSI';
+						}
+
+					}
+
+
+					$qr_nev_sensor = "";
+
+					if ( $cantpros_sensor > $cantmax_sensor ) {
+						
+						$qr_nev_sensor = "UPDATE ps_cart_product SET quantity = ". $cantmax_sensor." WHERE id_cart = ".$this->id." AND id_product = ".$pabbottsensor;	
+
+					}
+					
+						$al_log .= $qr_nev_sensor;
+
+					if ( $qr_nev_sensor != "" ) {
+
+						if ( !Db::getInstance()->execute($qr_nev_sensor) /*!$this->CartQueryExecute($qr_nev)*/ ) {
+							$al_log .= '_RSNO';
+						} else {
+							$al_log .= '_RSSI';
+						}
+
+					}
+				}
+				
+
+				
+				error_log($al_log, 3, _ROUTE_FILE_."/pabbott_error.log");
+				
+			
+
+			/*$fp = fopen('/home/ubuntu/pabbott_error.log', 'a');
+			fwrite($fp, $al_log);
+			fclose($fp);*/
+
+			//error_log( print_r( debug_backtrace(), true ), 3, "/home/ubuntu/pabbott_error.log");
+			//error_log($alenum."-------------------------------------------------------\n", 3, "/home/ubuntu/pabbott_error.log");
+			//error_log($al_log);
+		}
+
+
+		//----------------------  FIN  ----------------------------   ABBOTT   -------------------------------------  EWING  -------------//		
+
+
+
 		if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING)
 		{
 			foreach ($products as $key => $product)
