@@ -25,6 +25,7 @@ if (isset($_GET['opc_sel']) ) {
                         o.invoice_number,
                         CONCAT(c.firstname, " ", c.lastname) AS cliente,
                         c.identification as cedula,
+                        c.email as correo_cliente,
                         a.address1,
                         a.address2,
                         o.date_add,
@@ -60,6 +61,7 @@ if (isset($_GET['opc_sel']) ) {
                     AS Transportador /*,
                     ocr.*,
                     cr.reduction_product*/
+                    , m.nombre AS medico
                     FROM ps_order_detail od  -- 174411
                     INNER JOIN ps_orders o ON ( o.id_order = od.id_order )
                     LEFT JOIN ps_order_cart_rule ocr ON ( ocr.id_order = o.id_order )
@@ -77,6 +79,8 @@ if (isset($_GET['opc_sel']) ) {
                     LEFT JOIN ps_associate_carrier asoc ON (o.id_order = asoc.id_order)
                     LEFT JOIN ps_carrier trans ON(asoc.id_entity = trans.id_carrier)
                     LEFT JOIN ps_employee emp ON(asoc.id_entity = emp.id_employee)
+                    LEFT JOIN ps_doctor_cart dc ON ( o.id_cart = dc.id_cart )
+                    LEFT JOIN ps_medico m ON ( dc.id_doctor = m.id_medico )
                     WHERE  o.date_add BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"
                     ORDER BY ct.date_delivery ,ct.time_delivery,o.date_add ASC';
                     //echo $sql;
@@ -87,7 +91,7 @@ if (isset($_GET['opc_sel']) ) {
                 if ($results = Db::getInstance_slv()->ExecuteS($sql)) {
                     
                     $output = fopen('php://output', 'w');
-                    fputcsv($output, array('NUM PEDIDO', 'NUM FACTURA', 'CLIENTE','CEDULA', 'DIRECCION 1', 'DIRECCION 2', 'CIUDAD DESTINO', 'FECHA', 'REFERENCIA', 'DESCRIPCION', 'PRECIO', 'PRECIO CON IMPUESTO', 'VALOR DESCUENTO', 'CUPON DESCUENTO', 'DESCUENTO A', 'TIPO DESCUENTO', 'PRODUCTO CON DESCUENTO', 'CANTIDAD', 'ICR', 'LOTE','TRANSPORTADORA', 'ESTADO ORDEN', 'COSTO ICR', 'ORDEN SUMINISTRO', 'IVA PROVEEDOR', 'FECHA DE ENTREGA', 'HORA DE ENTREGA', 'METODO DE PAGO', 'TRANSPORTADOR'));
+                    fputcsv($output, array('NUM PEDIDO', 'NUM FACTURA', 'CLIENTE','CEDULA', 'CORREO_CLIENTE', 'DIRECCION 1', 'DIRECCION 2', 'CIUDAD DESTINO', 'FECHA', 'REFERENCIA', 'DESCRIPCION', 'PRECIO', 'PRECIO CON IMPUESTO', 'VALOR DESCUENTO', 'CUPON DESCUENTO', 'DESCUENTO A', 'TIPO DESCUENTO', 'PRODUCTO CON DESCUENTO', 'CANTIDAD', 'ICR', 'LOTE','TRANSPORTADORA', 'ESTADO ORDEN', 'COSTO ICR', 'ORDEN SUMINISTRO', 'IVA PROVEEDOR', 'FECHA DE ENTREGA', 'HORA DE ENTREGA', 'METODO DE PAGO', 'TRANSPORTADOR', 'DOCTOR'));
                             
                     /*echo "<table border='1'>
                             <tr>
@@ -139,7 +143,7 @@ if (isset($_GET['opc_sel']) ) {
                                     </tr>
                                 ";*/
 
-                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['cedula']), utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['valor_descuento'], $dat_print['cupon_descuento'], $dat_print['descuento_a'], $dat_print['tipo_descuento'], $dat_print['producto_con_descuento'], $dat_print['product_quantity'],  $dat_print['product_quantity'], $dat_print['cod_icr'], $dat_print['lote'],utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'] ));
+                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['cedula']), utf8_decode($dat_print['correo_cliente']),  utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['valor_descuento'], $dat_print['cupon_descuento'], $dat_print['descuento_a'], $dat_print['tipo_descuento'], $dat_print['producto_con_descuento'], $dat_print['product_quantity'],  $dat_print['product_quantity'], $dat_print['cod_icr'], $dat_print['lote'],utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'], $dat_print['medico'] ));
 
                             }
                     //echo "</table>";
