@@ -410,6 +410,7 @@ color: #979797;
 												</div>
 				                        		<div id="contenedorProducto" >
 				                        			<div id="productos" >
+				                        				{assign var='quitarenvio' value=0}
 				                        				{foreach from=$products item=product name=productLoop}
 				                        					{assign var='productId' value=$product.id_product}
 				                        					{assign var='productAttributeId' value=$product.id_product_attribute}
@@ -420,6 +421,9 @@ color: #979797;
 				                        					{* Display the product line *}
 				                        					<!-- Imprime productos -->
 				                        					{include file="$tpl_dir./shopping-cart-product-line-formula.tpl"}
+				                        					{if $product.id_product = 39492}
+				                        						{assign var='quitarenvio' value=1}
+				                        					{/if}
 				                        				{/foreach}
 				                        				<!-- productos de regalo -->
 				                        				{assign var='last_was_odd' value=$product@iteration%2}
@@ -480,14 +484,14 @@ color: #979797;
 													{/if *}
 
 													<!-- total envio -->
-													{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+													{if $total_shipping_tax_exc <= 0 && !isset($virtualCart) && $quitarenvio == 0 }
 														<div class="cart_total_price" style="{if !isset($carrier->id) || is_null($carrier->id)}display:none;{/if}">
 															<div class="descripcion">Envío:</div>
 															<div class="price2" id="total_shipping">{l s='Free Shipping!'}</div>
 														</div>
 													{else}
 														{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
-															{if $priceDisplay}
+															{if $priceDisplay  && $quitarenvio == 0}
 																<div class="cart_total_price" {if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
 																	<div class="descripcion">Envío:</div>
 																	<div class="price2" id="total_shipping">{displayPrice price=$total_shipping_tax_exc}</div>
