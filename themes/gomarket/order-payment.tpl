@@ -421,7 +421,7 @@ color: #979797;
 				                        					{* Display the product line *}
 				                        					<!-- Imprime productos -->
 				                        					{include file="$tpl_dir./shopping-cart-product-line-formula.tpl"}
-				                        					{if $product.id_product = 39492}
+				                        					{if $product.id_product == 39492}
 				                        						{assign var='quitarenvio' value=1}
 				                        					{/if}
 				                        				{/foreach}
