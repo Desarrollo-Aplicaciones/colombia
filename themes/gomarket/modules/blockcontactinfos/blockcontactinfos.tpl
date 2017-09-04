@@ -53,12 +53,12 @@
 		<h4 class="title_block">{l s='Mobile' mod='blockcontactinfos'}</h4>
 		{* <a class="show_hide_footer" href="javascript:void(0)">icon</a> *}
 		<ul class="f_block_content">
-		<a href="https://itunes.apple.com/co/app/farmalisto/id899599402?mt=8">
+		<!--a href="https://itunes.apple.com/co/app/farmalisto/id899599402?mt=8"-->
 		<img src="{$img_dir}footer/appStore.jpg" alt="Descarga la aplicación de farmalisto en el App Store" target="blank"/>
-		</a>
-		<a href="https://play.google.com/store/apps/details?id=com.ionicframework.appfarmalisto2">
+		<!--/a>
+		<a href="https://play.google.com/store/apps/details?id=com.ionicframework.appfarmalisto2"-->
 				<img src="{$img_dir}footer/googlePlay.png" alt="Descarga la aplicación de farmalisto en google play" target="blank"/>
-		</a>
+		<!--/a-->
 		</ul>
 	</div>
 </div>

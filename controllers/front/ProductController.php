@@ -251,7 +251,7 @@ class ProductControllerCore extends FrontController
 			}
 			/****************** FIN  CALCULAR VALOR RESTANTE PARA EL ENVIO GRATUITO   *****************/
 
-			$prods_redireccion = array( '39473' => 'http://info.farmalisto.com/freestyle-libre/', '39474' => 'http://info.farmalisto.com/freestyle-libre/');
+			$prods_redireccion = array( '39493' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128494', '39494' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128496');
 
  $img_manufacturer='./img/m/farmalisto-laboratorios.jpg'; 
   if (file_exists('./img/m/'.$this->product->id_manufacturer.'-small_lab_pdp.jpg')) {
