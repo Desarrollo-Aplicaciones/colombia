@@ -694,7 +694,11 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				<img src="{$img_dir}pdp/truck1.jpg" class="img-truck" id="truck1">
 			</div>
 			<div class="ctn-txt-arrow">
-				<span id="txt-green-times-delivery">Tiempos de entrega</span>
+                            {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
+				<span id="txt-green-times-delivery">Costos de envío</span>
+                            {else}
+                                <span id="txt-green-times-delivery">Tiempos de entrega</span>
+                            {/if}
 				<div class="ctn-img-desplegable" id="open-close">
 					<span class="img-desplegable-plus">+</span>
 				</div>
@@ -702,6 +706,9 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		</div>
 
 		<div class="ctn-times-delivery" id="times-delivery" style="display: none;">
+                    {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
+                        <span class="txt-gray">  Para envíos de <strong> dispositivos electrónicos y dispositivos médicos tipo 2B </strong>se cobrará un costo de envío adicional. Validar el valor con los agentes de Call Center:<strong> 4926365</strong> </span>
+                    {else}
 			<div class="ctn-valor-min"><span class="txt-green-small"><strong>Valor mínimo</strong> de pedido: <strong>$25.000</strong></span></div>
 			<div class="ctn-info-times-delivery">
 				<span class="txt-gray">
@@ -713,6 +720,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				</span>
 			</div>
 			<div class="ctn-valor-min"><a href="{$base_dir}content/1-entregas-y-pedidos-domicilios" class="txt-green-small"><strong>Ver más...</strong></a></div>
+                    {/if}
 		</div>
 
 	</div>
