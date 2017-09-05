@@ -899,7 +899,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				<ul id="idTab99" class="rte bullet content_hide_show">
 					<div class="ctn-times-delivery-li">
                       {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
-                        <span class="txt-gray">  Para envíos de <strong> dispositivos electrónicos y dispositivos médicos tipo 2B </strong>se cobrará un costo de envío adicional. Validar el valor con los agentes de Call Center:<strong> 4926365"</strong> </span>
+                        <span class="txt-gray">  Para envíos de <strong> dispositivos electrónicos y dispositivos médicos tipo 2B </strong>se cobrará un costo de envío adicional. Validar el valor con los agentes de Call Center:<strong> 4926365</strong> </span>
                       {else}  
 						<span class="txt-gray">
 							¿Cuál es el costo de envío de los pedidos?
