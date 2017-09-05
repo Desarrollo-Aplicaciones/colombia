@@ -793,9 +793,13 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				{if $attachments}<li><a id="more_info_tab_attachments" href="#idTab9">{l s='Download'}</a></li>{/if}
 				{if isset($accessories) AND $accessories}<li><a href="#idTab4">{l s='Accessories'}</a></li>{/if}
 				{if isset($product) && $product->customizable}<li><a href="#idTab10">{l s='Product customization'}</a></li>{/if}
-				<li><a href="#idTab99" id="tab-times-delivery">Tiempos de entrega</a></li>
-				{$HOOK_PRODUCT_TAB}
-
+                {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
+                  <li><a href="#idTab99" id="tab-times-delivery">Costos de envío</a></li>
+                  {$HOOK_PRODUCT_TAB}
+                {else}  
+                  <li><a href="#idTab99" id="tab-times-delivery">Tiempos de entrega</a></li>
+                  {$HOOK_PRODUCT_TAB}
+                {/if}
 			</ul>
 
 			<div id="more_info_sheets" class="sheets align_justify">
@@ -894,6 +898,9 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 
 				<ul id="idTab99" class="rte bullet content_hide_show">
 					<div class="ctn-times-delivery-li">
+                      {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
+                        <span class="txt-gray">  Para envíos de <strong> dispositivos electrónicos y dispositivos médicos tipo 2B </strong>se cobrará un costo de envío adicional. Validar el valor con los agentes de Call Center:<strong> 4926365"</strong> </span>
+                      {else}  
 						<span class="txt-gray">
 							¿Cuál es el costo de envío de los pedidos?
 							<br><br>
@@ -901,6 +908,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							<strong>Principales Ciudades:</strong> Para todos los pedidos el costo será de <strong>$8.500</strong> (Carga hasta de tres kilos) <br>
 							<strong>Trayectos Especiales:</strong> Para todos los pedidos el costo será de <strong>$28.000</strong> (Carga hasta de tres kilos)<br>
 						</span>
+                      {/if}  
 					</div>
 				</ul>
 
