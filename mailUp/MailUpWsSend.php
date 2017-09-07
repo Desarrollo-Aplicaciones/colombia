@@ -93,13 +93,46 @@ for($i=count($sendNewsletterData['options']);$i<6;$i++) {
     $sendNewsletterData['options'][$i]['value'] = "Valor".$i;
 }
 //print_r($key);exit;
-print_r($sendNewsletterData);
-exit;
+//print_r($sendNewsletterData);
+//exit;
 //$send = $WsSend->sendNewsletter($sendNewsletterData);
 
 //print_r($WsSend->readReturnCode("SendNewsletterResponse","errorCode"));
 
-$WsSend->logout();
+//$WsSend->logout();
+
+/*
+ * Rest mailup
+ */
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "https://send.mailup.com/API/v2.0/messages/sendtemplate",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{ \"Template\": 694, \"Subject\": \"Mensaje de prueba desde la plantilla\", \"From\": {\"Name\": \"Test User\", \"Email\": \"test@example.com\"}, \"A\": [], \"Bcc\": [], \"ReplyTo\": null, \"CharSet \": [{\"Nombre\": \"Max\", \"Email\": \"info@example.com\"}] \":\" utf-8 \", \" ExtendedHeaders \": null, \" Attachments \": null, \" EmbeddedImages \": null, \" XSmtpAPI \": null,}",
+  CURLOPT_HTTPHEADER => array(
+    "accept: application/json",
+    "authorization: Basic RmFybWFsaXMxOlNtc2Zhcm1hLjEyMw==",
+    "content-type: application/json"
+  ),
+));
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
 
 
 /*$curl = curl_init();
