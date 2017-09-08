@@ -38,7 +38,7 @@ class StatsForecastAbbott extends Module
 	private $t6 = 0;
 	private $t7 = 0;
 	private $t8 = 0;
-    public $id_products_abbott = '9123, 8274';
+    public $id_products_abbott = '39473, 39474';
 
 	public function __construct()
 	{
