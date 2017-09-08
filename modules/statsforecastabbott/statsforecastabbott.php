@@ -38,6 +38,7 @@ class StatsForecastAbbott extends Module
 	private $t6 = 0;
 	private $t7 = 0;
 	private $t8 = 0;
+    public $id_products_abbott = '9123, 8274';
 
 	public function __construct()
 	{
@@ -110,7 +111,7 @@ class StatsForecastAbbott extends Module
 			? 'LEFT(invoice_date, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(invoice_date),DAYOFYEAR(invoice_date)-WEEKDAY(invoice_date)), CONCAT(YEAR(invoice_date),"-01-01*"))');
 
-		$result = $db->query('
+		/*$result = $db->query('
 		SELECT
 			'.$dateFromGAdd.' as fix_date,
 			COUNT(DISTINCT(o.id_order)) as countOrders,
@@ -120,9 +121,23 @@ class StatsForecastAbbott extends Module
         LEFT JOIN '._DB_PREFIX_.'order_detail odl
         ON (o.id_order = odl.id_order)
 		WHERE o.date_add BETWEEN '.ModuleGraph::getDateBetween().'
-        AND odl.product_id IN(39473, 39474)
+        AND odl.product_id IN ('.$this->id_products_abbott.')
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-        AND o.current_state IN ('.$valid_state_sale.')
+        AND o.current_state INx ('.$valid_state_sale.')
+		GROUP BY '.$dateFromGAdd);*/
+        
+       $result = $db->query('
+		SELECT
+			'.$dateFromGAdd.' as fix_date,
+			COUNT(*) as countOrders,
+			SUM((SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order)) as countProducts,
+			SUM(o.total_paid_tax_excl / o.conversion_rate) as totalSales
+		FROM '._DB_PREFIX_.'orders o
+          LEFT JOIN '._DB_PREFIX_.'order_detail odl
+        ON (o.id_order = odl.id_order)
+		WHERE o.date_add BETWEEN '.ModuleGraph::getDateBetween().'
+          AND odl.product_id IN ('.$this->id_products_abbott.')
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' AND o.current_state IN ('.$valid_state_sale.')
 		GROUP BY '.$dateFromGAdd);
         
 		while ($row = $db->nextRow($result))
@@ -270,7 +285,7 @@ $consu = '
 				FROM '._DB_PREFIX_.'cart c
                 LEFT JOIN ps_cart_product cd
                 ON(c.id_cart = cd.id_cart)
-                WHERE cd.id_product IN(39473, 39474)
+                WHERE cd.id_product IN('.$this->id_products_abbott.')
 				AND (c.date_add BETWEEN '.ModuleGraph::getDateBetween().' OR c.date_upd BETWEEN '.ModuleGraph::getDateBetween().'
 				)'.Shop::addSqlRestriction(false, 'c');
         
@@ -280,7 +295,7 @@ $consu = '
 				FROM '._DB_PREFIX_.'cart c
                 LEFT JOIN ps_cart_product cd
                 ON(c.id_cart = cd.id_cart)
-                WHERE cd.id_product IN(39473, 39474)
+                WHERE cd.id_product IN('.$this->id_products_abbott.')
                 AND c.id_address_invoice != 0
 				AND (c.date_add BETWEEN '.ModuleGraph::getDateBetween().' OR c.date_upd BETWEEN '.ModuleGraph::getDateBetween().'
 				)'.Shop::addSqlRestriction(false, 'c');
@@ -293,7 +308,7 @@ $consu = '
                   LEFT JOIN ps_order_detail  od1
                 ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
-                AND od1.product_id IN(39473, 39474)
+                AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.date_add BETWEEN '.ModuleGraph::getDateBetween()
 					.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
         
@@ -513,7 +528,7 @@ $consu = '
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (product_shop.id_category_default = cl.id_category AND cl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
 				'.$join.'
 				WHERE o.valid = 1
-                AND od.product_id IN(39473, 39474)
+                AND od.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$where.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
@@ -540,7 +555,7 @@ $consu = '
 					LEFT JOIN ps_order_detail  od1
                     ON (o.id_order = od1.id_order)			
                     WHERE o.valid = 1
-                    AND od1.product_id IN(39473, 39474)
+                    AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
 			$ca['lang'] = Db::getInstance()->getRow($sql);
@@ -551,7 +566,7 @@ $consu = '
                     LEFT JOIN ps_order_detail  od1
                     ON (o.id_order = od1.id_order)
 					WHERE o.valid = 1
-                    AND od1.product_id IN(39473, 39474)	
+                    AND od1.product_id IN('.$this->id_products_abbott.')	
                     AND ADDDATE(o.`invoice_date`, interval 30 day) BETWEEN \''.$employee->stats_date_from.' 00:00:00\' AND \''.min(date('Y-m-d H:i:s'), $employee->stats_date_to.' 23:59:59').'\'
                     '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
             
@@ -570,7 +585,7 @@ $consu = '
 				LEFT JOIN `'._DB_PREFIX_.'order_payment` op ON o.reference = op.order_reference
 				'.$join.'
 				WHERE o.valid = 1
-                AND od1.product_id IN(39473, 39474)		
+                AND od1.product_id IN('.$this->id_products_abbott.')		
 				AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 				'.$where.'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
@@ -586,7 +601,7 @@ $consu = '
                 LEFT JOIN ps_order_detail  od1
                 ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
-                AND od1.product_id IN(39473, 39474)
+                AND od1.product_id IN('.$this->id_products_abbott.')
                 AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
                 '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY c.id_zone
@@ -600,7 +615,7 @@ $consu = '
                 LEFT JOIN ps_order_detail  od1
                 ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
-                AND od1.product_id IN(39473, 39474)
+                AND od1.product_id IN('.$this->id_products_abbott.')
 				AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 				'.$where.'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
@@ -613,7 +628,7 @@ $consu = '
                 LEFT JOIN ps_order_detail  od1
                 ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
-                AND od1.product_id IN(39473, 39474)
+                AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
 		$ca['ventil'] = Db::getInstance()->getRow($sql);
@@ -628,7 +643,7 @@ $consu = '
                 LEFT JOIN ps_order_detail  od1
                 ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
-                AND od1.product_id IN(39473, 39474)
+                AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY pac.id_attribute';
