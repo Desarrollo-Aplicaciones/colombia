@@ -57,11 +57,11 @@ class SearchControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		$prods_redireccion = array( '39493' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128494', '39494' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128496');
+		/*$prods_redireccion = array( '39493' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128494', '39494' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128496');
 
 			$this->context->smarty->assign(array(
 				'prods_redireccion' =>  $prods_redireccion
-				));
+				));*/
 
 		$query = Tools::replaceAccentedChars(urldecode(Tools::getValue('q')));
 		if ($this->ajax_search)

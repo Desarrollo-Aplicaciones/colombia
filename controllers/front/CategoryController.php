@@ -113,7 +113,7 @@ class CategoryControllerCore extends FrontController
 		$this->assignSubcategories();
 		if ($this->category->id != 1)
 			$this->assignProductList();
-        $prods_redireccion = array( '39493' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128494', '39494' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128496');
+        //$prods_redireccion = array( '39493' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128494', '39494' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128496');
 		$this->context->smarty->assign(array(
 			'category' => $this->category,
 			'products' => (isset($this->cat_products) && $this->cat_products) ? $this->cat_products : null,
@@ -129,7 +129,7 @@ class CategoryControllerCore extends FrontController
 			'allow_oosp' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
 			'suppliers' => Supplier::getSuppliers(),
-			'prods_redireccion' =>  $prods_redireccion,
+			/*'prods_redireccion' =>  $prods_redireccion,*/
 		));
 	}
 

@@ -251,7 +251,7 @@ class ProductControllerCore extends FrontController
 			}
 			/****************** FIN  CALCULAR VALOR RESTANTE PARA EL ENVIO GRATUITO   *****************/
 
-			$prods_redireccion = array( '39493' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128494', '39494' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128496');
+			//$prods_redireccion = array( '39493' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128494', '39494' => 'https://www.farmalisto.com.co/index.php?controller=order&submitReorder=&id_order=128496');
 
  $img_manufacturer='./img/m/farmalisto-laboratorios.jpg'; 
   if (file_exists('./img/m/'.$this->product->id_manufacturer.'-small_lab_pdp.jpg')) {
@@ -295,7 +295,7 @@ class ProductControllerCore extends FrontController
         		'url_manufacturer'=> $url_manufacturer,
         		'HOOK_BANNER' => Hook::exec('prodmain'),
 				'disponibilidad' => Configuration::get('PS_SUBJECT_INVENTORY'),
-				'prods_redireccion' =>  $prods_redireccion,
+				/*'prods_redireccion' =>  $prods_redireccion,*/
 			));
 		}
 		$this->context->smarty->assign('errors', $this->errors);

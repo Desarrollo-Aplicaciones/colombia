@@ -1192,8 +1192,6 @@ echo "<hr>";*/
             $abbot11 = 39477;
             $abbot21 = 39476;
 
-			$pabbottflete = 39492;//39492; //cobro flete abbott
-
 			$pabbottsensor = 39473; //Sensor * 2
 			$pabbottlector = 39474; //Lector * 1
 
@@ -1376,6 +1374,17 @@ echo "<hr>";*/
 			}
 			//////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
 			if ( $cantpros_sensor != 0 ||  $cantpros_lector != 0  || $abtBD[ $pabbottflete ] != 0 ) {
+
+				$qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = '.$this->id;//.' AND id_product = '.$abbot11;
+
+				if ( !Db::getInstance()->execute($qr_rule)  ) {
+						$al_log .= '_RuleNO';
+					} else {
+						$al_log .= '_RuleSI';
+					}
+
+
+
 				$al_log .= ("c:".$this->id."-");
 				//////--usleep(200000); // para dar tiempo de quitar el producto
 				$alenum = rand(0,99);
