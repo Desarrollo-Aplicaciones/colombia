@@ -1184,25 +1184,25 @@ echo "<hr>";*/
 			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRule" && debug_backtrace()[1]['function'] != "getContextualValue") 
 			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRuleCore" && debug_backtrace()[1]['function'] != "checkValidity") ) {
 
-			$al_log = "\n";
+			//$al_log = "\n";
 
 			//////--$al_log .= ("in c:".debug_backtrace()[1]['class']."-f:".debug_backtrace()[1]['function']);
 			
 			$nevBD = array();
-            $abbot11 = 39477;
-            $abbot21 = 39476;
+			$abbot11 = 39494;
+			$abbot21 = 39493;
 
 			$pabbottsensor = 39473; //Sensor * 2
 			$pabbottlector = 39474; //Lector * 1
 
 			$abtBD[ $abbot11 ] = 0; 
-            $abtBD[ $abbot21 ] = 0; 
+			$abtBD[ $abbot21 ] = 0; 
 
 			$cantpros_sensor = 0;
 			$cantpros_lector = 0;
 
 			$cantmax_sensor = 2;
-            $cantmax_lector = 1;
+			$cantmax_lector = 1;
 
 
 			if ( $this->id != 0 && $this->id != '' ) {
@@ -1227,6 +1227,7 @@ echo "<hr>";*/
 			//////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
 
 			if ( $abtBD[ $abbot11 ] != 0  || $abtBD[ $abbot21 ] != 0 ) {
+				$al_log = "\n";
 
 				$al_log .= ("c:".$this->id."-");
 				//////--usleep(200000); // para dar tiempo de quitar el producto
@@ -1339,7 +1340,7 @@ echo "<hr>";*/
 		if (  /*$this->id_customer == 250 && */ !is_null($products) && count($products) > 0 
 			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRule" && debug_backtrace()[1]['function'] != "getContextualValue") 
 			&& ( isset(debug_backtrace()[1]['class']) && debug_backtrace()[1]['class'] != "CartRuleCore" && debug_backtrace()[1]['function'] != "checkValidity") ) {
-			$al_log = "\n";
+			//$al_log = "\n";
 			//////--$al_log .= ("in c:".debug_backtrace()[1]['class']."-f:".debug_backtrace()[1]['function']);
 			
 			$nevBD = array();
@@ -1374,14 +1375,32 @@ echo "<hr>";*/
 			}
 			//////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
 			if ( $cantpros_sensor != 0 ||  $cantpros_lector != 0  || $abtBD[ $pabbottflete ] != 0 ) {
+				$al_log = "\n 2 -----\n ";
 
-				$qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = '.$this->id;//.' AND id_product = '.$abbot11;
+				$regla2mas1 = 204808;
+				$regla1mas1 = 204834;
+				
+				$qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = '.$this->id;//.' AND id_cart_rule = '.$regla1mas1;
 
-				if ( !Db::getInstance()->execute($qr_rule)  ) {
-						$al_log .= '_RuleNO';
-					} else {
-						$al_log .= '_RuleSI';
-					}
+				if ( Db::getInstance()->execute($qr_rule)  ) {
+                                        $al_log .= '_BORRAR_RuleSI - '.$qr_rule;
+                                } else {
+                                        $al_log .= '_BORRAR_RuleNO';
+                                }
+
+
+				if ( $cantpros_sensor == 2  &&  $cantpros_lector == 1 ) {
+
+					$qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas1.')';
+				} elseif (  $cantpros_sensor != 2  ||  $cantpros_lector != 1 ) {
+					$qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla1mas1.')';
+				}
+
+				if ( Db::getInstance()->execute($qr_rule2)  ) {
+					$al_log .= '_RuleSI - '.$qr_rule2;
+				} else {
+					$al_log .= '_RuleNO';
+				}
 
 
 

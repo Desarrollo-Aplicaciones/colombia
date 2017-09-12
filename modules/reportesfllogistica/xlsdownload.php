@@ -26,6 +26,8 @@ if (isset($_GET['opc_sel']) ) {
                         CONCAT(c.firstname, " ", c.lastname) AS cliente,
                         c.identification as cedula,
                         c.email as correo_cliente,
+			a.phone AS telefono1,
+			a.phone_mobile AS telefono2,
                         a.address1,
                         a.address2,
                         o.date_add,
@@ -61,7 +63,8 @@ if (isset($_GET['opc_sel']) ) {
                     AS Transportador /*,
                     ocr.*,
                     cr.reduction_product*/
-                    , m.nombre AS medico
+                    , m.nombre AS medico,
+		    REPLACE ( o.private_message,"|","_") AS private_message
                     FROM ps_order_detail od  -- 174411
                     INNER JOIN ps_orders o ON ( o.id_order = od.id_order )
                     LEFT JOIN ps_order_cart_rule ocr ON ( ocr.id_order = o.id_order )
@@ -91,59 +94,78 @@ if (isset($_GET['opc_sel']) ) {
                 if ($results = Db::getInstance_slv()->ExecuteS($sql)) {
                     
                     $output = fopen('php://output', 'w');
-                    fputcsv($output, array('NUM PEDIDO', 'NUM FACTURA', 'CLIENTE','CEDULA', 'CORREO_CLIENTE', 'DIRECCION 1', 'DIRECCION 2', 'CIUDAD DESTINO', 'FECHA', 'REFERENCIA', 'DESCRIPCION', 'PRECIO', 'PRECIO CON IMPUESTO', 'VALOR DESCUENTO', 'CUPON DESCUENTO', 'DESCUENTO A', 'TIPO DESCUENTO', 'PRODUCTO CON DESCUENTO', 'CANTIDAD', 'ICR', 'LOTE','TRANSPORTADORA', 'ESTADO ORDEN', 'COSTO ICR', 'ORDEN SUMINISTRO', 'IVA PROVEEDOR', 'FECHA DE ENTREGA', 'HORA DE ENTREGA', 'METODO DE PAGO', 'TRANSPORTADOR', 'DOCTOR'));
+                    fputcsv($output, array('NUM PEDIDO',
+                        'NUM FACTURA',
+                        'CLIENTE',
+                        'CEDULA',
+                        'TELEFONO 1',
+                        'TELEFONO 2',
+                        'CORREO_CLIENTE',
+                        'DIRECCION 1',
+                        'DIRECCION 2',
+                        'CIUDAD DESTINO',
+                        'FECHA',
+                        'REFERENCIA',
+                        'DESCRIPCION',
+                        'PRECIO',
+                        'PRECIO CON IMPUESTO',
+                        'VALOR DESCUENTO',
+                        'CUPON DESCUENTO',
+                        'DESCUENTO A',
+                        'TIPO DESCUENTO',
+                        'PRODUCTO CON DESCUENTO',
+                        'CANTIDAD',
+                        'ICR',
+                        'LOTE',
+                        'TRANSPORTADORA',
+                        'ESTADO ORDEN',
+                        'COSTO ICR',
+                        'ORDEN SUMINISTRO',
+                        'IVA PROVEEDOR',
+                        'FECHA DE ENTREGA',
+                        'HORA DE ENTREGA',
+                        'METODO DE PAGO',
+                        'TRANSPORTADOR',
+                        'DOCTOR',
+                        'MENSAJE PRIVADO'), "|");
                             
-                    /*echo "<table border='1'>
-                            <tr>
-                                <td> NUM PEDIDO </td>
-                                <td> NUM FACTURA </td>
-                                <td> CLIENTE </td>
-                                <td> DIRECCION 1 </td>
-                                <td> DIRECCION 2 </td>
-                                <td> CIUDAD DESTINO </td>
-                                <td> FECHA </td>
-                                <td> REFERENCIA </td>
-                                <td> DESCRIPCION </td>
-                                <td> PRECIO </td>
-                                <td> PRECIO CON IMPUESTO</td>
-                                <td> CANTIDAD </td>
-                                <td> ICR </td>
-                                <td> TRANSPORTADORA </td>
-                                <td> ESTADO ORDEN </td>
-                                <td> COSTO ICR </td>
-                                <td> IVA PROVEEDOR </td>
-                                <td> FECHA DE ENTREGA </td>
-                                <td> HORA DE ENTREGA </td>
-                                <td> TRANSPORTADOR </td>
-                            </tr>";*/
 
                             foreach ($results as $dat_print) {
-                                /*echo "
-                                    <tr>
-                                        <td> ".$dat_print['id_order']." </td>
-                                        <td> ".$dat_print['invoice_number']." </td>
-                                        <td> ".utf8_decode($dat_print['cliente'])." </td>
-                                        <td> ".utf8_decode($dat_print['address1'])." </td>
-                                        <td> ".utf8_decode($dat_print['address2'])." </td>
-                                        <td> ".utf8_decode($dat_print['city'])." </td>
-                                        <td> ".$dat_print['date_add']." </td>
-                                        <td> ".$dat_print['product_reference']." </td>
-                                        <td> ".utf8_decode($dat_print['product_name'])." </td>
-                                        <td> ".$dat_print['precio']." </td>
-                                        <td> ".$dat_print['precio_tax']." </td>
-                                        <td> ".$dat_print['product_quantity']." </td>
-                                        <td> ".$dat_print['cod_icr']." </td>
-                                        <td> ".utf8_decode($dat_print['nombre'])." </td>
-                                        <td> ".utf8_decode($dat_print['name'])." </td>
-                                        <td> ".$dat_print['costo_icr']." </td>
-                                        <td> ".$dat_print['iva_proveedor']." </td>
-                                         <td> ".$dat_print['Fecha_entrga']." </td>
-                                          <td> ".$dat_print['Hora_entrega']." </td>
-                                        <td> ".$dat_print['Transportador']." </td>
-                                    </tr>
-                                ";*/
 
-                                fputcsv( $output, array( $dat_print['id_order'], $dat_print['invoice_number'], utf8_decode($dat_print['cliente']), utf8_decode($dat_print['cedula']), utf8_decode($dat_print['correo_cliente']),  utf8_decode($dat_print['address1']), utf8_decode($dat_print['address2']), utf8_decode($dat_print['city']), $dat_print['date_add'], $dat_print['product_reference'], utf8_decode($dat_print['product_name']), $dat_print['precio'], $dat_print['precio_tax'], $dat_print['valor_descuento'], $dat_print['cupon_descuento'], $dat_print['descuento_a'], $dat_print['tipo_descuento'], $dat_print['producto_con_descuento'], $dat_print['product_quantity'],  $dat_print['product_quantity'], $dat_print['cod_icr'], $dat_print['lote'],utf8_decode($dat_print['nombre']), utf8_decode($dat_print['name']), $dat_print['costo_icr'], $dat_print['id_supply_order'], $dat_print['iva_proveedor'], $dat_print['Fecha_entrga'], $dat_print['Hora_entrega'],$dat_print['payment'], $dat_print['Transportador'], $dat_print['medico'] ));
+                                fputcsv( $output, array($dat_print['id_order'],
+                         $dat_print['invoice_number'],
+                         utf8_decode($dat_print['cliente']),
+                         utf8_decode($dat_print['cedula']),
+                         utf8_decode($dat_print['telefono1']),
+                         utf8_decode($dat_print['telefono2']),
+                         utf8_decode($dat_print['correo_cliente']),
+                         utf8_decode($dat_print['address1']),
+                         utf8_decode($dat_print['address2']),
+                         utf8_decode($dat_print['city']),
+                         $dat_print['date_add'],
+                         $dat_print['product_reference'],
+                         utf8_decode($dat_print['product_name']),
+                         $dat_print['precio'],
+                         $dat_print['precio_tax'],
+                         $dat_print['valor_descuento'],
+                         $dat_print['cupon_descuento'],
+                         $dat_print['descuento_a'],
+                         $dat_print['tipo_descuento'],
+                         $dat_print['producto_con_descuento'],
+                         $dat_print['product_quantity'],
+                         $dat_print['cod_icr'],
+                         $dat_print['lote'],
+                         utf8_decode($dat_print['nombre']),
+                         utf8_decode($dat_print['name']),
+                         $dat_print['costo_icr'],
+                         $dat_print['id_supply_order'],
+                         $dat_print['iva_proveedor'],
+                         $dat_print['Fecha_entrga'],
+                         $dat_print['Hora_entrega'],
+                         $dat_print['payment'],
+                         $dat_print['Transportador'],
+                         $dat_print['medico'],
+                         $dat_print['private_message'] ), "||");
 
                             }
                     //echo "</table>";
