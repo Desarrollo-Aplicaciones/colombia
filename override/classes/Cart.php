@@ -1392,7 +1392,7 @@ echo "<hr>";*/
 				if ( $cantpros_sensor == 2  &&  $cantpros_lector == 1 ) {
 
 					$qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas1.')';
-				} elseif (  $cantpros_sensor != 2  ||  $cantpros_lector != 1 ) {
+				} elseif (  $cantpros_sensor == 1  ||  $cantpros_lector == 1 ) {
 					$qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla1mas1.')';
 				}
 
