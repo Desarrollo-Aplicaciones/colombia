@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{statsforecastabbott}prestashop>statsforecastabbott_88055a330fa14563f4f08af88476dc2d'] = 'Tabla de mando de estadísticas Abboot';
+$_MODULE['<{statsforecastabbott}prestashop>statsforecastabbott_88055a330fa14563f4f08af88476dc2d'] = 'Tabla de mando de estadísticas Abbott';
 $_MODULE['<{statsforecastabbott}prestashop>statsforecastabbott_72c24d8aa8b0a7a47035b1e9d905b582'] = 'Todos los importes se indican sin IVA';
 $_MODULE['<{statsforecastabbott}prestashop>statsforecastabbott_1ee1c44c2dc81681f961235604247b81'] = 'Modo';
 $_MODULE['<{statsforecastabbott}prestashop>statsforecastabbott_03727ac48595a24daed975559c944a44'] = 'Día';
