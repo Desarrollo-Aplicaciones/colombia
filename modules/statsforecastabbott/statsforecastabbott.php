@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class StatsForecast extends Module
+class StatsForecastAbbott extends Module
 {
 	private $_html = '';
 	private $t1 = 0;
@@ -578,10 +578,10 @@ class StatsForecast extends Module
 		return $ca;
 	}
 }
-
+/*
 function statsforecast_sort($a, $b)
 {
 	if ($a['orderSum'] == $b['orderSum'])
 		return 0;
 	return ($a['orderSum'] > $b['orderSum']) ? -1 : 1;
-}
+}*/
