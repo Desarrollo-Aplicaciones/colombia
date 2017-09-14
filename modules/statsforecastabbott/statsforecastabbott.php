@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class StatsForecast extends Module
+class StatsForecastAbbott extends Module
 {
 	private $_html = '';
 	private $t1 = 0;
@@ -38,10 +38,11 @@ class StatsForecast extends Module
 	private $t6 = 0;
 	private $t7 = 0;
 	private $t8 = 0;
+    public $id_products_abbott = '9123, 8274';
 
 	public function __construct()
 	{
-		$this->name = 'statsforecast';
+		$this->name = 'statsforecastabbott';
 		$this->tab = 'analytics_stats';
 		$this->version = 1.0;
 		$this->author = 'PrestaShop';
@@ -49,7 +50,7 @@ class StatsForecast extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Stats Dashboard');
+		$this->displayName = $this->l('Abbott Statistics Chart');
 		$this->description = '';
 	}
 
@@ -60,7 +61,7 @@ class StatsForecast extends Module
 
 	public function getContent()
 	{
-		Tools::redirectAdmin('index.php?controller=AdminStats&module=statsforecast&token='.Tools::getAdminTokenLite('AdminStats'));
+		Tools::redirectAdmin('index.php?controller=AdminStats&module=statsforecastabbott&token='.Tools::getAdminTokenLite('AdminStats'));
 	}
 
 	public function hookAdminStatsModules()
@@ -110,16 +111,35 @@ class StatsForecast extends Module
 			? 'LEFT(invoice_date, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(invoice_date),DAYOFYEAR(invoice_date)-WEEKDAY(invoice_date)), CONCAT(YEAR(invoice_date),"-01-01*"))');
 
-		$result = $db->query('
+		/*$result = $db->query('
+		SELECT
+			'.$dateFromGAdd.' as fix_date,
+			COUNT(DISTINCT(o.id_order)) as countOrders,
+			COUNT(*) as countProducts,
+			SUM(DISTINCT(o.total_paid_tax_excl / o.conversion_rate)) as totalSales
+		FROM '._DB_PREFIX_.'orders o
+        LEFT JOIN '._DB_PREFIX_.'order_detail odl
+        ON (o.id_order = odl.id_order)
+		WHERE o.date_add BETWEEN '.ModuleGraph::getDateBetween().'
+        AND odl.product_id IN ('.$this->id_products_abbott.')
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+        AND o.current_state INx ('.$valid_state_sale.')
+		GROUP BY '.$dateFromGAdd);*/
+        
+       $result = $db->query('
 		SELECT
 			'.$dateFromGAdd.' as fix_date,
 			COUNT(*) as countOrders,
 			SUM((SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order)) as countProducts,
 			SUM(o.total_paid_tax_excl / o.conversion_rate) as totalSales
 		FROM '._DB_PREFIX_.'orders o
+          LEFT JOIN '._DB_PREFIX_.'order_detail odl
+        ON (o.id_order = odl.id_order)
 		WHERE o.date_add BETWEEN '.ModuleGraph::getDateBetween().'
+          AND odl.product_id IN ('.$this->id_products_abbott.')
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' AND o.current_state IN ('.$valid_state_sale.')
 		GROUP BY '.$dateFromGAdd);
+        
 		while ($row = $db->nextRow($result))
 			$dataTable[$row['fix_date']] = $row;
 
@@ -155,11 +175,13 @@ class StatsForecast extends Module
 				WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween().'
 				'.Shop::addSqlRestriction(false, 'c').'
 				GROUP BY '.$dateFromGAdd;
+       
 		$visits = Db::getInstance()->query($sql);
 		while ($row = $db->nextRow($visits))
 			$visitArray[$row['fix_date']] = $row['visits'];
 
 		$today = date('Y-m-d');
+
 		foreach ($dataTable as $row)
 		{
 			$visitsToday = (int)(isset($visitArray[$row['fix_date']]) ? $visitArray[$row['fix_date']] : 0);
@@ -172,7 +194,12 @@ class StatsForecast extends Module
 			WHERE date_add BETWEEN '.ModuleGraph::getDateBetween().'
 			AND date_add '.$dateFromGReg
 			.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER));
-
+$consu = '
+			SELECT COUNT(*) FROM '._DB_PREFIX_.'customer
+			WHERE date_add BETWEEN '.ModuleGraph::getDateBetween().'
+			AND date_add '.$dateFromGReg
+			.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+        
 			$this->_html .= '
 			<tr>
 				<td>'.$row['fix_date'].'</td>
@@ -242,6 +269,7 @@ class StatsForecast extends Module
 				FROM '._DB_PREFIX_.'connections c
 				WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween()
 					.Shop::addSqlRestriction(false, 'c');
+
 		$visitors = Db::getInstance()->getValue($sql);
 
 		$sql = 'SELECT COUNT(DISTINCT g.id_customer)
@@ -250,34 +278,41 @@ class StatsForecast extends Module
 				WHERE g.id_customer != 0
 					AND c.date_add BETWEEN '.ModuleGraph::getDateBetween()
 					.Shop::addSqlRestriction(false, 'c');
+
 		$customers = Db::getInstance()->getValue($sql);
 
-		$sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'cart
-				WHERE id_cart IN (
-						SELECT id_cart FROM '._DB_PREFIX_.'cart_product
-					) AND (
-						date_add BETWEEN '.ModuleGraph::getDateBetween().' OR date_upd BETWEEN '.ModuleGraph::getDateBetween().'
-					)'.Shop::addSqlRestriction();
+        $sql = 'SELECT COUNT(DISTINCT c.id_cart)
+				FROM '._DB_PREFIX_.'cart c
+                LEFT JOIN ps_cart_product cd
+                ON(c.id_cart = cd.id_cart)
+                WHERE cd.id_product IN('.$this->id_products_abbott.')
+				AND (c.date_add BETWEEN '.ModuleGraph::getDateBetween().' OR c.date_upd BETWEEN '.ModuleGraph::getDateBetween().'
+				)'.Shop::addSqlRestriction(false, 'c');
+        
 		$carts = Db::getInstance()->getValue($sql);
 
-		$sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'cart
-				WHERE id_cart IN (
-						SELECT id_cart FROM '._DB_PREFIX_.'cart_product
-					) AND id_address_invoice != 0
-					AND (
-						date_add BETWEEN '.ModuleGraph::getDateBetween().' OR date_upd BETWEEN '.ModuleGraph::getDateBetween().'
-					)'.Shop::addSqlRestriction();
+		$sql = 'SELECT COUNT(DISTINCT c.id_cart)
+				FROM '._DB_PREFIX_.'cart c
+                LEFT JOIN ps_cart_product cd
+                ON(c.id_cart = cd.id_cart)
+                WHERE cd.id_product IN('.$this->id_products_abbott.')
+                AND c.id_address_invoice != 0
+				AND (c.date_add BETWEEN '.ModuleGraph::getDateBetween().' OR c.date_upd BETWEEN '.ModuleGraph::getDateBetween().'
+				)'.Shop::addSqlRestriction(false, 'c');
+        
+
 		$fullcarts = Db::getInstance()->getValue($sql);
 
-		$sql = 'SELECT COUNT(*)
+		$sql = 'SELECT COUNT(DISTINCT(o.id_order))
 				FROM '._DB_PREFIX_.'orders o
+                  LEFT JOIN ps_order_detail  od1
+                ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
+                AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.date_add BETWEEN '.ModuleGraph::getDateBetween()
 					.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
+        
 		$orders = Db::getInstance()->getValue($sql);
-
 		$this->_html .= '<br />
 		<div class="blocStats"><h2 class="icon-conversion"><span></span>'.$this->l('Conversion').'</h2>
 		<br/>
@@ -458,6 +493,20 @@ class StatsForecast extends Module
 
 		return $this->_html;
 	}
+    public static function debug_to_console($data, $texto = NULL) {
+    if (is_array($data)) {
+      $formato = 'Array: %s ->  %s';
+      $message = sprintf($formato, $texto, json_encode($cars));
+      $output = "<script>console.log( '" . $message . "' );</script>";
+    } else {
+      $cadenalimpia = preg_replace("[\n|\r|\n\r]", "", $data);
+      $formato = "%s ->  %s";
+      $message = sprintf($formato, $texto, $cadenalimpia);
+      $output = "<script>console.log( '" . $message . "' );</script>";
+    }
+    echo $output;
+  }
+
 
 	private function getRealCA()
 	{
@@ -479,18 +528,21 @@ class StatsForecast extends Module
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (product_shop.id_category_default = cl.id_category AND cl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
 				'.$join.'
 				WHERE o.valid = 1
+                AND od.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$where.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY product_shop.id_category_default';
 		$ca['cat'] = Db::getInstance()->executeS($sql);
-		uasort($ca['cat'], 'statsforecast_sort');
+		uasort($ca['cat'], 'statsforecastabbott_sort');
 
 		$langValues = '';
 		$sql = 'SELECT l.id_lang, l.iso_code
 				FROM `'._DB_PREFIX_.'lang` l
 				'.Shop::addSqlAssociation('lang', 'l').'
 				WHERE l.active = 1';
+        
+        
 		$languages = Db::getInstance()->executeS($sql);
 		foreach ($languages as $language)
 			$langValues .= 'SUM(IF(o.id_lang = '.(int)$language['id_lang'].', total_paid_tax_excl / o.conversion_rate, 0)) as '.pSQL($language['iso_code']).',';
@@ -500,7 +552,10 @@ class StatsForecast extends Module
 		{
 			$sql = 'SELECT '.$langValues.'
 					FROM `'._DB_PREFIX_.'orders` o
-					WHERE o.valid = 1
+					LEFT JOIN ps_order_detail  od1
+                    ON (o.id_order = od1.id_order)			
+                    WHERE o.valid = 1
+                    AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
 			$ca['lang'] = Db::getInstance()->getRow($sql);
@@ -508,9 +563,13 @@ class StatsForecast extends Module
 
 			$sql = 'SELECT '.$langValues.'
 					FROM `'._DB_PREFIX_.'orders` o
+                    LEFT JOIN ps_order_detail  od1
+                    ON (o.id_order = od1.id_order)
 					WHERE o.valid = 1
-						AND ADDDATE(o.`invoice_date`, interval 30 day) BETWEEN \''.$employee->stats_date_from.' 00:00:00\' AND \''.min(date('Y-m-d H:i:s'), $employee->stats_date_to.' 23:59:59').'\'
-						'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
+                    AND od1.product_id IN('.$this->id_products_abbott.')	
+                    AND ADDDATE(o.`invoice_date`, interval 30 day) BETWEEN \''.$employee->stats_date_from.' 00:00:00\' AND \''.min(date('Y-m-d H:i:s'), $employee->stats_date_to.' 23:59:59').'\'
+                    '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
+            
 			$ca['langprev'] = Db::getInstance()->getRow($sql);
 		}
 		else
@@ -521,9 +580,12 @@ class StatsForecast extends Module
 
 		$sql = 'SELECT op.payment_method, SUM(amount / o.conversion_rate) as total, COUNT(*) as nb, AVG(amount / o.conversion_rate) as cart
 				FROM `'._DB_PREFIX_.'orders` o
+                LEFT JOIN ps_order_detail  od1
+                ON (o.id_order = od1.id_order)
 				LEFT JOIN `'._DB_PREFIX_.'order_payment` op ON o.reference = op.order_reference
 				'.$join.'
 				WHERE o.valid = 1
+                AND od1.product_id IN('.$this->id_products_abbott.')		
 				AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 				'.$where.'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
@@ -536,9 +598,12 @@ class StatsForecast extends Module
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address
 				LEFT JOIN `'._DB_PREFIX_.'country` c ON c.id_country = a.id_country
 				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.id_zone = c.id_zone
+                LEFT JOIN ps_order_detail  od1
+                ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
-					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
-					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+                AND od1.product_id IN('.$this->id_products_abbott.')
+                AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
+                '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY c.id_zone
 				ORDER BY total DESC';
 		$ca['zones'] = Db::getInstance()->executeS($sql);
@@ -547,17 +612,23 @@ class StatsForecast extends Module
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'currency` cu ON o.id_currency = cu.id_currency
 				'.$join.'
+                LEFT JOIN ps_order_detail  od1
+                ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
-					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
-					'.$where.'
-					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+                AND od1.product_id IN('.$this->id_products_abbott.')
+				AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
+				'.$where.'
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY o.id_currency
 				ORDER BY total DESC';
 		$ca['currencies'] = Db::getInstance()->executeS($sql);
 
 		$sql = 'SELECT SUM(total_paid_tax_excl / o.conversion_rate) as total, COUNT(*) AS nb
 				FROM `'._DB_PREFIX_.'orders` o
+                LEFT JOIN ps_order_detail  od1
+                ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
+                AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
 		$ca['ventil'] = Db::getInstance()->getRow($sql);
@@ -569,17 +640,21 @@ class StatsForecast extends Module
 				INNER JOIN '._DB_PREFIX_.'attribute a ON pac.id_attribute = a.id_attribute
 				INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (a.id_attribute_group = agl.id_attribute_group AND agl.id_lang = '.(int)$this->context->language->id.')
 				INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (a.id_attribute = al.id_attribute AND al.id_lang = '.(int)$this->context->language->id.')
+                LEFT JOIN ps_order_detail  od1
+                ON (o.id_order = od1.id_order)
 				WHERE o.valid = 1
+                AND od1.product_id IN('.$this->id_products_abbott.')
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY pac.id_attribute';
+        self::debug_to_console($sql);
 		$ca['attributes'] = Db::getInstance()->executeS($sql);
 
 		return $ca;
 	}
 }
 
-function statsforecast_sort($a, $b)
+function statsforecastabbott_sort($a, $b)
 {
 	if ($a['orderSum'] == $b['orderSum'])
 		return 0;
