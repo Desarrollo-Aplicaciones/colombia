@@ -1380,7 +1380,7 @@ echo "<hr>";*/
 				$regla2mas1 = 204808;
 				$regla1mas1 = 204834;
 				
-				$qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = '.$this->id;//.' AND id_cart_rule = '.$regla1mas1;
+				$qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = '.$this->id.' AND id_cart_rule IN ( '.$regla1mas1.','.$regla2mas1.' )';
 
 				if ( Db::getInstance()->execute($qr_rule)  ) {
                                         $al_log .= '_BORRAR_RuleSI - '.$qr_rule;
@@ -1392,7 +1392,7 @@ echo "<hr>";*/
 				if ( $cantpros_sensor == 2  &&  $cantpros_lector == 1 ) {
 
 					$qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas1.')';
-				} elseif (  $cantpros_sensor == 1  ||  $cantpros_lector == 1 ) {
+				} elseif (  $cantpros_sensor == 1 &&  $cantpros_lector == 1 ) {
 					$qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla1mas1.')';
 				}
 
@@ -1446,19 +1446,19 @@ echo "<hr>";*/
 						}
 					}
 					$qr_nev_sensor = "";
-					if ( $cantpros_sensor > $cantmax_sensor ) {
+/*					if ( $cantpros_sensor > $cantmax_sensor ) {
 						
 						$qr_nev_sensor = "UPDATE ps_cart_product SET quantity = ". $cantmax_sensor." WHERE id_cart = ".$this->id." AND id_product = ".$pabbottsensor;	
 					}
 					
 						$al_log .= $qr_nev_sensor;
 					if ( $qr_nev_sensor != "" ) {
-						if ( !Db::getInstance()->execute($qr_nev_sensor) /*!$this->CartQueryExecute($qr_nev)*/ ) {
+						if ( !Db::getInstance()->execute($qr_nev_sensor)  ) {
 							$al_log .= '_RSNO';
 						} else {
 							$al_log .= '_RSSI';
 						}
-					}
+					}*/
 				}
 				
 				
