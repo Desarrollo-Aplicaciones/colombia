@@ -243,30 +243,20 @@ class Order extends OrderCore {
 			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
 
                         $contTime = 0;
-                        $data = "Id orden: ".$this->id.", semaforo: ".Configuration::get('SEMAFORO_FACTURAS').", contTime: ".$contTime."\n";
-                        $this->generateLogOrder($data);
                         while(Configuration::get('SEMAFORO_FACTURAS') == 1 && $contTime < 2){
                             time_nanosleep(0, 50000000);
                             $contTime++;
                         }
-                        Configuration::updateValue('SEMAFORO_FACTURAS',1);       
-                        $data = "Id orden: ".$this->id.", semaforo: ".Configuration::get('SEMAFORO_FACTURAS').", contTime: ".$contTime."\n";
-                        $this->generateLogOrder($data);
+                        Configuration::updateValue('SEMAFORO_FACTURAS',1);            
                         if ($order_invoice->number)
                            Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $this->id_shop);
                         else
                           $order_invoice->number = Order::getLastInvoiceNumber($this->id_shop) + 1;
 
-                        $data = "Id orden: ".$this->id.", semaforo: ".Configuration::get('SEMAFORO_FACTURAS').", invoice start number: ".Configuration::get('PS_INVOICE_START_NUMBER').", contTime: ".$contTime."\n";
-                        $this->generateLogOrder($data);
-                        
 			// Save Order invoice
 			$order_invoice->add();
                         
                         Configuration::updateValue('SEMAFORO_FACTURAS',0); 
-                        
-                        $data = "Id orden: ".$this->id.", semaforo: ".Configuration::get('SEMAFORO_FACTURAS').", invoice start number: ".Configuration::get('PS_INVOICE_START_NUMBER').", contTime: ".$contTime."\n";
-                        $this->generateLogOrder($data);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
@@ -326,15 +316,4 @@ class Order extends OrderCore {
 			$this->update();
 		}
 	}
-        
-        public function generateLogOrder($data) {
-            if ($archivo = fopen(_ROUTE_FILE_."/ordenes/logs_crear_orders_farmalisto.txt", "a")) {
-              if (fwrite($archivo, date("d m Y H:i:s") . " -> " . $data . "\n")) {
-                //echo "Se ha ejecutado correctamente";
-              } else {
-                //echo "Ha habido un problema al crear el archivo";
-              }
-              fclose($archivo);
-            }
-        }
 }
