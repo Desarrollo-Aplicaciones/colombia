@@ -131,7 +131,7 @@ class cancelarordenes extends Module
 						FROM `'._DB_PREFIX_.'orders` o
 						INNER JOIN `'._DB_PREFIX_.'order_detail` od ON ( o.id_order = od.id_order)
 						-- LEFT JOIN `'._DB_PREFIX_.'order_picking` opk ON ( od.id_order_detail = opk.id_order_detail )
-						WHERE  o.current_state IN ('.(int) Configuration::get('PS_OS_SHIPPING').', '.(int) Configuration::get('PS_OS_DELIVERED').', '.(int) Configuration::get('ALISTAMIENTO').' , '.(int) Configuration::get('PS_OS_CANCELED').') 
+						WHERE  o.current_state IN ('.(int) Configuration::get('PS_OS_SHIPPING').', '.(int) Configuration::get('PS_OS_DELIVERED').', '.(int) Configuration::get('ALISTAMIENTO').' , '.(int) Configuration::get('PS_OS_CANCELED').' , 0) 
 						AND o.id_order = '.(int)$_POST['orden_cambio'];
 				$result = Db::getInstance()->getRow($sql);
 
