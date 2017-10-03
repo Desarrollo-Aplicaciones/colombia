@@ -962,24 +962,30 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
             	$discounts_return = array();
             	$discounts_return[] = array( 'success' => false, 'msg' => 'Cupon incorrecto, no aplicado' );
 
-            }
-
-
-/*        $discounts = array();
-        foreach ($this->context->cart->getDiscounts() as $key => $value) {
-        	$discounts[] = array('id_cart_rule' => (int)$value['id_cart_rule'], 'code' => $value['code'], 'value_real' => $value['value_real']);
-        }*/
+			}
 
         $medios_de_pago = NULL;
 
         if((int) $id_address > 0){
         	$medios_de_pago = $this->list_medios_de_pago();
-        }
+		}
+		
+		$order_total = $this->context->cart->getOrderTotal();
+		$total_discounts = $this->context->cart->getOrderTotal(TRUE,Cart::ONLY_DISCOUNTS);
 
         $msg = json_decode($this->context->cookie->{'msg_app'});
-        return array('id_cart' => (int)$this->context->cart->id,'id_customer' => (int)$this->context->cart->id_customer,'msg' => $msg,'id_address' => (int)$this->context->cart->id_address_invoice ,'order_total' => $this->context->cart->getOrderTotal(), 'sub_total' => $subtotal,'products' => $products,'discounts' => $discounts_return,
-                     'total_discounts'=>$this->context->cart->getOrderTotal(TRUE,Cart::ONLY_DISCOUNTS),'shipping_cost'=>(float)$this->context->cart->getTotalShippingCost(),
-                     'rx'=> Cart::prodsHasFormula($productsFormula),'mediosp' => $medios_de_pago);                     
+		return array('id_cart' => (int)$this->context->cart->id,
+					'id_customer' => (int)$this->context->cart->id_customer,
+					'msg' => $msg,
+					'id_address' => (int)$this->context->cart->id_address_invoice,
+					'order_total' => $order_total,
+					'sub_total' => $subtotal,
+					'products' => $products,
+					'discounts' => $discounts_return,
+					'total_discounts'=>$total_discounts,
+					'shipping_cost'=>(float)$this->context->cart->getTotalShippingCost(),
+					'rx'=> Cart::prodsHasFormula($productsFormula),
+					'mediosp' => $medios_de_pago);
     }
 
     return array("ERROR" => 'Parámetros inválidos.','success' => false);
