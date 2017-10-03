@@ -869,7 +869,7 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
         		$this->clearCart();	
         	}
         }
-
+		$order_total = $this->context->cart->getOrderTotal();
         
         // actualizar atributos del carrito si existe 
         if(isset($this->context->cart) && !empty($this->context->cart) && (isset($this->context->cookie->id_cart) && !empty($this->context->cookie->id_cart)) ){
@@ -912,11 +912,23 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
             $this->context->cart->update();   
             
             $products = array();
-            $productsFormula = array();
-
+			$productsFormula = array();
+			
             foreach ($this->context->cart->getProducts() as $key => $value) {
-
-            	$img = NULL;
+				$img = NULL;
+				if ( $value['id_image'] != NULL ) {
+						$img = _PS_BASE_URL_
+						. __PS_BASE_URI__
+						. 'img/p/'
+						. Image::getImgFolderStatic(explode('-', $value['id_image'])[1])
+						. explode('-', $value['id_image'])[1]
+						. '-large_default.jpg';
+				} else {
+					$img = _PS_BASE_URL_
+					. __PS_BASE_URI__
+					. 'img/p/'
+					. 'es-default-large_default.jpg';
+				}
             	foreach ($products_app as  $value2) {
 
             		if($value2['id'] == $value['id_product'] ){
@@ -969,7 +981,7 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
         if((int) $id_address > 0){
         	$medios_de_pago = $this->list_medios_de_pago();
 		}
-		
+
 		$order_total = $this->context->cart->getOrderTotal();
 		$total_discounts = $this->context->cart->getOrderTotal(TRUE,Cart::ONLY_DISCOUNTS);
 
