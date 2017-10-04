@@ -832,149 +832,148 @@ private function get_address_rfc($id_customer){
                      'rx'=>true);
 }*/
 
-
-
-public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = NULL, $deleteDiscount = NULL, $msg= NULL, $id_cart = null, $clear = FALSE) {
-
+public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = NULL, $deleteDiscount = NULL, $msg= NULL, $id_cart = null, $clear = FALSE, $return = TRUE) {
 	if (is_array($products_app) && count($products_app) > 0) {
-            //echo 'crear carrito';
-            $this->context = Context::getContext(); // actualizar contexto
-            // carga un carrito de la sesión o por el id_cart
-            $cart_exist = (int) Db::getInstance()->getValue("SELECT COUNT(id_cart) total FROM ps_cart WHERE id_cart = ". (int) (isset($id_cart)? $id_cart :  $this->context->cookie->id_cart ));
-            if ( (isset($this->context->cookie->id_cart) && !empty($this->context->cookie->id_cart)) || $cart_exist != 0) {
-            	$this->context->cart = new Cart((int) (isset($id_cart)? $id_cart :  $this->context->cookie->id_cart ) );
-            	$this->context->cookie->id_cart = $this->context->cart->id;
-            	$this->clearCart();	
+		//echo 'crear carrito';
+		$this->context = Context::getContext(); // actualizar contexto
+		// carga un carrito de la sesión o por el id_cart
+		$cart_exist = (int) Db::getInstance()->getValue("SELECT COUNT(id_cart) total FROM ps_cart WHERE id_cart = ". (int) (isset($id_cart)? $id_cart :  $this->context->cookie->id_cart ));
+		if ( (isset($this->context->cookie->id_cart) && !empty($this->context->cookie->id_cart)) || $cart_exist != 0) {
+			$this->context->cart = new Cart((int) (isset($id_cart)? $id_cart :  $this->context->cookie->id_cart ) );
+			$this->context->cookie->id_cart = $this->context->cart->id;
+			$this->clearCart();	
 
-            } else {
-            	// crear un carrito nuevo
-            	$this->context->cart = new Cart();
-            	$this->context->cart->id_currency = Configuration::get('PS_CURRENCY_DEFAULT'); 
-    			// Agrega el carrito a la base de datos
-            	$this->context->cart->add();
-            	$this->context->cookie->id_cart = $this->context->cart->id;
-            }
-            // agrgar productos al carrito
-            foreach ($products_app as $value) {
-            	$this->context->cart->updateQty($value['qty'], $value['id'], 0, 0, 'up', 0);
-            }
+		} else {
+			// crear un carrito nuevo
+			$this->context->cart = new Cart();
+			$this->context->cart->id_currency = Configuration::get('PS_CURRENCY_DEFAULT'); 
+			// Agrega el carrito a la base de datos
+			$this->context->cart->add();
+			$this->context->cookie->id_cart = $this->context->cart->id;
+		}
+		// agrgar productos al carrito
+		foreach ($products_app as $value) {
+			$this->context->cart->updateQty($value['qty'], $value['id'], 0, 0, 'up', 0);
+		}
 
-        }
-        // Cargar un carrito de la sesión o por id_cart
-        if ( (isset($this->context->cookie->id_cart) && !empty($this->context->cookie->id_cart)) || $id_cart != NULL && empty($products_app)) {
-        	$this->context = Context::getContext(); // actualizar contexto
-        	$this->context->cart = new Cart((int) (isset($id_cart)? $id_cart :  $this->context->cookie->id_cart ) );
-        	$this->context->cookie->id_cart = $this->context->cart->id;
-        	if($clear){
-        		$this->clearCart();	
-        	}
-        }
-		$order_total = $this->context->cart->getOrderTotal();
-        
-        // actualizar atributos del carrito si existe 
-        if(isset($this->context->cart) && !empty($this->context->cart) && (isset($this->context->cookie->id_cart) && !empty($this->context->cookie->id_cart)) ){
-        	$this->context->cookie->{'msg_app'} = json_encode($msg);
-        	include(_PS_CLASS_DIR_.'Mobile_Detect.php');
-        	$detect = new Mobile_Detect;
-        	$this->context->cart->device = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet_app' : 'phone_app') : 'computer_app');            
+	}
+	// Cargar un carrito de la sesión o por id_cart
+	if ( (isset($this->context->cookie->id_cart) && !empty($this->context->cookie->id_cart)) || $id_cart != NULL && empty($products_app)) {
+		$this->context = Context::getContext(); // actualizar contexto
+		$this->context->cart = new Cart((int) (isset($id_cart)? $id_cart :  $this->context->cookie->id_cart ) );
+		$this->context->cookie->id_cart = $this->context->cart->id;
+		if($clear){
+			$this->clearCart();	
+		}
+	}
+	$this->context->cart->getOrderTotal();
+	
+	// actualizar atributos del carrito si existe 
+	if(isset($this->context->cart) && !empty($this->context->cart) && (isset($this->context->cookie->id_cart) && !empty($this->context->cookie->id_cart)) ){
+		$this->context->cookie->{'msg_app'} = json_encode($msg);
+		if($return){
+			include(_PS_CLASS_DIR_.'Mobile_Detect.php');
+		}
+		$detect = new Mobile_Detect;
+		$this->context->cart->device = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet_app' : 'phone_app') : 'computer_app');            
 
-        	$this->context->cart->id_customer = (int) $id_customer;
-        	$this->context->cart->id_address_delivery = (int) $id_address;
-        	$this->context->cart->id_address_invoice =  (int) $id_address;
-        	$this->context->cart->update();
+		$this->context->cart->id_customer = (int) $id_customer;
+		$this->context->cart->id_address_delivery = (int) $id_address;
+		$this->context->cart->id_address_invoice =  (int) $id_address;
+		$this->context->cart->update();
 
-            // Valida y agrega cupon de descuento
-        	$aplicar_cupon = 0;
-        	if (isset($discounts) && !empty($discounts) && is_array($discounts) && count($discounts) > 0 ) {
-        		$aplicar_cupon = 1;
-        		foreach ($discounts as $key => $value) {
-        			$cartRule = NULL;
-        			if (isset($value['type_voucher'])) {
-	        			if( $value['type_voucher'] == 'md' ) {							
-	        				$iddoc = trim($value['cupon']);
-	        				$cartRule = new CartRule(CartRule::getIdByDoctor($iddoc));
-	        			} elseif( $value['type_voucher'] == 'cupon' ) {
-	        				$cartRule = new CartRule(CartRule::getIdByCode(trim($value['cupon'])));
-	        			}
-        			}
-        			if(!empty($cartRule))
-        				$this->context->cart->addCartRule($cartRule->id);
+		// Valida y agrega cupon de descuento
+		$aplicar_cupon = 0;
+		if (isset($discounts) && !empty($discounts) && is_array($discounts) && count($discounts) > 0 ) {
+			$aplicar_cupon = 1;
+			foreach ($discounts as $key => $value) {
+				$cartRule = NULL;
+				if (isset($value['type_voucher'])) {
+					if( $value['type_voucher'] == 'md' ) {							
+						$iddoc = trim($value['cupon']);
+						$cartRule = new CartRule(CartRule::getIdByDoctor($iddoc));
+					} elseif( $value['type_voucher'] == 'cupon' ) {
+						$cartRule = new CartRule(CartRule::getIdByCode(trim($value['cupon'])));
+					}
+				}
+				if(!empty($cartRule))
+					$this->context->cart->addCartRule($cartRule->id);
 
-            	//exit(print_r($cartRule));
-        		}
-        	}
-            // Valida y remueve regla de carrito
+			//exit(print_r($cartRule));
+			}
+		}
+		// Valida y remueve regla de carrito
 /*            if(isset($deleteDiscount) && !empty($deleteDiscount)){
-            	if (($id_cart_rule = (int)$deleteDiscount) && Validate::isUnsignedId($id_cart_rule)){
-            		$this->context->cart->removeCartRule($id_cart_rule);
-            	}
-            }*/
-            $this->context->cart->update();   
-            
-            $products = array();
-			$productsFormula = array();
-			
-            foreach ($this->context->cart->getProducts() as $key => $value) {
-				$img = NULL;
-				if ( $value['id_image'] != NULL ) {
-						$img = _PS_BASE_URL_
-						. __PS_BASE_URI__
-						. 'img/p/'
-						. Image::getImgFolderStatic(explode('-', $value['id_image'])[1])
-						. explode('-', $value['id_image'])[1]
-						. '-large_default.jpg';
-				} else {
+			if (($id_cart_rule = (int)$deleteDiscount) && Validate::isUnsignedId($id_cart_rule)){
+				$this->context->cart->removeCartRule($id_cart_rule);
+			}
+		}*/
+		$this->context->cart->update();
+		
+		$products = array();
+		$productsFormula = array();
+
+		foreach ($this->context->cart->getProducts() as $key => $value) {
+			$img = NULL;
+			if ( $value['id_image'] != NULL ) {
 					$img = _PS_BASE_URL_
 					. __PS_BASE_URI__
 					. 'img/p/'
-					. 'es-default-large_default.jpg';
+					. Image::getImgFolderStatic(explode('-', $value['id_image'])[1])
+					. explode('-', $value['id_image'])[1]
+					. '-large_default.jpg';
+			} else {
+				$img = _PS_BASE_URL_
+				. __PS_BASE_URI__
+				. 'img/p/'
+				. 'es-default-large_default.jpg';
+			}
+			foreach ($products_app as  $value2) {
+
+				if($value2['id'] == $value['id_product'] && $value2['img'] != null){
+					$img = $value2['img'];  
 				}
-            	foreach ($products_app as  $value2) {
-
-            		if($value2['id'] == $value['id_product'] ){
-            			$img = $value2['img'];  
-            		}
-
-            	}
-
-            	$products[] = array('id' => (int)$value['id_product'],'name' => $value['name'],'price' => $value['price_wt'],'img'=> $img,'qty' => (int)$value['cart_quantity']);
-            	$productsFormula[] = $value['id_product'];
-
-            }
-
-
-            $subtotal = 0;
-
-            if ( $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS) != $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) ) {
-            	$subtotal = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING);
-            } else {
-            	$subtotal = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-            }
-
-
-            if ( $id_cart != NULL ) {
-
-            	$discounts_return = array();
-            	foreach ($this->context->cart->getDiscounts() as $key => $value) {
-            		$type_voucher = 'cupon';
-            		if($value['id_cart_rule'] == Db::getInstance()->getValue("SELECT id_cart_rule FROM "._DB_PREFIX_."cruzar_medcupon WHERE id_cart_rule = ".(int)$value['id_cart_rule']))
-            			$type_voucher ='md';
-
-            		$discounts_return[] = array('type_voucher' => 'cupon', 'cupon' => $value['code'], 'success' => true, 'msg' => 'Cupon aplicado correctamente');
-            	}
-
-            } else {
-            	$discounts_return = array();
-            	$discounts_return[] = array('success' => null);
-            }
-
-
-            if ( isset($discounts_return[0]) && $aplicar_cupon == 1 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
-
-            	$discounts_return = array();
-            	$discounts_return[] = array( 'success' => false, 'msg' => 'Cupon incorrecto, no aplicado' );
 
 			}
+
+			$products[] = array('id' => (int)$value['id_product'],'name' => $value['name'],'price' => $value['price_wt'],'img'=> $img,'qty' => (int)$value['cart_quantity']);
+			$productsFormula[] = $value['id_product'];
+
+		}
+
+
+		$subtotal = 0;
+
+		if ( $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS) != $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) ) {
+			$subtotal = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING);
+		} else {
+			$subtotal = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		}
+
+
+		if ( $id_cart != NULL ) {
+
+			$discounts_return = array();
+			foreach ($this->context->cart->getDiscounts() as $key => $value) {
+				$type_voucher = 'cupon';
+				if($value['id_cart_rule'] == Db::getInstance()->getValue("SELECT id_cart_rule FROM "._DB_PREFIX_."cruzar_medcupon WHERE id_cart_rule = ".(int)$value['id_cart_rule']))
+					$type_voucher ='md';
+
+				$discounts_return[] = array('type_voucher' => 'cupon', 'cupon' => $value['code'], 'success' => true, 'msg' => 'Cupon aplicado correctamente');
+			}
+
+		} else {
+			$discounts_return = array();
+			$discounts_return[] = array('success' => null);
+		}
+
+
+		if ( isset($discounts_return[0]) && $aplicar_cupon == 1 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
+
+			$discounts_return = array();
+			$discounts_return[] = array( 'success' => false, 'msg' => 'Cupon incorrecto, no aplicado' );
+
+		}
 
         $medios_de_pago = NULL;
 
@@ -984,20 +983,24 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
 
 		$order_total = $this->context->cart->getOrderTotal();
 		$total_discounts = $this->context->cart->getOrderTotal(TRUE,Cart::ONLY_DISCOUNTS);
-
-        $msg = json_decode($this->context->cookie->{'msg_app'});
-		return array('id_cart' => (int)$this->context->cart->id,
-					'id_customer' => (int)$this->context->cart->id_customer,
-					'msg' => $msg,
-					'id_address' => (int)$this->context->cart->id_address_invoice,
-					'order_total' => $order_total,
-					'sub_total' => $subtotal,
-					'products' => $products,
-					'discounts' => $discounts_return,
-					'total_discounts'=>$total_discounts,
-					'shipping_cost'=>(float)$this->context->cart->getTotalShippingCost(),
-					'rx'=> Cart::prodsHasFormula($productsFormula),
-					'mediosp' => $medios_de_pago);
+		
+		$msg = json_decode($this->context->cookie->{'msg_app'});
+		if($return){
+			return $this->cart($products, (int)$this->context->cart->id_customer, (int)$this->context->cart->id_address_invoice, $discounts_return, $deleteDiscount, $msg, (int)$this->context->cart->id, $clear, FALSE);
+		}else{
+			return array('id_cart' => (int)$this->context->cart->id,
+						'id_customer' => (int)$this->context->cart->id_customer,
+						'msg' => $msg,
+						'id_address' => (int)$this->context->cart->id_address_invoice,
+						'order_total' => $order_total,
+						'sub_total' => $subtotal,
+						'products' => $products,
+						'discounts' => $discounts_return,
+						'total_discounts'=>$total_discounts,
+						'shipping_cost'=>(float)$this->context->cart->getTotalShippingCost(),
+						'rx'=> Cart::prodsHasFormula($productsFormula),
+						'mediosp' => $medios_de_pago);
+		}
     }
 
     return array("ERROR" => 'Parámetros inválidos.','success' => false);
