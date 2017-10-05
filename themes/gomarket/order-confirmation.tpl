@@ -177,22 +177,32 @@
 
 <script type="text/javascript">
 {if isset($id_product) && ($id_product == 39473 || $id_product == 39474 || $id_product == 39493 || $id_product == 39494)}
-var datos={};
-datos['formId']="a775a964-524c-4eba-b050-9a97d41c4ffd";
-datos['lang']="en";
-datos['testAxId']="";
-datos['smActionUrl']="/form/7ymgpvwlezxrq1wn/";
-datos['validationToken']="4f979a0287ee4c0aaea99a44a7d3b9f5";
+var datos = {};
+datos['formId'] = "a775a964-524c-4eba-b050-9a97d41c4ffd";
+datos['lang'] = "en";
+datos['testAxId'] = "";
+datos['smActionUrl'] = "/form/7ymgpvwlezxrq1wn/";
+datos['validationToken'] = "4f979a0287ee4c0aaea99a44a7d3b9f5";
 
-datos['sm-form-name']="{$name_customer}";
-datos['sm-cst.idcustomer']="{$id_customer}";
-datos['sm-form-email']="{$email_customer}";
-datos['sm-form-phone']="{$phone}";
-datos['sm-cst.producto']="{$product}";
-datos['sm-cst.segmento']="{$segmento}";
+datos['sm-form-name'] = "{$name_customer}";
+datos['sm-cst.idcustomer'] = "{$id_customer}";
+datos['sm-form-email'] = "{$email_customer}";
+datos['sm-form-phone'] = "{$phone}";
+datos['sm-cst.producto'] = "{$product}";
+datos['sm-cst.segmento'] = "{$segmento}";
+var link = "https://app2.emlgrid.com/form/7ymgpvwlezxrq1wn/contact.htm";
 
-var link="https://app2.emlgrid.com/form/7ymgpvwlezxrq1wn/contact.htm";
-$.ajax({url:link,type:"post",data:datos,success:function(respuesta){console.log(respuesta);}}).always(function(){});
+$.ajax({
+    url: link,
+    type: "post",
+    data: datos,
+    success: function(respuesta){
+        console.log(respuesta);
+    }
+}).always(function(){
+//window.location.href = "aqui-pagina-redireccion";
+//alert("aqui-alerta-si-se-necesita");
+})
 
 {/if}
 </script>
