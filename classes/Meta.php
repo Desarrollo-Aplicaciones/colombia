@@ -242,13 +242,15 @@ class MetaCore extends ObjectModel
 	 */
 	public static function getProductMetas($id_product, $id_lang, $page_name)
 	{
+                $productBlackList = Configuration::get('PRODUCT_BLACK_LIST_SHOW');
 		$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
 				'.Shop::addSqlAssociation('product', 'p').'
+                                LEFT JOIN '._DB_PREFIX_.'product_black_list product_black ON (product_black.id_product = p.id_product)
 				WHERE pl.id_lang = '.(int)$id_lang.'
 					AND pl.id_product = '.(int)$id_product.'
-					AND product_shop.active = 1';
+					AND product_shop.active = IF(product_black.motivo IN ('.$productBlackList.'),  0,  1)';
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
 			if (empty($row['meta_description']))
