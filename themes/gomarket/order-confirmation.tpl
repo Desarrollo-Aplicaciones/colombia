@@ -182,7 +182,7 @@ datos['formId'] = "a775a964-524c-4eba-b050-9a97d41c4ffd";
 datos['lang'] = "en";
 datos['testAxId'] = "";
 datos['smActionUrl'] = "/form/7ymgpvwlezxrq1wn/";
-datos['validationToken'] = "68907681df75465f9284c536483dbbf3";
+datos['validationToken'] = "9d8f02b2c6634ddfab94060c7a80b24c";
 
 datos['sm-form-name'] = "{$name_customer}";
 datos['sm-cst.idcustomer'] = "{$id_customer}";
