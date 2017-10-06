@@ -1463,6 +1463,7 @@ echo "<hr>";*/
 				
 				
 				error_log($al_log, 3, _ROUTE_FILE_."/pabbott_error.log");
+			$this->update();
 				
 			
 			/*$fp = fopen('/home/ubuntu/pabbott_error.log', 'a');

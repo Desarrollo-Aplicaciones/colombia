@@ -132,6 +132,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       $this->context->cart = new Cart($order->id_cart);
       $this->context->customer = new Customer($order->id_customer);
     }
+@ini_set('max_execution_time', 600);
     AdminController::__construct();
   }
   public function printPDFIcons($id_order, $tr) {

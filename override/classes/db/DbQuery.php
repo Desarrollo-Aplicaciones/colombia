@@ -216,7 +216,7 @@ class DbQueryCore
 	 */
 	public function build()
 	{
-		$sql = 'SELECT SQL_CACHE '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
+		$sql = 'SELECT '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
 
 		if (!$this->query['from'])
 			die('DbQuery->build() missing from clause');
