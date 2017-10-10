@@ -55,7 +55,6 @@ class Ventas {
   	$i=0;
   	$result = $con->query("SELECT COUNT(*) as ordenes,
   						   SUM(po.total_paid_tax_excl / po.conversion_rate) as Total,
-  						   sum(pod.product_quantity) as cantidad,
   						   SUBSTRING(date_add,1,4),
   						   SUBSTRING(date_add,6,2),
   						   SUBSTRING(date_add,9,2),
