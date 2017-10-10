@@ -29,42 +29,42 @@ class Ventas {
      return false;
      exit();
  	}
-  	$result = $con->query("SELECT COUNT(DISTINCT po.id_order)as ordenes ,
-  						   sum(DISTINCT po.total_paid) as Total,
-  						   SUBSTRING(invoice_date,1,4),
-						   SUBSTRING(invoice_date,6,2),
-  						   SUBSTRING(invoice_date,9,2),
-						   SUBSTRING(invoice_date,11,9),
-  						   po.invoice_date
+  	$result = $con->query("SELECT COUNT(*) as ordenes ,
+  						   SUM(po.total_paid_tax_excl / po.conversion_rate) as Total,
+  						   SUBSTRING(date_add,1,4),
+						   SUBSTRING(date_add,6,2),
+  						   SUBSTRING(date_add,9,2),
+						   SUBSTRING(date_add,11,9),
+  						   po.date_add
 		FROM ps_orders po INNER JOIN ps_order_detail pod on pod.id_order = po.id_order
-		where SUBSTRING(invoice_date,6,2) = ". $this->hoy['mon'] ."
-		and SUBSTRING(invoice_date,1,4) = ".$this->hoy['year']."
-		-- and invoice_date >= DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
+		where SUBSTRING(date_add,6,2) = ". $this->hoy['mon'] ."
+		and SUBSTRING(date_add,1,4) = ".$this->hoy['year']."
+		-- and date_add >= DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
 		and po.current_state IN (2,3,4,5,9,12,20,22)
-		group by SUBSTRING(invoice_date,1,4),
-		SUBSTRING(invoice_date,6,2),
-		SUBSTRING(invoice_date,9,2) ORDER BY invoice_date ASC");
+		group by SUBSTRING(date_add,1,4),
+		SUBSTRING(date_add,6,2),
+		SUBSTRING(date_add,9,2) ORDER BY date_add ASC");
   	while($row = mysqli_fetch_array($result, MYSQL_ASSOC)) {
   		$this->mes['valor'][$i] = +$row['Total'];
   		$this->mes['cantidad'][$i] = $row['ordenes'];
-  		$this->mes['fecha'][$i] = $row['SUBSTRING(invoice_date,1,4)']
-  								   ."/".$row['SUBSTRING(invoice_date,6,2)']
-  								   ."/".$row['SUBSTRING(invoice_date,9,2)'];
+  		$this->mes['fecha'][$i] = $row['SUBSTRING(date_add,1,4)']
+  								   ."/".$row['SUBSTRING(date_add,6,2)']
+  								   ."/".$row['SUBSTRING(date_add,9,2)'];
   		$i=$i+1;
   	}
   	$i=0;
-  	$result = $con->query("SELECT COUNT(DISTINCT po.id_order)as ordenes,
-  						   sum(DISTINCT po.total_paid) as Total,
+  	$result = $con->query("SELECT COUNT(*) as ordenes,
+  						   SUM(po.total_paid_tax_excl / po.conversion_rate) as Total,
   						   sum(pod.product_quantity) as cantidad,
-  						   SUBSTRING(invoice_date,1,4),
-  						   SUBSTRING(invoice_date,6,2),
-  						   SUBSTRING(invoice_date,9,2),
-						   SUBSTRING(invoice_date,12,2),po.invoice_date
+  						   SUBSTRING(date_add,1,4),
+  						   SUBSTRING(date_add,6,2),
+  						   SUBSTRING(date_add,9,2),
+						   SUBSTRING(date_add,12,2),po.date_add
 		FROM ps_orders po INNER JOIN ps_order_detail pod on pod.id_order = po.id_order
-  			where SUBSTRING(invoice_date,9,2) = ".$this->hoy['mday']." and
-			SUBSTRING(invoice_date,6,2) = ". $this->hoy['mon'] ."
-  			and SUBSTRING(invoice_date,1,4) = ".$this->hoy['year']."
-  			and po.current_state IN (2,3,4,5,9,12,20,22) group by SUBSTRING(invoice_date,12,2) ORDER BY invoice_date ASC");
+  			where SUBSTRING(date_add,9,2) = ".$this->hoy['mday']." and
+			SUBSTRING(date_add,6,2) = ". $this->hoy['mon'] ."
+  			and SUBSTRING(date_add,1,4) = ".$this->hoy['year']."
+  			and po.current_state IN (2,3,4,5,9,12,20,22) group by SUBSTRING(date_add,12,2) ORDER BY date_add ASC");
   	//if(!( mysql_fetch_array($result, MYSQL_ASSOC)))
   	/*{
   		$this->dia['cantidad'][$i]=1;
@@ -74,7 +74,7 @@ class Ventas {
   	while($row = mysqli_fetch_array($result, MYSQL_ASSOC)) {
   		$this->dia['valor'][$i] = +$row['Total'];
   		$this->dia['cantidad'][$i] = $row['ordenes'];
-  		$this->dia['fecha'][$i] = $row['SUBSTRING(invoice_date,12,2)'];
+  		$this->dia['fecha'][$i] = $row['SUBSTRING(date_add,12,2)'];
   		$i=$i+1;
   	}
 
