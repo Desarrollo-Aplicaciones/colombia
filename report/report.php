@@ -36,7 +36,7 @@ class Ventas {
   						   SUBSTRING(date_add,9,2),
 						   SUBSTRING(date_add,11,9),
   						   po.date_add
-		FROM ps_orders po INNER JOIN ps_order_detail pod on pod.id_order = po.id_order
+		FROM ps_orders po 
 		where SUBSTRING(date_add,6,2) = ". $this->hoy['mon'] ."
 		and SUBSTRING(date_add,1,4) = ".$this->hoy['year']."
 		-- and date_add >= DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
@@ -60,7 +60,7 @@ class Ventas {
   						   SUBSTRING(date_add,6,2),
   						   SUBSTRING(date_add,9,2),
 						   SUBSTRING(date_add,12,2),po.date_add
-		FROM ps_orders po INNER JOIN ps_order_detail pod on pod.id_order = po.id_order
+		FROM ps_orders po 
   			where SUBSTRING(date_add,9,2) = ".$this->hoy['mday']." and
 			SUBSTRING(date_add,6,2) = ". $this->hoy['mon'] ."
   			and SUBSTRING(date_add,1,4) = ".$this->hoy['year']."
