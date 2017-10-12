@@ -419,10 +419,13 @@ class MetaCore extends ObjectModel
 		if (empty($meta_tags['meta_keywords']))
 			$meta_tags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
                 
-                $uri = explode('?',$_SERVER['REQUEST_URI']);
-                $uri = str_replace('/', '', $uri);
-                $meta_tags['canonical'] = $uri[0];
-                
+                $enabledCanonica = Configuration::get('PS_ENABLED_CANONICA');
+                $meta_tags['enabledCanonica'] = $enabledCanonica;
+                if($enabledCanonica) {
+                    $uri = explode('?',$_SERVER['REQUEST_URI']);
+                    $uri = str_replace('/', '', $uri);
+                    $meta_tags['canonical'] = $uri[0];
+                }
 		return $meta_tags;
 	}
 }
