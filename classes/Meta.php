@@ -418,6 +418,11 @@ class MetaCore extends ObjectModel
 			$meta_tags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
 		if (empty($meta_tags['meta_keywords']))
 			$meta_tags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
+                
+                $uri = explode('?',$_SERVER['REQUEST_URI']);
+                $uri = str_replace('/', '', $uri);
+                $meta_tags['canonical'] = $uri[0];
+                
 		return $meta_tags;
 	}
 }
