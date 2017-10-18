@@ -85,6 +85,7 @@ if (isset($_GET['opc_sel']) ) {
                     LEFT JOIN ps_doctor_cart dc ON ( o.id_cart = dc.id_cart )
                     LEFT JOIN ps_medico m ON ( dc.id_doctor = m.id_medico )
                     WHERE  o.date_add BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"
+                    GROUP BY o.id_order
                     ORDER BY ct.date_delivery ,ct.time_delivery,o.date_add ASC';
                     //echo $sql;
                     //echo"<hr>";
