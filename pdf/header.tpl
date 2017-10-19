@@ -40,8 +40,11 @@
 			<tr>
 			  <td style="font-weight: bold; font-size: 9pt; color: #444;">No somos grandes contribuyentes.</td>
 			</tr>
-
-			{if $invoice_number_header >= 28801}
+                        {if $invoice_number_header >= 133000}
+				<tr>
+					<td style="font-size: 9pt; color: #444";>Resoluci&oacute;n DIAN #18762005308295 de 2017/10/19</td>
+				</tr>
+			{else if $invoice_number_header >= 28801}
 				<tr>
 					<td style="font-size: 9pt; color: #444";>Resoluci&oacute;n DIAN #320001325045 de 2015/10/20</td>
 				</tr>
@@ -59,6 +62,10 @@
 			{if $invoice_number_header >= 28801}
 				<tr>
 					<td style="font-size: 9pt; color: #444";>Numeraci&oacute;n autorizada de <strong>28801 a 500000</strong></td>
+				</tr>
+			{else}{else if $invoice_number_header >= 81000}
+				<tr>
+					<td style="font-size: 9pt; color: #444";>Numeraci&oacute;n autorizada de <strong>133000 a 500000</td>
 				</tr>
 			{else}
 				<tr>
