@@ -45,7 +45,7 @@ if (isset($_GET['opc_sel']) ) {
 			IF ( ocr.reduction_percent IS NOT NULL AND ocr.reduction_amount IS NOT NULL AND ocr.reduction_product IS NOT NULL, 
                             IF ( cr.reduction_product != 0, IF ( cr.reduction_product = od.product_id, "*", ""), ""), "") AS producto_con_descuento,
                         od.product_quantity,
-                        i.cod_icr,
+                        GROUP_CONCAT(i.cod_icr),
                         soi.lote,
                         tro.nombre,
                         osl.name,
