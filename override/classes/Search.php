@@ -74,8 +74,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		if ($ajax)
 		{
 
-			// $conn_string = "host=localhost port=5432 dbname=farmalisto_colombia user=search password=search123";
-			$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
+			$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+			//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 			$dbconn4 = pg_pconnect($conn_string);
 			$conn_open = 1;
 
@@ -244,8 +244,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		else if ($order_by == 'date_upd')
 			$alias = 'p.';
 
-		// $conn_string = "host=localhost port=5432 dbname=farmalisto_colombia user=search password=search123";
-		$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
+		$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+		//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 		$dbconn4 = pg_pconnect($conn_string);
 		$conn_open = 1;
 
@@ -429,8 +429,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 			$alias = 'product_shop.';
 
 
-		// $conn_string = "host=localhost port=5432 dbname=farmalisto_colombia user=search password=search123";
-		$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
+		$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+//		$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 		$dbconn4 = pg_pconnect($conn_string);
 		$conn_open = 1;
 
@@ -653,8 +653,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		if ($ajax)
 		{
 
-			// $conn_string = "host=localhost port=5432 dbname=farmalisto_colombia user=search password=search123";
-			$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
+			$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+			//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 			$dbconn4 = pg_pconnect($conn_string);
 			$conn_open = 1;
 
@@ -785,8 +785,8 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		else if ($order_by == 'date_upd')
 			$alias = 'p.';
 
-		// $conn_string = "host=localhost port=5432 dbname=farmalisto_colombia user=search password=search123";
-		$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
+		$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+		//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 		$dbconn4 = pg_pconnect($conn_string);
 		$conn_open = 1;
 
