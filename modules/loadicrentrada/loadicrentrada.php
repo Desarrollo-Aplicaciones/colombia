@@ -24,8 +24,6 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 //require_once(_PS_ROOT_DIR_.'/classes/seveFileClass.php');
-ini_set('post_max_size', '64M'); 
-ini_set('upload_max_filesize', '64M');
 if (!defined('_PS_VERSION_'))
   exit;
 class loadicrentrada extends Module {
