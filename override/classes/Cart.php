@@ -74,6 +74,16 @@ class Cart extends CartCore {
 	public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null, $express = false)
 	{
 		
+		/** ENVIO ABBOTT FREE **/
+		if (Context::getContext()->cart->_products) {
+				foreach (Context::getContext()->cart->_products as $key => $value) {
+					if ($value['id_product'] == 39473 || $value['id_product'] == 39474 || $value['id_product'] == 39494 || $value['id_product'] == 39493) {
+			        	return 0;
+			       	}
+				}
+			}
+
+
 		if ((isset(Context::getContext()->cookie->check_xps) && Context::getContext()->cookie->check_xps)
 			|| (isset(Context::getContext()->cart->check_xps) && Context::getContext()->cart->check_xps)
 			|| Tools::getValue('express'))
@@ -1409,11 +1419,11 @@ echo "<hr>";*/
 				$alenum = rand(0,99);
 				$al_log .= ("-N:".$alenum );
 					$qr_nev = "";
-					if ( ( $cantpros_sensor < 2 || $cantpros_lector < 1 ) && 
+					/*if ( ( $cantpros_sensor < 2 || $cantpros_lector < 1 ) && 
 						( ( $cantpros_sensor != 2 || $cantpros_lector != 1 ) && $abtBD[ $pabbottflete ] == 0 ) ) {
 						
 						$qr_nev = "INSERT INTO ps_cart_product (id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES ( '".$this->id."', '".$pabbottflete."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '1', '".date("Y-m-d H:i:s")."')";
-					}
+					}*/
 					if ( $cantpros_sensor >= 2 && $cantpros_lector >= 1 && $abtBD[ $pabbottflete ] != 0 ) {
 						
 						$qr_nev = 'DELETE FROM ps_cart_product WHERE id_cart = '.$this->id.' AND id_product = '.$pabbottflete;
@@ -1424,13 +1434,13 @@ echo "<hr>";*/
 					} */
 					
 						$al_log .= $qr_nev;
-					if ( $qr_nev != "" ) {
-						if ( !Db::getInstance()->execute($qr_nev) /*!$this->CartQueryExecute($qr_nev)*/ ) {
+					/*if ( $qr_nev != "" ) {
+						if ( !Db::getInstance()->execute($qr_nev)  ) {
 							$al_log .= '_RNO';
 						} else {
 							$al_log .= '_RSI';
 						}
-					}
+					}*/
 					$qr_nev_lector = "";
 					if ( $cantpros_lector > $cantmax_lector ) {
 						
