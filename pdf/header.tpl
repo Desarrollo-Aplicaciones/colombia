@@ -59,13 +59,13 @@
 			  <td style="font-size: 9pt; color: #444";>Factura por computador</td>
 			</tr>
 
-			{if $invoice_number_header >= 28801}
+			{if $invoice_number_header >= 133000}
 				<tr>
-					<td style="font-size: 9pt; color: #444";>Numeraci&oacute;n autorizada de <strong>28801 a 500000</strong></td>
+					<td style="font-size: 9pt; color: #444";>Numeraci&oacute;n autorizada de <strong>133000 a 500000</strong></td>
 				</tr>
-			{else}{else if $invoice_number_header >= 81000}
+			{else if $invoice_number_header >= 28801}
 				<tr>
-					<td style="font-size: 9pt; color: #444";>Numeraci&oacute;n autorizada de <strong>133000 a 500000</td>
+					<td style="font-size: 9pt; color: #444";>Numeraci&oacute;n autorizada de <strong>28801 a 500000</td>
 				</tr>
 			{else}
 				<tr>
