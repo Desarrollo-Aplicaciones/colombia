@@ -166,12 +166,12 @@ public function sing($str)
 public function urlv() {
 
   $protocolo=NULL;
-  if(Utilities::is_ssl())
-  {
+//  if(Utilities::is_ssl())
+  //{
     $protocolo='https://';
-  }else{
-    $protocolo='http://';
-  }
+  //}else{
+    //$protocolo='http://';
+  //}
 
 // Url archivo de verificaciÃ³n webservice   
   $nombre_archivo = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
