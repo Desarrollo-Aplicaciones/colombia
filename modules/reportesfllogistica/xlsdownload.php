@@ -32,7 +32,7 @@ if (isset($_GET['opc_sel']) ) {
                         a.address2,
                         o.date_add,
                         a.city,
-                        GROUP_CONCAT(od.product_reference) AS product_reference,
+                        od.product_reference,
                         od.product_name,
                         CONCAT( "$ ", REPLACE(od.product_price,".",",") ) AS precio,
                         CONCAT( "$ ", REPLACE(od.unit_price_tax_incl,".",",") ) AS precio_tax,	
@@ -45,7 +45,7 @@ if (isset($_GET['opc_sel']) ) {
 			IF ( ocr.reduction_percent IS NOT NULL AND ocr.reduction_amount IS NOT NULL AND ocr.reduction_product IS NOT NULL, 
                             IF ( cr.reduction_product != 0, IF ( cr.reduction_product = od.product_id, "*", ""), ""), "") AS producto_con_descuento,
                         od.product_quantity,
-                        GROUP_CONCAT(i.cod_icr) AS cod_icr,
+                        i.cod_icr AS cod_icr,
                         soi.lote,
                         tro.nombre,
                         osl.name,
@@ -84,8 +84,7 @@ if (isset($_GET['opc_sel']) ) {
                     LEFT JOIN ps_employee emp ON(asoc.id_entity = emp.id_employee)
                     LEFT JOIN ps_doctor_cart dc ON ( o.id_cart = dc.id_cart )
                     LEFT JOIN ps_medico m ON ( dc.id_doctor = m.id_medico )
-                    WHERE  o.date_add BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"
-                    GROUP BY o.id_order
+                    WHERE  o.date_add BETWEEN "'.$input1.' 00:00:00" AND "'.$input2.' 23:59:59"                    
                     ORDER BY ct.date_delivery ,ct.time_delivery,o.date_add ASC';
                     //echo $sql;
                     //echo"<hr>";
