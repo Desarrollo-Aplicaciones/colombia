@@ -97,10 +97,10 @@
 	{foreach from=$js_files item=js_uri}	
 		{if isset($settings->column) && $settings->column == '1_column'}
 			{if !strpos($js_uri,"blocklayered.js")}
-				<script type="text/javascript" src="{$js_uri}"></script>
+				<script type="text/javascript" src='{$js_uri|replace:"http:":"https:"}'></script>
 			{/if}
 		{else}
-			<script type="text/javascript" src="{$js_uri}"></script>
+			<script type="text/javascript" src='{$js_uri|replace:"http:":"https:"}'></script>
 		{/if}
 	{/foreach}
 {/if}
