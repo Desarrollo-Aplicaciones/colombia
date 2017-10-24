@@ -21,7 +21,7 @@ if (isset($_FILES["file"])) {
         if (is_array($names) && $names[0] != '' && $names[0] != false ) {
             $actualiza_price = loadProducts(pathFiles().$names[0],Tools::getValue('id_supplier_order_copy'),Tools::getValue('id_supplier_copy'),$names[2]);
         }
-echo $actualiza_price;exit;
+
         if ($actualiza_price == false) {
             header("HTTP/1.0 404 Error cargando el listado de productos.");
         } elseif ($actualiza_price == 406) {
@@ -65,7 +65,7 @@ echo $actualiza_price;exit;
               echo $actualiza_price;
             }
         }
-
+        echo '<div style="color: #f00; border:solid 1px #f00;padding:20px;background-color:#fdd">'.$msg_send.'</div>';
     }
 }
 else{
