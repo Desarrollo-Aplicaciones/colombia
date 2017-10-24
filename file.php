@@ -65,7 +65,7 @@ if (isset($_FILES["file"])) {
               echo $actualiza_price;
             }
         }
-
+        echo '<div style="color: #f00; border:solid 1px #f00;padding:20px;background-color:#fdd">'.$msg_send.'</div>';
     }
 }
 else{
