@@ -77,7 +77,7 @@ class Cart extends CartCore {
 		/** ENVIO ABBOTT FREE **/
 		if (Context::getContext()->cart->_products) {
 				foreach (Context::getContext()->cart->_products as $key => $value) {
-					if ($value['id_product'] == 39473 || $value['id_product'] == 39474 || $value['id_product'] == 39494 || $value['id_product'] == 39493) {
+					if ($value['id_product'] == 39473 || $value['id_product'] == 39474 ) {
 			        	return 0;
 			       	}
 				}
@@ -208,6 +208,14 @@ class Cart extends CartCore {
 
 	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null, $express = false)
 	{	
+		if (!is_null($product_list)) {
+	      foreach ($product_list as $key => $value) {
+	        if ($value['id_product'] == 39473 || $value['id_product'] == 39474) {
+	          return 0;
+	        }
+	      }
+	    }
+            
               	/* validaciones envio Express */
 		if ((isset(Context::getContext()->cookie->check_xps) && Context::getContext()->cookie->check_xps)
 			 && (!isset(Context::getContext()->cookie->entrega_nocturna) || Context::getContext()->cookie->entrega_nocturna==='disabled')) {
