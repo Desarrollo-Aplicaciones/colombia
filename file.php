@@ -23,13 +23,17 @@ if (isset($_FILES["file"])) {
         }
 
         if ($actualiza_price == false) {
-            header("HTTP/1.0 404 Error cargando el listado de productos.");
+            //header("HTTP/1.0 404 Error cargando el listado de productos.");
+            $msg_send = 'Error cargando el listado de productos.';
         } elseif ($actualiza_price == 406) {
-            header("HTTP/1.0 406 Error cargando el listado de productos, algunos productos no corresponden con el proveedor seleccionado.");
+            //header("HTTP/1.0 406 Error cargando el listado de productos, algunos productos no corresponden con el proveedor seleccionado.");
+            $msg_send = 'Error cargando el listado de productos, algunos productos no corresponden con el proveedor seleccionado.';
         } elseif ($actualiza_price == 407) {
-            header("HTTP/1.0 407 Error cargando el listado de productos, algunos productos están duplicados.");
+            //header("HTTP/1.0 407 Error cargando el listado de productos, algunos productos están duplicados.");
+            $msg_send = 'Error cargando el listado de productos, algunos productos están duplicados.';
         } elseif ($actualiza_price == 204) {
-            header("HTTP/1.0 204 No se cargo ningún producto.");
+            //header("HTTP/1.0 204 No se cargo ningún producto.");
+            $msg_send = 'No se cargo ningún producto.';
         } else {
           $err_paso = 0;
             switch ($actualiza_price) {
