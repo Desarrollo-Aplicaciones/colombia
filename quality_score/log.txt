@@ -3158,3 +3158,18 @@
  NO Recordatorio: 2016-09-01 05:00:01
  Recordatorio: 2016-09-01 07:00:24
  NO Recordatorio: 2016-09-01 09:00:01
+ NO Recordatorio: 2017-10-23 11:00:01
+ NO Recordatorio: 2017-10-23 13:00:01
+ NO Recordatorio: 2017-10-23 15:00:02
+ NO Recordatorio: 2017-10-23 17:00:01
+ NO Recordatorio: 2017-10-23 19:00:01
+ NO Recordatorio: 2017-10-23 21:00:01
+ NO Recordatorio: 2017-10-23 23:00:01
+ NO Recordatorio: 2017-10-24 01:00:01
+ NO Recordatorio: 2017-10-24 03:00:01
+ NO Recordatorio: 2017-10-24 05:00:01
+ NO Recordatorio: 2017-10-24 07:00:01
+ NO Recordatorio: 2017-10-24 09:00:01
+ NO Recordatorio: 2017-10-24 11:00:01
+ NO Recordatorio: 2017-10-24 13:00:01
+ NO Recordatorio: 2017-10-24 15:00:01

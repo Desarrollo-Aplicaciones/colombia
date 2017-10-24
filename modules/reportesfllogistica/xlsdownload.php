@@ -93,8 +93,7 @@ if (isset($_GET['opc_sel']) ) {
                 
                 if ($results = Db::getInstance_slv()->ExecuteS($sql)) {
                     
-                    $output = fopen('php://output', 'w');
-                    fputcsv($output, array('NUM PEDIDO',
+                     echo implode('|', array('NUM PEDIDO',
                         'NUM FACTURA',
                         'CLIENTE',
                         'CEDULA',
@@ -127,47 +126,46 @@ if (isset($_GET['opc_sel']) ) {
                         'METODO DE PAGO',
                         'TRANSPORTADOR',
                         'DOCTOR',
-                        'MENSAJE PRIVADO'), "|");
+                        'MENSAJE PRIVADO'))."\r\n";
+
+                        foreach ($results as $key => $dat_print) {
+                            echo implode('|', array($dat_print['id_order'],
+                             $dat_print['invoice_number'],
+                             utf8_decode($dat_print['cliente']),
+                             utf8_decode($dat_print['cedula']),
+                             utf8_decode($dat_print['telefono1']),
+                             utf8_decode($dat_print['telefono2']),
+                             utf8_decode($dat_print['correo_cliente']),
+                             utf8_decode($dat_print['address1']),
+                             utf8_decode($dat_print['address2']),
+                             utf8_decode($dat_print['city']),
+                             $dat_print['date_add'],
+                             $dat_print['product_reference'],
+                             utf8_decode($dat_print['product_name']),
+                             $dat_print['precio'],
+                             $dat_print['precio_tax'],
+                             $dat_print['valor_descuento'],
+                             $dat_print['cupon_descuento'],
+                             $dat_print['descuento_a'],
+                             $dat_print['tipo_descuento'],
+                             $dat_print['producto_con_descuento'],
+                             $dat_print['product_quantity'],
+                             $dat_print['cod_icr'],
+                             $dat_print['lote'],
+                             utf8_decode($dat_print['nombre']),
+                             utf8_decode($dat_print['name']),
+                             $dat_print['costo_icr'],
+                             $dat_print['id_supply_order'],
+                             $dat_print['iva_proveedor'],
+                             $dat_print['Fecha_entrga'],
+                             $dat_print['Hora_entrega'],
+                             $dat_print['payment'],
+                             $dat_print['Transportador'],
+                             $dat_print['medico'],
+                             '"'.$dat_print['private_message'].'"' ))."\r\n";
+                        }
+
                             
-
-                            foreach ($results as $dat_print) {
-
-                                fputcsv( $output, array($dat_print['id_order'],
-                         $dat_print['invoice_number'],
-                         utf8_decode($dat_print['cliente']),
-                         utf8_decode($dat_print['cedula']),
-                         utf8_decode($dat_print['telefono1']),
-                         utf8_decode($dat_print['telefono2']),
-                         utf8_decode($dat_print['correo_cliente']),
-                         utf8_decode($dat_print['address1']),
-                         utf8_decode($dat_print['address2']),
-                         utf8_decode($dat_print['city']),
-                         $dat_print['date_add'],
-                         $dat_print['product_reference'],
-                         utf8_decode($dat_print['product_name']),
-                         $dat_print['precio'],
-                         $dat_print['precio_tax'],
-                         $dat_print['valor_descuento'],
-                         $dat_print['cupon_descuento'],
-                         $dat_print['descuento_a'],
-                         $dat_print['tipo_descuento'],
-                         $dat_print['producto_con_descuento'],
-                         $dat_print['product_quantity'],
-                         $dat_print['cod_icr'],
-                         $dat_print['lote'],
-                         utf8_decode($dat_print['nombre']),
-                         utf8_decode($dat_print['name']),
-                         $dat_print['costo_icr'],
-                         $dat_print['id_supply_order'],
-                         $dat_print['iva_proveedor'],
-                         $dat_print['Fecha_entrga'],
-                         $dat_print['Hora_entrega'],
-                         $dat_print['payment'],
-                         $dat_print['Transportador'],
-                         $dat_print['medico'],
-                         $dat_print['private_message'] ), "||");
-
-                            }
                     //echo "</table>";
                 } else {
                     header("Content-type: text/csv; charset=utf-8");
