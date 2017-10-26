@@ -1209,12 +1209,20 @@ echo "<hr>";*/
       $nevBD = array();
       $abbot11 = 39494;
       $abbot21 = 39493;
+      $abbot2150 = 39514;
+      $abbot225 = 39526;
+
 
       $pabbottsensor = 39473; //Sensor * 2
       $pabbottlector = 39474; //Lector * 1
+      $pabbottTirillas = 36762; //Tirillas 50 unidades 
+      $pabbottTirillas25 = 36763; //Tirillas 25 unidades 
 
       $abtBD[ $abbot11 ] = 0; 
       $abtBD[ $abbot21 ] = 0; 
+      $abtBD[ $abbot2150 ] = 0; 
+      $abtBD[ $abbot225 ] = 0; 
+
 
       $cantpros_sensor = 0;
       $cantpros_lector = 0;
@@ -1226,7 +1234,7 @@ echo "<hr>";*/
       if ( $this->id != 0 && $this->id != '' ) {
         $query_pabbotts_cart = "SELECT id_product, quantity FROM ps_cart_product cpp
           WHERE cpp.id_cart = ".$this->id."
-          AND id_product IN (".$abbot11.",".$abbot21.")"; 
+          AND id_product IN (".$abbot11.",".$abbot21.",".$abbot2150.",".$abbot225.")"; 
                                 
                                 
         if ( $result_pabbotts_cart = Db::getInstance()->ExecuteS($query_pabbotts_cart) ) {
@@ -1244,7 +1252,7 @@ echo "<hr>";*/
 
       //////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
 
-      if ( $abtBD[ $abbot11 ] != 0  || $abtBD[ $abbot21 ] != 0 ) {
+      if ( $abtBD[ $abbot11 ] != 0  || $abtBD[ $abbot21 ] != 0 || $abtBD[ $abbot2150 ] != 0 || $abtBD[ $abbot225 ] != 0 ) {
         $al_log = "\n";
 
         $al_log .= ("c:".$this->id."-");
@@ -1254,7 +1262,22 @@ echo "<hr>";*/
 
           $qr_nev = "";
 
-          if ( $abtBD[ $abbot11 ] != 0 ) {
+          if ( $abtBD[ $abbot2150 ] != 0 ) {
+            
+            $qr_nev = "INSERT INTO ps_cart_product "
+                                                        . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                                                        . "( '".$this->id."', '".$pabbottTirillas."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '1', '".date("Y-m-d H:i:s")."'),"
+                                                        . "( '".$this->id."', '".$pabbottsensor."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '2', '".date("Y-m-d H:i:s")."'),"
+                                                        . "( '".$this->id."', '".$pabbottlector."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '1', '".date("Y-m-d H:i:s")."')";
+
+          } elseif ( $abtBD[ $abbot225 ] != 0 ) {
+            
+            $qr_nev = "INSERT INTO ps_cart_product "
+                                                        . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                                                        . "( '".$this->id."', '".$pabbottsensor."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '2', '".date("Y-m-d H:i:s")."'),"
+                                                        . "( '".$this->id."', '".$pabbottTirillas25."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '1', '".date("Y-m-d H:i:s")."')";
+
+          } elseif ( $abtBD[ $abbot11 ] != 0 ) {
             
             $qr_nev = "INSERT INTO ps_cart_product "
                                                         . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
@@ -1368,6 +1391,8 @@ echo "<hr>";*/
       $abtBD[ $pabbottflete ] = 0; 
       $cantpros_sensor = 0;
       $cantpros_lector = 0;
+      $cantpros_tiri50 = 0;
+      $cantpros_tiri25 = 0;
       $cantmax_sensor = 2;
                         $cantmax_lector = 1;
       if ( $this->id != 0 && $this->id != '' ) {
@@ -1382,6 +1407,7 @@ echo "<hr>";*/
           }
         }
       }
+      /* COBRO FLETE ORIGINAL ABBOTT
       foreach ($products as $key => $product) {
         if ( ( $product["id_product"] != $pabbottflete ) 
             && ( $product["id_product"] ==  $pabbottsensor ) ) { // Validar sensor y cantidad
@@ -1390,15 +1416,33 @@ echo "<hr>";*/
             && ( $product["id_product"] ==  $pabbottlector ) ) { // validar lector y cantidad
           $cantpros_lector += $product["cart_quantity"];
         }
+      }*/
+
+
+      foreach ($products as $key => $product) {
+        if ( ( $product["id_product"] ==  $pabbottsensor ) ) { // Validar sensor y cantidad
+          $cantpros_sensor += $product["cart_quantity"];
+        } elseif ( ( $product["id_product"] ==  $pabbottlector ) ) { // validar lector y cantidad
+          $cantpros_lector += $product["cart_quantity"];
+        } elseif ( ( $product["id_product"] ==  $pabbottTirillas ) ) { // validar tirillas 50 y cantidad
+          $cantpros_tiri50 += $product["cart_quantity"];
+        } elseif ( ( $product["id_product"] ==  $pabbottTirillas25 ) ) { // validar tirillas 25 y cantidad
+          $cantpros_tiri25 += $product["cart_quantity"];
+        }
+
       }
+
+
       //////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
-      if ( $cantpros_sensor != 0 ||  $cantpros_lector != 0  || $abtBD[ $pabbottflete ] != 0 ) {
+      if ( $cantpros_sensor != 0 ||  $cantpros_lector != 0  || $cantpros_tiri50 != 0 ||  $cantpros_tiri25 != 0) {
         $al_log = "\n 2 -----\n ";
 
         $regla2mas1 = 204808;
         $regla1mas1 = 204834;
+        $regla2mas1mas50 = 208279;
+        $regla2mas25 = 208280;
         
-        $qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = '.$this->id.' AND id_cart_rule IN ( '.$regla1mas1.','.$regla2mas1.' )';
+        $qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = '.$this->id.' AND id_cart_rule IN ( '.$regla1mas1.','.$regla2mas1.','.$regla2mas1mas50.','.$regla2mas25.' )';
 
         if ( Db::getInstance()->execute($qr_rule)  ) {
                                         $al_log .= '_BORRAR_RuleSI - '.$qr_rule;
@@ -1407,12 +1451,53 @@ echo "<hr>";*/
                                 }
 
 
-        if ( $cantpros_sensor == 2  &&  $cantpros_lector == 1 ) {
+        if ( $cantpros_sensor == 2  &&  $cantpros_lector == 1 && $cantpros_tiri50 == 1 && $cantpros_tiri25 != 0) {
+          $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id .' AND id_product = '.$pabbottTirillas25; //.' AND id_product = '.$abbot11;
+
+            if (!Db::getInstance()->execute($qr_nev2)) {
+              $al_log2 = 'tirilla25_RNO';
+            } else {
+              $al_log2 = 'tirilla25_RSI';
+            }
+
+          $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas1mas50.')';
+
+        } elseif ( $cantpros_sensor == 2  &&  $cantpros_lector == 1 && $cantpros_tiri50 == 1 ) {
+
+          $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas1mas50.')';$qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id .' AND id_product = '.$pabbottTirillas25; //.' AND id_product = '.$abbot11;
+
+            if (!Db::getInstance()->execute($qr_nev2)) {
+              $al_log2 = 'tirilla25_RNO';
+            } else {
+              $al_log2 = 'tirilla25_RSI';
+            }
+
+        } elseif ( $cantpros_sensor == 2  &&  $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 == 0 ) {
 
           $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas1.')';
-        } elseif (  $cantpros_sensor == 1 &&  $cantpros_lector == 1 ) {
+
+        } elseif ( $cantpros_sensor == 1  &&  $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 == 0 ) {
+
           $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla1mas1.')';
+
+        } elseif (  $cantpros_sensor == 2 &&  $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 >= 1 ) {
+
+            $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id .' AND id_product = '.$pabbottTirillas25; //.' AND id_product = '.$abbot11;
+
+            if (!Db::getInstance()->execute($qr_nev2)) {
+              
+              $al_log2 = 'tirilla25_RNO';
+            } else {
+              $al_log2 = 'tirilla25_RSI';
+            }
+          $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas1.')';
+
+        } elseif ( $cantpros_sensor >= 2  &&  $cantpros_lector == 0 && $cantpros_tiri50 == 0 ) {
+
+          $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( '.$this->id.','.$regla2mas25.')';
+
         }
+
 
         if ( Db::getInstance()->execute($qr_rule2)  ) {
           $al_log .= '_RuleSI - '.$qr_rule2;

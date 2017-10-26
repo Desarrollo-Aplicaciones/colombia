@@ -69,3 +69,4 @@ Disallow: /*es/buscar
 Disallow: /*es/pedido-rapido
 Disallow: /*es/estado-pedido
 Disallow: /*es/confirmacion-pedido
+SITEMAP: https://www.farmalisto.com.co/1_index_sitemap.xml
