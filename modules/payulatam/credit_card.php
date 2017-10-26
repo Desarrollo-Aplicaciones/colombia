@@ -241,7 +241,7 @@ class PayuCreditCard extends PayUControllerWS {
       "emailAddress":"'. $params[5]['buyerEmail'].'",
       "dniNumber":"'.$dni.'",   
       "shippingAddress": {
-       "street1": "'.$address->address1.'",
+       "street1": "'.substr($address->address1,0, 99).'",
        "street2":"N/A",    
        "city": "'.$address->city.'",
        "state": "'.$conf->get_state($address->id_state).'",
@@ -258,7 +258,7 @@ class PayuCreditCard extends PayUControllerWS {
  },      
 
  "shippingAddress":{
-  "street1":"'.$address->address1.'",
+  "street1":"'.substr($address->address1,0, 99).'",
   "street2":"N/A",
   "city":"'.$address->city.'",
   "state":"'.$conf->get_state($address->id_state).'",
@@ -280,7 +280,7 @@ class PayuCreditCard extends PayUControllerWS {
   "contactPhone":"'.((!empty($address->phone)) ? $address->phone : $address->phone_mobile).'",
   "dniNumber":"'.$dni.'",
   "billingAddress":{
-    "street1":"'.$address->address1.'",
+    "street1":"'.substr($address->address1,0, 99).'",
     "street2":"N/A",
     "city":"'.$address->city.'",
     "state":"'.$conf->get_state($address->id_state).'",

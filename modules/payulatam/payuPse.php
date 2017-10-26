@@ -99,7 +99,7 @@ if (isset($_POST['pse_bank']) && isset($_POST['name_bank']) && !empty($_POST['ps
                     "emailAddress":"' . $params[5]['buyerEmail'] . '",
                     "dniNumber":"'.$dni.'",
                     "shippingAddress":{
-                        "street1":"'.$address->address1.'",
+                        "street1":"'.substr($address->address1,0, 99).'",
                         "city":"'.$address->city.'",
                         "state":"'.$conf->get_state($address->id_state).'",
                         "country":"' . $this->context->country->iso_code . '",

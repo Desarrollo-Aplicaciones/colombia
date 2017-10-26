@@ -55,7 +55,6 @@ class PayuEfecty extends PayUControllerWS{
     $intentos = $conf->count_pay_cart($id_cart);
 
     $total_tax = PasarelaPago::get_total_tax($id_cart);
-
 // Script Json payuLatam (Baloto)              
     $data='{
       "language":"es",
@@ -80,7 +79,7 @@ class PayuEfecty extends PayUControllerWS{
             "emailAddress":"'.$params[5]['buyerEmail'].'",
             "dniNumber":"'.$address['dni'].'",
             "shippingAddress":{
-              "street1":"'.$address['address1'].'",
+              "street1":"'.substr($address['address1'],0, 99).'",
               "city":"'.$address['city'].'",
               "state":"'.$address['state'].'",
               "country":"'.$address['iso_code'].'",
