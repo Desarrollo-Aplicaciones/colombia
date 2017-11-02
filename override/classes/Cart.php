@@ -1090,13 +1090,13 @@ class Cart extends CartCore {
               $abbot2150 = 39514; */
 //            $abbot225 = 39526;
 
-            $freestyle_1_1_0_0 = 39529;     //      FreeStyle Combo Sensor Lector (-40%)                                            $310.880 
-            $freestyle_2_0_0_0 = 39527;     //      FreeStyle Combo 2 Sensores + 50 Tirillas (Gratis)                               $388.600
-            $freestyle_2_1_0_0 = 39528;     //      FreeStyle Combo 2 Sensores Lector (-40%) + 50 Tirillas                          $505.180
+            $freestyle_1_1_0_0 = 39535;     //      FreeStyle Combo Sensor Lector (-40%)                                            $310.880 
+            $freestyle_2_0_0_0 = 39533;     //      FreeStyle Combo 2 Sensores + 50 Tirillas (Gratis)                               $388.600
+            $freestyle_2_1_0_0 = 39534;     //      FreeStyle Combo 2 Sensores Lector (-40%) + 50 Tirillas                          $505.180
 
 
-            $pabbottsensor = 39473; //Sensor * 2
-            $pabbottlector = 39474; //Lector * 1
+            $pabbottsensor = 39473;         //      Sensor
+            $pabbottlector = 39474;         //      Lector
             $pabbottTirillas50 = 36762; //Tirillas 50 unidades 
 //            $pabbottTirillas25 = 36763; //Tirillas 25 unidades 
 
@@ -1298,9 +1298,9 @@ class Cart extends CartCore {
             //////--$al_log .= ("in c:".debug_backtrace()[1]['class']."-f:".debug_backtrace()[1]['function']);
 
             $nevBD = array();
-            $pabbottflete = 39492; //39492; //cobro flete abbott
-            $pabbottsensor = 39473; //Sensor * 2
-            $pabbottlector = 39474; //Lector * 1
+            $pabbottflete = 39492;  //   39492; //cobro flete abbott
+            $pabbottsensor = 39473; //  Sensor 
+            $pabbottlector = 39474; //  Lector
             $abtBD[$pabbottflete] = 0;
             $cantpros_sensor = 0;
             $cantpros_lector = 0;
