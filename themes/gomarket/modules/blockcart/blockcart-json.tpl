@@ -98,7 +98,12 @@
 {/if}
 "wrappingCost": "{$wrapping_cost|html_entity_decode:2:'UTF-8'}",
 "nbTotalProducts": "{$nb_total_products}",
-"total": "{$total|html_entity_decode:2:'UTF-8'}",
+{*{if $product.id_product == 39529 || $product.id_product == 39528 || $product.id_product == 39527} *}    {*Para productos de Freestyle Noviembre LOCAL*}
+{if $product.id_product == 39533 || $product.id_product == 39534 || $product.id_product == 39535}     {*Para productos de Freestyle Noviembre PRODUCCION*}
+    "total": "{convertPrice|html_entity_decode:2:'UTF-8' price=$product.price}",
+{else}
+    "total": "{$total|html_entity_decode:2:'UTF-8'}",
+{/if}
 "productTotal": "{$product_total|html_entity_decode:2:'UTF-8'}",
 {if isset($errors) && $errors}
 "hasError" : true,
