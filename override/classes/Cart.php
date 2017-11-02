@@ -1357,11 +1357,11 @@ class Cart extends CartCore {
                   $regla2mas25 = 208280; */
 
 
-                $regla_1_1_0_0 = 208292;     //      FreeStyle Combo Sensor Lector (-40%)                                           
-                $regla_2_0_0_0 = 208293;     //      FreeStyle Combo 2 Sensores + 50 Tirillas (Gratis)                             
-                $regla_2_1_0_0 = 208294;     //      FreeStyle Combo 2 Sensores Lector (-40%)   
+                $regla_1_1_0_0 = 208910;     //      FreeStyle Combo Sensor Lector (-40%)                                           
+                $regla_2_0_0_0 = 208911;     //      FreeStyle Combo 2 Sensores + 50 Tirillas (Gratis)                             
+                $regla_2_1_0_0 = 208912;     //      FreeStyle Combo 2 Sensores Lector (-40%)   
 //                $regla_2_1_0_0_50 = 208279;     //      FreeStyle Combo 2 Sensores Lector + 50 Tirillas    
-                $regla_2_1_0_0_50 = 208295;     //      FreeStyle Combo 2 Sensores Lector + 50 Tirillas    
+                $regla_2_1_0_0_50 = 208913;     //      FreeStyle Combo 2 Sensores Lector + 50 Tirillas    
 
                 $qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = ' . $this->id . ' AND id_cart_rule IN ( ' . $regla_1_1_0_0 . ',' . $regla_2_0_0_0 . ',' . $regla_2_1_0_0 . ',' . $regla_2_1_0_0_50 . ')';
 
