@@ -1085,21 +1085,29 @@ class Cart extends CartCore {
             //////--$al_log .= ("in c:".debug_backtrace()[1]['class']."-f:".debug_backtrace()[1]['function']);
 
             $nevBD = array();
-            $abbot11 = 39494;
-            $abbot21 = 39493;
-            $abbot2150 = 39514;
-            $abbot225 = 39526;
+            /* $abbot11 = 39494;
+              $abbot21 = 39493;
+              $abbot2150 = 39514; */
+//            $abbot225 = 39526;
+
+            $freestyle_1_1_0_0 = 39529;     //      FreeStyle Combo Sensor Lector (-40%)                                            $310.880 
+            $freestyle_2_0_0_0 = 39527;     //      FreeStyle Combo 2 Sensores + 50 Tirillas (Gratis)                               $388.600
+            $freestyle_2_1_0_0 = 39528;     //      FreeStyle Combo 2 Sensores Lector (-40%) + 50 Tirillas                          $505.180
 
 
             $pabbottsensor = 39473; //Sensor * 2
             $pabbottlector = 39474; //Lector * 1
-            $pabbottTirillas = 36762; //Tirillas 50 unidades 
-            $pabbottTirillas25 = 36763; //Tirillas 25 unidades 
+            $pabbottTirillas50 = 36762; //Tirillas 50 unidades 
+//            $pabbottTirillas25 = 36763; //Tirillas 25 unidades 
 
-            $abtBD[$abbot11] = 0;
-            $abtBD[$abbot21] = 0;
-            $abtBD[$abbot2150] = 0;
-            $abtBD[$abbot225] = 0;
+            /* $abtBD[$abbot11] = 0;
+              $abtBD[$abbot21] = 0;
+              $abtBD[$abbot2150] = 0; */
+//            $abtBD[$abbot225] = 0;
+
+            $abtBD[$freestyle_1_1_0_0] = 0;
+            $abtBD[$freestyle_2_0_0_0] = 0;
+            $abtBD[$freestyle_2_1_0_0] = 0;
 
 
             $cantpros_sensor = 0;
@@ -1112,9 +1120,13 @@ class Cart extends CartCore {
             if ($this->id != 0 && $this->id != '') {
                 $query_pabbotts_cart = "SELECT id_product, quantity FROM ps_cart_product cpp
           WHERE cpp.id_cart = " . $this->id . "
-          AND id_product IN (" . $abbot11 . "," . $abbot21 . "," . $abbot2150 . "," . $abbot225 . ")";
+          AND id_product IN (" . $freestyle_1_1_0_0 . "," . $freestyle_2_0_0_0 . "," . $freestyle_2_1_0_0 . ")";
 
+                /* $query_pabbotts_cart = "SELECT id_product, quantity FROM ps_cart_product cpp
+                  WHERE cpp.id_cart = " . $this->id . "
+                  AND id_product IN (" . $abbot11 . "," . $abbot21 . "," . $abbot2150 . "," . $abbot225 . ")"; */
 
+// error_log("Query_pabbotts_cart:   ".$query_pabbotts_cart);
                 if ($result_pabbotts_cart = Db::getInstance()->ExecuteS($query_pabbotts_cart)) {
                     foreach ($result_pabbotts_cart as $key => $value) {
 
@@ -1129,8 +1141,14 @@ class Cart extends CartCore {
 
 
             //////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
+//             error_log("Freestyle_1_1_0_0:  " . $freestyle_1_1_0_0 . "," . $freestyle_2_0_0_0 . "," . $freestyle_2_1_0_0);
+            // error_log("abtBD :  " . $abtBD[$freestyle_1_1_0_0] . "," . $abtBD[$freestyle_2_0_0_0] . "," . $abtBD[$freestyle_2_1_0_0]);
+//            // error_log("Product abbot11:  " . $abbot11 . "," . $abbot21 . "," . $abbot2150.",".$abbot225);
+//            error_log("abtBD2 :  ".$abtBD[$abbot11]."," . $abtBD[$abbot21] . "," . $abtBD[$abbot2150] . "," . $abtBD[$abbot225]);
 
-            if ($abtBD[$abbot11] != 0 || $abtBD[$abbot21] != 0 || $abtBD[$abbot2150] != 0 || $abtBD[$abbot225] != 0) {
+            if ($abtBD[$freestyle_1_1_0_0] != 0 || $abtBD[$freestyle_2_0_0_0] != 0 || $abtBD[$freestyle_2_1_0_0] != 0) {
+//                if ($abtBD[$abbot11] != 0 || $abtBD[$abbot21] != 0 || $abtBD[$abbot2150] != 0 || $abtBD[$abbot225] != 0 ) {
+                // error_log("ENTRO POR FIN");
                 $al_log = "\n";
 
                 $al_log .= ("c:" . $this->id . "-");
@@ -1140,29 +1158,53 @@ class Cart extends CartCore {
 
                 $qr_nev = "";
 
-                if ($abtBD[$abbot2150] != 0) {
+                /* if ($abtBD[$abbot2150] != 0) {
 
-                    $qr_nev = "INSERT INTO ps_cart_product "
-                        . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
-                        . "( '" . $this->id . "', '" . $pabbottTirillas . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "'),"
-                        . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
-                        . "( '" . $this->id . "', '" . $pabbottlector . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
-                } elseif ($abtBD[$abbot225] != 0) {
+                  $qr_nev = "INSERT INTO ps_cart_product "
+                  . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                  . "( '" . $this->id . "', '" . $pabbottTirillas . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "'),"
+                  . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
+                  . "( '" . $this->id . "', '" . $pabbottlector . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
+                  } elseif ($abtBD[$abbot225] != 0) {
 
-                    $qr_nev = "INSERT INTO ps_cart_product "
-                        . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
-                        . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
-                        . "( '" . $this->id . "', '" . $pabbottTirillas25 . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
-                } elseif ($abtBD[$abbot11] != 0) {
+                  $qr_nev = "INSERT INTO ps_cart_product "
+                  . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                  . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
+                  . "( '" . $this->id . "', '" . $pabbottTirillas25 . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
+                  } elseif ($abtBD[$abbot11] != 0) {
 
+                  $qr_nev = "INSERT INTO ps_cart_product "
+                  . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                  . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "'),"
+                  . "( '" . $this->id . "', '" . $pabbottlector . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
+                  } elseif ($abtBD[$abbot21] != 0) {
+
+                  $qr_nev = "INSERT INTO ps_cart_product "
+                  . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                  . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
+                  . "( '" . $this->id . "', '" . $pabbottlector . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
+                  } */
+
+
+
+
+                if ($abtBD[$freestyle_1_1_0_0] != 0) {
+// error_log("INSERT 1");
                     $qr_nev = "INSERT INTO ps_cart_product "
                         . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
                         . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "'),"
                         . "( '" . $this->id . "', '" . $pabbottlector . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
-                } elseif ($abtBD[$abbot21] != 0) {
-
+                } elseif ($abtBD[$freestyle_2_0_0_0] != 0) {
+// error_log("INSERT 2");
                     $qr_nev = "INSERT INTO ps_cart_product "
                         . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                        . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
+                        . "( '" . $this->id . "', '" . $pabbottTirillas50 . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
+                } elseif ($abtBD[$freestyle_2_1_0_0] != 0) {
+// error_log("INSERT 3");
+                    $qr_nev .= "INSERT INTO ps_cart_product "
+                        . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
+                        . "( '" . $this->id . "', '" . $pabbottTirillas50 . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "'),"
                         . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
                         . "( '" . $this->id . "', '" . $pabbottlector . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
                 }
@@ -1175,6 +1217,7 @@ class Cart extends CartCore {
 
                 if (!Db::getInstance()->execute($qr_nev2)) {
                     $al_log .= '_RNO';
+                    // error_log("SI BORRRO TODO ");
                 } else {
                     $al_log .= '_RSI';
                 }
@@ -1233,7 +1276,7 @@ class Cart extends CartCore {
 
             // error_log($al_log, 3, _ROUTE_FILE_ . "/pabbott_error.log");
 
-
+            $this->update();
 
             /* $fp = fopen('/home/ubuntu/pabbott_error.log', 'a');
               fwrite($fp, $al_log);
@@ -1262,7 +1305,7 @@ class Cart extends CartCore {
             $cantpros_sensor = 0;
             $cantpros_lector = 0;
             $cantpros_tiri50 = 0;
-            $cantpros_tiri25 = 0;
+//            $cantpros_tiri25 = 0;
             $cantmax_sensor = 2;
             $cantmax_lector = 1;
             if ($this->id != 0 && $this->id != '') {
@@ -1294,7 +1337,7 @@ class Cart extends CartCore {
                     $cantpros_sensor += $product["cart_quantity"];
                 } elseif (( $product["id_product"] == $pabbottlector)) { // validar lector y cantidad
                     $cantpros_lector += $product["cart_quantity"];
-                } elseif (( $product["id_product"] == $pabbottTirillas)) { // validar tirillas 50 y cantidad
+                } elseif (( $product["id_product"] == $pabbottTirillas50)) { // validar tirillas 50 y cantidad
                     $cantpros_tiri50 += $product["cart_quantity"];
                 } elseif (( $product["id_product"] == $pabbottTirillas25)) { // validar tirillas 25 y cantidad
                     $cantpros_tiri25 += $product["cart_quantity"];
@@ -1303,15 +1346,25 @@ class Cart extends CartCore {
 
 
             //////--$al_log .= ("- cant_ref:".$cantpros_refrigerados);
-            if ($cantpros_sensor != 0 || $cantpros_lector != 0 || $cantpros_tiri50 != 0 || $cantpros_tiri25 != 0) {
+            // error_log("CANTIDADES: ".$cantpros_sensor.", ". $cantpros_lector. ", ". $cantpros_tiri50);
+
+            if ($cantpros_sensor != 0 || $cantpros_lector != 0 || $cantpros_tiri50 != 0) {
                 $al_log = "\n 2 -----\n ";
 
-                $regla2mas1 = 204808;
-                $regla1mas1 = 204834;
-                $regla2mas1mas50 = 208279;
-                $regla2mas25 = 208280;
+                /* $regla2mas1 = 204808;
+                  $regla1mas1 = 204834;
+                  $regla2mas1mas50 = 208279;
+                  $regla2mas25 = 208280; */
 
-                $qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = ' . $this->id . ' AND id_cart_rule IN ( ' . $regla1mas1 . ',' . $regla2mas1 . ',' . $regla2mas1mas50 . ',' . $regla2mas25 . ' )';
+
+                $regla_1_1_0_0 = 208292;     //      FreeStyle Combo Sensor Lector (-40%)                                           
+                $regla_2_0_0_0 = 208293;     //      FreeStyle Combo 2 Sensores + 50 Tirillas (Gratis)                             
+                $regla_2_1_0_0 = 208294;     //      FreeStyle Combo 2 Sensores Lector (-40%)   
+//                $regla_2_1_0_0_50 = 208279;     //      FreeStyle Combo 2 Sensores Lector + 50 Tirillas    
+                $regla_2_1_0_0_50 = 208295;     //      FreeStyle Combo 2 Sensores Lector + 50 Tirillas    
+
+                $qr_rule = 'DELETE FROM ps_cart_cart_rule WHERE id_cart = ' . $this->id . ' AND id_cart_rule IN ( ' . $regla_1_1_0_0 . ',' . $regla_2_0_0_0 . ',' . $regla_2_1_0_0 . ',' . $regla_2_1_0_0_50 . ')';
+
 
                 if (Db::getInstance()->execute($qr_rule)) {
                     $al_log .= '_BORRAR_RuleSI - ' . $qr_rule;
@@ -1320,50 +1373,71 @@ class Cart extends CartCore {
                 }
 
 
-                if ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 1 && $cantpros_tiri25 != 0) {
-                    $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas25; //.' AND id_product = '.$abbot11;
+                /* if ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 1 && $cantpros_tiri25 != 0) {
+                  $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas25; //.' AND id_product = '.$abbot11;
 
-                    if (!Db::getInstance()->execute($qr_nev2)) {
-                        $al_log2 = 'tirilla25_RNO';
-                    } else {
-                        $al_log2 = 'tirilla25_RSI';
-                    }
+                  if (!Db::getInstance()->execute($qr_nev2)) {
+                  $al_log2 = 'tirilla25_RNO';
+                  } else {
+                  $al_log2 = 'tirilla25_RSI';
+                  }
 
-                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1mas50 . ')';
-                } elseif ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 1) {
+                  $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1mas50 . ')';
+                  } elseif ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 1) {
 
-                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1mas50 . ')';
-                    $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas25; //.' AND id_product = '.$abbot11;
+                  $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1mas50 . ')';
+                  $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas25; //.' AND id_product = '.$abbot11;
 
-                    if (!Db::getInstance()->execute($qr_nev2)) {
-                        $al_log2 = 'tirilla25_RNO';
-                    } else {
-                        $al_log2 = 'tirilla25_RSI';
-                    }
-                } elseif ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 == 0) {
+                  if (!Db::getInstance()->execute($qr_nev2)) {
+                  $al_log2 = 'tirilla25_RNO';
+                  } else {
+                  $al_log2 = 'tirilla25_RSI';
+                  }
+                  } elseif ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 == 0) {
 
-                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1 . ')';
-                } elseif ($cantpros_sensor == 1 && $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 == 0) {
+                  $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1 . ')';
+                  } elseif ($cantpros_sensor == 1 && $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 == 0) {
 
-                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla1mas1 . ')';
-                } elseif ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 >= 1) {
+                  $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla1mas1 . ')';
+                  } elseif ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 == 0 && $cantpros_tiri25 >= 1) {
 
-                    $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas25; //.' AND id_product = '.$abbot11;
+                  $qr_nev2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas25; //.' AND id_product = '.$abbot11;
 
-                    if (!Db::getInstance()->execute($qr_nev2)) {
+                  if (!Db::getInstance()->execute($qr_nev2)) {
 
-                        $al_log2 = 'tirilla25_RNO';
-                    } else {
-                        $al_log2 = 'tirilla25_RSI';
-                    }
-                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1 . ')';
-                } elseif ($cantpros_sensor >= 2 && $cantpros_lector == 0 && $cantpros_tiri50 == 0) {
+                  $al_log2 = 'tirilla25_RNO';
+                  } else {
+                  $al_log2 = 'tirilla25_RSI';
+                  }
+                  $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas1 . ')';
+                  } elseif ($cantpros_sensor >= 2 && $cantpros_lector == 0 && $cantpros_tiri50 == 0) {
 
-                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas25 . ')';
+                  $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla2mas25 . ')';
+                  } */
+
+
+
+
+
+                //          PROMOCION DE NOVIEMBRE DE 2017          //
+                //          FreeStyle Combo Sensor Lector (-40%)        //
+                if ($cantpros_sensor == 1 && $cantpros_lector == 1 && $cantpros_tiri50 >= 0) {
+
+                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_1_1_0_0 . ')';
+                } elseif ($cantpros_sensor == 2 && $cantpros_lector == 0 && $cantpros_tiri50 >= 0) {
+
+                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_2_0_0_0 . ')';
+                } elseif ($cantpros_sensor == 2 && $cantpros_lector == 1 && $cantpros_tiri50 >= 0) {
+
+                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_2_1_0_0 . ');';
+                    $qr_rule2 .= 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_2_1_0_0_50 . ');';
                 }
 
 
-                if (Db::getInstance()->execute($qr_rule2)) {
+                //          FIN DE INSERCION DE REGLAS          //
+
+
+                if (isset($qr_rule2) && Db::getInstance()->execute($qr_rule2)) {
                     $al_log .= '_RuleSI - ' . $qr_rule2;
                 } else {
                     $al_log .= '_RuleNO';
@@ -1382,9 +1456,14 @@ class Cart extends CartCore {
                   $qr_nev = "INSERT INTO ps_cart_product (id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES ( '".$this->id."', '".$pabbottflete."', '".$this->id_address_delivery."', '".$this->id_shop."', '0', '1', '".date("Y-m-d H:i:s")."')";
                   } */
                 if ($cantpros_sensor >= 2 && $cantpros_lector >= 1 && $abtBD[$pabbottflete] != 0) {
-
+                    // error_log("Entro y borro el flete.");
                     $qr_nev = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottflete;
                 }
+
+
+
+
+
                 /* elseif ( $cantpros_sensor != 2 || $cantpros_lector != 1  && $abtBD[ $pabbottflete ] == 0  ) {
 
                   $qr_nev = "UPDATE ps_cart_product SET quantity = 1 WHERE id_cart = ".$this->id." AND id_product = ".$pabbottflete;
@@ -1398,14 +1477,45 @@ class Cart extends CartCore {
                   $al_log .= '_RSI';
                   }
                   } */
-                $qr_nev_lector = "";
-                if ($cantpros_lector > $cantmax_lector) {
 
-                    $qr_nev_lector = "UPDATE ps_cart_product SET quantity = " . $cantmax_lector . " WHERE id_cart = " . $this->id . " AND id_product = " . $pabbottlector;
+
+
+
+
+
+
+                $qr_nev_lector = "";
+                /*   if ($cantpros_lector > $cantmax_lector) {
+                  error_log("Entro a Actualizar el ps_cart_product.");
+                  $qr_nev_lector = "UPDATE ps_cart_product SET quantity = " . $cantmax_lector . " WHERE id_cart = " . $this->id . " AND id_product = " . $pabbottlector;
+                  } */
+
+                // error_log("VALIDANDO CANTIDADES: ".$cantpros_sensor.", ". $cantpros_lector. ", ". $cantpros_tiri50);
+
+                if ($cantpros_sensor > 2 && $cantpros_lector == 0 && $cantpros_tiri50 >= 0) {
+                    // error_log("ENTRO A BORRAR");
+                    $qr_nev_lector = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas50;
+//                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_2_1_0_0 . ');';
+//                    $qr_rule2 .= 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_2_1_0_0_50 . ');';
                 }
+                if ($cantpros_sensor >= 2 && $cantpros_lector == 1 && $cantpros_tiri50 > 1) {
+                    // error_log("ENTRO A BORRAR 2");
+                    $qr_nev_lector = "UPDATE ps_cart_product SET quantity = 1 WHERE id_cart = " . $this->id . " AND id_product = " . $pabbottTirillas50;
+//                    $qr_rule2 = 'DELETE FROM ps_cart_product WHERE id_cart = ' . $this->id . ' AND id_product = ' . $pabbottTirillas50;
+//                    $qr_rule2 = 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_2_1_0_0 . ');';
+//                    $qr_rule2 .= 'INSERT INTO ps_cart_cart_rule ( id_cart, id_cart_rule ) VALUES ( ' . $this->id . ',' . $regla_2_1_0_0_50 . ');';
+                }
+
+
+
+
+
+
+
 
                 $al_log .= $qr_nev_lector;
                 if ($qr_nev_lector != "") {
+                    // error_log("EJECUTAR:  ". $qr_nev_lector);
                     if (!Db::getInstance()->execute($qr_nev_lector) /* !$this->CartQueryExecute($qr_nev) */) {
                         $al_log .= '_RLNO';
                     } else {
@@ -1439,6 +1549,7 @@ class Cart extends CartCore {
             //// error_log( print_r( debug_backtrace(), true ), 3, "/home/ubuntu/pabbott_error.log");
             //// error_log($alenum."-------------------------------------------------------\n", 3, "/home/ubuntu/pabbott_error.log");
             //// error_log($al_log);
+            // error_log("    ");
         }
         //----------------------  FIN 2  ----------------------------   ABBOTT 2   -------------------------------------  EWING  -------------//    
 
@@ -1475,7 +1586,9 @@ class Cart extends CartCore {
         // se toman las reglas de carrito
         if (in_array($type, array(Cart::BOTH, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS))) {
             $CartRules = $this->getCartRules();
-
+            /*  echo "<pre>";
+              print_r($CartRules);
+              echo "</pre>"; */
             // se toman los valores de descuento
             if (!empty($CartRules)) {
                 $ReductionPercent = $CartRules[0]['reduction_percent'];
@@ -1605,13 +1718,14 @@ class Cart extends CartCore {
         }
 
         $order_total_products = $order_total;
-
+// error_log("Order_total_products: ".$order_total_products);
         if ($type == Cart::ONLY_DISCOUNTS) {
             $order_total = 0;
         }
 
         // Wrapping Fees
         $wrapping_fees = 0;
+        // error_log("REGALO: ".$this->gift);
         if ($this->gift) {
             $wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), 2), Currency::getCurrencyInstance((int) $this->id_currency));
         }
@@ -1620,6 +1734,7 @@ class Cart extends CartCore {
         }
 
         // se aplica el descuento normal si el cupon de descuento es 0, si no existe cupon o si el descuento amount es diferente de 0
+        // error_log("GenerateReduction:  ".(int)$GenerateReduction);
         if ($GenerateReduction) {
             if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive()) {
                 // First, retrieve the cart rules associated to this "getOrderTotal"
@@ -1729,13 +1844,13 @@ class Cart extends CartCore {
                 }
             }
         }
-
+// error_log("Cart::BOTH:          ".Cart::BOTH. ", TIPO: ".$type);
         if ($type == Cart::BOTH) {
 
             if ($order_total <= 0) {
                 $order_total = 0;
             }
-
+// error_log("Shipping_fees: ".$shipping_fees.",  Wrapping_fees: ".$wrapping_fees);
             $order_total += $shipping_fees + $wrapping_fees;
         }
 
@@ -1745,18 +1860,22 @@ class Cart extends CartCore {
 
         if ($type == Cart::ONLY_DISCOUNTS) {
             $giftProductSpecial = explode(",", Configuration::get('PS_GIFTPRODUCTSPECIAL'));
-            foreach ($cart_rules as $cart_rule) {
-                if (in_array((int) $cart_rule['obj']->id, $giftProductSpecial)) {
-                    return 0;
-                } else {
-                    return $order_total_discount;
+            if (isset($cart_rules)) {
+                foreach ($cart_rules as $cart_rule) {
+                    if (in_array((int) $cart_rule['obj']->id, $giftProductSpecial)) {
+                        return 0;
+                    } else {
+                        return $order_total_discount;
+                    }
                 }
+            } else {
+                // error_log("Order_total_discount:                     ".$order_total_discount);
             }
         }
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING && $ReductionAmount != 0) {
             $order_total = $totalProductWT;
         }
-
+// error_log("TOTAL ORDEN : ".Tools::ps_round((float) $order_total, 2));
         return Tools::ps_round((float) $order_total, 2);
     }
 
