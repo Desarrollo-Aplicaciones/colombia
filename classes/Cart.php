@@ -3251,15 +3251,20 @@ class CartCore extends ObjectModel
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
 
 		foreach ($products as $product)
-			$success &= $cart->updateQty(
-				$product['quantity'],
-				(int)$product['id_product'],
-				(int)$product['id_product_attribute'],
-				null,
-				'up',
-				(int)$product['id_address_delivery'],
-				new Shop($cart->id_shop)
-			);
+            
+            //  Delete product Flete of Freestyle from cart
+            if ((int)$product['id_product'] != 39492){
+                
+                $success &= $cart->updateQty(
+                    $product['quantity'],
+                    (int)$product['id_product'],
+                    (int)$product['id_product_attribute'],
+                    null,
+                    'up',
+                    (int)$product['id_address_delivery'],
+                    new Shop($cart->id_shop)
+                );
+            }
 
 		// Customized products
 		$customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
