@@ -423,8 +423,7 @@ class MetaCore extends ObjectModel
                 $meta_tags['enabledCanonica'] = $enabledCanonica;
                 if($enabledCanonica) {
                     $uri = explode('?',$_SERVER['REQUEST_URI']);
-                    $uri = str_replace('/', '', $uri);
-                    $meta_tags['canonical'] = $uri[0];
+                    $meta_tags['canonical'] = substr($uri[0],1);
                 }
 		return $meta_tags;
 	}
