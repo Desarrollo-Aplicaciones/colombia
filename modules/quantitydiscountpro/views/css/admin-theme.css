@@ -1,0 +1,36 @@
+#quantity-discount-pro { clear: both }
+#quantity-discount-pro p.inline-label {
+    text-align: center;
+    margin: 10px 0;
+}
+
+#quantity-discount-pro select[multiple] { height: 150px }
+#quantity-discount-pro select option { white-space: normal; }
+
+.bootstrap #quantity-discount-pro .form-horizontal .control-label {
+    text-align: left;
+}
+
+.time-column {
+    width: auto;
+    height: 20px;
+    display: block;
+}
+
+.time-column.valid-date {
+    background: url(../img/valid.png) no-repeat center center;
+}
+
+.time-column.expired-date {
+    background: url(../img/expired.png) no-repeat center center;
+}
+
+.time-column.future-date {
+    background: url(../img/future.png) no-repeat center center;
+}
+
+.time-column.valid-date-icon { color: #72c279; }
+.time-column.future-date-icon { color: #f3e838; }
+.time-column.expired-date-icon { color: #e08f95; }
+
+.time-column [class^="icon-"] { font-size: 18px !important; }

@@ -1098,7 +1098,7 @@ class Cart extends CartCore {
             $pabbottsensor = 39473;         //      Sensor
             $pabbottlector = 39474;         //      Lector
             $pabbottTirillas50 = 36762; //Tirillas 50 unidades 
-//            $pabbottTirillas25 = 36763; //Tirillas 25 unidades 
+            $pabbottTirillas25 = 36763; //Tirillas 25 unidades 
 
             /* $abtBD[$abbot11] = 0;
               $abtBD[$abbot21] = 0;
@@ -1189,19 +1189,19 @@ class Cart extends CartCore {
 
 
                 if ($abtBD[$freestyle_1_1_0_0] != 0) {
-// error_log("INSERT 1");
+ error_log("INSERT 1");
                     $qr_nev = "INSERT INTO ps_cart_product "
                         . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
                         . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "'),"
                         . "( '" . $this->id . "', '" . $pabbottlector . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
                 } elseif ($abtBD[$freestyle_2_0_0_0] != 0) {
-// error_log("INSERT 2");
+ error_log("INSERT 2");
                     $qr_nev = "INSERT INTO ps_cart_product "
                         . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
                         . "( '" . $this->id . "', '" . $pabbottsensor . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '2', '" . date("Y-m-d H:i:s") . "'),"
                         . "( '" . $this->id . "', '" . $pabbottTirillas50 . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "')";
                 } elseif ($abtBD[$freestyle_2_1_0_0] != 0) {
-// error_log("INSERT 3");
+ error_log("INSERT 3");
                     $qr_nev .= "INSERT INTO ps_cart_product "
                         . "(id_cart, id_product, id_address_delivery, id_shop, id_product_attribute, quantity, date_add) VALUES "
                         . "( '" . $this->id . "', '" . $pabbottTirillas50 . "', '" . $this->id_address_delivery . "', '" . $this->id_shop . "', '0', '1', '" . date("Y-m-d H:i:s") . "'),"
@@ -2546,6 +2546,31 @@ class Cart extends CartCore {
         } else {
             return false;
         }
+    }
+
+    //FAR-49 - Descuento Acumulativos
+    public function addCartRule($id_cart_rule)
+    {
+        $result = parent::addCartRule($id_cart_rule);
+
+        if (Tools::isSubmit('submitAddDiscount') && $result) {
+            if (Module::isEnabled('quantitydiscountpro')) {
+                include_once(_PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php');
+                $quantityDiscount = new QuantityDiscountRule();
+                $quantityDiscountRulesAtCart = $quantityDiscount->getQuantityDiscountRulesAtCart((int)Context::getContext()->cart->id);
+
+                if (is_array($quantityDiscountRulesAtCart) && count($quantityDiscountRulesAtCart)) {
+                    foreach ($quantityDiscountRulesAtCart as $quantityDiscountRuleAtCart) {
+                        $quantityDiscountRuleAtCartObj = new QuantityDiscountRule((int)$quantityDiscountRuleAtCart['id_quantity_discount_rule']);
+                        if (!$quantityDiscount->compatibleCartRules($quantityDiscountRuleAtCartObj)) {
+                            $quantityDiscount->removeQuantityDiscountCartRule($quantityDiscountRuleAtCart['id_cart_rule'], (int)Context::getContext()->cart->id);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
 }

@@ -738,4 +738,31 @@ public function getAssociatedRestrictions($type, $active_only, $i18n)
         // Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
     }
 
+    //FAR-49 - Descuento Acumulativos
+    public static function autoAddToCart(Context $context = null)
+    {
+        parent::autoAddToCart($context);
+
+        if (Module::isEnabled('quantitydiscountpro')) {
+            include_once(_PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php');
+            $quantityDiscount = new QuantityDiscountRule();
+            $quantityDiscount->createAndRemoveRules();
+        }
+    }
+
+    public function delete()
+    {
+        $r = parent::delete();
+
+        if (Module::isEnabled('quantitydiscountpro')) {
+            include_once(_PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php');
+            if ((bool)Configuration::get('PS_CART_RULE_FEATURE_ACTIVE') != (bool)QuantityDiscountRule::isCurrentlyUsed(null, true)
+                || (bool)QuantityDiscountRule::isCurrentlyUsed(null, true)) {
+                Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', true);
+            }
+        }
+
+        return $r;
+    }
+
 }  
