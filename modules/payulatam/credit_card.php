@@ -357,7 +357,7 @@ $data.='
 ';
 $this->generateLogRequestPayU(" Data: ".$data);
 $response = $conf->sendJson($data);
-$this->generateLogRequestPayU(" Response: ".$response);
+$this->generateLogRequestPayU(" Response: ".json_encode($response));
 $subs = substr($post['numerot'], 0, (strlen($post['numerot']) - 4));
 $nueva = '';
 
