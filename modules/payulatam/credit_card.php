@@ -34,13 +34,23 @@ require_once(_PS_MODULE_DIR_ . 'payulatam/config.php');
 require_once(_PS_MODULE_DIR_ . 'payulatam/paymentws.php');
 require_once(_PS_MODULE_DIR_ . 'payulatam/creditcards.class.php');
 
-
 class PayuCreditCard extends PayUControllerWS {
 
   public $ssl = true;
 
   public function setMedia() {
     parent::setMedia();
+  }
+  
+  public function generateLogRequestPayU($data) {
+    if ($archivo = fopen(_ROUTE_FILE_."/payu/logs_request_payu.log", "a")) {
+      if (fwrite($archivo, date("d m Y H:i:s") . " -> " . $data . "\n")) {
+        //echo "Se ha ejecutado correctamente";
+      } else {
+        //echo "Ha habido un problema al crear el archivo";
+      }
+      fclose($archivo);
+    }
   }
 
   public function process() {
@@ -75,25 +85,36 @@ class PayuCreditCard extends PayUControllerWS {
 
     $status_cart = PasarelaPagoCore::is_cart_pay_process($this->context->cart->id);
     $id_cart = $this->context->cart->id;
-
+    $this->generateLogRequestPayU(" ID cart: ".$id_cart);
+    $cantity = 0;
     while ($status_cart['in_pay'] && $status_cart['status']) {
+      $this->generateLogRequestPayU(" Cantity: ".$cantity);
+        if($cantity == 3) {
+            break;
+        }
       sleep(1);
 
       $context = Context::getContext();
+      $this->generateLogRequestPayU(" Context: ".json_encode($context));
       if($conf->existe_transaccion($id_cart) || empty($context->cart->id)){
         if(isset($context->cookie->{'page_confirmation'})){
           $redirect = json_decode($context->cookie->{'page_confirmation'});
+          $this->generateLogRequestPayU(" Redirect: ".$redirect);
           PasarelaPagoCore::set_cart_pay_process($id_cart,0);
           Tools::redirectLink($redirect);
           exit();
         }
         $redirectLink = 'index.php?controller=history';
         PasarelaPagoCore::set_cart_pay_process($id_cart,0);
+        $this->generateLogRequestPayU(" RedirectLink: ".$redirectLink);
         Tools::redirect($redirectLink);
         exit();
       }
 
       $status_cart = PasarelaPagoCore::is_cart_pay_process($this->context->cart->id);
+      $this->generateLogRequestPayU(" Status Cart: ".json_encode($status_cart));
+      $cantity++;
+      //break;
     }
 
     PasarelaPagoCore::set_cart_pay_process($id_cart, 1);
@@ -334,7 +355,9 @@ if($conn['produccion'] == 'no'){
 $data.='          
 }
 ';
+$this->generateLogRequestPayU(" Data: ".$data);
 $response = $conf->sendJson($data);
+$this->generateLogRequestPayU(" Response: ".$response);
 $subs = substr($post['numerot'], 0, (strlen($post['numerot']) - 4));
 $nueva = '';
 
