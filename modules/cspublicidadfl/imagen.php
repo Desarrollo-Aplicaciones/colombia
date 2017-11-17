@@ -5,7 +5,7 @@ $image = $_GET['image'];
 // un try catch en caso de que la imagen no exista podamos controlar la excepción
 	try {
 		// Definimos la ruta donde se almacenan las imágenes y añadimos el nombre imagen que nos interesa 
-		$directorio = Configuration::get('PATH_UP_LOAD');
+		$directorio = Configuration::get('PATH_UP_LOAD')."../../htdocs/modules/";
 
 		$ruta=$directorio."cspublicidadfl/uploads/".$image;
 		//le informamos al navegador el tipo de documento

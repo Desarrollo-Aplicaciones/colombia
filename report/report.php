@@ -23,9 +23,9 @@ class Ventas {
   private function conectar()
   {
   	$i=0;
-      $con = new mysqli("col1-repo.cuznbgafgkfl.us-east-1.rds.amazonaws.com:3808","farmalisto","F4rm4l1st02015**","farmalisto_colombia", "3808");
+      $con = new mysqli("db.local","farmalistoco","nRkKfsj59snfMz","farmalisto_colombia", "7706");
    if ($con->connect_errno) {
-     printf("Conexión fallida: %s\n", $con->connect_errno);
+     printf("Conexión fallida: :\ ) %s\n", $con->connect_errno);
      return false;
      exit();
  	}

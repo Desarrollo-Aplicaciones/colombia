@@ -3195,3 +3195,230 @@
  NO Recordatorio: 2017-10-26 07:00:01
  NO Recordatorio: 2017-10-26 09:00:01
  NO Recordatorio: 2017-10-26 11:00:01
+ NO Recordatorio: 2017-10-26 13:00:01
+ NO Recordatorio: 2017-10-26 15:00:01
+ NO Recordatorio: 2017-10-26 17:00:01
+ Recordatorio: 2017-10-26 19:00:06
+ NO Recordatorio: 2017-10-26 21:00:01
+ NO Recordatorio: 2017-10-26 23:00:01
+ NO Recordatorio: 2017-10-27 01:00:01
+ NO Recordatorio: 2017-10-27 03:00:01
+ NO Recordatorio: 2017-10-27 05:00:01
+ NO Recordatorio: 2017-10-27 07:00:01
+ NO Recordatorio: 2017-10-27 09:00:01
+ NO Recordatorio: 2017-10-27 11:00:01
+ NO Recordatorio: 2017-10-27 13:00:01
+ NO Recordatorio: 2017-10-27 15:00:01
+ NO Recordatorio: 2017-10-27 17:00:02
+ NO Recordatorio: 2017-10-27 19:00:01
+ NO Recordatorio: 2017-10-27 21:00:01
+ Recordatorio: 2017-10-27 23:00:04
+ NO Recordatorio: 2017-10-28 01:00:01
+ NO Recordatorio: 2017-10-28 03:00:01
+ NO Recordatorio: 2017-10-28 05:00:02
+ NO Recordatorio: 2017-10-28 07:00:02
+ NO Recordatorio: 2017-10-28 09:00:01
+ NO Recordatorio: 2017-10-28 11:00:01
+ NO Recordatorio: 2017-10-28 13:00:01
+ NO Recordatorio: 2017-10-28 15:00:01
+ NO Recordatorio: 2017-10-28 17:00:01
+ NO Recordatorio: 2017-10-28 19:00:02
+ NO Recordatorio: 2017-10-28 21:00:01PHP Warning:  file_get_contents(http://www.farmalisto.com.co/quality_score/task_quality_score.php): failed to open stream: HTTP request failed!  in /var/www/farmalisto.com.co/htdocs/quality_score/executecronQE.php on line 2
+
+ NO Recordatorio: 2017-10-29 01:00:01
+ NO Recordatorio: 2017-10-29 03:00:01
+ NO Recordatorio: 2017-10-29 05:00:01
+ NO Recordatorio: 2017-10-29 07:00:02
+ NO Recordatorio: 2017-10-29 09:00:01
+ NO Recordatorio: 2017-10-29 11:00:01
+ NO Recordatorio: 2017-10-29 13:00:01
+ NO Recordatorio: 2017-10-29 15:00:02
+ NO Recordatorio: 2017-10-29 17:00:01
+ Recordatorio: 2017-10-29 19:00:03
+ NO Recordatorio: 2017-10-29 21:00:01
+ Recordatorio: 2017-10-29 23:00:32
+ NO Recordatorio: 2017-10-30 01:00:02
+ NO Recordatorio: 2017-10-30 03:00:01
+ NO Recordatorio: 2017-10-30 05:00:01
+ NO Recordatorio: 2017-10-30 07:00:01
+ NO Recordatorio: 2017-10-30 09:00:01
+ NO Recordatorio: 2017-10-30 11:00:01
+ NO Recordatorio: 2017-10-30 13:00:01
+ NO Recordatorio: 2017-10-30 15:00:01
+ NO Recordatorio: 2017-10-30 17:00:02
+ NO Recordatorio: 2017-10-30 19:00:01
+ NO Recordatorio: 2017-10-30 21:00:01
+ Recordatorio: 2017-10-30 23:00:03
+ NO Recordatorio: 2017-10-31 01:00:01
+ NO Recordatorio: 2017-10-31 03:00:01
+ NO Recordatorio: 2017-10-31 05:00:02
+ NO Recordatorio: 2017-10-31 07:00:01
+ NO Recordatorio: 2017-10-31 09:00:01
+ NO Recordatorio: 2017-10-31 11:00:01
+ NO Recordatorio: 2017-10-31 13:00:01
+ NO Recordatorio: 2017-10-31 15:00:01
+ NO Recordatorio: 2017-10-31 17:00:01
+ NO Recordatorio: 2017-10-31 19:00:01
+ NO Recordatorio: 2017-10-31 21:00:02
+ Recordatorio: 2017-10-31 23:00:38
+ NO Recordatorio: 2017-11-01 01:00:01
+ NO Recordatorio: 2017-11-01 03:00:01
+ NO Recordatorio: 2017-11-01 05:00:01
+ NO Recordatorio: 2017-11-01 07:00:01
+ NO Recordatorio: 2017-11-01 09:00:01
+ NO Recordatorio: 2017-11-01 11:00:01
+ NO Recordatorio: 2017-11-01 13:00:01
+ NO Recordatorio: 2017-11-01 15:00:01
+ Recordatorio: 2017-11-01 17:00:02
+ Recordatorio: 2017-11-01 19:00:09
+ NO Recordatorio: 2017-11-01 21:00:01
+ Recordatorio: 2017-11-01 23:00:25
+ NO Recordatorio: 2017-11-02 01:00:01
+ NO Recordatorio: 2017-11-02 03:00:01
+ NO Recordatorio: 2017-11-02 05:00:01
+ NO Recordatorio: 2017-11-02 07:00:01
+ NO Recordatorio: 2017-11-02 09:00:01
+ NO Recordatorio: 2017-11-02 11:00:01
+ NO Recordatorio: 2017-11-02 13:00:01
+ NO Recordatorio: 2017-11-02 15:00:01
+ NO Recordatorio: 2017-11-02 17:00:01
+ NO Recordatorio: 2017-11-02 19:00:01
+ Recordatorio: 2017-11-02 21:00:04
+ Recordatorio: 2017-11-02 23:00:06
+ NO Recordatorio: 2017-11-03 01:00:01
+ NO Recordatorio: 2017-11-03 03:00:01
+ NO Recordatorio: 2017-11-03 05:00:01
+ NO Recordatorio: 2017-11-03 07:00:01
+ NO Recordatorio: 2017-11-03 09:00:01
+ NO Recordatorio: 2017-11-03 11:00:02
+ NO Recordatorio: 2017-11-03 13:00:01
+ NO Recordatorio: 2017-11-03 15:00:01
+ Recordatorio: 2017-11-03 17:00:05
+ NO Recordatorio: 2017-11-03 19:00:01
+ NO Recordatorio: 2017-11-03 21:00:01
+ Recordatorio: 2017-11-03 23:00:33
+ NO Recordatorio: 2017-11-04 01:00:01
+ NO Recordatorio: 2017-11-04 03:00:01
+ NO Recordatorio: 2017-11-04 05:00:01
+ NO Recordatorio: 2017-11-04 07:00:01
+ NO Recordatorio: 2017-11-04 09:00:01
+ NO Recordatorio: 2017-11-04 11:00:01
+ NO Recordatorio: 2017-11-04 13:00:02
+ NO Recordatorio: 2017-11-04 15:00:01
+ NO Recordatorio: 2017-11-04 17:00:01
+ NO Recordatorio: 2017-11-04 19:00:02
+ NO Recordatorio: 2017-11-04 21:00:01
+ Recordatorio: 2017-11-04 23:00:03
+ NO Recordatorio: 2017-11-05 02:00:01
+ NO Recordatorio: 2017-11-05 04:00:01
+ NO Recordatorio: 2017-11-05 06:00:01
+ NO Recordatorio: 2017-11-05 08:00:01
+ NO Recordatorio: 2017-11-05 10:00:02
+ NO Recordatorio: 2017-11-05 12:00:01
+ NO Recordatorio: 2017-11-05 14:00:01
+ NO Recordatorio: 2017-11-05 16:00:01
+ NO Recordatorio: 2017-11-05 18:00:01
+ NO Recordatorio: 2017-11-05 20:00:01
+ NO Recordatorio: 2017-11-05 22:00:01
+ Recordatorio: 2017-11-06 00:00:02
+ NO Recordatorio: 2017-11-06 02:00:01
+ NO Recordatorio: 2017-11-06 04:00:01
+ NO Recordatorio: 2017-11-06 06:00:01
+ NO Recordatorio: 2017-11-06 08:00:01
+ NO Recordatorio: 2017-11-06 10:00:01
+ NO Recordatorio: 2017-11-06 12:00:01
+ NO Recordatorio: 2017-11-06 14:00:01
+ NO Recordatorio: 2017-11-06 16:00:01
+ NO Recordatorio: 2017-11-06 18:00:01
+ NO Recordatorio: 2017-11-06 20:00:01
+ NO Recordatorio: 2017-11-06 22:00:01
+ Recordatorio: 2017-11-07 00:00:04
+ NO Recordatorio: 2017-11-07 02:00:01
+ NO Recordatorio: 2017-11-07 04:00:01
+ NO Recordatorio: 2017-11-07 06:00:01
+ NO Recordatorio: 2017-11-07 08:00:01
+ NO Recordatorio: 2017-11-07 10:00:01
+ NO Recordatorio: 2017-11-07 12:00:01
+ NO Recordatorio: 2017-11-07 14:00:01
+ NO Recordatorio: 2017-11-07 16:00:01
+ NO Recordatorio: 2017-11-07 18:00:01
+ NO Recordatorio: 2017-11-07 20:00:01
+ NO Recordatorio: 2017-11-07 22:00:01
+ Recordatorio: 2017-11-08 00:00:15
+ NO Recordatorio: 2017-11-08 02:00:01
+ NO Recordatorio: 2017-11-08 04:00:01
+ NO Recordatorio: 2017-11-08 06:00:01
+ NO Recordatorio: 2017-11-08 08:00:01
+ NO Recordatorio: 2017-11-08 10:00:01
+ NO Recordatorio: 2017-11-08 12:00:01
+ NO Recordatorio: 2017-11-08 14:00:01
+ NO Recordatorio: 2017-11-08 16:00:01
+ Recordatorio: 2017-11-08 18:01:00
+ Recordatorio: 2017-11-08 20:00:46
+ NO Recordatorio: 2017-11-08 22:00:01
+ Recordatorio: 2017-11-09 00:00:11
+ NO Recordatorio: 2017-11-09 02:00:01
+ NO Recordatorio: 2017-11-09 04:00:01
+ NO Recordatorio: 2017-11-09 06:00:01
+ NO Recordatorio: 2017-11-09 08:00:01
+ NO Recordatorio: 2017-11-09 10:00:01
+ NO Recordatorio: 2017-11-09 12:00:01
+ NO Recordatorio: 2017-11-09 14:00:01
+ NO Recordatorio: 2017-11-09 16:00:01
+ Recordatorio: 2017-11-09 18:00:14
+ NO Recordatorio: 2017-11-09 20:00:01
+ Recordatorio: 2017-11-09 22:00:03
+ Recordatorio: 2017-11-10 00:00:50
+ NO Recordatorio: 2017-11-10 02:00:01
+ NO Recordatorio: 2017-11-10 04:00:01
+ NO Recordatorio: 2017-11-10 06:00:01
+ NO Recordatorio: 2017-11-10 08:00:01
+ NO Recordatorio: 2017-11-10 10:00:01
+ NO Recordatorio: 2017-11-10 12:00:02
+ NO Recordatorio: 2017-11-10 14:00:01
+ NO Recordatorio: 2017-11-10 16:00:01
+ NO Recordatorio: 2017-11-10 18:00:02
+ NO Recordatorio: 2017-11-10 20:00:01
+ NO Recordatorio: 2017-11-10 22:00:01
+ Recordatorio: 2017-11-11 00:00:02
+ NO Recordatorio: 2017-11-11 02:00:01
+ NO Recordatorio: 2017-11-11 04:00:02
+ NO Recordatorio: 2017-11-11 06:00:01
+ NO Recordatorio: 2017-11-11 08:00:02
+ NO Recordatorio: 2017-11-11 10:00:01
+ NO Recordatorio: 2017-11-11 12:00:01
+ NO Recordatorio: 2017-11-11 14:00:01
+ NO Recordatorio: 2017-11-11 16:00:01
+ NO Recordatorio: 2017-11-11 18:00:01
+ NO Recordatorio: 2017-11-11 20:00:01
+ Recordatorio: 2017-11-11 22:00:04
+ Recordatorio: 2017-11-12 00:00:38
+ NO Recordatorio: 2017-11-12 02:00:01
+ NO Recordatorio: 2017-11-12 04:00:02
+ NO Recordatorio: 2017-11-12 06:00:01
+ NO Recordatorio: 2017-11-12 08:00:01
+ NO Recordatorio: 2017-11-12 10:00:01
+ NO Recordatorio: 2017-11-12 12:00:01
+ NO Recordatorio: 2017-11-12 14:00:01
+ NO Recordatorio: 2017-11-12 16:00:01
+ NO Recordatorio: 2017-11-12 18:00:01
+ NO Recordatorio: 2017-11-12 20:00:01
+ NO Recordatorio: 2017-11-12 22:00:01
+ NO Recordatorio: 2017-11-13 00:00:01
+ NO Recordatorio: 2017-11-13 02:00:01
+ NO Recordatorio: 2017-11-13 04:00:01
+ NO Recordatorio: 2017-11-13 06:00:01
+ NO Recordatorio: 2017-11-13 08:00:01
+ NO Recordatorio: 2017-11-13 10:00:01
+ NO Recordatorio: 2017-11-13 12:00:01PHP Warning:  file_get_contents(http://www.farmalisto.com.co/quality_score/task_quality_score.php): failed to open stream: HTTP request failed!  in /var/www/farmalisto.com.co/htdocs/quality_score/executecronQE.php on line 2
+
+ NO Recordatorio: 2017-11-16 14:00:01
+ NO Recordatorio: 2017-11-16 16:00:01
+ NO Recordatorio: 2017-11-16 18:00:01
+ NO Recordatorio: 2017-11-16 20:00:01
+ Recordatorio: 2017-11-16 22:00:22
+ Recordatorio: 2017-11-17 00:00:04
+ NO Recordatorio: 2017-11-17 02:00:01
+ NO Recordatorio: 2017-11-17 04:00:02
+ NO Recordatorio: 2017-11-17 06:00:01
+ NO Recordatorio: 2017-11-17 08:00:02

@@ -187,8 +187,8 @@ if (isset($_POST)) {
         try {
 
             if (move_uploaded_file($array_file[$name_file]['tmp_name'], pathFiles($module) . $nuevo_archivo)) {
-                chmod(pathFiles($module) . $nuevo_archivo, 0755);
-                //echo "<br> subio archivo: ".pathFiles($module) . $nuevo_archivo;
+                chmod(pathFiles($module) . $nuevo_archivo, 0777);
+                echo "<br> subio archivo: ".pathFiles($module) . $nuevo_archivo;
                 //retorna array en [0]=>'nombre original', [1]=>'nuevo nombre', [2]=>'ruta del archivo'
                 return $vector = array($nuevo_archivo, $nombre_archivo, $full_path);
             } else {
@@ -225,7 +225,7 @@ if (isset($_POST)) {
     function pathFiles($sub_dir) {
         // Definir directorio donde almacenar los archivos, debe terminar en "/" 
        // $directorio = "C:/wamp/www/prod.farmalisto.com.co/filesX/";
-        $directorio = Configuration::get('PATH_UP_LOAD');
+        $directorio = Configuration::get('PATH_UP_LOAD')."../../htdocs/modules/";
                 
 
         if (isset($sub_dir) && $sub_dir != '') {

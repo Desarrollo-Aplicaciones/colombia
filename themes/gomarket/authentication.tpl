@@ -142,9 +142,9 @@ $(function(){ldelim}
 	<div class="contenedor" id="tercerHole_resp">
 		<span class="current_resp">Ingreso</span>
 		{if !isset($smarty.cookies.validamobile) OR $smarty.server.REMOTE_ADDR eq '192.168.10.121'}
-			<a href="javascript:void(0);" class="fb_connect_button">
+			<!--<a href="javascript:void(0);" class="fb_connect_button">
 				<img src="{$base_uri}/themes/gomarket/img/my-account/fb+.png" alt="iniciar sesión con Facebook"/>Iniciar sesión
-			</a>
+			</a>-->
 			<a href="javascript:void(0);" class="g_connect_button">
 				<img src="{$base_uri}/themes/gomarket/img/my-account/G+.png" alt="iniciar sesión con Google"/>Iniciar sesión
 			</a>
@@ -498,9 +498,9 @@ but it's deprecated
 	<a href="javascript:void(0);" class="toggleHoles"><span>No</span> estoy registrado</a>
 	{if !isset($smarty.cookies.validamobile) OR $smarty.server.REMOTE_ADDR eq '192.168.10.121'}
 		{if $smarty.server.REMOTE_ADDR neq '192.168.10.83'}
-		<a href="javascript:void(0);" class="fb_connect_button">
+		<!--<a href="javascript:void(0);" class="fb_connect_button">
 			<img src="{$base_uri}/themes/gomarket/img/my-account/fb-.png" alt="iniciar sesión con Facebook"/>Iniciar sesión
-		</a>
+		</a>-->
 		<a href="javascript:void(0);" class="g_connect_button">
 			<img src="{$base_uri}/themes/gomarket/img/my-account/G-.png" alt="iniciar sesión con Google"/>Iniciar sesión
 		</a>
