@@ -91,6 +91,7 @@ class PayuCreditCard extends PayUControllerWS {
 
         $status_cart = PasarelaPagoCore::is_cart_pay_process($this->context->cart->id);
         $id_cart = $this->context->cart->id;
+        $this->logtxt("     /* ****************************************************** */");
         $this->logtxt(" ID cart: " . $id_cart);
         $cantity = 0;
         while ($status_cart['in_pay'] && $status_cart['status']) {
@@ -358,9 +359,133 @@ class PayuCreditCard extends PayUControllerWS {
                 $data .= '          
 }
 ';
-                $this->logtxt(" Data: " . $data);
+                ////////////    LOG    ///////////////////
+                
+                 $data_log = '{
+       "language":"es",
+       "command":"SUBMIT_TRANSACTION",
+       "merchant":{
+        "apiKey":"' . $conn['apikey_privatekey'] . '",
+        "apiLogin":"' . $conn['apilogin_id'] . '"
+      },
+      "transaction":{
+
+        "order":{
+         "accountId":"' . $conn['accountid'] . '",
+         "referenceCode":"' . $params[2]['referenceCode'] . '_' . $intentos . '",
+         "description":"' . $reference_code . '",
+         "language":"' . $params[10]['lng'] . '",
+         "notifyUrl":"' . $conf->urlv() . '",
+         "signature":"' . $conf->sing($params[2]['referenceCode'] . '_' . $intentos . '~' . $params[4]['amount'] . '~' . $currency) . '",
+         "additionalValues":{
+          "TX_VALUE":{
+           "value":' . $params[4]['amount'] . ',
+           "currency":"' . $currency . '"
+         },
+         "TX_TAX":{  
+           "value":' . $total_tax . ',
+           "currency":"' . $params[9]['currency'] . '"
+         },
+         "TX_TAX_RETURN_BASE":{  
+           "value":' . ($total_tax == 0.00 ? 0.00 : ($params[4]['amount'] - $total_tax)) . ',
+           "currency":"' . $params[9]['currency'] . '"
+         }
+      },
+
+     "buyer": {
+      "fullName": "' . $customer->firstname . ' ' . $customer->lastname . '",
+      "contactPhone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
+      "emailAddress":"' . $params[5]['buyerEmail'] . '",
+      "dniNumber":"' . $dni . '",   
+      "shippingAddress": {
+       "street1": "' . substr($address->address1, 0, 99) . '",
+       "street2":"N/A",    
+       "city": "' . $address->city . '",
+       "state": "' . $conf->get_state($address->id_state) . '",
+       "country": "';
+                if ($conn['produccion'] == 'no') {
+                    $data_log .= 'PA';
+                } else {
+                    $data_log .= $this->context->country->iso_code;
+                }
+                $data_log .= '",
+     "postalCode": "' . $address->postcode . '",
+     "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+   }
+ },      
+
+ "shippingAddress":{
+  "street1":"' . substr($address->address1, 0, 99) . '",
+  "street2":"N/A",
+  "city":"' . $address->city . '",
+  "state":"' . $conf->get_state($address->id_state) . '",
+  "country":"';
+                if ($conn['produccion'] == 'no') {
+                    $data_log .= 'PA';
+                } else {
+                    $data_log .= $this->context->country->iso_code;
+                }
+                $data_log .= '",
+ "postalCode":"' . $address->postcode . '",
+ "phone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+}  
+},
+"payer":{
+
+  "fullName":"' . $customer->firstname . ' ' . $customer->lastname . '",
+  "emailAddress":"' . $params[5]['buyerEmail'] . '",
+  "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
+  "dniNumber":"' . $dni . '",
+  "billingAddress":{
+    "street1":"' . substr($address->address1, 0, 99) . '",
+    "street2":"N/A",
+    "city":"' . $address->city . '",
+    "state":"' . $conf->get_state($address->id_state) . '",
+    "country":"';
+                if ($conn['produccion'] == 'no') {
+                    $data_log .= 'PA';
+                } else {
+                    $data_log .= $this->context->country->iso_code;
+                }
+                $data_log .= '",
+   "postalCode":"' . $address->postcode . '",
+   "phone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+ }      
+},
+
+"extraParameters":{
+  "INSTALLMENTS_NUMBER":' . $post['cuotas'] . '
+},
+"type":"AUTHORIZATION_AND_CAPTURE",
+"paymentMethod":"' . $paymentMethod . '",
+"paymentCountry":"';
+                if ($conn['produccion'] == 'no') {
+                    $data_log .= 'PA';
+                } else {
+                    $data_log .= $this->context->country->iso_code;
+                }
+                $data_log .= '",
+"deviceSessionId": "' . $_deviceSessionId . '",
+"ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
+"userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
+"cookie": "' . md5($this->context->cookie->timestamp) . '"  
+},
+"test":';
+                if ($conn['produccion'] == 'no') {
+                    $data_log .= 'true';
+                } else {
+                    $data_log .= 'false';
+                }
+                $data_log .= '          
+}
+';
+                
+                
+                ////////////      FIN LOG    //////////////
+                $this->logtxt(" Data: " . $data_log);
                 $response = $conf->sendJson($data);
                 $this->logtxt(" Response: " . json_encode($response));
+                $this->logtxt(" ");
                 $subs = substr($post['numerot'], 0, (strlen($post['numerot']) - 4));
                 $nueva = '';
 
