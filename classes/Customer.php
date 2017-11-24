@@ -607,9 +607,9 @@ class CustomerCore extends ObjectModel
 	 */
 	public function updateGroup($list)
 	{
+		$this->cleanGroups();
 		if ($list && !empty($list)){
-			$this->cleanGroups();
-		$this->addGroups($list);
+            $this->addGroups($list);
 		}
 		else{
 			$this->addGroups(array($this->id_default_group));		
@@ -618,7 +618,7 @@ class CustomerCore extends ObjectModel
 
 	public function cleanGroups()
 	{
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
+        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
 	}
 
 	public function addGroups($groups)
