@@ -63,9 +63,6 @@
 }
 </script>
 {/if}
-
-{assign var=precio value=$atomik.product.price|string_format:"%d"}
-
 {if $atomik.page_name == 'product'}
 <script type="application/ld+json">
     {
@@ -93,17 +90,17 @@
         "@type": "Offer",
         "priceCurrency": "{$atomik.currency.iso_code|escape:'html':'UTF-8'}",
         "name": "{$atomik.product.name|escape:'html':'UTF-8'}",
-        "price": "{$precio|escape:'html':'UTF-8'}",
+        "price": "{$atomik.product.price|escape:'html':'UTF-8'}",
         "image": "{$atomik.product.cover_link|escape:'html':'UTF-8'}",
 
         "sku": "{$atomik.product.reference|escape:'htmlall':'UTF-8'}",
         {if $atomik.product.condition == 'new'}"itemCondition": "http://schema.org/NewCondition",{/if}
         {if $atomik.product.condition == 'used'}"itemCondition": "http://schema.org/UsedCondition",{/if}
         {if $atomik.product.condition == 'refurbished'}"itemCondition": "http://schema.org/RefurbishedCondition",{/if}
-        "availability":{*if $atomik.product.quantity > 0*} "http://schema.org/InStock"{*else} "http://schema.org/OutOfStock"{/if*},
+        "availability":{if $atomik.product.quantity > 0} "http://schema.org/InStock"{else} "http://schema.org/OutOfStock"{/if},
         "seller": {
             "@type": "Organization",
-            "name": "{$atomik.product_manufacturer.name|escape:'html':'UTF-8'}"
+            "name": "{$atomik.shop_name|escape:'html':'UTF-8'}"
         }
     }
     {else}
@@ -113,17 +110,17 @@
         "@type": "Offer",
         "name": "{$atomik.product.name|escape:'html':'UTF-8'} - {' '|implode:$combination.attributes_values} {$combination.reference|escape:'htmlall':'UTF-8'} ",
         "priceCurrency": "{$atomik.currency.iso_code|escape:'html':'UTF-8'}",
-        "price": "{$precio|escape:'html':'UTF-8'}",
+        "price": "{$atomik.product.price|escape:'html':'UTF-8'}",
         "image": "{if $combination.id_image > 0}{$link->getImageLink($atomik.product.link_rewrite, $combination.id_image, 'home_default')|escape:'html':'UTF-8'}{else}{$atomik.product.cover_link|escape:'html':'UTF-8'}{/if}",
 
         "sku": "{$combination.reference|escape:'htmlall':'UTF-8'}",
         {if $atomik.product.condition == 'new'}"itemCondition": "http://schema.org/NewCondition",{/if}
         {if $atomik.product.condition == 'used'}"itemCondition": "http://schema.org/UsedCondition",{/if}
         {if $atomik.product.condition == 'refurbished'}"itemCondition": "http://schema.org/RefurbishedCondition",{/if}
-        "availability": {*if $combination.quantity > 0*}"http://schema.org/InStock"{*else}"http://schema.org/OutOfStock"{/if*},
+        "availability": {if $combination.quantity > 0}"http://schema.org/InStock"{else}"http://schema.org/OutOfStock"{/if},
         "seller": {
             "@type": "Organization",
-            "name": "{$atomik.product_manufacturer.name|escape:'html':'UTF-8'}"}
+            "name": "{$atomik.shop_name|escape:'html':'UTF-8'}"}
         } {if !$combination@last},{/if}
      {/foreach}
     ]
