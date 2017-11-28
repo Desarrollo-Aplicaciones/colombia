@@ -91,7 +91,7 @@ if(COUNT($resultsC) > 0) {
         'send_mail_black_list',
         'Clientes interesados',
         '', 
-        ['leidy.castiblanco@farmalisto.com.co'], 
+        ['leidy.castiblanco@farmalisto.com.co','juan.valdes@farmalisto.com.co','contacto@farmalisto.com.co','eiver.gomez@farmalisto.com.co'], 
         '',
 		null,
         null,
