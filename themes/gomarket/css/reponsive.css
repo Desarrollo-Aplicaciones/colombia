@@ -816,13 +816,14 @@
 		/*-------------------------------AUTH3.0------------------*/
 		#authentication .block_permanent_links{display:none;}
 		#authentication .imagenAyuda {margin-right: -30px;}
-		#primerHole{display:none;width: 100%;}
+		/*#primerHole{display:none;width: 100%;}*/
+		#primerHole{width: 100%;}
 		#segundoHole{margin-top: 20px;width: 100%;}
   		#tercerHole{display:none;}
 		#tercerHole_resp{display:block;}
 		#errorHole{width: 100%;margin:0;}
 		#primerHole, #segundoHole, #tercerHole{margin: 0;}
-		.contenido{margin-top: 65px;width:100%;}
+		/*.contenido{margin-top: 65px;width:100%;}*/
 		.current{display:none;}
 		.header_bg2{display:none;}
 		.header_bg1{width:100%;}
@@ -1177,12 +1178,13 @@
 		/*-------------------------------AUTH3.0------------------*/
 		#authentication .block_permanent_links{display:none;}
 		#authentication .imagenAyuda {margin-right: -30px;}
-		#primerHole{display:none;width: 100%;}
+		/*#primerHole{display:none;width: 100%;}*/
+		#primerHole{width: 100%;}
 		#segundoHole{margin-top: 20px;width: 100%;}
 		#errorHole{width:100%;margin:0;}
   		#tercerHole{display:none;}
 		#tercerHole_resp{display:block;}
-		.contenido{margin-top: 65px;width:100%;}
+		/*.contenido{margin-top: 65px;width:100%;}*/
 		#primerHole, #segundoHole, #tercerHole{margin: 0;}
 		.current{display:none;}
 		.header_bg2{display:none;}
@@ -1191,6 +1193,7 @@
 		.auth_logo{width:100%;text-align: center;}
 		.etiqueta, .form-registro{display:none;}
 		#authentication input[type=text], #authentication input[type=password]{height: 40px;font-size: 13px;}
+
 		.resp_button{display:inline-block;text-indent: 30%;}
 		.toggleActive{text-indent: 10px;}
 
