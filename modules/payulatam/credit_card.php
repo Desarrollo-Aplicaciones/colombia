@@ -96,7 +96,7 @@ class PayuCreditCard extends PayUControllerWS {
         $cantity = 0;
         while ($status_cart['in_pay'] && $status_cart['status']) {
             $this->logtxt(" Cantity: " . $cantity);
-            if ($cantity == 3) {
+            if ($cantity == 10) {
                 break;
             }
             sleep(1);
