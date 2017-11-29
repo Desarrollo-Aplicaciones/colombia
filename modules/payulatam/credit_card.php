@@ -102,7 +102,10 @@ class PayuCreditCard extends PayUControllerWS {
             sleep(1);
 
             $context = Context::getContext();
+            $this->logtxt(" EXISTE Context: " . isset($context));
             $this->logtxt(" Context: " . json_encode($context));
+            $this->logtxt(" EXISTE Conf->existe_transaccion($id_cart): " . $conf->existe_transaccion($id_cart));
+            $this->logtxt(" EXISTE Context->cart->id: " . $context->cart->id);
             if ($conf->existe_transaccion($id_cart) || empty($context->cart->id)) {
                 if (isset($context->cookie->{'page_confirmation'})) {
                     $redirect = json_decode($context->cookie->{'page_confirmation'});
