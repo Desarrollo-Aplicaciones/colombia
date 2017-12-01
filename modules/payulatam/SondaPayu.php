@@ -17,7 +17,7 @@ class SondaPayu extends PayUControllerWS {
             $this->url_reports = "https://api.payulatam.com/reports-api/4.0/service.cgi";
         }
         $this->logtxt("     /* ****************************************************** */");
-        $this->logtxt(" Iniciando SondaPayu: " . $this->url_reports);
+        $this->logtxt(" Iniciando SondaPayu: " . $this->url_reports. ", Fecha: ".date('d/M/Y H:i:s'));
     }
 
     public function logtxt($text = "") {
