@@ -8,15 +8,17 @@ jQuery(function ($) {
                     producto: {type: String},
                     ean: {type: String},
                     laboratorio: {type: String},
+                    fecha: {DateFormat: "dd/mm/yy"},
+                    ciudad: {type: String},
                     solicitados: {type: String},
                     warehouse_quantity: {type: String},
-                    missing: {type: String}
+                    faltantes: {type: String}
 
                 }
             }
         },
         filtering: {
-            enabled: true
+            enabled: false
         },
         paging: {
             pageSize: 50,
@@ -33,10 +35,11 @@ jQuery(function ($) {
             {field: "producto", width: "200px", title: "Producto"},
             {field: "ean", width: "90px", title: "Referencia"},
             {field: "laboratorio", width: "90px", title: "Laboratorio"},
+            {field: "fecha", title: "Fecha", width: "90px"},
+            {field: "ciudad", title: "Ciudad", width: "90px"},
             {field: "solicitados", title: "Solicitados", width: "90px"},
-            {field: "warehouse_quantity", title: "U/ Bodega", width: "90px"},
-            {field: "missing", title: "Faltantes", width: "90px"}
-
+            {field: "warehouse_quantity", title: "U/ Reservadas", width: "90px"},
+            {field: "faltantes", title: "Faltantes", width: "90px"},
 
         ],
         events: {
@@ -73,4 +76,22 @@ function myCustomFilter(cell) {
                             }
                         }
             });
+}
+
+function calcular_faltantes(valueInput, divFaltante, solicitados, uBodega) {
+    
+    var valueInput = $(valueInput).val();
+    var totalFaltantes = 0;
+    
+    if(valueInput < 0 || valueInput == "" || isNaN(totalFaltantes) || (totalFaltantes < 0 && valueInput == "")) {
+        totalFaltantes = parseInt(solicitados) - parseInt(uBodega);
+    } else {
+        totalFaltantes = parseInt(solicitados) - parseInt(valueInput);
+    }
+
+    if(totalFaltantes < 0 && valueInput != "") {
+        totalFaltantes = 0;
+    }
+
+    $("#"+divFaltante).text(totalFaltantes);
 }
