@@ -81,7 +81,7 @@ class PurchasesProducts extends Module
             `id_order`  int NOT NULL ,
             `id_product`  int NOT NULL ,
             `quantity_reserve`  int NOT NULL ,
-            `missing_reserve`  int NOT NULL ,
+            `missing_quantity`  int NOT NULL ,
             PRIMARY KEY (`id_reserve`)
         );");
         
