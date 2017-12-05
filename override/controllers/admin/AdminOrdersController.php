@@ -1198,6 +1198,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             }
             
             if($missing > 0) {
+                
                 $reserve_products = 'INSERT INTO ' . _DB_PREFIX_ . 'reserve_product(id_order, id_product, quantity_reserve, missing_quantity)
                                     VALUES('.$payment_module->currentOrder.','.pSQL($row['id_product']).',' . $reserve . ',' . $missing . ')';
                 Db::getInstance()->executeS($reserve_products);
