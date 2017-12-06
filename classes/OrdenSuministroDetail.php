@@ -553,11 +553,12 @@ class OrdenSuministroDetail {
             self::debug_to_console($result3[0]['reserve_on_stock'], " result3[0][reserve_on_stock]  ");
             if ($res['id_estado_icr'] == 2 && $result3[0]['reserve_on_stock'] != NULL) {
                 $this->updateReserveProduct();
-                $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ",'".Configuration::get('PS_NOT_IN_WAREHOUSE_ICR')."')";
             } else {
                 $this->getOrdersDiscountIcr();
-                $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . ",0,'".Configuration::get('PS_NOT_IN_WAREHOUSE_ICR')."')";
             }
+            
+            $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ",'".Configuration::get('PS_NOT_IN_WAREHOUSE_ICR')."')";
+            
             self::debug_to_console($query5, " Query5 ");
             //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
             if (DB::getInstance()->execute($query5)) {
