@@ -88,6 +88,7 @@ class PurchasesProducts extends Module
         Db::getInstance()->execute("CREATE TABLE IF NOT EXISTS `ps_history_reserve` (
             `id_history`  int NOT NULL AUTO_INCREMENT ,
             `id_order`  int NOT NULL ,
+            `id_product`  int NOT NULL ,
             `quantity_icrs`  int NOT NULL ,
             PRIMARY KEY (`id_history`)
         );");

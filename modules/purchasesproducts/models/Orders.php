@@ -14,7 +14,7 @@ class Orders {
 	        INNER JOIN ' . _DB_PREFIX_ . 'address AS a ON ( o.id_address_delivery = a.id_address )
 	        INNER JOIN ' . _DB_PREFIX_ . 'order_detail AS od  ON ( o.id_order = od.id_order)
 	        INNER JOIN ' . _DB_PREFIX_ . 'product AS p ON ( p.id_product = od.product_id)
-	        INNER JOIN ' . _DB_PREFIX_ . 'manufacturer AS m ON ( m.id_manufacturer = p.id_manufacturer)
+	        LEFT JOIN ' . _DB_PREFIX_ . 'manufacturer AS m ON ( m.id_manufacturer = p.id_manufacturer)
 	        INNER JOIN ' . _DB_PREFIX_ . 'stock_available_mv AS sam ON ( sam.id_product = p.id_product )
                 INNER JOIN ' . _DB_PREFIX_ . 'reserve_product AS rp ON (rp.id_order = o.id_order AND rp.id_product = p.id_product)
 	        WHERE  current_state = 9 AND rp.missing_quantity > 0
