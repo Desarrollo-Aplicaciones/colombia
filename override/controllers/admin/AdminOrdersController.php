@@ -1125,11 +1125,31 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       if ($this->tabAccess['edit'] === '1') {
         $payment_module = Module::getInstanceByName($module_name);
         $cart = new Cart((int) $id_cart);
+        $order = new Order();
         Context::getContext()->currency = new Currency((int) $cart->id_currency);
         Context::getContext()->customer = new Customer((int) $cart->id_customer);
         $employee = new Employee((int) Context::getContext()->cookie->id_employee);
         $cod_pagar = Tools::getValue('cod_pagar');
         $private_message = stripslashes(Tools::getValue('private_message'));
+        
+        $productsCart = new DbQuery();
+        $productsCart->select('pp.id_product, pp.quantity');
+        $productsCart->from('cart_product', 'pp');
+        $productsCart->where('pp.id_cart = ' . pSQL($id_cart));
+        $resultProductsCart = Db::getInstance()->executeS($productsCart);
+        
+        $arrProductsStock = [];
+        foreach($resultProductsCart as $value) {
+            
+            $stockAvailableMv = new DbQuery();
+            $stockAvailableMv->select('*');
+            $stockAvailableMv->from('stock_available_mv', 'sa');
+            $stockAvailableMv->where('sa.id_product = ' . pSQL($value['id_product']));
+            $resultStockAvailableMv = Db::getInstance()->executeS($stockAvailableMv);
+            
+            $arrProductsStock[] = $resultStockAvailableMv[0];
+        }
+        
         if ($payment_module->validateOrder(
         (int) $cart->id, (int) $id_order_state, $cart->getOrderTotal(true, Cart::BOTH), !empty($cod_pagar) ? $cod_pagar : $payment_module->displayName, $this->l('Manual order -- Employee:') .
         substr($employee->firstname, 0, 1) . '. ' . $employee->lastname, array(), null, false, $cart->secure_key, null, $private_message
@@ -1142,6 +1162,30 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $sql2 = "INSERT INTO ps_orders_transporte (id_order,EXTRAS) VALUES ($payment_module->currentOrder,'express')";
           Db::getInstance()->Execute($sql2);
         }
+        
+        foreach($arrProductsStock as $valueStock) {
+            
+            $validayteStockAvailableMv = new DbQuery();
+            $validayteStockAvailableMv->select('*');
+            $validayteStockAvailableMv->from('stock_available_mv', 'sa');
+            $validayteStockAvailableMv->where('sa.id_product = ' . pSQL($valueStock['id_product']));
+            $resultValidayteStockAvailableMv = Db::getInstance()->executeS($stockAvailableMv);
+            
+            if(count($resultValidayteStockAvailableMv) == 0) {
+                $sqlStock = "INSERT INTO ps_stock_available_mv (id_stock_available,id_product,id_product_attribute,id_shop,id_shop_group,quantity,depends_on_stock,out_of_stock,reserve_on_stock) "
+                        . "VALUES ('".$valueStock['id_stock_available']."',"
+                        . "'".$valueStock['id_product']."',"
+                        . "'".$valueStock['id_product_attribute']."',"
+                        . "'".$valueStock['id_shop']."',"
+                        . "'".$valueStock['id_shop_group']."',"
+                        . "'".$valueStock['quantity']."',"
+                        . "'".$valueStock['depends_on_stock']."',"
+                        . "'".$valueStock['out_of_stock']."',"
+                        . "'".$valueStock['reserve_on_stock']."')";
+                Db::getInstance()->Execute($sqlStock);
+            }
+        }
+        
         Address::update_date_delivered();
         if ($payment_module->currentOrder) {
           // Genrenando el descuento de los reservados en el stock
