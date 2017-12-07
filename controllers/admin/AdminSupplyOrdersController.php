@@ -202,6 +202,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                            . "'".$valueStock[0]->depends_on_stock."',"
                            . "'".$valueStock[0]->out_of_stock."',"
                            . "'".$valueStock[0]->reserve_on_stock."')";
+           echo $sqlStock;exit;
            Db::getInstance()->Execute($sqlStock);
        }
 
