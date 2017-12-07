@@ -1169,9 +1169,10 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $validayteStockAvailableMv->select('*');
             $validayteStockAvailableMv->from('stock_available_mv', 'sa');
             $validayteStockAvailableMv->where('sa.id_product = ' . pSQL($valueStock['id_product']));
-            $resultValidayteStockAvailableMv = Db::getInstance()->executeS($stockAvailableMv);
+            $resultValidayteStockAvailableMv = Db::getInstance()->executeS($validayteStockAvailableMv);
             
             if(count($resultValidayteStockAvailableMv) == 0) {
+                
                 $sqlStock = "INSERT INTO ps_stock_available_mv (id_stock_available,id_product,id_product_attribute,id_shop,id_shop_group,quantity,depends_on_stock,out_of_stock,reserve_on_stock) "
                         . "VALUES ('".$valueStock['id_stock_available']."',"
                         . "'".$valueStock['id_product']."',"

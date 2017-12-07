@@ -538,7 +538,7 @@ class OrdenSuministroDetail {
         foreach ($result as $res) {
           self::debug_to_console($res['id_icr'], " res[id_icr]");
           if (isset($res['id_icr'])) {
-            $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock
+            $query3 = "SELECT samv.reserve_on_stock  AS reserve_on_stock, samv.id_product
               FROM `ps_stock_available_mv` samv 
               INNER JOIN ps_supply_order_detail sod ON (samv.id_product = sod.id_product)		
               INNER JOIN ps_supply_order_icr soi ON (soi.id_supply_order_detail = sod.id_supply_order_detail)
@@ -546,6 +546,8 @@ class OrdenSuministroDetail {
             self::debug_to_console($query3, " Query 3");
 
             $result3 = DB::getInstance()->executeS($query3);
+            
+            $productStockMv = $this->getProductStockMv($result3[0]['id_product']);
             
             //      return var_dump("result3 t", var_dump($result3));
 //              var_dump("ID ICR: ",$res['id_icr'],"reserve_on_stock: ",$result3[0]['reserve_on_stock']);
@@ -564,6 +566,12 @@ class OrdenSuministroDetail {
             if (DB::getInstance()->execute($query5)) {
 //                  return true;
               self::debug_to_console($update_ok, " Update_ok ");
+              $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
+              
+              if(count($productStockMvExist) == 0) {
+                  $this->addProductStockMv($productStockMv);
+              }
+              
               $update_ok = true;
 //                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
             } else {
@@ -594,6 +602,41 @@ class OrdenSuministroDetail {
       $this->errors[] = Tools::displayError($this->l("Error Actualizando el Stock disponible y los reservados, No se pudo ingresar registro en Histórico orden de suministro recibida"));
     }
   }
+    
+    /**
+     * Obtengo la información del producto en la tabla stock_avilable_mv
+     * @param int $id_product
+     * @return array
+     */
+    public function getProductStockMv($id_product) {
+        
+        $validayteStockAvailableMv = new DbQuery();
+        $validayteStockAvailableMv->select('*');
+        $validayteStockAvailableMv->from('stock_available_mv', 'sa');
+        $validayteStockAvailableMv->where('sa.id_product = ' . pSQL($id_product));
+        $resultValidayteStockAvailableMv = Db::getInstance()->executeS($validayteStockAvailableMv);
+        
+        return $resultValidayteStockAvailableMv;
+    }
+    
+    /**
+     * Inserto el producto en la tabla stock_avialable_mv
+     * @param array $valueStock
+     */
+    public function addProductStockMv($valueStock) {
+        
+        $sqlStock = "INSERT INTO ps_stock_available_mv (id_stock_available,id_product,id_product_attribute,id_shop,id_shop_group,quantity,depends_on_stock,out_of_stock,reserve_on_stock) "
+                        . "VALUES ('".$valueStock[0]['id_stock_available']."',"
+                        . "'".$valueStock[0]['id_product']."',"
+                        . "'".$valueStock[0]['id_product_attribute']."',"
+                        . "'".$valueStock[0]['id_shop']."',"
+                        . "'".$valueStock[0]['id_shop_group']."',"
+                        . "'".($valueStock[0]['quantity'] - 1)."',"
+                        . "'".$valueStock[0]['depends_on_stock']."',"
+                        . "'".$valueStock[0]['out_of_stock']."',"
+                        . "'".$valueStock[0]['reserve_on_stock']."')";
+        Db::getInstance()->Execute($sqlStock);
+    }
   
     /**
      * Trae las ordenes desde la mas nueva a la mas vieja para realizar el descuento del ICR
