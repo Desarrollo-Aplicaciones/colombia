@@ -565,12 +565,19 @@ class OrdenSuministroDetail {
             //            return var_dump("RESULT2 : id_icr: ", $result2[0]['id_icr'], "id_estado_icr: ", $result2[0]['id_estado_icr'], $id_order, $result3[0]['reserve_on_stock'], "QUERY:", $query4);
             if (DB::getInstance()->execute($query5)) {
 //                  return true;
-              self::debug_to_console($update_ok, " Update_ok ");              
-              $update_ok = true;
+                self::debug_to_console($update_ok, " Update_ok ");              
+                $update_ok = true;
 //                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
             } else {
-              $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
-              return false;
+                $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
+                self::debug_to_console(count($productStockMvExist), "    Existe stock MV ");
+                if(count($productStockMvExist) == 0) {
+                    self::debug_to_console($productStockMv, "    Add stock MV ");
+                    $this->addProductStockMv($productStockMv);
+                }
+                $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
+                self::debug_to_console($this->errores_cargue, " Error procedure ");    
+                return false;
             }
             
             $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
