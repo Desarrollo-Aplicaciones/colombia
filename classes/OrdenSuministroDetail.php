@@ -581,7 +581,7 @@ class OrdenSuministroDetail {
             }
             
             $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
-            self::debug_to_console(count($productStockMvExist), "    Existe stock MV ");
+            self::debug_to_console($productStockMvExist, "    Existe stock MV ");
             if(count($productStockMvExist) == 0) {
                 self::debug_to_console($productStockMv, "    Add stock MV ");
                 $this->addProductStockMv($productStockMv);
