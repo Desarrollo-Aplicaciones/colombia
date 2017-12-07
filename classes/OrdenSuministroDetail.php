@@ -624,7 +624,7 @@ class OrdenSuministroDetail {
         $validayteStockAvailableMv->where('sa.id_product = ' . pSQL($id_product));
         self::debug_to_console($validayteStockAvailableMv->__toString(), " Query stock MV ");
         $resultValidayteStockAvailableMv = Db::getInstance()->executeS($validayteStockAvailableMv);
-        
+        self::debug_to_console($resultValidayteStockAvailableMv, " Result Query stock MV ");
         return $resultValidayteStockAvailableMv;
     }
     
