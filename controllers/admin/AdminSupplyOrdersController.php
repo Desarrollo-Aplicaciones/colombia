@@ -127,7 +127,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     $dataProductStock = json_decode($_COOKIE['add_stock_mv']);
                     $validateProductStock = $this->getProductStockMv($dataProductStock[0]->id_product);
                     if(count($validateProductStock) == 0) {
-                        $this->addProductStockMv($validateProductStock);
+                        $this->addProductStockMv($dataProductStock);
                     }
                 }
 		parent::__construct();
@@ -202,7 +202,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
                            . "'".$valueStock[0]->depends_on_stock."',"
                            . "'".$valueStock[0]->out_of_stock."',"
                            . "'".$valueStock[0]->reserve_on_stock."')";
-           echo $sqlStock;exit;
            Db::getInstance()->Execute($sqlStock);
        }
 
