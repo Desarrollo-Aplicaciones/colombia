@@ -621,7 +621,7 @@ class OrdenSuministroDetail {
         $validayteStockAvailableMv = new DbQuery();
         $validayteStockAvailableMv->select('*');
         $validayteStockAvailableMv->from('stock_available_mv', 'sa');
-        $validayteStockAvailableMv->where('sa.id_product = ' . pSQL($id_product));
+        $validayteStockAvailableMv->where(' sa.id_product = ' . pSQL($id_product));
         self::debug_to_console($validayteStockAvailableMv->__toString(), " Query stock MV ");
         $resultValidayteStockAvailableMv = Db::getInstance()->executeS($validayteStockAvailableMv);
         self::debug_to_console($resultValidayteStockAvailableMv, " Result Query stock MV ");
