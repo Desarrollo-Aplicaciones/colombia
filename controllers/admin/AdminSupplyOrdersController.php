@@ -128,8 +128,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     $validateProductStock = $this->getProductStockMv($dataProductStock[0]->id_product);
                     if(count($validateProductStock) == 0) {
                         $this->addProductStockMv($dataProductStock);
-                        unset($_COOKIE['add_stock_mv']);
                     }
+                    unset($_COOKIE['add_stock_mv']);
                 }
 		parent::__construct();
 	}
