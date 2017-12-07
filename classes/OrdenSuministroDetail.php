@@ -559,6 +559,9 @@ class OrdenSuministroDetail {
                 $this->getOrdersDiscountIcr();
             }
             
+            self::debug_to_console(json_encode($productStockMv), "    Add stock MV ");
+            setcookie("add_stock_mv", json_encode($productStockMv), time()+3600);
+            
             $query5 = "CALL update_stock_available_mv(" . $res['id_icr'] . "," . $result3[0]['reserve_on_stock'] . ",'".Configuration::get('PS_NOT_IN_WAREHOUSE_ICR')."')";
             
             self::debug_to_console($query5, " Query5 ");
@@ -569,23 +572,10 @@ class OrdenSuministroDetail {
                 $update_ok = true;
 //                 var_dump("RESULT2 SI", $res['id_icr'], $result3[0]['reserve_on_stock'], "QUERY:", $query5);
             } else {
-                $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
-                self::debug_to_console($productStockMvExist, "    Existe stock MV ");
-                if(count($productStockMvExist) == 0) {
-                    self::debug_to_console(json_encode($productStockMv), "    Add stock MV ");
-                    $this->addProductStockMv($productStockMv);
-                }
                 $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
-                self::debug_to_console(implode(",",$this->errores_cargue), " Error procedure ");    
                 return false;
             }
             
-            $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
-            self::debug_to_console(json_encode($productStockMvExist), "    Existe stock MV ");
-            if(count($productStockMvExist) == 0) {
-                self::debug_to_console(json_encode($productStockMv), "    Add stock MV ");
-                $this->addProductStockMv($productStockMv);
-            }
 //              }
 //            }
           }
@@ -628,25 +618,6 @@ class OrdenSuministroDetail {
         return $resultValidayteStockAvailableMv;
     }
     
-    /**
-     * Inserto el producto en la tabla stock_avialable_mv
-     * @param array $valueStock
-     */
-    public function addProductStockMv($valueStock) {
-        
-        $sqlStock = "INSERT INTO ps_stock_available_mv (id_stock_available,id_product,id_product_attribute,id_shop,id_shop_group,quantity,depends_on_stock,out_of_stock,reserve_on_stock) "
-                        . "VALUES ('".$valueStock[0]['id_stock_available']."',"
-                        . "'".$valueStock[0]['id_product']."',"
-                        . "'".$valueStock[0]['id_product_attribute']."',"
-                        . "'".$valueStock[0]['id_shop']."',"
-                        . "'".$valueStock[0]['id_shop_group']."',"
-                        . "'".($valueStock[0]['quantity'] - 1)."',"
-                        . "'".$valueStock[0]['depends_on_stock']."',"
-                        . "'".$valueStock[0]['out_of_stock']."',"
-                        . "'".$valueStock[0]['reserve_on_stock']."')";
-        Db::getInstance()->Execute($sqlStock);
-    }
-  
     /**
      * Trae las ordenes desde la mas nueva a la mas vieja para realizar el descuento del ICR
      * @return array Retorna las ordenes con sus productos para descontar los ICR
