@@ -572,18 +572,18 @@ class OrdenSuministroDetail {
                 $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
                 self::debug_to_console($productStockMvExist, "    Existe stock MV ");
                 if(count($productStockMvExist) == 0) {
-                    self::debug_to_console($productStockMv, "    Add stock MV ");
+                    self::debug_to_console(implode(",",$productStockMv), "    Add stock MV ");
                     $this->addProductStockMv($productStockMv);
                 }
                 $this->errores_cargue[] = "Error Actualizando el Stock disponible y los reservados, en el ingreso del ICR: " . $res['cod_icr'];
-                self::debug_to_console($this->errores_cargue, " Error procedure ");    
+                self::debug_to_console(implode(",",$this->errores_cargue), " Error procedure ");    
                 return false;
             }
             
             $productStockMvExist = $this->getProductStockMv($result3[0]['id_product']);
-            self::debug_to_console($productStockMvExist, "    Existe stock MV ");
+            self::debug_to_console(implode(",",$productStockMvExist), "    Existe stock MV ");
             if(count($productStockMvExist) == 0) {
-                self::debug_to_console($productStockMv, "    Add stock MV ");
+                self::debug_to_console(implode(",",$productStockMv), "    Add stock MV ");
                 $this->addProductStockMv($productStockMv);
             }
 //              }
@@ -624,7 +624,7 @@ class OrdenSuministroDetail {
         $validayteStockAvailableMv->where(' sa.id_product = ' . pSQL($id_product));
         self::debug_to_console($validayteStockAvailableMv->__toString(), " Query stock MV ");
         $resultValidayteStockAvailableMv = Db::getInstance()->executeS($validayteStockAvailableMv);
-        self::debug_to_console($resultValidayteStockAvailableMv, " Result Query stock MV ");
+        self::debug_to_console(implode(",",$resultValidayteStockAvailableMv), " Result Query stock MV ");
         return $resultValidayteStockAvailableMv;
     }
     
