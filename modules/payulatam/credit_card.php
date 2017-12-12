@@ -342,7 +342,7 @@ class PayuCreditCard extends PayUControllerWS {
                 if ($conn['produccion'] == 'no') {
                     $data .= 'PA';
                 } else {
-                    $data .= $this->context->country->iso_code;
+                    $data .= 'CO';//$this->context->country->iso_code;
                 }
                 $data .= '",
 "deviceSessionId": "' . $_deviceSessionId . '",
