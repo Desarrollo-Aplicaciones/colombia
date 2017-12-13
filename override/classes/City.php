@@ -26,6 +26,7 @@ class City extends CityCore
 		WHERE cit.id_state = '. $id_state .'
 		GROUP BY cit.id_city, cit.city_name
 		ORDER BY cit.city_name ASC';
+                
 		return Db::getInstance()->executeS($q_city_unique);
 	}
 
