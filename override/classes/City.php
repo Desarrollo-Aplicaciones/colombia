@@ -15,14 +15,14 @@ class City extends CityCore
      * @return array
      */
     
-	public static function getCitiesByStateAvailable($id_state)
+	public static function getCitiesByStateAvailable($id_state, $id_country)
 	{
 		$q_city_unique='
 		SELECT cit.id_city, cit.city_name
 		FROM `'._DB_PREFIX_.'cities_col` cit
 		INNER JOIN `'._DB_PREFIX_.'carrier_city` car
 		ON (car.id_city_des = cit.id_city)
-		INNER JOIN ps_state s  ON ( s.id_state = cit.id_state AND s.id_country = '.(int)Configuration::get('PS_COUNTRY_DEFAULT').' )
+		INNER JOIN ps_state s  ON ( s.id_state = cit.id_state AND s.id_country = '.(int)$id_country.' )
 		WHERE cit.id_state = '. $id_state .'
 		GROUP BY cit.id_city, cit.city_name
 		ORDER BY cit.city_name ASC';

@@ -51,6 +51,8 @@
 						{else}
 							{if $input.name == 'id_state'}
 								<div id="contains_states" {if !$contains_states}style="display:none;"{/if}>
+                                                        {else if $input.name == 'city'}
+ 								<div id="contains_city" {if !$contains_states}style="display:none;"{/if}>
 							{/if}
 							{block name="label"}
 								{if isset($input.label)}<label>{$input.label} </label>{/if}
@@ -170,6 +172,7 @@
 													{elseif $option == "-"}
 														<option value="">--</option>
 													{else}
+                                                                                                            {if $option['active'] == 1}
 														<option value="{$option[$input.options.id]}"
 															{if isset($input.multiple)}
 																{foreach $fields_value[$input.name] as $field_value}
@@ -183,6 +186,7 @@
 																{/if}
 															{/if}
 														>{$option[$input.options.name]}</option>
+                                                                                                            {/if}
 
 													{/if}
 												{/foreach}
@@ -349,7 +353,7 @@
 								</div>
 								<div class="clear"></div>
 							{/block}{* end block field *}
-							{if $input.name == 'id_state'}
+							{if $input.name == 'id_state' || $input.name == 'city'}
 								</div>
 							{/if}
 						{/if}
@@ -463,12 +467,14 @@
                            $('#id_state').change(function(){
                                     var ruta = "../ajax_formulario_cities.php";                                   
                                     var estado = $(this).val();
+                                    var country = $("#id_country").val();
                                     $('#city').empty();
                                     $.ajax({
                                         type:"post",
                                         url:ruta,
                                         data:{
-                                            "id_state":estado
+                                            "id_state":estado,
+                                            "id_country":country
                                         },
                                         success:function(response){
                                             var json = $.parseJSON(response);
