@@ -1480,7 +1480,7 @@
 	</div>
 	<div id="address_invoice">
 		<h3>{l s='Invoice'}</h3>
-		<select id="id_address_invoice" name="id_address_invoice" disabled>
+		<select id="id_address_invoice" name="id_address_invoice">
 		</select>
 		<div id="address_invoice_detail">
 		</div>
