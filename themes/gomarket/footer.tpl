@@ -46,10 +46,10 @@
             <div class="mode_footer">
                 <div class="ctn-gray-footer">
                     <div class="container_24">
+                        {$HOOK_HOMEBOTCEN}
                         {* <div id="footer" class="grid_24 clearfix  omega alpha"> *}
                             {include file="ctn-gray-footer.tpl"}
                             {if isset($HOOK_CS_FOOTER_TOP) && $HOOK_CS_FOOTER_TOP}{$HOOK_CS_FOOTER_TOP}{/if}
-                            {$HOOK_HOMEBOTCEN}
                             {$HOOK_FOOTER}
                             {* Este es el cms que carga el texto largo del footer *}
                             <div id="ctn-footer-display" style="display: none;">
@@ -561,4 +561,15 @@ window.__lc.chat_between_groups = false;
     </div>
 </div>
 *}
+{if isset($js_files_footer)}
+	{foreach from=$js_files_footer item=js_uri}	
+		{if isset($settings->column) && $settings->column == '1_column'}
+			{if !strpos($js_uri,"blocklayered.js")}
+				<script type="text/javascript" src='{$js_uri|replace:"http:":"https:"}'></script>
+			{/if}
+		{else}
+			<script type="text/javascript" src='{$js_uri|replace:"http:":"https:"}'></script>
+		{/if}
+	{/foreach}
+{/if}
 </html>
