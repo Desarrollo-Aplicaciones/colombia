@@ -43,10 +43,10 @@
 
 <!-- Footer -->
         {if !isset($smarty.cookies.validamobile)}
+            {$HOOK_HOMEBOTCEN}
             <div class="mode_footer">
                 <div class="ctn-gray-footer">
                     <div class="container_24">
-                        {$HOOK_HOMEBOTCEN}
                         {* <div id="footer" class="grid_24 clearfix  omega alpha"> *}
                             {include file="ctn-gray-footer.tpl"}
                             {if isset($HOOK_CS_FOOTER_TOP) && $HOOK_CS_FOOTER_TOP}{$HOOK_CS_FOOTER_TOP}{/if}
