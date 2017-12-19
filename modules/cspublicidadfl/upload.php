@@ -226,7 +226,7 @@ if (isset($_POST)) {
     function pathFiles($sub_dir) {
         // Definir directorio donde almacenar los archivos, debe terminar en "/" 
        // $directorio = "C:/wamp/www/prod.farmalisto.com.co/filesX/";
-        $directorio = Configuration::get('PATH_UP_LOAD')."../../htdocs/modules/";
+        $directorio = Configuration::get('PATH_UP_LOAD');
                 
 
         if (isset($sub_dir) && $sub_dir != '') {
