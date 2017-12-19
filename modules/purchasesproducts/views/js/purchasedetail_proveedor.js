@@ -16,8 +16,8 @@ jQuery(function ($) {
                     unitToBuy: {type: Number},
                     unitsProvider: {type: Number},
                     valor: {type: Number},
-                    valor_venta: {type: Number},
-                    quantityBuy: {type: Number}
+                    valor_venta: {type: Number}
+                    //quantityBuy: {type: Number}
                 }
             }
         },
@@ -42,7 +42,7 @@ jQuery(function ($) {
             {field: "unitsProvider", width: "60px", title: "Unidades proveedor"},
             {field: "valor", width: "60px", title: "Valor de compra"},
             {field: "valor_venta", width: "70px", title: "Valor de venta"},
-            {field: "quantityBuy", width: "90px", title: "Cantidad a comprar"},
+            //{field: "quantityBuy", width: "90px", title: "Cantidad a comprar"},
 
         ],
         events: {
