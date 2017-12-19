@@ -178,6 +178,7 @@ if (isset($_POST)) {
                 echo "<br>Imagen Banner cargada.";
                 $flag = false;
             } else { // existe
+                unlink($full_path);
                 echo "<br>Imagen Banner actualizada.";
             }
             break;
