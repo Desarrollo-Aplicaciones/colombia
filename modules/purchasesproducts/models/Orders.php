@@ -32,7 +32,7 @@ class Orders {
                         (SELECT SUM(quantity_expected)
                         FROM ps_supply_order_detail s
                         INNER JOIN ps_supply_order so ON so.id_supply_order = s.id_supply_order
-                        WHERE so.id_supply_order_state = 3 AND s.reference = p.reference
+                        WHERE so.id_supply_order_state = 4 AND s.reference = p.reference
                         GROUP BY s.reference) AS unitExpected,
                         (SELECT SUM(quantity_received)
                         FROM ps_supply_order_detail s
