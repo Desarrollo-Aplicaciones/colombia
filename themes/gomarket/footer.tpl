@@ -522,7 +522,17 @@ imgDefer[i].setAttribute('src',imgDefer[i].getAttribute('data-src'));
 window.onload = init;
 </script>
 
-
+{if isset($js_files_footer)}
+	{foreach from=$js_files_footer item=js_uri}	
+		{if isset($settings->column) && $settings->column == '1_column'}
+			{if !strpos($js_uri,"blocklayered.js")}
+				<script type="text/javascript" src='{$js_uri|replace:"http:":"https:"}'></script>
+			{/if}
+		{else}
+			<script type="text/javascript" src='{$js_uri|replace:"http:":"https:"}'></script>
+		{/if}
+	{/foreach}
+{/if}
 </body>
 
 <!-- Start of LiveChat (www.livechatinc.com) code -->
