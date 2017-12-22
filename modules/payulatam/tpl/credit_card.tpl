@@ -319,6 +319,8 @@
                     <div class="cont-trust-img">
                         <img class="trust_img" src="{$img_dir}authentication/seguridad.jpg" />
                     </div>
+                    <br/>
+                    <input type="checkbox" name="remember_tarjeta" id="remember_tarjeta"> {l s='Recordar Tarjeta' mod='payulatam'} 
                     <div class="cont-trust-img">
                         <input type="button" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR">
                         {* <input type="button" id="submit_btn" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR"> *}
