@@ -307,6 +307,7 @@ class PayuCreditCard extends PayUControllerWS {
   "emailAddress":"' . $params[5]['buyerEmail'] . '",
   "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
   "dniNumber":"' . $dni . '",
+  "dniType":"'.(isset(Tools::getValue('dniType')) && !empty(Tools::getValue('dniType'))) ? Tools::getValue('dniType') : "".'",
   "billingAddress":{
     "street1":"' . substr($address->address1, 0, 99) . '",
     "street2":"N/A",
