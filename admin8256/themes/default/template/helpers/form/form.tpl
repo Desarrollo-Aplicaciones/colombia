@@ -172,8 +172,22 @@
 													{elseif $option == "-"}
 														<option value="">--</option>
 													{else}
-                                                                                                            {if $option['active'] == 1}
+                                                                                                            {if $input.name == 'id_country' && isset($option['active']) && $option['active'] == 1}
 														<option value="{$option[$input.options.id]}"
+															{if isset($input.multiple)}
+																{foreach $fields_value[$input.name] as $field_value}
+																	{if $field_value == $option[$input.options.id]}
+																		selected="selected"
+																	{/if}
+																{/foreach}
+															{else}
+																{if $fields_value[$input.name] == $option[$input.options.id]}
+																	selected="selected"
+																{/if}
+															{/if}
+														>{$option[$input.options.name]}</option>
+                                                                                                            {else if $input.name != 'id_country'}
+                                                                                                                <option value="{$option[$input.options.id]}"
 															{if isset($input.multiple)}
 																{foreach $fields_value[$input.name] as $field_value}
 																	{if $field_value == $option[$input.options.id]}
