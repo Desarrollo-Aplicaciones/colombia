@@ -188,43 +188,6 @@
 <div class="separador-medios-pago"></div>
 <!-- Tarjeta Credito /-->
 
-<!-- Tarjeta Codensa -->
-<div id="ctn-tarjeta-credito-codensa" class="cont-opc-pago">
-	<div name="opcion21" id="opciones" onclick="mouse_overd('div21', '#ctn-tarjeta-credito-codensa');">
-		
-		<div class="invisible">
-			<div id="div8rb"></div>
-			<div class="visible2"></div>
-			<div class="visible"></div>
-		</div>
-
-		<div class="payment_module" id="texttarjeta">
-			<input type="radio" value="div8" name="mediopago" id="mediopagot">
-			{* <input type="radio" value="div8" name="mediopago" id="mediopagot" > *}
-			<div class="image">
-				<img src="{$img_dir}mediosp/credito.jpg" alt="Tarjetas Farmalisto"/>
-			</div>
-			<div class="ctn-title-medio-pago">Tarjeta de crédito codensa</div>
-			<div class="cont-mas-menos"><img id="div8im" src="{$img_dir}mediosp/mas_menos.png"></div>
-		</div> 
-	</div>
-	<div id="divs">
-		<div id="div21" class="ctn-toggle-payment" style="display: none; ">
-			{if isset($medios_de_pago['Tarjeta_credito']) && $medios_de_pago['Tarjeta_credito'] ==='1'}
-				<div class="contendfrom">
-					{include file="$tpl_dir../../modules/payulatam/tpl/credit_card_codensa.tpl"}
-				</div>
-			{else}
-				<p class="contendfromd">
-					<span class="textapoyo"><strong>El pago con tarjeta, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
-				</p>
-			{/if}
-		</div>
-	</div>
-</div>
-<div class="separador-medios-pago"></div>
-<!-- Tarjeta Codensa /-->
-
 
 <!-- Baloto -->
 <div id="ctn-baloto" class="cont-opc-pago">
