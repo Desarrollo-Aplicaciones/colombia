@@ -13,7 +13,11 @@ if ( $id_state == '') {
 }
 
 if ( $id_country == '') {
-    $id_country = $_POST['id_country'];
+    if(!isset($_POST['id_country'])) {
+        $id_country = null;
+    } else {
+        $id_country = $_POST['id_country'];
+    }
 } 
 if ( $id_country == '') {
     $id_country = $_GET['id_country'];

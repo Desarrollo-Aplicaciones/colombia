@@ -15,8 +15,11 @@ class City extends CityCore
      * @return array
      */
     
-	public static function getCitiesByStateAvailable($id_state, $id_country)
+	public static function getCitiesByStateAvailable($id_state, $id_country = null)
 	{
+                if(is_null($id_country)) {
+                    $id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+                }
 		$q_city_unique='
 		SELECT cit.id_city, cit.city_name
 		FROM `'._DB_PREFIX_.'cities_col` cit
