@@ -52,7 +52,7 @@
 
     <script type="text/javascript"> 
         $(function(){ 
-            var nombre = $("input#nombre");
+            var nombre = $("input#nombrec");
             var codigo = $("input#codigot");
             if ( nombre.val() == '' ){
                 codigo.prop("disabled", "true");
@@ -304,7 +304,7 @@
                     </div>
                     <div class="cardAttr">
                         {* <div class="textCard">Nombre del Titular<span class="purple">*</span>: </div> *}
-                        <input type="text" name="nombre" id="nombre" autocomplete="off" value="" placeholder="Nombre del Titular  *" />
+                        <input type="text" name="nombrec" id="nombrec" autocomplete="off" value="" placeholder="Nombre del Titular  *" />
                     </div>
                     <div class="cardAttr">
                         {* <div class="textCard">Nombre del Titular<span class="purple">*</span>: </div> *}

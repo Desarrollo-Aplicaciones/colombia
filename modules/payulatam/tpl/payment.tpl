@@ -202,7 +202,7 @@
 			<input type="radio" value="div21" name="mediopago" id="mediopagot">
 			{* <input type="radio" value="div8" name="mediopago" id="mediopagot" > *}
 			<div class="image">
-				<img src="{$img_dir}mediosp/credito.jpg" alt="Tarjetas Farmalisto"/>
+				<img src="{$img_dir}mediosp/Pago_Codensa.jpg" alt="Tarjetas Farmalisto"/>
 			</div>
 			<div class="ctn-title-medio-pago">Tarjeta de crédito Condensa</div>
 			<div class="cont-mas-menos"><img id="div8im" src="{$img_dir}mediosp/mas_menos.png"></div>
