@@ -316,14 +316,30 @@ function validarEmail(campo) {
 			toggleText();
 			elem = $(this);
 			if (elem.next('.contenedor').is(":visible")){
+				ventana = $('#no').attr("ventana");
+				if(ventana != 2) {
+					elem.removeClass("toggleActive");
+					elem.next('.contenedor').slideUp();
+				}
+				console.log(ventana);
 				elem.removeClass("toggleActive");
-				elem.next('.contenedor').slideUp();
 			}
 			else{
 				$('.resp_button').each(function(){
 					if ($(this).next('.contenedor').is(":visible")){
-						$(this).removeClass("toggleActive");
+						/*$(this).removeClass("toggleActive");
 						$(this).next('.contenedor').slideUp();
+						*/
+						toggleText();
+						$('#primerHole').slideToggle();
+						$('#segundoHole').slideToggle();
+						$('.resp_button').toggleClass("toggleActive");
+						$('#no').attr("ventana","2");
+						console.log("cerroooo");
+
+
+
+
 						return false;
 					}
 				});

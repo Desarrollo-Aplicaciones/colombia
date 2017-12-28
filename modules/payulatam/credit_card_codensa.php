@@ -130,18 +130,23 @@ class PayuCreditCard extends PayUControllerWS {
         PasarelaPagoCore::set_cart_pay_process($id_cart, 1);
 
 
-        $arraypaymentMethod = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AMEX', 'MASTERCARD' => 'MASTERCARD');
+        $arraypaymentMethod = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AMEX', 'MASTERCARD' => 'MASTERCARD', 'CODENSA' => 'CODENSA');
         $arraypaymentMethod2 = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AmEx', 'MASTERCARD' => 'MasterCard', 'DinersClub' => 'DinersClub', 'UnionPay' => 'UnionPay');
 
-        if ((isset($_POST['numerot']) && !empty($_POST['numerot']) && strlen($_POST['numerot']) > 13 && strlen((int) $_POST['numerot']) < 17 && isset($_POST['nombre']) && !empty($_POST['nombre']) && isset($_POST['codigot']) && !empty($_POST['codigot']) &&
-            isset($_POST['datepicker']) && !empty($_POST['datepicker']) && isset($_POST['cuotas']) && !empty($_POST['cuotas'])) || (isset($_POST['token_id']) && !empty($_POST['token_id']) && isset($_POST['openpay_device_session_id']) && !empty($_POST['openpay_device_session_id']) )) {
-
-            $CCV = new CreditCardValidator();
-            $CCV->Validate(Tools::getValue('numerot'));
-            $key = $CCV->GetCardName($CCV->GetCardInfo()['type']);
-            if ($CCV->GetCardInfo()['status'] == 'invalid') {
-                $this->context->cookie->{'error_pay'} = json_encode(array('ERROR' => 'El numero de la tarjeta no es valido.'));
-                Tools::redirectLink($url_reintento);
+        if ((isset($_POST['numerot']) && !empty($_POST['numerot']) && strlen($_POST['numerot']) > 13 && strlen((int) $_POST['numerot']) < 17 && isset($_POST['nombrec']) && !empty($_POST['nombrec']) && isset($_POST['codigot']) && !empty($_POST['codigot']) &&
+            /*isset($_POST['datepicker']) && !empty($_POST['datepicker']) &&*/ isset($_POST['cuotas']) && !empty($_POST['cuotas']) && isset($_POST['dniType']) && !empty($_POST['dniType'])) || (isset($_POST['token_id']) && !empty($_POST['token_id']) && isset($_POST['openpay_device_session_id']) && !empty($_POST['openpay_device_session_id']) )) {
+            
+            $numerot = Tools::getValue('numerot');
+            if(substr($numerot,0,6) == '590712') {
+                $key = "CODENSA";
+            } else {
+                $CCV = new CreditCardValidator();
+                $CCV->Validate(Tools::getValue('numerot'));
+                $key = $CCV->GetCardName($CCV->GetCardInfo()['type']);
+                if ($CCV->GetCardInfo()['status'] == 'invalid') {
+                    $this->context->cookie->{'error_pay'} = json_encode(array('ERROR' => 'El numero de la tarjeta no es valido.'));
+                    Tools::redirectLink($url_reintento);
+                }
             }
             // reglas de carrito para bines
             $payulatam = new PayULatam();
@@ -154,10 +159,10 @@ class PayuCreditCard extends PayUControllerWS {
 
             $params = $this->initParams();
             // se optinen los datos del formulario de pago farmalisto    
-            $post = array('nombre' => (Tools::getValue('nombre')) ? Tools::getValue('nombre') : Tools::getValue('holder'),
+            $post = array('nombre' => (Tools::getValue('nombrec')) ? Tools::getValue('nombrec') : Tools::getValue('holder'),
               'numerot' => (Tools::getValue('numerot')) ? Tools::getValue('numerot') : Tools::getValue('card'),
               'codigot' => (Tools::getValue('codigot')) ? Tools::getValue('codigot') : Tools::getValue('cvv'),
-              'date' => Tools::getValue('datepicker'),
+              'date' => Tools::getValue('Year').'/'.Tools::getValue('Month'),
               'cuotas' => Tools::getValue('cuotas'),
               'Month' => Tools::getValue('Month'),
               'Year' => Tools::getValue('Year')
@@ -182,6 +187,7 @@ class PayuCreditCard extends PayUControllerWS {
             }
 
             $dni = $conf->get_dni($this->context->cart->id_address_delivery);
+            $dniType = (isset($_POST['dniType']) && !empty($_POST['dniType'])) ? $_POST['dniType'] : '';
             if ($conn['nombre_pasarela'] == 'redeban') {
                 $parameters = array('idAdquiriente' => $dni, 'tipoDocumento' => 'CC', 'numDocumento' => $post['nombre'], 'franquicia' => $arraypaymentMethod2[strtoupper($key)],
                   'numTarjeta' => $post['numerot'], 'fechaExpiracion' => $post['Year'] . '-' . $post['Month'] . '-' . $post['Month'], 'codVerificacion' => $post['codigot'],
@@ -307,6 +313,7 @@ class PayuCreditCard extends PayUControllerWS {
   "emailAddress":"' . $params[5]['buyerEmail'] . '",
   "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
   "dniNumber":"' . $dni . '",
+  "dniType":"'.$dniType.'",    
   "billingAddress":{
     "street1":"' . substr($address->address1, 0, 99) . '",
     "street2":"N/A",
@@ -434,11 +441,11 @@ class PayuCreditCard extends PayUControllerWS {
 }  
 },
 "payer":{
-
   "fullName":"' . $customer->firstname . ' ' . $customer->lastname . '",
   "emailAddress":"' . $params[5]['buyerEmail'] . '",
   "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
   "dniNumber":"' . $dni . '",
+  "dniType":"'.$dniType.'",
   "billingAddress":{
     "street1":"' . substr($address->address1, 0, 99) . '",
     "street2":"N/A",
@@ -482,7 +489,7 @@ class PayuCreditCard extends PayUControllerWS {
                 $data_log .= '          
 }
 ';
-                
+
                 
                 ////////////      FIN LOG    //////////////
                 $this->logtxt(" Data: " . $data_log);

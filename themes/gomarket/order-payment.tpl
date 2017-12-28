@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="{$css_dir}order-payment.css" type="text/css" media="screen" charset="utf-8" />
 <script	src="{$base_dir_ssl}js/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
 <script src="{$base_dir_ssl}themes/gomarket/js/jquery.validate.js"></script>
+<script src="{$base_dir_ssl}themes/gomarket/js/jquery-ui.js"></script>
 {*}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css">
@@ -165,6 +166,13 @@ color: #979797;
 			    document.getElementById("texttarjeta").style.fontWeight='600';
 			    $('[value=div8]').attr("checked", true);
 			} 
+                        else if(objeto == "div21") {
+				clearDivs();
+			    document.getElementById("botoncitosubmit").onclick = submitforms21;
+			    document.getElementById("texttarjeta").style.color='#646464';
+			    document.getElementById("texttarjeta").style.fontWeight='600';
+			    $('[value=div21]').attr("checked", true);
+			} 
 			else if(objeto == "div9") {
 				clearDivs();
 			    document.getElementById("botoncitosubmit").onclick = submitforms3;
@@ -205,11 +213,13 @@ color: #979797;
 	    	pest[4] = "#texttarjeta";
 	    	pest[5] = "#textpse";
 	    	pest[6] = "#textradiodatafono";
+                pest[7] = "#texttarjetac";
 	     	rb[1] = "div10";
 	     	rb[2] = "div9";
 	     	rb[3] = "div8";
 	     	rb[4] = "div7";
 	     	rb[5] = "div5";
+                rb[5] = "div21";
 	     	for (var i = 1; i < 6; i++) {
 	     		$(pest[i]).removeAttr("style");
 	     		$('[value=' + rb[i] + ']').removeAttr("checked");
@@ -227,6 +237,9 @@ color: #979797;
 		}
 		function submitforms5() {
 			$( "#formEfecty" ).submit();	
+		}
+                function submitforms21() {
+			$( "#formPayUc" ).submit();	
 		}
 	</script>
 {/literal}
