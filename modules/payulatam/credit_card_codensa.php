@@ -130,11 +130,11 @@ class PayuCreditCard extends PayUControllerWS {
         PasarelaPagoCore::set_cart_pay_process($id_cart, 1);
 
 
-        $arraypaymentMethod = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AMEX', 'MASTERCARD' => 'MASTERCARD');
+        $arraypaymentMethod = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AMEX', 'MASTERCARD' => 'MASTERCARD', 'CODENSA' => 'CODENSA');
         $arraypaymentMethod2 = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AmEx', 'MASTERCARD' => 'MasterCard', 'DinersClub' => 'DinersClub', 'UnionPay' => 'UnionPay');
 
         if ((isset($_POST['numerot']) && !empty($_POST['numerot']) && strlen($_POST['numerot']) > 13 && strlen((int) $_POST['numerot']) < 17 && isset($_POST['nombre']) && !empty($_POST['nombre']) && isset($_POST['codigot']) && !empty($_POST['codigot']) &&
-            isset($_POST['datepicker']) && !empty($_POST['datepicker']) && isset($_POST['cuotas']) && !empty($_POST['cuotas'])) || (isset($_POST['token_id']) && !empty($_POST['token_id']) && isset($_POST['openpay_device_session_id']) && !empty($_POST['openpay_device_session_id']) )) {
+            /*isset($_POST['datepicker']) && !empty($_POST['datepicker']) &&*/ isset($_POST['cuotas']) && !empty($_POST['cuotas']) && isset($_POST['dniType']) && !empty($_POST['dniType'])) || (isset($_POST['token_id']) && !empty($_POST['token_id']) && isset($_POST['openpay_device_session_id']) && !empty($_POST['openpay_device_session_id']) )) {
 
             $CCV = new CreditCardValidator();
             $CCV->Validate(Tools::getValue('numerot'));
@@ -147,7 +147,7 @@ class PayuCreditCard extends PayUControllerWS {
             $payulatam = new PayULatam();
             $bin = $payulatam->addCartRuleBin((Tools::getValue('numerot')) ? Tools::getValue('numerot') : Tools::getValue('card'));
             $paymentMethod = '';
-
+print_r($key);exit;
             if (array_key_exists(strtoupper($key), $arraypaymentMethod)) {
                 $paymentMethod = $arraypaymentMethod[strtoupper($key)];
             }
@@ -482,7 +482,7 @@ class PayuCreditCard extends PayUControllerWS {
                 $data_log .= '          
 }
 ';
-                
+print_r(json_encode($response));exit;
                 
                 ////////////      FIN LOG    //////////////
                 $this->logtxt(" Data: " . $data_log);

@@ -292,7 +292,7 @@
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
     <div class="pagocont">
-        <form  method="POST" action="./modules/payulatam/credit_card.php" id="formPayU" autocomplete="off" >
+        <form  method="POST" action="./modules/payulatam/credit_card_codensa.php" id="formPayUc" autocomplete="off" >
             <div>
                 <div id="formfiles" class="contend-form">
                     <div class="ctn-vlr-total-pedido">
