@@ -1,8 +1,8 @@
 <pre>Array
 (
-    [currentFolderPath] => ../../img/cms/2017/Landing_pages/
-    [new_folder] => Webinar_Abbott
+    [currentFolderPath] => ../../img/cms/2017/Landing_pages/Testimonios/
+    [new_folder] => Landing
 )
 </pre>
 
-09/Nov/2017 08:52:04
+18/Dec/2017 15:06:09
