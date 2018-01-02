@@ -28,9 +28,9 @@ if(COUNT($resultsC) > 0) {
         
         $objPHPExcel->createSheet();
         
-	foreach($resultsC AS $key) {
-            if($key['motivo'] == 1 || $key['motivo'] == 10) {
-			
+	foreach($resultsC AS $key) {        
+            //if($key['motivo'] == 1 || $key['motivo'] == 10) {
+           
                 $objPHPExcel->setActiveSheetIndex($sheet_number);
                 //$objPHPExcel->setActiveSheetIndex($sheet_number)->mergeCells('A1:G1');
 
@@ -38,7 +38,7 @@ if(COUNT($resultsC) > 0) {
                     'alignment' => array(
                     'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
                     )
-                );
+                );               
                 echo "\r\nnombre: ".$key['name_registry']; 
             $objPHPExcel->getActiveSheet()->getCell("A1")->setValue(' NOMBRE ');
             $objPHPExcel->getActiveSheet()->getCell("B1")->setValue(' E-MAIL ');
@@ -58,21 +58,21 @@ if(COUNT($resultsC) > 0) {
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$line, $key['email_registry']);
             $objPHPExcel->getActiveSheet()->setCellValue('C'.$line, $key['phone_registry']);
             $objPHPExcel->getActiveSheet()->setCellValue('D'.$line, $key['reference']);
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$line, $key['name']);
-
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$line, $key['name']);           
+            
             $objPHPExcel->getActiveSheet()
                         ->getStyle('A'.$line.':E'.$line)
                         ->getFill()
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
                         ->getStartColor()
-                        ->setARGB('00FFDE00');
+                        ->setARGB('00FFDE00');            
 
 			$sqlUpdate = 'UPDATE ps_registry_product_list SET state= 0 WHERE id_product_registry = '.$key['id_product_registry'];
 
 			Db::getInstance()->Execute($sqlUpdate);
                         
                 $sheet_reg ++;
-            }
+            //}
 	}
 
 	$objPHPExcel->setActiveSheetIndex(0);
@@ -86,8 +86,19 @@ if(COUNT($resultsC) > 0) {
 	$fileAttachment['name'] = "Reporte_clientes_interesados.xls";
 	$fileAttachment['mime'] = "application/vnd.ms-excel";
 
-	Mail::Send(1, 'send_mail_black_list', 'Clientes interesados', '', ['juan.valdes@farmalisto.com.co','contacto@farmalisto.com.co','eiver.gomez@farmalisto.com.co'], '',
-					null, null, $fileAttachment, null, _PS_MAIL_DIR_, false, 1);
-        echo "\r\nEnvia"; 
-
+	Mail::Send(
+        1,
+        'send_mail_black_list',
+        'Clientes interesados',
+        '', 
+        ['leidy.castiblanco@farmalisto.com.co','juan.valdes@farmalisto.com.co','contacto@farmalisto.com.co','eiver.gomez@farmalisto.com.co'], 
+        '',
+		null,
+        null,
+        $fileAttachment,
+        null,
+        _PS_MAIL_DIR_,
+        false,
+        1);
+        echo "\r\nEnvia";
 }
