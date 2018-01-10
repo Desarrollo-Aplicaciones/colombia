@@ -1138,7 +1138,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
         $productsCart->where('pp.id_cart = ' . pSQL($id_cart));
         $resultProductsCart = Db::getInstance()->executeS($productsCart);
         
-        $arrProductsStock = [];
+        /*$arrProductsStock = [];
         foreach($resultProductsCart as $value) {
             
             $stockAvailableMv = new DbQuery();
@@ -1148,7 +1148,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $resultStockAvailableMv = Db::getInstance()->executeS($stockAvailableMv);
             
             $arrProductsStock[] = $resultStockAvailableMv[0];
-        }
+        }*/
         
         if ($payment_module->validateOrder(
         (int) $cart->id, (int) $id_order_state, $cart->getOrderTotal(true, Cart::BOTH), !empty($cod_pagar) ? $cod_pagar : $payment_module->displayName, $this->l('Manual order -- Employee:') .
@@ -1163,7 +1163,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           Db::getInstance()->Execute($sql2);
         }
         
-        foreach($arrProductsStock as $valueStock) {
+        /*foreach($arrProductsStock as $valueStock) {
             
             $validayteStockAvailableMv = new DbQuery();
             $validayteStockAvailableMv->select('*');
@@ -1185,7 +1185,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
                         . "'".$valueStock['reserve_on_stock']."')";
                 Db::getInstance()->Execute($sqlStock);
             }
-        }
+        }*/
         
         Address::update_date_delivered();
         if ($payment_module->currentOrder) {
@@ -1196,7 +1196,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           $sql->leftJoin('cart_product', 'pp', 'po.id_cart = pp.id_cart');
           $sql->where('po.id_cart = ' . pSQL($id_cart));
           $result = Db::getInstance()->executeS($sql);
-          $sin_stock = false;
+          /*$sin_stock = false;
           foreach ($result as $row) {
             $sql = new DbQuery();
             $sql->select('s.quantity, s.reserve_on_stock');
@@ -1257,7 +1257,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             
             $historyStateOrder = "INSERT INTO ps_order_history(id_order, id_order_state, date_add) VALUES(".$payment_module->currentOrder.", 9, '".date('Y-m-d H:i:s')."')";
             DB::getInstance()->execute($historyStateOrder);
-          }
+          }*/
           Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $payment_module->currentOrder . '&vieworder' . '&token=' . $this->token);
         }
       } else
