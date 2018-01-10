@@ -75,7 +75,7 @@ class OrderHistory extends OrderHistoryCore
                               $missing = 0;
                           }
 
-                          if (isset($result2[0]) && $result2[0]['quantity'] > 0) {
+                          if (isset($result2[0])) {
                               $newReserveOnStock = $result2[0]['reserve_on_stock'] + $row['quantity'];
                               $sql_new_reserve = 'UPDATE ' . _DB_PREFIX_ . 'stock_available_mv
                                                               SET reserve_on_stock = ' . $newReserveOnStock . '
