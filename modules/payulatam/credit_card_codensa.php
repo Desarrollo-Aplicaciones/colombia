@@ -131,7 +131,7 @@ class PayuCreditCard extends PayUControllerWS {
 
 
         $arraypaymentMethod = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AMEX', 'MASTERCARD' => 'MASTERCARD', 'CODENSA' => 'CODENSA');
-        $arraypaymentMethod2 = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AmEx', 'MASTERCARD' => 'MasterCard', 'DinersClub' => 'DinersClub', 'UnionPay' => 'UnionPay');
+        $arraypaymentMethod2 = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AmEx', 'MASTERCARD' => 'MasterCard', 'DinersClub' => 'DinersClub', 'UnionPay' => 'UnionPay', 'CODENSA' => 'CODENSA');
 
         if ((isset($_POST['numerot']) && !empty($_POST['numerot']) && strlen($_POST['numerot']) > 13 && strlen((int) $_POST['numerot']) < 17 && isset($_POST['nombrec']) && !empty($_POST['nombrec']) && isset($_POST['codigot']) && !empty($_POST['codigot']) &&
             /*isset($_POST['datepicker']) && !empty($_POST['datepicker']) &&*/ isset($_POST['cuotas']) && !empty($_POST['cuotas']) && isset($_POST['dniType']) && !empty($_POST['dniType'])) || (isset($_POST['token_id']) && !empty($_POST['token_id']) && isset($_POST['openpay_device_session_id']) && !empty($_POST['openpay_device_session_id']) )) {
@@ -230,7 +230,7 @@ class PayuCreditCard extends PayUControllerWS {
 
                 if ($conn['produccion'] == 'no') {
 
-                    $currency = 'USD';
+                    $currency = 'COP';
                 } else {
 
                     $currency = $params[9]['currency'];
@@ -350,7 +350,7 @@ class PayuCreditCard extends PayUControllerWS {
 "paymentMethod":"' . $paymentMethod . '",
 "paymentCountry":"';
                 if ($conn['produccion'] == 'no') {
-                    $data .= 'PA';
+                    $data .= 'CO';
                 } else {
                     $data .= 'CO';//$this->context->country->iso_code;
                 }
@@ -414,7 +414,7 @@ class PayuCreditCard extends PayUControllerWS {
        "state": "' . $conf->get_state($address->id_state) . '",
        "country": "';
                 if ($conn['produccion'] == 'no') {
-                    $data_log .= 'PA';
+                    $data_log .= 'CO';
                 } else {
                     $data_log .= $this->context->country->iso_code;
                 }
@@ -431,7 +431,7 @@ class PayuCreditCard extends PayUControllerWS {
   "state":"' . $conf->get_state($address->id_state) . '",
   "country":"';
                 if ($conn['produccion'] == 'no') {
-                    $data_log .= 'PA';
+                    $data_log .= 'CO';
                 } else {
                     $data_log .= $this->context->country->iso_code;
                 }
@@ -453,7 +453,7 @@ class PayuCreditCard extends PayUControllerWS {
     "state":"' . $conf->get_state($address->id_state) . '",
     "country":"';
                 if ($conn['produccion'] == 'no') {
-                    $data_log .= 'PA';
+                    $data_log .= 'CO';
                 } else {
                     $data_log .= $this->context->country->iso_code;
                 }
@@ -470,7 +470,7 @@ class PayuCreditCard extends PayUControllerWS {
 "paymentMethod":"' . $paymentMethod . '",
 "paymentCountry":"';
                 if ($conn['produccion'] == 'no') {
-                    $data_log .= 'PA';
+                    $data_log .= 'CO';
                 } else {
                     $data_log .= $this->context->country->iso_code;
                 }
@@ -490,7 +490,7 @@ class PayuCreditCard extends PayUControllerWS {
 }
 ';
 
-                
+               
                 ////////////      FIN LOG    //////////////
                 $this->logtxt(" Data: " . $data_log);
                 $response = $conf->sendJson($data);
