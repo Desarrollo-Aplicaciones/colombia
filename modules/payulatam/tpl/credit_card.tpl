@@ -280,12 +280,25 @@
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
     <div class="pagocont">
+        <div class="ctn-vlr-total-pedido">
+            El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
+        </div>
+        {* Tarjetas de crédito almacenadas por el cliente *}
+        {if $store_credit_cards}
+            <form  method="POST" action="./modules/payulatam/credit_card.php" id="formTokenPayU" autocomplete="off" >
+                {foreach from=$store_credit_cards item=credit_card}
+                <input type="hidden" name="token_id" value="{$credit_card.token_id}">
+                <div class="cont-trust-img">
+                    <input type="submit" class="paymentSubmit boton-pagos-excep" value="PAGAR CON {$credit_card.payment_method|upper}  {$credit_card.masked_number|upper}">
+                </div>
+                {/foreach}
+                <hr/>
+            </form>
+        {/if}
+        {* Formulario Tarjeta de crédito *}
         <form  method="POST" action="./modules/payulatam/credit_card.php" id="formPayU" autocomplete="off" >
             <div>
                 <div id="formfiles" class="contend-form">
-                    <div class="ctn-vlr-total-pedido">
-                        El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
-                    </div>
                     <div class="cardAttr">
                         {* <div class="textCard">Número de Tarjeta de Crédito<span class="purple">*</span>: </div> *}
                         <input type="text" name="numerot" autocomplete="off" data-openpay-card="card_number" id="numerot" placeholder="Número de Tarjeta de Crédito o Débito *"/>
@@ -320,10 +333,9 @@
                         <img class="trust_img" src="{$img_dir}authentication/seguridad.jpg" />
                     </div>
                     <br/>
-                    <input type="checkbox" name="remember_tarjeta" id="remember_tarjeta"> {l s='Recordar Tarjeta' mod='payulatam'} 
+                    <input type="checkbox" name="remember_card" value="true"> {l s='Recordar Tarjeta' mod='payulatam'} 
                     <div class="cont-trust-img">
                         <input type="button" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR">
-                        {* <input type="button" id="submit_btn" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR"> *}
                     </div>
                 </div>
             </div>
