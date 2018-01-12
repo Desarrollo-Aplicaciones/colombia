@@ -281,7 +281,7 @@ class PayuCreditCard extends PayUControllerWS {
        "state": "' . $conf->get_state($address->id_state) . '",
        "country": "';
                 if ($conn['produccion'] == 'no') {
-                    $data .= 'PA';
+                    $data .= 'CO';
                 } else {
                     $data .= $this->context->country->iso_code;
                 }
@@ -298,7 +298,7 @@ class PayuCreditCard extends PayUControllerWS {
   "state":"' . $conf->get_state($address->id_state) . '",
   "country":"';
                 if ($conn['produccion'] == 'no') {
-                    $data .= 'PA';
+                    $data .= 'CO';
                 } else {
                     $data .= $this->context->country->iso_code;
                 }
@@ -321,7 +321,7 @@ class PayuCreditCard extends PayUControllerWS {
     "state":"' . $conf->get_state($address->id_state) . '",
     "country":"';
                 if ($conn['produccion'] == 'no') {
-                    $data .= 'PA';
+                    $data .= 'CO';
                 } else {
                     $data .= $this->context->country->iso_code;
                 }
