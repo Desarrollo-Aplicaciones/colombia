@@ -683,7 +683,7 @@ class OrdenSuministroDetail {
     public function addProductStockMv($valueStock) {
 
        $sqlStock = "INSERT INTO ps_stock_available_mv (id_stock_available,id_product,id_product_attribute,id_shop,id_shop_group,quantity,depends_on_stock,out_of_stock,reserve_on_stock) "
-                       . "VALUES ('".$valueStock[0]->id_stock_available."',"
+                       . "VALUES ('".$valueStock[0]->id_product."',"
                        . "'".$valueStock[0]->id_product."',"
                        . "'".$valueStock[0]->id_product_attribute."',"
                        . "'".$valueStock[0]->id_shop."',"
