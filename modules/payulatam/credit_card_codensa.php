@@ -490,7 +490,9 @@ class PayuCreditCard extends PayUControllerWS {
 }
 ';
 
-               
+                $fp = fopen(_ROUTE_FILE_ . "/log_payu/log_data_request.log", "a+");
+                fwrite($fp, $data . "\r\n");
+                fclose($fp);
                 ////////////      FIN LOG    //////////////
                 $this->logtxt(" Data: " . $data_log);
                 $response = $conf->sendJson($data);
