@@ -128,6 +128,29 @@
                     $(this).datepicker('setDate', new Date(year, month, 1));
                 }
             });
+            
+            {* Validate form of payment with credit card tokenizer *}
+            var validator = $('#formTokenPayU').validate({
+                {literal}
+                    wrapper: 'div',
+                    errorPlacement: function (error, element) {
+                        error.addClass("arrow")
+                        error.insertAfter(element);
+                    },
+                {/literal}
+                rules :{
+                    cuotas : {
+                      required : true
+                    }
+                },
+                messages: {
+                    cuotas : {
+                        required : "El campo es requerido."
+                    }
+                }
+            });
+            
+            {* Validate form of payment with credit card new *}
             var validator = $('#formPayU').validate({
                 {literal}
                     wrapper: 'div',
@@ -287,15 +310,30 @@
         {if $store_credit_cards}
             <form  method="POST" action="./modules/payulatam/credit_card.php" id="formTokenPayU" autocomplete="off" >
                 {foreach from=$store_credit_cards item=credit_card}
-                <input type="hidden" name="token_id" value="{$credit_card.token_id}">
+                <input type="hidden" name="masked_number" value="{$credit_card.masked_number}">
+                <input type="hidden" name="payment_method" value="{$credit_card.payment_method}">
                 <div class="cont-trust-img">
                     <input type="submit" class="paymentSubmit boton-pagos-excep" value="PAGAR CON {$credit_card.payment_method|upper}  {$credit_card.masked_number|upper}">
                 </div>
                 {/foreach}
+                
+                <div class="cardAttr">
+                    {* <div class="textCard">Número de cuotas<span class="purple">*</span>: </div> *}
+                    <select name="cuotas" id="cuotas" class="select-100">
+                            <option value="" disabled selected>Número de cuotas *</option>
+                        {for $foo=1 to 36}
+                            <option value="{$foo|string_format:'%2d'}">{$foo|string_format:"%2d"}</option>
+                        {/for}
+                    </select>
+                </div>
                 <hr/>
             </form>
         {/if}
         {* Formulario Tarjeta de crédito *}
+        <br>
+        <div class="ctn-vlr-total-pedido">
+            <b>Agrega una tarjeta de Cr&eacute;dito Nueva</b>
+        </div>
         <form  method="POST" action="./modules/payulatam/credit_card.php" id="formPayU" autocomplete="off" >
             <div>
                 <div id="formfiles" class="contend-form">
