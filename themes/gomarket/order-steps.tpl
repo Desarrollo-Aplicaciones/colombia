@@ -33,6 +33,39 @@
 {/if}
 
 {if !$opc}
+<div id="order-step">
+	<div id="accordion">
+		<ul>
+			<li {if $current_step=='summary'}class="active"{/if}>
+				<div>
+					<a href="{$link->getPageLink('order', true)}&paso=inicial">
+						<span>1</span>
+						<p>Mi Carrito</p>
+						<div class="icon" id="cart"></div>
+					</a>
+				</div>
+			</li>
+			<li {if $current_step=='address'}class="active"{/if}>
+				<div>
+					<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1&multi-shipping={$multi_shipping}")|escape:'html'}">
+						<span>2</span>
+						<p>Datos de entrega</p>
+						<div class="icon" id="delivery"></div>
+					</a>
+				</div>
+			</li>
+			<li {if $current_step=='payment'}class="active"{/if}>
+				<div>
+					<a href="javascript:void(0);">
+						<span>3</span>
+						<p>Modos de Pago</p>
+						<div class="icon" id="pay"></div>
+					</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
 <!-- Steps -->
 <ul class="step" id="order_step">
 	<li id="step_begin" class="{if $current_step=='summary'}step_current{else}{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address' || $current_step=='login'}step_done{else}step_todo{/if}{/if}">

@@ -1,0 +1,151 @@
+/**
+ * Order - Steps
+ */
+#order-step {
+  background: url(../img/checkout/line.png) center center repeat;
+  width: 100%;
+}
+
+#order-step #accordion {
+  margin: 10px auto;
+  max-width: 300px;
+  overflow: hidden;
+  width: 100%;
+  padding: 0 20px 0 20px;
+  background-color: #fff;
+}
+
+#order-step #accordion ul {
+  display: table;
+  margin: 0;
+  padding: 0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+#order-step #accordion ul li {
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: table-cell;
+  height: 50px;
+  position: relative;
+  text-align: center;
+  transition: all 500ms ease;
+  vertical-align: bottom;
+  width: 9.999%;
+}
+
+#order-step #accordion ul li.active ~ li div a {
+  color: #646464 !important
+}
+
+#order-step #accordion ul li div {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
+#order-step #accordion ul li div a {
+  border: 1px solid #b4b4b4;
+  box-sizing: border-box;
+  color: #3a9b37;
+  display: block;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+  height: 50px;
+  padding: 5px 0 5px 0;
+  position: relative;
+  text-decoration: none;
+  transition: all 200ms ease;
+  width: 100%;
+  /*z-index: 3;*/
+}
+
+#order-step #accordion ul li div a * {
+  -webkit-transition: all 400ms ease;
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  transition: all 400ms ease;
+  white-space: nowrap;
+  width: 100%;
+  /*z-index: 5;*/
+}
+
+#order-step #accordion ul li div a span {
+  text-overflow: clip;
+  text-transform: uppercase;
+}
+
+#order-step #accordion ul li div a p {
+  display: none;
+  margin-top: 0;
+}
+
+#order-step #accordion li { 
+  width: 8%; 
+}
+
+#order-step #accordion li.active { 
+  width: 60%; 
+}
+
+#order-step #accordion li.active a { 
+  background: #62c35f; /* Old browsers */
+  background: -moz-linear-gradient(-45deg, #62c35f 0%, #3a9b37 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, #62c35f 0%,#3a9b37 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #62c35f 0%,#3a9b37 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  border: none !important;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62c35f', endColorstr='#3a9b37',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+#order-step #accordion li.active a * {
+  -webkit-transform: translateX(0);
+  color: #fff;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+#order-step #accordion li.active a span {
+  font-weight: bold;
+}
+
+#order-step #accordion li.active a p {
+  display: block;
+}
+
+#order-step #accordion li.active .icon {
+  display: none;
+}
+
+#order-step #accordion .icon {
+  background-image: url(../img/checkout/icons-checkout.png);
+  background-repeat: no-repeat;
+  height: 22px;
+  margin: 0 auto;
+  width: 22px;
+}
+
+#order-step #accordion #cart { 
+  background-position: -2px 0; 
+}
+
+#order-step #accordion #delivery { 
+  background-position: -27px 0; 
+}
+
+#order-step #accordion #pay { 
+  background-position: -52px 0; 
+}
+
+#order-step #accordion ul li.active ~ li #pay {
+  background-position: -152px 0;
+}
+
+#order-step #accordion ul li.active ~ li #delivery {
+  background-position: -127px 0;
+}
+
+#order-step #accordion ul li.active ~ li #cart {
+  background-position: -102px 0;
+}

@@ -68,6 +68,8 @@ class OrderController extends OrderControllerCore
     public function initContent()
 	{
 		parent::initContent();
+		$this->context->controller->addJS(_THEME_JS_DIR_.'checkout.js','all');
+		$this->context->controller->addCSS(_THEME_CSS_DIR_.'checkout.css','all');
 
 			if($this->step == 0)
 				$this->context->smarty->tpl_vars['meta_title']->value = 'Mi Carrito';
