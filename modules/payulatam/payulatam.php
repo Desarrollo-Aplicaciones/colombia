@@ -336,7 +336,7 @@ private function _displayWarning() {
             masked_number, 
             payment_method 
             FROM "._DB_PREFIX_."payu_cards 
-            WHERE id_customer = ".(int)$customer->id;
+            WHERE id_customer = ".(int)$customer->id." ORDER BY creation_date DESC";
         $creditCards = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sqlCreditCards);
         $this->context->smarty->assign('store_credit_cards', $creditCards);
 

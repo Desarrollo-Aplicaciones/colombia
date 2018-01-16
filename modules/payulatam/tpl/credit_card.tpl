@@ -237,6 +237,17 @@
                     }
                 });
             });
+            $(".paymentSubmit").click(function(event) {
+                var maskedNumber = $(this).attr("id");
+                var paymentMethod = $(this).attr("name");
+                
+                var input = $("<input>").attr("type", "hidden").attr("name", "masked_number").val(maskedNumber);
+                var input2 = $("<input>").attr("type", "hidden").attr("name", "payment_method").val(paymentMethod);
+                $('#formTokenPayU').append($(input));
+                $('#formTokenPayU').append($(input2));
+              
+            });
+          
         });
         
         $(function($){
@@ -310,10 +321,8 @@
         {if $store_credit_cards}
             <form  method="POST" action="./modules/payulatam/credit_card.php" id="formTokenPayU" autocomplete="off" >
                 {foreach from=$store_credit_cards item=credit_card}
-                <input type="hidden" name="masked_number" value="{$credit_card.masked_number}">
-                <input type="hidden" name="payment_method" value="{$credit_card.payment_method}">
                 <div class="cont-trust-img">
-                    <input type="submit" class="paymentSubmit boton-pagos-excep" value="PAGAR CON {$credit_card.payment_method|upper}  {$credit_card.masked_number|upper}">
+                    <input type="submit" class="paymentSubmit boton-pagos-excep" value="PAGAR CON {$credit_card.payment_method|upper}  {$credit_card.masked_number|upper}" id="{$credit_card.masked_number}" name="{$credit_card.payment_method}">
                 </div>
                 {/foreach}
                 
