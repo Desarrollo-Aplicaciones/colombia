@@ -449,6 +449,10 @@ class PayuCreditCard extends PayUControllerWS {
                     PasarelaPagoCore::set_cart_pay_process($id_cart, 0);
                     Tools::redirectLink($page_confirmation);
                 } else {
+                    $TokenDelete = "DELETE FROM `" . _DB_PREFIX_ . "payu_cards` WHERE  id_customer = '" . $payerId . "' AND token_id = '" . $creditCardTokenId . "';";
+                    if (Db::getInstance()->execute($TokenDelete)) {
+                        $conf->error_payu($id_order, $customer->id, $paymentWithToken, $responsePaymentWithToken, 'Tarjeta_credito', "ERROR_DELETE_TOKEN", $this->context->cart->id, $id_address);
+                    }
                     $conf->error_payu($id_order, $customer->id, $paymentWithToken, $responsePaymentWithToken, 'Tarjeta_credito', $responsePaymentWithToken['transactionResponse']['state'], $this->context->cart->id, $id_address);
                     $error_pay[] = array('ERROR' => 'La entidad financiera rechazo la transacción. <b>Status: ' . $responsePaymentWithToken['transactionResponse']['state'] . '</b>.');
                 }
