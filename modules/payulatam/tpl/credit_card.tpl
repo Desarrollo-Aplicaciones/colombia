@@ -316,7 +316,6 @@
             height: 40px !important;
             font-size: 14px !important;
             color: white;
-            border: 1px solid #FF922E !important
         }
         .remember-card {
             margin: 0;
