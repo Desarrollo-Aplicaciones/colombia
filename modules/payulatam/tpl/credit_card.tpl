@@ -313,7 +313,7 @@
         .remember-card-container {
             position: relative;
             background-color: #58b955;
-            height: 40px !important;
+            height: 45px !important;
             font-size: 14px !important;
             color: white;
         }
