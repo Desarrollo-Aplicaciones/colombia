@@ -13,4 +13,12 @@ $(function () {
       $accordionLi.eq(idxStepCurrent).addClass("active");
     }
   );
+
+  /**
+   * Horizontal Radio Buttons 
+   */
+  $("input[name='documentType']").click(function () {
+    $("input[name='documentType']").parent().removeClass("checked");
+    $(this).parent().addClass("checked");
+  });
 });

@@ -1,3 +1,21 @@
+<div class="horizontal-radio-buttons">
+	<ul>
+		<li>
+			<input type="radio" id="f-option" name="documentType" value="CC">
+			<label for="f-option">Persona Natural</label>
+	
+			<div class="check"></div>
+		</li>
+
+		<li>
+			<input type="radio" id="s-option" name="documentType" value="NIT">
+			<label for="s-option">NIT</label>
+	
+			<div class="check"></div>
+		</li>
+	</ul>
+</div>
+
 <div id="container_data_billing" class="">
 	<div class="titulo" id="title_data_billing">
 		Datos para generar tu factura

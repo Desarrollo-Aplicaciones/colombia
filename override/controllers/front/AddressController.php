@@ -9,7 +9,10 @@ class AddressController extends AddressControllerCore
 	public function initContent()
 	{
 		parent::initContent();
-	
+		
+		$this->context->controller->addJS(_THEME_JS_DIR_.'checkout.js','all');
+		$this->context->controller->addCSS(_THEME_CSS_DIR_.'checkout.css','all');
+
 		$this->assignCountries();
 		$this->assignVatNumber();
 		$this->assignAddressFormat();
