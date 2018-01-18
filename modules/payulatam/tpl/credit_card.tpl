@@ -325,6 +325,12 @@
             transform: translate(0, -50%);
             margin-left: 15px;
         }
+        .remember-card-label {
+            margin-left: 40px;
+            top: 50%;
+            transform: translate(0, -50%);
+            position: absolute;
+        }
     </style>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
@@ -399,10 +405,10 @@
                     <div class="remember-card-container">
                         <div class="remember-card">
                                 <input style="transform: scale(1.3)" id="rememberCard" type="checkbox" name="remember_card" value="true"> 
-                            <label style="margin-left: 15px" id="labelRemember" for="rememberCard">
-                                {l s='Recordar esta tarjeta para futuras compras' mod='payulatam'} 
-                            </label>
                         </div>
+                        <label class="remember-card-label" id="labelRemember" for="rememberCard">
+                            {l s='Recordar esta tarjeta para futuras compras' mod='payulatam'} 
+                        </label>
                     </div>
                     <div class="cont-trust-img">
                         <input type="button" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR">
