@@ -309,6 +309,22 @@
         .img_beneficio{
             height: 80px;
         }
+        
+        .remember-card-container {
+            position: relative;
+            background-color: #58b955;
+            height: 40px !important;
+            font-size: 14px !important;
+            color: white;
+            border: 1px solid #FF922E !important
+        }
+        .remember-card {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+            margin-left: 15px;
+        }
     </style>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
@@ -380,7 +396,14 @@
                         <img class="trust_img" src="{$img_dir}authentication/seguridad.jpg" />
                     </div>
                     <br/>
-                    <input type="checkbox" name="remember_card" value="true"> {l s='Recordar Tarjeta' mod='payulatam'} 
+                    <div class="remember-card-container">
+                        <div class="remember-card">
+                                <input style="transform: scale(1.3)" id="rememberCard" type="checkbox" name="remember_card" value="true"> 
+                            <label style="margin-left: 15px" id="labelRemember" for="rememberCard">
+                                {l s='Recordar esta tarjeta para futuras compras' mod='payulatam'} 
+                            </label>
+                        </div>
+                    </div>
                     <div class="cont-trust-img">
                         <input type="button" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR">
                     </div>
