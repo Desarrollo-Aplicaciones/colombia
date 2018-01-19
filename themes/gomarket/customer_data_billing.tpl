@@ -1,30 +1,105 @@
 <div class="checkout">
   <h3>Datos para generar tu factura</h3>
-  <div class="grid horizontal-radio-buttons">
-    <ul>
-      <li class="col-1-2">
-        <input type="radio" id="f-option" name="documentType" value="CC">
-        <label for="f-option">Persona Natural</label>
-    
-        <div class="check"></div>
-      </li>
+	<div class="grid">
+    <div class="col-1-2">
+      <div class="radio">
+				<input id="radio-1" name="radio" type="radio" checked>
+				<label for="radio-1" class="radio-label">Persona natural</label>
+			</div>
+    </div>
+    <div class="col-1-2"> 
+			<div class="radio">
+				<input id="radio-2" name="radio" type="radio">
+				<label  for="radio-2" class="radio-label">NIT</label>
+			</div>
+    </div>
+	</div>
 
-      <li class="col-1-2">
-        <input type="radio" id="s-option" name="documentType" value="NIT">
-        <label for="s-option">NIT</label>
-    
-        <div class="check"></div>
-      </li>
-    </ul>
-  </div>
+	<div class="grid">
+    <div class="col-1-2">
+			<div class="form-group">
+				<label for="">Tipo de Documento:</label>
+				<select class="form-control">
+					<option value="" selected="selected" disabled>Selecciona</option>
+					<option value="saab">Saab</option>
+					<option value="mercedes">Mercedes</option>
+					<option value="audi">Audi</option>
+				</select>
+    	</div>
+    </div>
+
+    <div class="col-1-2"> 
+			<div class="form-group">
+				<label for="">Número de Documento:</label>
+				<input type="text" class="form-control" placeholder="">
+			</div>
+		</div>
+
+		<div class="col-1-2"> 
+			<div class="form-group">
+				<label for="">Nombre:</label>
+				<input type="text" class="form-control" placeholder="">
+			</div>
+		</div>
+
+		<div class="col-1-2"> 
+			<div class="form-group">
+				<label for="">Apellido:</label>
+				<input type="text" class="form-control" placeholder="">
+			</div>
+		</div>
+
+		<div class="col-1-1">
+			<div class="form-label">
+				<label for="">Fecha de nacimiento:</label> 
+			</div>
+    </div>
+
+		<div class="col-1-3">
+			<div class="form-group">
+					<select class="form-control">
+						<option value="volvo">Día</option>
+						<option value="saab">Saab</option>
+					</select>
+				</div>
+		</div>
+
+		<div class="col-1-3">
+			<div class="form-group">
+					<select class="form-control">
+						<option value="volvo">Mes</option>
+						<option value="saab">Saab</option>
+					</select>
+				</div>
+		</div>
+
+		<div class="col-1-3">
+			<div class="form-group">
+					<select class="form-control">
+						<option value="volvo">Año</option>
+						<option value="saab">Saab</option>
+					</select>
+				</div>
+		</div>
+	</div>
+
+	<div class="grid">
+    <div class="col-1-2">
+      <div class="form-group">
+				<label for="">NIT:</label>
+				<input type="text" class="form-control" placeholder="">
+			</div>
+    </div>
+    <div class="col-1-2"> 
+			<div class="form-group">
+				<label for="">Razón social:</label>
+				<input type="text" class="form-control" placeholder="">
+			</div>
+    </div>
+	</div>
 </div>
 
-<select>
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
-</select>
+
 
 <div id="container_data_billing" class="">
   <div class="titulo" id="title_data_billing">
