@@ -1,3 +1,11 @@
+@import 'simplegrid.css';
+
+.checkout h3 {
+  font-family: 'Montserrat';
+  font-size: 20px;
+  text-align: center;
+}
+
 /**
  * Order - Steps
  */
@@ -153,22 +161,6 @@
 /**
  * Horizontal Radio Buttons 
  */
- .horizontal-radio-buttons {
-  display: block;
-  position: relative;
-  margin: 40px auto;
-  height: auto;
-  width: 410px;
-  padding: 20px;
-}
-
-.horizontal-radio-buttons ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-	overflow: auto;
-}
-
 .horizontal-radio-buttons ul li {
   margin: 10px;
   color: #AAAAAA;
@@ -177,7 +169,7 @@
   display: block;
   position: relative;
   float: left;
-  width: 180px;
+  width: 90%;
   height: 50px;
 	border-bottom: 1px solid #333;
 }
