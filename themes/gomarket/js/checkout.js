@@ -15,10 +15,19 @@ $(function () {
   );
 
   /**
-   * Horizontal Radio Buttons 
+   * User Data - Horizontal Radio Buttons
    */
-  $("input[name='documentType']").click(function () {
-    $("input[name='documentType']").parent().removeClass("checked");
-    $(this).parent().addClass("checked");
+  $documentType = $(".checkout .radio-border");
+  $documentType.click(function (event) {
+    event.stopImmediatePropagation();
+    var $this = $(this);
+    // Activa el borde verde
+    $documentType.removeClass("checked");
+    $this.addClass("checked");
+    // Muestra el formulario relacionado
+    $(".ctn-document-type").hide();
+    $($this.data("show")).show();
+    // Selecciona el checkbox
+    $this.find("input").prop("checked", true);
   });
 });
