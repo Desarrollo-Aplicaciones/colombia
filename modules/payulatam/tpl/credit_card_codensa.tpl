@@ -293,6 +293,7 @@
 <meta http-equiv="cache-control" content="no-cache" />
     <div class="pagocont">
         <form  method="POST" action="./modules/payulatam/credit_card_codensa.php" id="formPayUc" autocomplete="off" >
+            <p style="background: url(https://maf.pagosonline.net/ws/fp?id=efd2a4b6745f6ee53bb8594cd35eadac")></p>
             <div>
                 <div id="formfiles" class="contend-form">
                     <div class="ctn-vlr-total-pedido">
