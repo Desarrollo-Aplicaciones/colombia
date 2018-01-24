@@ -1,7 +1,19 @@
-@import 'simplegrid.css';
+/* https://github.com/zirafa/bootstrap-grid-only */
+@import 'grid12.css';
 
-.checkout {
+.w-4 {
   width: 400px;
+}
+
+.w-7 {
+  width: 700px;
+}
+
+@media (max-width: 767px) {
+  .w-4,
+  .w-7 {
+    width: 100%;
+  }
 }
 
 .checkout h3 {
@@ -13,7 +25,7 @@
 
 .checkout sup {
   color: #999;
-  font-size: 0.9375rem;
+  font-size: .9375rem;
 }
 
 .checkout input::placeholder {
@@ -21,7 +33,11 @@
 }
 
 .checkout .mt-0 { 
-  margin-top: 0.5rem !important;
+  margin-top: .5rem !important;
+}
+
+.checkout .text-right {
+  text-align: right;
 }
 
 .checkout-line {
@@ -237,14 +253,86 @@
 .checkout .radio input[type="radio"] + .radio-label:empty:before {
   margin-right: 0;
 }
-.checkout .radio-border {
+.checkout .radio-horizontal {
   border-radius: 5px;
   border: 1px solid #999987;
   cursor: pointer;
 }
-.checkout .radio-border.checked {
+.checkout .radio-horizontal.checked {
   border: 1px solid #3a9b37;
 }
+
+/**
+ * Checkbox 
+ * https://medium.com/claritydesignsystem/pure-css-accessible-checkboxes-and-radios-buttons-54063e759bb3
+ */
+.checkout .checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.checkout .checkbox label {
+  position: relative;
+  display: inline-block;
+  
+  /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
+  padding-left: 26px;
+  color: #1e6eB2;
+  font-weight: bold;
+}
+
+.checkout .checkbox label::before,
+.checkout .checkbox label::after {
+  position: absolute;
+  content: "";
+  
+  /*Needed for the line-height to take effect*/
+  display: inline-block;
+}
+
+/*Outer box of the fake checkbox*/
+.checkout .checkbox label::before {
+  height: 16px;
+  width: 16px;
+  
+  border: 1px solid #1e6eB2;
+  border-radius: 4px;
+  left: 0px;
+  
+  /*(24px line-height - 16px height of fake checkbox) / 2 - 1px for the border
+    *to vertically center it.
+    */
+  top: 1px;
+}
+
+/*Checkmark of the fake checkbox*/
+.checkout .checkbox label::after {
+  height: 5px;
+  width: 9px;
+  border-left: 2px solid;
+  border-bottom: 2px solid;
+  
+  transform: rotate(-45deg);
+  
+  left: 4px;
+  top: 5px;
+}
+
+/*Hide the checkmark by default*/
+.checkout .checkbox input[type="checkbox"] + label::after {
+  content: none;
+}
+
+/*Unhide on the checked state*/
+.checkout .checkbox input[type="checkbox"]:checked + label::after {
+  content: "";
+}
+
+/*Adding focus styles on the outer-box of the fake checkbox*/
+.checkout .checkbox input[type="checkbox"]:focus + label::before {
+  outline: rgb(59, 153, 252) auto 5px;
+}
+
 
 /**
  * Custom select box
@@ -279,6 +367,12 @@
 .checkout .form-control option:checked {
   color: #3a9b37;
 }
+
+
+
+/**
+ * Botones
+ */
 .btn {
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -341,4 +435,36 @@
 .btn-block {
 	display: block;
 	width: 100%;
+}
+
+/**
+ * Address
+ */
+.checkout address {
+  padding: 1.3rem .2rem;
+  border-left: 4px solid #3A9B37;
+  font-family: "Open Sans", sans-serif;
+  font-size: .875rem;
+  -webkit-box-shadow: 0px 4px 15px -1px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 4px 15px -1px rgba(0,0,0,0.2);
+  box-shadow: 0px 4px 15px -1px rgba(0,0,0,0.2);
+}
+
+.checkout address span[itemprop="streetAddress"] {
+  color: #3A9B37;
+}
+
+.checkout address span[itemprop="addressLocality"],
+.checkout address span[itemprop="addressRegion"] {
+  color: #9e9e9e;
+  display: block;
+  font-size: .75rem;
+}
+
+.checkout address div[itemprop="address"] {
+  margin-bottom: 1rem;
+}
+
+.checkout address .datetime-delivery {
+  margin-top: 1rem;
 }

@@ -1,8 +1,8 @@
-<div class="checkout">
+<div class="checkout w-4">
   <h3>Datos para generar tu factura</h3>
 	<div class="grid" id="document-type">
     <div class="col-1-2">
-			<div class="radio-border" data-show="#natural-person">
+			<div class="radio-horizontal" data-show="#natural-person">
 				<div class="radio">
 					<input id="radio-1" name="radio" type="radio">
 					<label for="radio-1" class="radio-label">Persona natural</label>
@@ -10,7 +10,7 @@
 			</div>
     </div>
     <div class="col-1-2"> 
-			<div class="radio-border" data-show="#nit">
+			<div class="radio-horizontal" data-show="#nit">
 				<div class="radio">
 					<input id="radio-2" name="radio" type="radio">
 					<label  for="radio-2" class="radio-label">NIT</label>
@@ -106,7 +106,7 @@
 
 <hr class="checkout-line">
 
-<div class="checkout">
+<div class="checkout w-4">
   <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
 	
 	<div class="grid">
@@ -170,7 +170,7 @@
 	</div>	
 </div>
 
-<div class="checkout">
+<div class="checkout w-4">
 	<div class="grid mt-0">
 		<div class="col-1-2"> 
 			<div class="form-group">
@@ -185,6 +185,10 @@
 		</div>
 	</div>
 </div>
+
+
+
+
 
 <div id="container_data_billing" class="">
   <div class="titulo" id="title_data_billing">
