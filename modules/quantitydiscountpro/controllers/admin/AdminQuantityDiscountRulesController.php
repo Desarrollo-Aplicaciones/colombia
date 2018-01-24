@@ -1901,9 +1901,9 @@ class AdminQuantityDiscountRulesController extends ModuleAdminController
         $message_counter = end($ruleMessages)->id_quantity_discount_rule_message;
 
 
-        $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
-        $this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
-        $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
+        $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js',true);
+        $this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js',true);
+        $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js',true);
 
         $iso = $this->context->language->iso_code;
 
