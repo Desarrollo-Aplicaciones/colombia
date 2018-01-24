@@ -128,6 +128,29 @@
                     $(this).datepicker('setDate', new Date(year, month, 1));
                 }
             });
+            
+            {* Validate form of payment with credit card tokenizer *}
+            var validator = $('#formTokenPayU').validate({
+                {literal}
+                    wrapper: 'div',
+                    errorPlacement: function (error, element) {
+                        error.addClass("arrow")
+                        error.insertAfter(element);
+                    },
+                {/literal}
+                rules :{
+                    cuotas : {
+                      required : true
+                    }
+                },
+                messages: {
+                    cuotas : {
+                        required : "El campo es requerido."
+                    }
+                }
+            });
+            
+            {* Validate form of payment with credit card new *}
             var validator = $('#formPayU').validate({
                 {literal}
                     wrapper: 'div',
@@ -214,6 +237,17 @@
                     }
                 });
             });
+            $(".paymentSubmit").click(function(event) {
+                var maskedNumber = $(this).attr("id");
+                var paymentMethod = $(this).attr("name");
+                
+                var input = $("<input>").attr("type", "hidden").attr("name", "masked_number").val(maskedNumber);
+                var input2 = $("<input>").attr("type", "hidden").attr("name", "payment_method").val(paymentMethod);
+                $('#formTokenPayU').append($(input));
+                $('#formTokenPayU').append($(input2));
+              
+            });
+          
         });
         
         $(function($){
@@ -275,17 +309,64 @@
         .img_beneficio{
             height: 80px;
         }
+        
+        .remember-card-container {
+            position: relative;
+            background-color: #58b955;
+            height: 45px !important;
+            font-size: 14px !important;
+            color: white;
+        }
+        .remember-card {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+            margin-left: 15px;
+        }
+        .remember-card-label {
+            margin-left: 40px;
+            top: 50%;
+            transform: translate(0, -50%);
+            position: absolute;
+        }
     </style>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
     <div class="pagocont">
+        <div class="ctn-vlr-total-pedido">
+            El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
+        </div>
+        {* Tarjetas de crédito almacenadas por el cliente *}
+        {if $store_credit_cards}
+            <form  method="POST" action="./modules/payulatam/credit_card.php" id="formTokenPayU" autocomplete="off" >
+                {foreach from=$store_credit_cards item=credit_card}
+                <div class="cont-trust-img">
+                    <input type="submit" class="paymentSubmit boton-pagos-excep" value="PAGAR CON {$credit_card.payment_method|upper}  {$credit_card.masked_number|upper}" id="{$credit_card.masked_number}" name="{$credit_card.payment_method}">
+                </div>
+                {/foreach}
+                
+                <div class="cardAttr">
+                    {* <div class="textCard">Número de cuotas<span class="purple">*</span>: </div> *}
+                    <select name="cuotas" id="cuotas" class="select-100">
+                            <option value="" disabled selected>Número de cuotas *</option>
+                        {for $foo=1 to 36}
+                            <option value="{$foo|string_format:'%2d'}">{$foo|string_format:"%2d"}</option>
+                        {/for}
+                    </select>
+                </div>
+                <hr/>
+            </form>
+        {/if}
+        {* Formulario Tarjeta de crédito *}
+        <br>
+        <div class="ctn-vlr-total-pedido">
+            <b>Agrega una tarjeta de Cr&eacute;dito Nueva</b>
+        </div>
         <form  method="POST" action="./modules/payulatam/credit_card.php" id="formPayU" autocomplete="off" >
             <div>
                 <div id="formfiles" class="contend-form">
-                    <div class="ctn-vlr-total-pedido">
-                        El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
-                    </div>
                     <div class="cardAttr">
                         {* <div class="textCard">Número de Tarjeta de Crédito<span class="purple">*</span>: </div> *}
                         <input type="text" name="numerot" autocomplete="off" data-openpay-card="card_number" id="numerot" placeholder="Número de Tarjeta de Crédito o Débito *"/>
@@ -319,9 +400,17 @@
                     <div class="cont-trust-img">
                         <img class="trust_img" src="{$img_dir}authentication/seguridad.jpg" />
                     </div>
+                    <br/>
+                    <div class="remember-card-container">
+                        <div class="remember-card">
+                                <input style="transform: scale(1.3)" id="rememberCard" type="checkbox" name="remember_card" value="true"> 
+                        </div>
+                        <label class="remember-card-label" id="labelRemember" for="rememberCard">
+                            {l s='Recordar esta tarjeta para futuras compras' mod='payulatam'} 
+                        </label>
+                    </div>
                     <div class="cont-trust-img">
                         <input type="button" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR">
-                        {* <input type="button" id="submit_btn" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR"> *}
                     </div>
                 </div>
             </div>
