@@ -1,7 +1,7 @@
 
 
 
-<link rel="stylesheet" type="text/css" href="{$css_dir}order-address.css">
+<!--link rel="stylesheet" type="text/css" href="{$css_dir}order-address.css"-->
 
 {if $opc}
   {assign var="back_order_page" value="order-opc.php"}
@@ -200,19 +200,20 @@ function hide_date_delivered(id_address){
 
 
 
+{if $direcciones}
 <!-- .checkout.w-7 -->
 <div class="checkout w-7">
   <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
-
-  <address>
+  {foreach from=$direcciones item=address}
+  <address data-id="{$address['id_address']}">
     <!-- .container-fluid -->
     <div class="container-fluid">
       <div class="row">
         <!-- .col-xs-12.col-md-4 -->
         <div class="col-xs-12 col-md-4">
           <div class="radio">
-            <input id="radio-1" name="radio" type="radio">
-            <label for="radio-1" class="radio-label"><b>Casa mamá</b></label>
+            <input class="radio-address" id="radio-{$address['id_address']}" name="radio" value="{$address['id_address']}" type="radio">
+            <label for="radio-{$address['id_address']}" class="radio-label"><b>{$address['alias']}</b></label>
           </div>
         </div>
         <!-- /.col-xs-12.col-md-4 -->
@@ -220,77 +221,119 @@ function hide_date_delivered(id_address){
         <!-- .col-xs-12.col-md-7 -->
         <div class="col-xs-12 col-md-7">
           <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-            <span itemprop="streetAddress">Calle 129A # 56B - 23 #3A9B37</span>
-            <span itemprop="addressLocality">Bogotá</span>
-            <span itemprop="addressRegion">Cundinamarca</span>
+            <span itemprop="streetAddress">{$address['address1']|truncate:40:"...":true}</span>
+            <span itemprop="addressLocality">{$address['city']}</span>
+            <span itemprop="addressRegion">{$address['state']}</span>
           </div>
 
-          <div class="checkbox">
-            <input type="checkbox" id="checkbox_1">
-            <label for="checkbox_1">Deseo mi orden con servicio express</label>
-          </div>
+          <div class="complete-data">
+            <div class="checkbox">
+              <input type="checkbox" id="checkbox-{$address['id_address']}">
+              <label for="checkbox-{$address['id_address']}">Deseo mi orden con servicio express</label>
+            </div>
 
-          <!-- .datetime-delivery -->
-          <div class="datetime-delivery">
-            <!-- .row --> 
-            <div class="row">
-              <div class="col-xs-12">            
-                <b>Fecha y hora de entrega</b>
-              </div>
-            </div>
-            <!-- /.row --> 
-            <!-- .row --> 
-            <div class="row">
-              <div class="col-xs-12 col-md-6">
-                <div class="form-group">
-                  <label for="billing-lastname">Día:</label>
-                  <select class="form-control">
-                    <option value="" selected="selected" disabled>Selecciona</option>
-                    <option value="volvo">Día</option>
-                    <option value="saab">Saab</option>
-                  </select>
+            <!-- .datetime-delivery -->
+            <div class="datetime-delivery">
+              <!-- .row --> 
+              <div class="row">
+                <div class="col-xs-12">            
+                  <b>Fecha y hora de entrega</b>
                 </div>
-              </div>
+              </div> 
+              <!-- /.row --> 
+              <!-- .row --> 
+              <div class="row">
+                <div class="col-xs-12 col-md-6">
+                  <div class="form-group">
+                    <label for="billing-lastname">Día:</label>
+                    <select class="form-control">
+                      <option value="" selected="selected" disabled>Selecciona</option>
+                      <option value="volvo">Día</option>
+                      <option value="saab">Saab</option>
+                    </select>
+                  </div>
+                </div>
 
-              <div class="col-xs-12 col-md-6">
-                <div class="form-group">
-                  <label for="billing-lastname">Hora:</label>
-                  <select class="form-control">
-                    <option value="" selected="selected" disabled>Selecciona</option>
-                    <option value="volvo">Mes</option>
-                    <option value="saab">Saab</option>
-                  </select>
+                <div class="col-xs-12 col-md-6">
+                  <div class="form-group">
+                    <label for="billing-lastname">Hora:</label>
+                    <select class="form-control">
+                      <option value="" selected="selected" disabled>Selecciona</option>
+                      <option value="volvo">Mes</option>
+                      <option value="saab">Saab</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- /.row -->
-            <!-- .row --> 
-            <div class="row">
-              <div class="col-xs-12 col-md-6 visible-md visible-lg"></div>
-              <div class="col-xs-12 col-md-6">
-                <div class="form-group text-right">
-                  <button type="button" class="btn btn-block btn-primary">Continuar</button>
+              <!-- /.row -->
+              <!-- .row --> 
+              <div class="row">
+                <div class="col-xs-12 col-md-6 visible-md visible-lg"></div>
+                <div class="col-xs-12 col-md-6">
+                  <div class="form-group text-right">
+                    <button type="button" class="btn btn-block btn-primary">Continuar</button>
+                  </div>
                 </div>
               </div>
+              <!-- /.row -->
             </div>
-            <!-- /.row -->
+            <!-- /.datetime-delivery -->
           </div>
-          <!-- /.datetime-delivery -->
+          <!-- /.complete-data -->
         </div>
         <!-- /.col-xs-12.col-md-7 -->
 
         <!-- .col-xs-12.col-md-1 -->
         <div class="col-xs-12 col-md-1">
-          <a>Edit</a>
+          <button class="btn-edit" title="Editar Dirección"></button>
         </div>
         <!-- /.col-xs-12.col-md-1 -->
       </div>
     </div>
     <!-- /.container-fluid -->
   </address>
+  {/foreach}
 
+  <address>
+    <!-- .container-fluid -->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- .col-xs-12 -->
+        <div class="col-xs-12">
+          <div id="add-address">
+            <span>+</span>
+            <b>Agregar nueva dirección</b>
+          </div>
+        </div>
+        <!-- /.col-xs-12 -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </address>
 </div>
 <!-- /.checkout.w-7 -->
+
+
+<!-- .checkout.w-7 -->
+<div class="checkout w-7">
+  <!-- .container-fluid -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- .col-xs-12 -->
+      <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+          <button type="button" class="btn btn-block btn-outline-secondary">Regresar</button>
+      </div>
+      <!-- /.col-xs-12 -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<!-- /.checkout.w-7 -->
+{/if}
+{* /$direcciones *}
+
 
 
 <br>

@@ -54,10 +54,21 @@
 					</a>
 				</div>
 			</li>
-			<li {if $current_step=='payment'}class="active"{/if}>
+
+			<li {if $current_step=='shipping'}class="active"{/if}>
 				<div>
 					<a href="javascript:void(0);">
 						<span>3</span>
+						<p>Fórmula médica</p>
+						<div class="icon" id="rx"></div>
+					</a>
+				</div>
+			</li>
+
+			<li {if $current_step=='payment'}class="active"{/if}>
+				<div>
+					<a href="javascript:void(0);">
+						<span>4</span>
 						<p>Modos de Pago</p>
 						<div class="icon" id="pay"></div>
 					</a>

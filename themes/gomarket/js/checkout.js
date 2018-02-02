@@ -17,17 +17,32 @@ $(function () {
   /**
    * User Data - Horizontal Radio Buttons
    */
-  $documentType = $(".checkout .radio-border");
+  $documentType = $(".checkout .radio-horizontal");
   $documentType.click(function (event) {
     event.stopImmediatePropagation();
     var $this = $(this);
+    
     // Activa el borde verde
     $documentType.removeClass("checked");
     $this.addClass("checked");
     // Muestra el formulario relacionado
-    $(".ctn-document-type").hide();
+    $("#natural-person, #nit").hide();
     $($this.data("show")).show();
     // Selecciona el checkbox
     $this.find("input").prop("checked", true);
+  });
+
+  /**
+   * Address - Vertical Radio Buttons
+   */
+  $(".checkout address .radio-address").click(function (event) {
+    event.stopImmediatePropagation();
+    var idAddress = $(this).val();
+    var $address = $("address[data-id='" + idAddress + "']");
+
+    $("address").removeClass("selected");
+    $address.addClass("selected");
+
+    //$address.find(".complete-data").show();
   });
 });
