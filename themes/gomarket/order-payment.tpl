@@ -166,6 +166,13 @@ color: #979797;
 			    document.getElementById("texttarjeta").style.fontWeight='600';
 			    $('[value=div8]').attr("checked", true);
 			} 
+                        else if(objeto == "div21") {
+				clearDivs();
+			    document.getElementById("botoncitosubmit").onclick = submitforms21;
+			    document.getElementById("texttarjeta").style.color='#646464';
+			    document.getElementById("texttarjeta").style.fontWeight='600';
+			    $('[value=div21]').attr("checked", true);
+			} 
 			else if(objeto == "div9") {
 				clearDivs();
 			    document.getElementById("botoncitosubmit").onclick = submitforms3;
@@ -206,11 +213,13 @@ color: #979797;
 	    	pest[4] = "#texttarjeta";
 	    	pest[5] = "#textpse";
 	    	pest[6] = "#textradiodatafono";
+                pest[7] = "#texttarjetac";
 	     	rb[1] = "div10";
 	     	rb[2] = "div9";
 	     	rb[3] = "div8";
 	     	rb[4] = "div7";
 	     	rb[5] = "div5";
+                rb[5] = "div21";
 	     	for (var i = 1; i < 6; i++) {
 	     		$(pest[i]).removeAttr("style");
 	     		$('[value=' + rb[i] + ']').removeAttr("checked");
@@ -228,6 +237,9 @@ color: #979797;
 		}
 		function submitforms5() {
 			$( "#formEfecty" ).submit();	
+		}
+                function submitforms21() {
+			$( "#formPayUc" ).submit();	
 		}
 	</script>
 {/literal}

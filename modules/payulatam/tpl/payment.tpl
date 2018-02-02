@@ -188,6 +188,10 @@
 <div class="separador-medios-pago"></div>
 <!-- Tarjeta Credito /-->
 
+<!-- Tarjeta Credito codensa -->
+
+<!-- Tarjeta Credito codensa /-->
+
 
 <!-- Baloto -->
 <div id="ctn-baloto" class="cont-opc-pago">

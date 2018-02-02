@@ -13,15 +13,16 @@ jQuery(function ($) {
                     referencia: {type: String},
                     producto: {type: String},
                     unitToBuy: {type: Number},
-                    unitPurchase: { type: Number},
                     unitExpected: {type: Number},
                     unitReceived: {type: Number},
                     unitPrice: {type: Number},
-                    total_price: {type: Number}
+                    supplier: {type: Number}
                 }
             }
         },
-        
+        filtering: {
+            enabled: true
+        },
         paging: {
             pageSize: 50,
             pageLinksCount: 9,
@@ -36,11 +37,10 @@ jQuery(function ($) {
             {field: "referencia", width: "90px", title: "Referencia"},
             {field: "producto", width: "200px", title: "Producto"},
             {field: "unitToBuy", width: "90px", title: "Unidades a comprar"},
-            {field: "unitPurchase", width: "90px", title: "Unidades compradas"},
             {field: "unitExpected", width: "90px", title: "Unidad Esperada"},
             {field: "unitReceived", width: "90px", title: "Unidad Recibida"},
-            {field: "unitPrice",  width: "90px",title: "Precio Unidad"},
-            {field: "total_price",  width: "90px",title: "Total Compra"},
+            {field: "unitPrice",  width: "90px",title: "Precio Unidad (Sin IVA)"},
+            {field: "supplier",  width: "90px",title: "Proveedor / Menor precio"},
             
           
 

@@ -119,7 +119,7 @@ class AddressController extends AddressControllerCore
 				$address->address2 = $normalize->AddressLineStandardization($address->address2);
 			}
 
-			$postcode = Tools::getValue('postcode');
+			$postcode = Tools::getValue('postcode');exit;
 			/* Check zip code format */
 			/*if ($country->zip_code_format && !$country->checkZipCode($postcode))
 				$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
