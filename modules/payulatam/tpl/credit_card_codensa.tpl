@@ -304,6 +304,7 @@
           </object>
             <div>
                 <div id="formfiles" class="contend-form">
+                    <input type="hidden" name="device"  value="{$device}" va/>
                     <div class="ctn-vlr-total-pedido">
                         El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
                     </div>

@@ -42,17 +42,6 @@ class PayuCreditCard extends PayUControllerWS {
         parent::setMedia();
     }
 
-    /* public function generateLogRequestPayU($data) {
-      if ($archivo = fopen(_ROUTE_FILE_."/payu/logs_request_payu.log", "a+")) {
-      if (fwrite($archivo, date("d m Y H:i:s") . " -> " . $data . "\n")) {
-      //echo "Se ha ejecutado correctamente";
-      } else {
-      //echo "Ha habido un problema al crear el archivo";
-      }
-      fclose($archivo);
-      }
-      } */
-
     public function logtxt($text = "") {
         //$contenido="-- lo que quieras escribir en el archivo -- \r\n";
         $fp = fopen(_ROUTE_FILE_ . "/log_payu/log_credit_cart.log", "a+");
@@ -92,6 +81,7 @@ class PayuCreditCard extends PayUControllerWS {
         $status_cart = PasarelaPagoCore::is_cart_pay_process($this->context->cart->id);
         $id_cart = $this->context->cart->id;
         $this->logtxt("     /* ****************************************************** */");
+        $this->logtxt(" Fecha y hora: " . date('l jS \of F Y h:i:s A'));
         $this->logtxt(" ID cart: " . $id_cart);
         $cantity = 0;
         while ($status_cart['in_pay'] && $status_cart['status']) {
@@ -102,10 +92,10 @@ class PayuCreditCard extends PayUControllerWS {
             sleep(1);
 
             $context = Context::getContext();
-            $this->logtxt(" EXISTE Context: " . isset($context));
-            $this->logtxt(" Context: " . json_encode($context));
-            $this->logtxt(" EXISTE Conf->existe_transaccion($id_cart): " . $conf->existe_transaccion($id_cart));
-            $this->logtxt(" EXISTE Context->cart->id: " . $context->cart->id);
+            /* $this->logtxt(" EXISTE Context: " . isset($context));
+              $this->logtxt(" Context: " . json_encode($context));
+              $this->logtxt(" EXISTE Conf->existe_transaccion($id_cart): " . $conf->existe_transaccion($id_cart));
+              $this->logtxt(" EXISTE Context->cart->id: " . $context->cart->id); */
             if ($conf->existe_transaccion($id_cart) || empty($context->cart->id)) {
                 if (isset($context->cookie->{'page_confirmation'})) {
                     $redirect = json_decode($context->cookie->{'page_confirmation'});
@@ -133,11 +123,18 @@ class PayuCreditCard extends PayUControllerWS {
         $arraypaymentMethod = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AMEX', 'MASTERCARD' => 'MASTERCARD', 'CODENSA' => 'CODENSA');
         $arraypaymentMethod2 = array("VISA" => 'VISA', 'DISCOVER' => 'DINERS', 'AMERICAN EXPRESS' => 'AmEx', 'MASTERCARD' => 'MasterCard', 'DinersClub' => 'DinersClub', 'UnionPay' => 'UnionPay', 'CODENSA' => 'CODENSA');
 
-        if ((isset($_POST['numerot']) && !empty($_POST['numerot']) && strlen($_POST['numerot']) > 13 && strlen((int) $_POST['numerot']) < 17 && isset($_POST['nombrec']) && !empty($_POST['nombrec']) && isset($_POST['codigot']) && !empty($_POST['codigot']) &&
-            /*isset($_POST['datepicker']) && !empty($_POST['datepicker']) &&*/ isset($_POST['cuotas']) && !empty($_POST['cuotas']) && isset($_POST['dniType']) && !empty($_POST['dniType'])) || (isset($_POST['token_id']) && !empty($_POST['token_id']) && isset($_POST['openpay_device_session_id']) && !empty($_POST['openpay_device_session_id']) )) {
-            
+        if ((isset($_POST['numerot']) && !empty($_POST['numerot']) && strlen($_POST['numerot']) > 13 && strlen((int) $_POST['numerot']) < 17 
+            && isset($_POST['nombrec']) && !empty($_POST['nombrec']) 
+            && isset($_POST['codigot']) && !empty($_POST['codigot']) 
+            && isset($_POST['cuotas']) && !empty($_POST['cuotas']) 
+            && isset($_POST['device']) && !empty($_POST['device']) 
+            && isset($_POST['dniType']) && !empty($_POST['dniType'])
+            ) 
+            || (isset($_POST['token_id']) && !empty($_POST['token_id']) 
+            && isset($_POST['openpay_device_session_id']) && !empty($_POST['openpay_device_session_id']) )) {
+
             $numerot = Tools::getValue('numerot');
-            if(substr($numerot,0,6) == '590712') {
+            if (substr($numerot, 0, 6) == '590712') {
                 $key = "CODENSA";
             } else {
                 $CCV = new CreditCardValidator();
@@ -157,21 +154,18 @@ class PayuCreditCard extends PayUControllerWS {
                 $paymentMethod = $arraypaymentMethod[strtoupper($key)];
             }
 
-            $params = $this->initParams();
             // se optinen los datos del formulario de pago farmalisto    
             $post = array('nombre' => (Tools::getValue('nombrec')) ? Tools::getValue('nombrec') : Tools::getValue('holder'),
               'numerot' => (Tools::getValue('numerot')) ? Tools::getValue('numerot') : Tools::getValue('card'),
               'codigot' => (Tools::getValue('codigot')) ? Tools::getValue('codigot') : Tools::getValue('cvv'),
-              'date' => Tools::getValue('Year').'/'.Tools::getValue('Month'),
+              'date' => Tools::getValue('Year') . '/' . Tools::getValue('Month'),
               'cuotas' => Tools::getValue('cuotas'),
               'Month' => Tools::getValue('Month'),
               'Year' => Tools::getValue('Year')
             );
-            $payulatam = new PayULatam();
             $customer = new Customer((int) $this->context->cart->id_customer);
             $conn = PasarelaPagoCore::GetDataConnect('Tarjeta_credito');
             $conf = new ConfPayu();
-            $keysPayu = $conf->keys();
 
             if ($conf->existe_transaccion($id_cart)) {
                 PasarelaPagoCore::set_cart_pay_process($id_cart, 0);
@@ -212,291 +206,216 @@ class PayuCreditCard extends PayUControllerWS {
             $id_order = 0;
             $id_address = $this->context->cart->id_address_delivery;
             $reference_code = $customer->id . '_' . $id_cart . '_' . $id_order . '_' . $id_address;
-            $_deviceSessionId = NULL;
-
-            if (isset($this->context->cookie->deviceSessionId) && !empty($this->context->cookie->deviceSessionId) && strlen($this->context->cookie->deviceSessionId) === 32) {
-                $_deviceSessionId = $this->context->cookie->deviceSessionId;
-            } elseif (isset($_POST['deviceSessionId']) && !empty($_POST['deviceSessionId']) && strlen($_POST['deviceSessionId']) === 32) {
-                $_deviceSessionId = $_POST['deviceSessionId'];
-            } else {
-                $_deviceSessionId = md5($this->context->cookie->timestamp);
-            }
-
+            $_deviceSessionId = Tools::getValue('device');
             $intentos = $conf->count_pay_cart($id_cart);
+            $params = $this->initParams();
+            $currency = $params[9]['currency'];
+            $name_card = $post['nombre'];
+            $total_tax = PasarelaPagoCore::get_total_tax($id_cart);
+            $country = $this->context->country->iso_code;
+            $test = (intval($conn['produccion']) == 0) ? 'true' : 'false';
+            $referenceCode = $params[2]['referenceCode'] . '_' . $intentos;
+            $signature = $conf->sing($params[2]['referenceCode'] . '_' . $intentos . '~' . $params[4]['amount'] . '~' . $currency);
+            $street1 = addslashes(substr($address->address1, 0, 99));
+            $street2 = "N/A";
 
             if ($conn['nombre_pasarela'] == 'payulatam') {
 
-                $currency = '';
+                $resquestPaymentWithCodensa = '
+                    {
+                        "language": "es",
+                        "command": "SUBMIT_TRANSACTION",
+                        "merchant": {
+                            "apiKey": "' . $conn['apikey_privatekey'] . '",
+                            "apiLogin": "' . $conn['apilogin_id'] . '"
+                        },
+                        "transaction": {
 
-                if ($conn['produccion'] == 'no') {
+                            "order": {
+                                "accountId": "' . $conn['accountid'] . '",
+                                "referenceCode": "' . $referenceCode . '",
+                                "description": "' . $reference_code . '",
+                                "language": "' . $params[10]['lng'] . '",
+                                "notifyUrl": "' . $conf->urlv() . '",
+                                "signature": "' . $signature . '",
+                                "additionalValues": {
+                                    "TX_VALUE": {
+                                        "value": '.$params[4]['amount'].',
+                                        "currency": "' . $currency . '"
+                                    },
+                                    "TX_TAX": {  
+                                        "value": '.$total_tax.',
+                                        "currency": "' . $currency . '"
+                                    },
+                                    "TX_TAX_RETURN_BASE": {  
+                                        "value": '.($total_tax == 0.00 ? 0.00 : ($params[4]['amount'] - $total_tax)).',
+                                        "currency": "' . $currency . '"
+                                    }
+                                },
 
-                    $currency = 'COP';
-                } else {
+                                "buyer": {
+                                    "fullName": "' . $customer->firstname . ' ' . $customer->lastname . '",
+                                    "contactPhone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
+                                    "emailAddress": "' . $params[5]['buyerEmail'] . '",
+                                    "dniNumber": "' . $dni . '",   
+                                    "shippingAddress": {
+                                        "street1": "' . $street1 . '",
+                                        "street2": "' . $street2 . '",    
+                                        "city": "' . $address->city . '",
+                                        "state": "' . $conf->get_state($address->id_state) . '",
+                                        "country": "' . $country . '",
+                                        "postalCode": "' . $address->postcode . '",
+                                        "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+                                    }
+                                },      
 
-                    $currency = $params[9]['currency'];
-                }
+                                "shippingAddress": {
+                                    "street1": "' . $street1 . '",
+                                    "street2": "' . $street2 . '",
+                                    "city": "' . $address->city . '",
+                                    "state": "' . $conf->get_state($address->id_state) . '",
+                                    "country": "' . $country . '",
+                                    "postalCode": "' . $address->postcode . '",
+                                    "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+                                }  
+                            },
+                            "payer": {
 
-                $total_tax = PasarelaPagoCore::get_total_tax($id_cart);
+                                "fullName": "' . $customer->firstname . ' ' . $customer->lastname . '",
+                                "emailAddress": "' . $params[5]['buyerEmail'] . '",
+                                "contactPhone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
+                                "dniNumber": "' . $dni . '",
+                                "dniType": "' . $dniType . '",    
+                                "billingAddress": {
+                                    "street1": "' . $street1 . '",
+                                    "street2": "' . $street2 . '",
+                                    "city": "' . $address->city . '",
+                                    "state": "' . $conf->get_state($address->id_state) . '",
+                                    "country": "' . $country . '",
+                                    "postalCode": "' . $address->postcode . '",
+                                    "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+                                }      
+                            },
+                            "creditCard": {
+                                "number": "' . $post['numerot'] . '",
+                                "securityCode": "' . $post['codigot'] . '",
+                                "expirationDate": "' . $post['date'] . '",
+                                "name": "' . $name_card . '"
+                            },
 
-                $data = '{
-       "language":"es",
-       "command":"SUBMIT_TRANSACTION",
-       "merchant":{
-        "apiKey":"' . $conn['apikey_privatekey'] . '",
-        "apiLogin":"' . $conn['apilogin_id'] . '"
-      },
-      "transaction":{
-
-        "order":{
-         "accountId":"' . $conn['accountid'] . '",
-         "referenceCode":"' . $params[2]['referenceCode'] . '_' . $intentos . '",
-         "description":"' . $reference_code . '",
-         "language":"' . $params[10]['lng'] . '",
-         "notifyUrl":"' . $conf->urlv() . '",
-         "signature":"' . $conf->sing($params[2]['referenceCode'] . '_' . $intentos . '~' . $params[4]['amount'] . '~' . $currency) . '",
-         "additionalValues":{
-          "TX_VALUE":{
-           "value":' . $params[4]['amount'] . ',
-           "currency":"' . $currency . '"
-         },
-         "TX_TAX":{  
-           "value":' . $total_tax . ',
-           "currency":"' . $params[9]['currency'] . '"
-         },
-         "TX_TAX_RETURN_BASE":{  
-           "value":' . ($total_tax == 0.00 ? 0.00 : ($params[4]['amount'] - $total_tax)) . ',
-           "currency":"' . $params[9]['currency'] . '"
-         }
-      },
-
-     "buyer": {
-      "fullName": "' . $customer->firstname . ' ' . $customer->lastname . '",
-      "contactPhone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
-      "emailAddress":"' . $params[5]['buyerEmail'] . '",
-      "dniNumber":"' . $dni . '",   
-      "shippingAddress": {
-       "street1": "' . substr($address->address1, 0, 99) . '",
-       "street2":"N/A",    
-       "city": "' . $address->city . '",
-       "state": "' . $conf->get_state($address->id_state) . '",
-       "country": "';
-                if ($conn['produccion'] == 'no') {
-                    $data .= 'CO';
-                } else {
-                    $data .= $this->context->country->iso_code;
-                }
-                $data .= '",
-     "postalCode": "' . $address->postcode . '",
-     "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
-   }
- },      
-
- "shippingAddress":{
-  "street1":"' . substr($address->address1, 0, 99) . '",
-  "street2":"N/A",
-  "city":"' . $address->city . '",
-  "state":"' . $conf->get_state($address->id_state) . '",
-  "country":"';
-                if ($conn['produccion'] == 'no') {
-                    $data .= 'CO';
-                } else {
-                    $data .= $this->context->country->iso_code;
-                }
-                $data .= '",
- "postalCode":"' . $address->postcode . '",
- "phone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
-}  
-},
-"payer":{
-
-  "fullName":"' . $customer->firstname . ' ' . $customer->lastname . '",
-  "emailAddress":"' . $params[5]['buyerEmail'] . '",
-  "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
-  "dniNumber":"' . $dni . '",
-  "dniType":"'.$dniType.'",    
-  "billingAddress":{
-    "street1":"' . substr($address->address1, 0, 99) . '",
-    "street2":"N/A",
-    "city":"' . $address->city . '",
-    "state":"' . $conf->get_state($address->id_state) . '",
-    "country":"';
-                if ($conn['produccion'] == 'no') {
-                    $data .= 'CO';
-                } else {
-                    $data .= $this->context->country->iso_code;
-                }
-                $data .= '",
-   "postalCode":"' . $address->postcode . '",
-   "phone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
- }      
-},
-"creditCard":{
- "number":"' . $post['numerot'] . '",
- "securityCode":"' . $post['codigot'] . '",
- "expirationDate":"' . $post['date'] . '",
- "name":"';
-                if ($conn['produccion'] == 'no') {
-                    $data .= 'APPROVED';
-                } else {
-                    $data .= $post['nombre'];
-                }
-                $data .= '"
-},
-
-"extraParameters":{
-  "INSTALLMENTS_NUMBER":' . $post['cuotas'] . '
-},
-"type":"AUTHORIZATION_AND_CAPTURE",
-"paymentMethod":"' . $paymentMethod . '",
-"paymentCountry":"';
-                if ($conn['produccion'] == 'no') {
-                    $data .= 'CO';
-                } else {
-                    $data .= 'CO';//$this->context->country->iso_code;
-                }
-                $data .= '",
-"deviceSessionId": "' . $_deviceSessionId . '",
-"ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
-"userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
-"cookie": "' . md5($this->context->cookie->timestamp) . '"  
-},
-"test":';
-                if ($conn['produccion'] == 'no') {
-                    $data .= 'true';
-                } else {
-                    $data .= 'false';
-                }
-                $data .= '          
-}
-';
+                            "extraParameters": {
+                                "INSTALLMENTS_NUMBER": '.$post['cuotas'].'
+                            },
+                            "type": "AUTHORIZATION_AND_CAPTURE",
+                            "paymentMethod": "' . $paymentMethod . '",
+                            "paymentCountry": "' . $country . '",
+                            "deviceSessionId": "' . $_deviceSessionId . '",
+                            "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
+                            "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
+                            "cookie": "' . md5($this->context->cookie->timestamp) . '"  
+                        },
+                        "test": '.$test.'          
+                    }
+                    ';
                 ////////////    LOG    ///////////////////
-                
-                 $data_log = '{
-       "language":"es",
-       "command":"SUBMIT_TRANSACTION",
-       "merchant":{
-        "apiKey":"' . $conn['apikey_privatekey'] . '",
-        "apiLogin":"' . $conn['apilogin_id'] . '"
-      },
-      "transaction":{
 
-        "order":{
-         "accountId":"' . $conn['accountid'] . '",
-         "referenceCode":"' . $params[2]['referenceCode'] . '_' . $intentos . '",
-         "description":"' . $reference_code . '",
-         "language":"' . $params[10]['lng'] . '",
-         "notifyUrl":"' . $conf->urlv() . '",
-         "signature":"' . $conf->sing($params[2]['referenceCode'] . '_' . $intentos . '~' . $params[4]['amount'] . '~' . $currency) . '",
-         "additionalValues":{
-          "TX_VALUE":{
-           "value":' . $params[4]['amount'] . ',
-           "currency":"' . $currency . '"
-         },
-         "TX_TAX":{  
-           "value":' . $total_tax . ',
-           "currency":"' . $params[9]['currency'] . '"
-         },
-         "TX_TAX_RETURN_BASE":{  
-           "value":' . ($total_tax == 0.00 ? 0.00 : ($params[4]['amount'] - $total_tax)) . ',
-           "currency":"' . $params[9]['currency'] . '"
-         }
-      },
+                $resquestPaymentWithCodensaLog = '
+                    {
+                    "language": "es",
+                    "command": "SUBMIT_TRANSACTION",
+                    "merchant": {
+                        "apiKey": "' . $conn['apikey_privatekey'] . '",
+                        "apiLogin": "' . $conn['apilogin_id'] . '"
+                    },
+                    "transaction": {
 
-     "buyer": {
-      "fullName": "' . $customer->firstname . ' ' . $customer->lastname . '",
-      "contactPhone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
-      "emailAddress":"' . $params[5]['buyerEmail'] . '",
-      "dniNumber":"' . $dni . '",   
-      "shippingAddress": {
-       "street1": "' . substr($address->address1, 0, 99) . '",
-       "street2":"N/A",    
-       "city": "' . $address->city . '",
-       "state": "' . $conf->get_state($address->id_state) . '",
-       "country": "';
-                if ($conn['produccion'] == 'no') {
-                    $data_log .= 'CO';
-                } else {
-                    $data_log .= $this->context->country->iso_code;
-                }
-                $data_log .= '",
-     "postalCode": "' . $address->postcode . '",
-     "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
-   }
- },      
+                        "order": {
+                            "accountId": "' . $conn['accountid'] . '",
+                            "referenceCode": "' . $params[2]['referenceCode'] . '_' . $intentos . '",
+                            "description": "' . $reference_code . '",
+                            "language": "' . $params[10]['lng'] . '",
+                            "notifyUrl": "' . $conf->urlv() . '",
+                            "signature": "' . $conf->sing($params[2]['referenceCode'] . '_' . $intentos . '~' . $params[4]['amount'] . '~' . $currency) . '",
+                            "additionalValues": {
+                                "TX_VALUE": {
+                                    "value": '.$params[4]['amount'].',
+                                    "currency": "' . $currency . '"
+                                },
+                                "TX_TAX": {  
+                                    "value": '.$total_tax.',
+                                    "currency": "' . $currency . '"
+                                },
+                                "TX_TAX_RETURN_BASE": {  
+                                    "value": '.($total_tax == 0.00 ? 0.00 : ($params[4]['amount'] - $total_tax)).',
+                                    "currency": "' . $currency . '"
+                                }
+                            },
 
- "shippingAddress":{
-  "street1":"' . substr($address->address1, 0, 99) . '",
-  "street2":"N/A",
-  "city":"' . $address->city . '",
-  "state":"' . $conf->get_state($address->id_state) . '",
-  "country":"';
-                if ($conn['produccion'] == 'no') {
-                    $data_log .= 'CO';
-                } else {
-                    $data_log .= $this->context->country->iso_code;
-                }
-                $data_log .= '",
- "postalCode":"' . $address->postcode . '",
- "phone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
-}  
-},
-"payer":{
-  "fullName":"' . $customer->firstname . ' ' . $customer->lastname . '",
-  "emailAddress":"' . $params[5]['buyerEmail'] . '",
-  "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
-  "dniNumber":"' . $dni . '",
-  "dniType":"'.$dniType.'",
-  "billingAddress":{
-    "street1":"' . substr($address->address1, 0, 99) . '",
-    "street2":"N/A",
-    "city":"' . $address->city . '",
-    "state":"' . $conf->get_state($address->id_state) . '",
-    "country":"';
-                if ($conn['produccion'] == 'no') {
-                    $data_log .= 'CO';
-                } else {
-                    $data_log .= $this->context->country->iso_code;
-                }
-                $data_log .= '",
-   "postalCode":"' . $address->postcode . '",
-   "phone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
- }      
-},
+                            "buyer": {
+                                "fullName": "' . $customer->firstname . ' ' . $customer->lastname . '",
+                                "contactPhone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
+                                "emailAddress": "' . $params[5]['buyerEmail'] . '",
+                                "dniNumber": "' . $dni . '",   
+                                "shippingAddress": {
+                                    "street1": "' . $street1 . '",
+                                    "street2": "' . $street2 . '",    
+                                    "city": "' . $address->city . '",
+                                    "state": "' . $conf->get_state($address->id_state) . '",
+                                    "country": "' . $country . '",
+                                    "postalCode": "' . $address->postcode . '",
+                                    "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+                                }
+                            },      
 
-"extraParameters":{
-  "INSTALLMENTS_NUMBER":' . $post['cuotas'] . '
-},
-"type":"AUTHORIZATION_AND_CAPTURE",
-"paymentMethod":"' . $paymentMethod . '",
-"paymentCountry":"';
-                if ($conn['produccion'] == 'no') {
-                    $data_log .= 'CO';
-                } else {
-                    $data_log .= $this->context->country->iso_code;
+                            "shippingAddress": {
+                                "street1": "' . $street1 . '",
+                                "street2": "' . $street2 . '",
+                                "city": "' . $address->city . '",
+                                "state": "' . $conf->get_state($address->id_state) . '",
+                                "country": "' . $country . '",
+                                "postalCode": "' . $address->postcode . '",
+                                "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+                            }  
+                        },
+                        "payer": {
+                            "fullName": "' . $customer->firstname . ' ' . $customer->lastname . '",
+                            "emailAddress": "' . $params[5]['buyerEmail'] . '",
+                            "contactPhone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
+                            "dniNumber": "' . $dni . '",
+                            "dniType": "' . $dniType . '",
+                            "billingAddress": {
+                                "street1": "' . $street1 . '",
+                                "street2": "' . $street2 . '",
+                                "city": "' . $address->city . '",
+                                "state": "' . $conf->get_state($address->id_state) . '",
+                                "country": "' . $country . '",
+                                "postalCode": "' . $address->postcode . '",
+                                "phone": "' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '"
+                            }      
+                        },
+                        "creditCard": {
+                        },
+                        "extraParameters": {
+                            "INSTALLMENTS_NUMBER": '.$post['cuotas'].'
+                        },
+                        "type": "AUTHORIZATION_AND_CAPTURE",
+                        "paymentMethod": "' . $paymentMethod . '",
+                        "paymentCountry": "' . $country . '",
+                        "deviceSessionId": "' . $_deviceSessionId . '",
+                        "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
+                        "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
+                        "cookie": "' . md5($this->context->cookie->timestamp) . '"  
+                    },
+                    "test": '.$test.'          
                 }
-                $data_log .= '",
-"deviceSessionId": "' . $_deviceSessionId . '",
-"ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
-"userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
-"cookie": "' . md5($this->context->cookie->timestamp) . '"  
-},
-"test":';
-                if ($conn['produccion'] == 'no') {
-                    $data_log .= 'true';
-                } else {
-                    $data_log .= 'false';
-                }
-                $data_log .= '          
-}
-';
+                ';
 
-                $fp = fopen(_ROUTE_FILE_ . "/log_payu/log_data_request.log", "a+");
-                fwrite($fp, $data . "\r\n");
-                fclose($fp);
-                ////////////      FIN LOG    //////////////
-                $this->logtxt(" Data: " . $data_log);
-                $response = $conf->sendJson($data);
-                $this->logtxt(" Response: " . json_encode($response));
+                //    LOG    //
+                $this->logtxt(" Resquest Payment With Codensa: ");
+                $this->logtxt($resquestPaymentWithCodensaLog);
+                $responsePaymentWithCodensa = $conf->sendJson($resquestPaymentWithCodensa);
+                $this->logtxt(" Response Payment With Codensa: ");
+                $this->logtxt(json_encode($responsePaymentWithCodensa));
                 $this->logtxt(" ");
                 $subs = substr($post['numerot'], 0, (strlen($post['numerot']) - 4));
                 $nueva = '';
@@ -505,17 +424,17 @@ class PayuCreditCard extends PayUControllerWS {
                     $nueva = $nueva . '*';
                 }
 
-                $data = str_replace('"number":"' . $subs, '"number":"' . $nueva, $data);
-                $data = str_replace('"securityCode":"' . $post['codigot'], '"securityCode":"' . '****', $data);
+                $resquestPaymentWithCodensa = str_replace('"number":"' . $subs, '"number":"' . $nueva, $resquestPaymentWithCodensa);
+                $resquestPaymentWithCodensa = str_replace('"securityCode":"' . $post['codigot'], '"securityCode":"' . '****', $resquestPaymentWithCodensa);
                 // colector Errores Payu
                 $error_pay = array();
 
-                if ($response['code'] === 'ERROR') {
-                    $conf->error_payu($id_order, $customer->id, $data, $response, 'Tarjeta_credito', $response['transactionResponse']['state'], $this->context->cart->id, $id_address);
-                    $error_pay[] = $response;
-                } elseif ($response['code'] === 'SUCCESS' && ( $response['transactionResponse']['state'] === 'PENDING' || $response['transactionResponse']['state'] === 'APPROVED' ) && $response['transactionResponse']['responseMessage'] != 'ERROR_CONVERTING_TRANSACTION_AMOUNTS') {
-                    $conf->pago_payu($id_order, $customer->id, $data, $response, 'Tarjeta_credito', $response['transactionResponse']['state'], $this->context->cart->id, $id_address);
-                    if ($response['transactionResponse']['state'] === 'APPROVED') { //
+                if ($responsePaymentWithCodensa['code'] === 'ERROR') {
+                    $conf->error_payu($id_order, $customer->id, $resquestPaymentWithCodensa, $responsePaymentWithCodensa, 'Tarjeta_credito', $responsePaymentWithCodensa['transactionResponse']['state'], $this->context->cart->id, $id_address);
+                    $error_pay[] = $responsePaymentWithCodensa;
+                } elseif ($responsePaymentWithCodensa['code'] === 'SUCCESS' && ( $responsePaymentWithCodensa['transactionResponse']['state'] === 'PENDING' || $responsePaymentWithCodensa['transactionResponse']['state'] === 'APPROVED' ) && $responsePaymentWithCodensa['transactionResponse']['responseMessage'] != 'ERROR_CONVERTING_TRANSACTION_AMOUNTS') {
+                    $conf->pago_payu($id_order, $customer->id, $resquestPaymentWithCodensa, $responsePaymentWithCodensa, 'Tarjeta_credito', $responsePaymentWithCodensa['transactionResponse']['state'], $this->context->cart->id, $id_address);
+                    if ($responsePaymentWithCodensa['transactionResponse']['state'] === 'APPROVED') { //
                         $this->createPendingOrder(array(), 'Tarjeta_credito', 'El sistema esta en espera de la confirmación de la pasarela de pago.', 'PS_OS_PAYMENT');
                     } else {
                         $this->createPendingOrder(array(), 'Tarjeta_credito', 'El sistema esta en espera de la confirmación de la pasarela de pago.', 'PAYU_WAITING_PAYMENT');
@@ -529,8 +448,8 @@ class PayuCreditCard extends PayUControllerWS {
                     PasarelaPagoCore::set_cart_pay_process($id_cart, 0);
                     Tools::redirectLink($page_confirmation);
                 } else {
-                    $conf->error_payu($id_order, $customer->id, $data, $response, 'Tarjeta_credito', $response['transactionResponse']['state'], $this->context->cart->id, $id_address);
-                    $error_pay[] = array('ERROR' => 'La entidad financiera rechazo la transacción. <b>Status: ' . $response['transactionResponse']['state'] . '</b>.');
+                    $conf->error_payu($id_order, $customer->id, $resquestPaymentWithCodensa, $responsePaymentWithCodensa, 'Tarjeta_credito', $responsePaymentWithCodensa['transactionResponse']['state'], $this->context->cart->id, $id_address);
+                    $error_pay[] = array('ERROR' => 'La entidad financiera rechazo la transacción. <b>Status: ' . $responsePaymentWithCodensa['transactionResponse']['state'] . '</b>.');
                 }
 
 
@@ -556,7 +475,6 @@ class PayuCreditCard extends PayUControllerWS {
         parent::displayContent();
         self::$smarty->display(_PS_MODULE_DIR_ . 'payulatam/tpl/success.tpl');
     }
-
 }
 
 $farmaPayu = new PayuCreditCard();
