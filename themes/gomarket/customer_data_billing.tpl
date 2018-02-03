@@ -1,5 +1,5 @@
 <div class="checkout w-4">
-  <h3>Datos para generar tu factura xxx</h3>
+  <h3>Datos para generar tu factura</h3>
 	<!-- .container-fluid -->
 	<div class="container-fluid">
 		<div class="row">
@@ -268,6 +268,8 @@
   <!-- /.container-fluid -->
 </div>
 <!-- /.checkout.w-4 --> 
+
+
 
 
 <br>
