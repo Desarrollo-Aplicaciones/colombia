@@ -42,7 +42,44 @@ $(function () {
 
     $("address").removeClass("selected");
     $address.addClass("selected");
-
-    //$address.find(".complete-data").show();
   });
+
+  /**
+   * Address - Get Cities By State Available
+   */
+  $('select[name="id_state"]').change(function () {
+    var $state = $(this);
+    var $city = $('select[name="id_city"]');
+    var $choose = $city.find("option:disabled");
+    var idCity = $state.find("option:selected").data("idCity");
+    
+    $city.prop("disabled", true);
+    $choose.text("Cargando...");
+    
+    $.getJSON("/app/services/cities", {
+      id_state: $state.val()
+    })
+    .done(function (data) {
+      $city.html("");
+      $choose.appendTo($city);
+      
+      if (data) {
+        $city.find("option:eq(0)").text("Selecciona").prop('selected', true);
+        $.each(data, function (key, city) {
+          $("<option/>", {
+            "value": city.id,
+            text: city.name
+          }).appendTo($city);
+        });
+        $city.prop("disabled", false);
+
+        if (typeof idCity !== "undefined") {
+          $city.find('option[value="' + idCity + '"]').prop('selected', true); 
+        }
+      } else {
+        $city.find("option:eq(0)").text("Depto. Sin Ciudad");
+      }
+    });
+  });
+  
 });

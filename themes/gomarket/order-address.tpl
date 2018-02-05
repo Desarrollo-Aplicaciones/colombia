@@ -180,7 +180,7 @@ function hide_date_delivered(id_address){
        } 
   }
 </script>
-<form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post" id="form_dir" name="form_dir">
+<!--form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post" id="form_dir" name="form_dir"-->
 {* if !$opc}
     <div class="titulo-pasos">{l s='Datos de Entrega'}</div>
     <div class="botones">
@@ -196,7 +196,7 @@ function hide_date_delivered(id_address){
 
 
 
-
+<form action="{$link->getPageLink($back_order_page, true)|escape:'html'}" method="post">
 {if $direcciones}
 <!-- .checkout.w-7 -->
 <div class="checkout w-7">
@@ -490,9 +490,12 @@ function hide_date_delivered(id_address){
 	<!-- /.container-fluid -->
 </div>
 <!-- /.checkout.w-4 --> 
+</form>
+{/if}
 
 <hr class="checkout-line">
 
+<form action="{$link->getPageLink('address', true)|escape:'html'}" method="post">
 <div class="checkout w-4">
   <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
 
@@ -503,10 +506,20 @@ function hide_date_delivered(id_address){
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
 					<label for="shipping-state">Departamento:</label>
-					<select class="form-control" id="shipping-state">
+					<select class="form-control" name="id_state" id="shipping-state">
 						<option value="" selected="selected" disabled>Selecciona</option>
-						<option value="volvo">Año</option>
-						<option value="saab">Saab</option>
+            <optgroup label="Ciudad / Departamento">
+              <option value="326" data-id-city="1184">Bogotá / Cundinamarca</option>
+              <option value="342" data-id-city="1976">Cali / Valle del Cauca</option>
+              <option value="314" data-id-city="1037">Medellín / Antioquia</option>
+              <option value="316" data-id-city="1162">Barranquilla / Atlántico</option>
+              <option value="339" data-id-city="1835">Bucaramanga / Santander</option>
+            </optgroup>
+            <optgroup label="Departamentos">
+              {foreach from=$estados item=state}
+              <option value="{$state['id_state']}">{$state['state']}</option>
+              {/foreach}
+            </optgroup>
 					</select>
 				</div>
       </div>
@@ -515,8 +528,8 @@ function hide_date_delivered(id_address){
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
 					<label for="shipping-city">Ciudad:</label>	
-					<select class="form-control" id="shipping-city">
-						<option value="" selected="selected" disabled>Selecciona</option>
+					<select class="form-control" name="id_city" id="shipping-city" disabled>
+						<option value="" selected="selected" disabled>Selecciona Departamento</option>
 						<option value="volvo">Año</option>
 						<option value="saab">Saab</option>
 					</select>
@@ -531,7 +544,7 @@ function hide_date_delivered(id_address){
       <div class="col-xs-12">
 				<div class="form-group">
 					<label for="shipping-address1">Dirección de Entrega:</label>
-					<input type="text" class="form-control" id="shipping-address1" placeholder="">
+					<input type="text" class="form-control" name="address1" id="shipping-address1" placeholder="">
 				</div>
       </div>
       <!-- /.col-xs-12 -->
@@ -543,7 +556,7 @@ function hide_date_delivered(id_address){
       <div class="col-xs-12">
 				<div class="form-group">
 					<label for="shipping-address2">Barrio / Indicaciones <sup>(opcional)</sup>:</label>
-					<input type="text" class="form-control" id="shipping-address2" placeholder="">
+					<input type="text" class="form-control" name="address2" id="shipping-address2" placeholder="">
 				</div>
       </div>
       <!-- /.col-xs-12 -->
@@ -555,7 +568,7 @@ function hide_date_delivered(id_address){
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
 					<label for="shipping-phone">Teléfono personal:</label>
-					<input type="text" class="form-control" id="shipping-phone" placeholder="">
+					<input type="text" class="form-control" name="phone" id="shipping-phone" placeholder="">
 				</div>
       </div>
       <!-- /.col-xs-12.col-sm-6 -->
@@ -563,7 +576,7 @@ function hide_date_delivered(id_address){
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
 					<label for="shipping-phone-mobile">Otro teléfono <sup>(opcional)</sup>:</label>
-					<input type="text" class="form-control" id="shipping-phone-mobile" placeholder="">
+					<input type="text" class="form-control" name="phone_mobile" id="shipping-phone-mobile" placeholder="">
 				</div>
       </div>
       <!-- /.col-xs-12.col-sm-6 -->
@@ -575,7 +588,7 @@ function hide_date_delivered(id_address){
       <div class="col-xs-12">
 				<div class="form-group">
 					<label for="shipping-alias">Nombre de la dirección:</label>
-					<input type="text" class="form-control" id="shipping-alias" placeholder="Ejm: Casa Mamá, Oficina, Amor...">
+					<input type="text" class="form-control" name="alias" id="shipping-alias" placeholder="Ejm: Casa Mamá, Oficina, Amor...">
 				</div>
       </div>
       <!-- /.col-xs-12 -->
@@ -600,7 +613,16 @@ function hide_date_delivered(id_address){
 			<!-- .col-xs-12.col-sm-6 -->
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
-					<button type="button" class="btn btn-block btn-primary">Continuar</button>
+          <!-- Si la fomula medica existe salto al paso 3 -->			
+          <input type="hidden" name="step" value="{if $formula}3{else}2{/if}" />
+          {if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if}
+		      {if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
+          <input type="hidden" name="token" value="{$token}" />
+
+          <input type="hidden" name="id_country" value="{$pais}" />
+          <input type="hidden" name="city" value="" />
+
+					<button type="submit" class="btn btn-block btn-primary" name="submitAddress">Continuar</button>
 				</div>
 			</div>
       <!-- /.col-xs-12.col-sm-6 -->
@@ -610,17 +632,7 @@ function hide_date_delivered(id_address){
   <!-- /.container-fluid -->
 </div>
 <!-- /.checkout.w-4 --> 
-{/if}
-
-<!-- Si la fomula medica existe salto al paso 3 -->			
-<input type="hidden" class="hidden" name="step" value="{if $formula}3{else}2{/if}">
-<input type="hidden" name="back" value="{$back}" />
-
-
-
-
-
-
+</form>
 
 
 <br>
@@ -799,7 +811,7 @@ function hide_date_delivered(id_address){
         <a id="atras12" href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")}" title="{l s='Previous'}" >
         << {l s='Previous'}</a>
   </div>
-  </form>
+  <!--/form-->
 </div>
 
 <div id="standard_lightbox">
