@@ -122,5 +122,11 @@ $(function () {
   $('select[name="id_city"]').change(function () {
     $('input[name="city"]').val($(this).find("option:selected").text());
   });
-  
+
+  /**
+   * Address - Number Document
+   */
+  $('input[name="number_document"]').keyup(function () {
+    $('input[name="dni"]').val($(this).val());
+  });
 });

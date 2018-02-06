@@ -199,22 +199,32 @@ self::$smarty->assign('formula',true);
 					$total+=1;
 				}
 	
-	
-				$pais = $this->context->country->id;
-				$sqlpais="SELECT ps_state.id_state, ps_state.name AS state
-                                            FROM ps_state
-                                            WHERE ps_state.id_country =  ".$pais." ORDER BY state ASC ;";
-				$rspais=Db::getInstance()->ExecuteS($sqlpais,FALSE);
-				$estados=array();
-				foreach($rspais as $estado) {
-					$estados[]=$estado;
-				}
 				$this->context->smarty->assign('cliente',$idcliente);
-				$this->context->smarty->assign('pais',$pais);
-				$this->context->smarty->assign('estados',$estados);
 				$this->context->smarty->assign('total',$total);
 				$this->context->smarty->assign('direcciones',$direcciones);
+				$this->context->smarty->assign('express_productos',$this->context->cart->expressProduct());
 				/******* Fin Codigo para Direcciones Ajax *******/
+
+				$selectCountry = (int)Configuration::get('PS_COUNTRY_DEFAULT');
+				$this->context->smarty->assign('id_country', $selectCountry);
+				$this->context->smarty->assign('states', State::getStatesByIdCountry($selectCountry));
+				/* Generate years, months and days */
+				if ($this->context->customer->birthday) {
+					$birthday = explode('-', $this->context->customer->birthday);
+				}	else {
+					$birthday = array('-', '-', '-');
+				}
+				$this->context->smarty->assign('id_country',(int)Configuration::get('PS_COUNTRY_DEFAULT'));
+				$this->context->smarty->assign(array(
+					'years' => Tools::dateYears(),
+					'sl_year' => $birthday[0],
+					'months' => Tools::dateMonths(),
+					'sl_month' => $birthday[1],
+					'days' => Tools::dateDays(),
+					'sl_day' => $birthday[2],
+					'errors' => $this->errors,
+					'genders' => Gender::getGenders(),
+				));
                 
 				$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
 				break;

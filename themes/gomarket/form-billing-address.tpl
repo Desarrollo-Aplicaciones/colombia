@@ -90,6 +90,7 @@
 				<div class="form-group">
 					<label for="shipping-alias">Nombre de la dirección:</label>
 					<input type="text" class="form-control" name="alias" id="shipping-alias" placeholder="Ejm: Casa Mamá, Oficina, Amor..." value="{if isset($smarty.post.alias)}{$smarty.post.alias}{/if}" required>
+          <input type="hidden" name="dni" value="">
 				</div>
       </div>
       <!-- /.col-xs-12 -->

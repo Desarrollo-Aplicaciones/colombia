@@ -193,6 +193,7 @@ function hide_date_delivered(id_address){
 {include file="$tpl_dir./order-steps.tpl"}
 {include file="$tpl_dir./errors.tpl"}
 
+{* New Checkout *}
 {* Update of the client data / First address *}
 {if !$datacustomer['firstname'] 
     || !$datacustomer['identification'] 
@@ -221,7 +222,8 @@ function hide_date_delivered(id_address){
 				<div class="form-group">
           <!-- Si la fomula medica existe salto al paso 3 -->			
           <input type="hidden" name="step" value="{if $formula}3{else}2{/if}" />
-          {if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if}
+          {*if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if*}
+          <input type="hidden" name="back" value="order.php?step=2&multi-shipping=0" />
 		      {if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
           <input type="hidden" name="token" value="{$token}" />
           <input type="hidden" name="id_country" value="{$id_country}" />
@@ -253,7 +255,7 @@ function hide_date_delivered(id_address){
         <!-- .col-xs-12.col-md-4 -->
         <div class="col-xs-12 col-md-4">
           <div class="radio">
-            <input class="radio-address" id="radio-{$address['id_address']}" name="radio" value="{$address['id_address']}" type="radio">
+            <input class="radio-address" id="radio-{$address['id_address']}" name="id_address_delivery" value="{$address['id_address']}" type="radio">
             <label for="radio-{$address['id_address']}" class="radio-label"><b>{$address['alias']}</b></label>
           </div>
         </div>
@@ -312,7 +314,8 @@ function hide_date_delivered(id_address){
                 <div class="col-xs-12 col-md-6 visible-md visible-lg"></div>
                 <div class="col-xs-12 col-md-6">
                   <div class="form-group text-right">
-                    <button type="button" class="btn2 btn-block btn-primary">Continuar</button>
+                    <input type="hidden" name="step" value="{if $formula}3{else}2{/if}" />
+                    <button type="submit" class="btn2 btn-block btn-primary">Continuar</button>
                   </div>
                 </div>
               </div>

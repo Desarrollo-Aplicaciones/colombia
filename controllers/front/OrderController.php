@@ -272,6 +272,7 @@ self::$smarty->assign('formula',true);
 }
                            
                             
+                            
 				$this->_assignAddress();
 				$this->processAddressFormat();
 				if (Tools::getValue('multi-shipping') == 1)
@@ -281,44 +282,34 @@ self::$smarty->assign('formula',true);
 					$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping.tpl');
 				}
 				else
-					/******* Codigo para Direcciones Ajax *******/
-					$idcliente = $this->context->customer->id; 
-					$sql="SELECT ad.id_address, ad.id_state, st.name AS state, ad.id_customer, ad.alias, ad.city, ad.address1, ad.address2 FROM "._DB_PREFIX_."address AS ad Inner Join "._DB_PREFIX_."state AS st ON ad.id_state = st.id_state WHERE ad.id_customer='".$idcliente."' AND ad.deleted=0";
-					$result=Db::getInstance()->ExecuteS($sql,FALSE);
-					$direcciones=array();
-					$total=0;
-					foreach($result as $row) {
-							$direcciones[]=$row;                                           
-							$total+=1;
-					}
-
-					$this->context->smarty->assign('cliente',$idcliente);
-					$this->context->smarty->assign('total',$total);
-					$this->context->smarty->assign('direcciones',$direcciones);
-					$this->context->smarty->assign('express_productos',$this->context->cart->expressProduct());
-					/******* Fin Codigo para Direcciones Ajax *******/    
-
-					$selectCountry = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-					$this->context->smarty->assign('id_country', $selectCountry);
-					$this->context->smarty->assign('states', State::getStatesByIdCountry($selectCountry));
-					/* Generate years, months and days */
-					if ($this->context->customer->birthday) {
-						$birthday = explode('-', $this->context->customer->birthday);
-					}	else {
-						$birthday = array('-', '-', '-');
-					}
-					$this->context->smarty->assign('id_country',(int)Configuration::get('PS_COUNTRY_DEFAULT'));
-					$this->context->smarty->assign(array(
-						'years' => Tools::dateYears(),
-						'sl_year' => $birthday[0],
-						'months' => Tools::dateMonths(),
-						'sl_month' => $birthday[1],
-						'days' => Tools::dateDays(),
-						'sl_day' => $birthday[2],
-						'errors' => $this->errors,
-						'genders' => Gender::getGenders(),
-					));
-					
+                                   /******* Codigo para Direcciones Ajax *******/
+                                        $idcliente = $this->context->customer->id; 
+                                  $sql="SELECT ad.id_address, ad.id_state, st.name AS state, ad.id_customer, ad.alias, ad.city, ad.address1, ad.address2 FROM "._DB_PREFIX_."address AS ad Inner Join "._DB_PREFIX_."state AS st ON ad.id_state = st.id_state WHERE ad.id_customer='".$idcliente."' AND ad.deleted=0";
+                                        $result=Db::getInstance()->ExecuteS($sql,FALSE);
+                                        $direcciones=array();
+                                        $total=0;
+                                        foreach($result as $row) {
+                                            $direcciones[]=$row;                                           
+                                            $total+=1;
+                                        }
+                                        
+                                        
+                                        $pais = $this->context->country->id;
+                                        $sqlpais="SELECT ps_state.id_state, ps_state.name AS state 
+                                            FROM ps_state 
+                                            WHERE ps_state.id_country =  ".$pais." ORDER BY state ASC ;";
+                                        $rspais=Db::getInstance()->ExecuteS($sqlpais,FALSE);
+                                        $estados=array();
+                                        foreach($rspais as $estado) {
+                                            $estados[]=$estado;                                           
+                                        }
+                                        $this->context->smarty->assign('cliente',$idcliente);
+                                        $this->context->smarty->assign('pais',$pais);
+                                        $this->context->smarty->assign('estados',$estados);
+                                        $this->context->smarty->assign('total',$total);
+                                        $this->context->smarty->assign('direcciones',$direcciones);
+                                        $this->context->smarty->assign('express_productos',$this->context->cart->expressProduct());
+                                        /******* Fin Codigo para Direcciones Ajax *******/    
 					$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
 			break;
 

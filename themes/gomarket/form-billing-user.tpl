@@ -50,7 +50,7 @@
 			<div class="col-xs-12 col-sm-6">
 				<div class="form-group">
 					<label for="billing-document-number">Número de Documento:</label>
-					<input type="text" class="form-control" name="dni" id="billing-document-number" value="{$datacustomer['identification']}" data-validate="true" pattern="^[0-9]*$" title="Documento no válido, sólo números, no espacios">
+					<input type="text" class="form-control" name="number_document" id="billing-document-number" value="{$datacustomer['identification']}" data-validate="true" pattern="^[0-9]*$" title="Documento no válido, sólo números, no espacios">
 				</div>	
 			</div>
 			<!-- /.col-xs-12.col-sm-6 -->
@@ -138,7 +138,7 @@
 			<div class="col-xs-12 col-sm-6">
 				<div class="form-group">
 					<label for="billing-nit">NIT:</label>
-					<input type="text" class="form-control" id="billing-nit" name="dni" placeholder="" data-validate="true">
+					<input type="text" class="form-control" id="billing-nit" name="number_document" placeholder="" data-validate="true">
 				</div>
 			</div>
 			<!-- /.col-xs-12.col-sm-6 -->
