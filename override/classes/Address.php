@@ -46,7 +46,11 @@ class Address extends AddressCore
             $val_id_city = $_POST['city_id'];
         }
 
-		$this->city = $nom_city;
+        $this->city = $nom_city;
+        
+        //echo "<pre>";
+        //var_dump($_POST);
+        //exit();
 
         //$fp=fopen("/tmp/archivo_dir.txt","a+"); fwrite($fp,print_r($this,true)."\r\n\r\n\r\n"); fclose($fp);
 

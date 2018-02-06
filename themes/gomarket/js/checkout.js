@@ -21,15 +21,48 @@ $(function () {
   $documentType.click(function (event) {
     event.stopImmediatePropagation();
     var $this = $(this);
-    
-    // Activa el borde verde
+    var $input = $this.find('input[name="type_document"]');
+
+    // Activate the green border
     $documentType.removeClass("checked");
     $this.addClass("checked");
-    // Muestra el formulario relacionado
-    $("#natural-person, #nit").hide();
-    $($this.data("show")).show();
-    // Selecciona el checkbox
+    // Show the related form
+    $("#natural-person, #nit").hide().find('input,textarea,select').prop("disabled", true);
+    $($this.data("show")).show().find('input,textarea,select').prop("disabled", false);
+
+    // Select the checkbox
     $this.find("input").prop("checked", true);
+
+    // Activa los required del formulario activo
+    // Evita - An invalid form control with name='' is not focusable
+    $('[data-validate="true"]:hidden').prop("required", false);
+    $('[data-validate="true"]:visible').prop("required", true);
+
+    // Validation type of document if is person
+    if (!parseInt($input.val())) {
+      $input.val($("#billing-document-type").val());
+    }
+    
+  });
+
+  /**
+   * User Data - Validation type of document
+   */
+  $("#billing-document-type").change(function() {
+    $("#radio-person").val($(this).val());
+  });
+
+  /**
+   * User Data - Customer Birthdate
+   */
+  $('[id^="birthdate-"]').change(function() {
+    $('input[name="birthday"]').val(
+      $('[id^="birthdate-year"]').val() 
+      + "-" + 
+      $('[id^="birthdate-month"]').val() 
+      + "-" + 
+      $('[id^="birthdate-day"]').val()
+    );
   });
 
   /**
@@ -74,12 +107,20 @@ $(function () {
         $city.prop("disabled", false);
 
         if (typeof idCity !== "undefined") {
-          $city.find('option[value="' + idCity + '"]').prop('selected', true); 
+          $city.find('option[value="' + idCity + '"]').prop('selected', true);
+          $('input[name="city"]').val($city.find("option:selected").text());
         }
       } else {
         $city.find("option:eq(0)").text("Depto. Sin Ciudad");
       }
     });
+  });
+
+  /**
+   * Address - Add city name
+   */
+  $('select[name="id_city"]').change(function () {
+    $('input[name="city"]').val($(this).find("option:selected").text());
   });
   
 });

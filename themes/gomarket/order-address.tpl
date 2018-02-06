@@ -193,11 +193,55 @@ function hide_date_delivered(id_address){
 {include file="$tpl_dir./order-steps.tpl"}
 {include file="$tpl_dir./errors.tpl"}
 
+{* Update of the client data / First address *}
+{if !$datacustomer['firstname'] 
+    || !$datacustomer['identification'] 
+    || !$datacustomer['id_type']
+    || !$direcciones}
+<form action="{$link->getPageLink('address', true)|escape:'html'}" method="post">
+{include file="$tpl_dir./form-billing-user.tpl"}
 
+<hr class="checkout-line">
 
+{include file="$tpl_dir./form-billing-address.tpl"}
 
-<form action="{$link->getPageLink($back_order_page, true)|escape:'html'}" method="post">
+<div class="checkout w-4">
+<!-- .container-fluid -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- .col-xs-12.col-sm-6 -->
+      <div class="col-xs-12 col-sm-6">
+				<div class="form-group">
+					<button type="button" class="btn2 btn-block btn-outline-secondary">Regresar</button>
+				</div>
+			</div>
+      <!-- /.col-xs-12.col-sm-6 -->
+			<!-- .col-xs-12.col-sm-6 -->
+      <div class="col-xs-12 col-sm-6">
+				<div class="form-group">
+          <!-- Si la fomula medica existe salto al paso 3 -->			
+          <input type="hidden" name="step" value="{if $formula}3{else}2{/if}" />
+          {if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if}
+		      {if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
+          <input type="hidden" name="token" value="{$token}" />
+          <input type="hidden" name="id_country" value="{$id_country}" />
+
+					<button type="submit" class="btn2 btn-block btn-primary" name="submitAddress">Continuar</button>
+				</div>
+			</div>
+      <!-- /.col-xs-12.col-sm-6 -->
+    </div>
+    <!-- /.row -->
+	</div>
+  <!-- /.container-fluid -->
+</div>
+<!-- /.checkout.w-4 --> 
+</form>
+{/if}
+
+{* Address list *}
 {if $direcciones}
+<form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post">
 <!-- .checkout.w-7 -->
 <div class="checkout w-7">
   <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
@@ -268,7 +312,7 @@ function hide_date_delivered(id_address){
                 <div class="col-xs-12 col-md-6 visible-md visible-lg"></div>
                 <div class="col-xs-12 col-md-6">
                   <div class="form-group text-right">
-                    <button type="button" class="btn btn-block btn-primary">Continuar</button>
+                    <button type="button" class="btn2 btn-block btn-primary">Continuar</button>
                   </div>
                 </div>
               </div>
@@ -311,7 +355,6 @@ function hide_date_delivered(id_address){
 </div>
 <!-- /.checkout.w-7 -->
 
-
 <!-- .checkout.w-7 -->
 <div class="checkout w-7">
   <!-- .container-fluid -->
@@ -319,7 +362,7 @@ function hide_date_delivered(id_address){
     <div class="row">
       <!-- .col-xs-12 -->
       <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-          <button type="button" class="btn btn-block btn-outline-secondary">Regresar</button>
+          <a class="btn2 btn-block btn-outline-secondary" href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")}">Regresar</a>
       </div>
       <!-- /.col-xs-12 -->
     </div>
@@ -328,6 +371,7 @@ function hide_date_delivered(id_address){
   <!-- /.container-fluid -->
 </div>
 <!-- /.checkout.w-7 -->
+</form>
 {/if}
 {* /$direcciones *}
 
@@ -339,300 +383,10 @@ function hide_date_delivered(id_address){
 
 
 
-{if $datacustomer['firstname'] == "" || $datacustomer['identification'] == "" || $datacustomer['id_type'] == 0 }
-<div class="checkout w-4">
-  <h3>Datos para generar tu factura</h3>
-	<!-- .container-fluid -->
-	<div class="container-fluid">
-		<div class="row">
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="radio-horizontal" data-show="#natural-person">
-					<div class="radio">
-						<input id="radio-1" name="radio" type="radio">
-						<label for="radio-1" class="radio-label">Persona natural</label>
-					</div>
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="radio-horizontal" data-show="#nit">
-					<div class="radio">
-						<input id="radio-2" name="radio" type="radio">
-						<label  for="radio-2" class="radio-label">NIT</label>
-					</div>
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-		</div>
-		<!-- /.row -->
-	</div>
-	<!-- /.container-fluid -->
 
-	<!-- .container-fluid -->
-	<div class="container-fluid" id="natural-person">
-		<div class="row">
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="billing-document-type">Tipo de Documento:</label>
-					<select class="form-control" id="billing-document-type">
-						<option value="" selected="selected" disabled>Selecciona</option>
-						<option value="saab">Saab</option>
-						<option value="mercedes">Mercedes</option>
-						<option value="audi">Audi</option>
-					</select>
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="billing-document-number">Número de Documento:</label>
-					<input type="text" class="form-control" id="billing-document-number" placeholder="">
-				</div>	
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-		</div>
-		<!-- /.row -->
 
-		<div class="row">
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="billing-name">Nombre:</label>
-					<input type="text" class="form-control" id="billing-name" placeholder="">
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="billing-lastname">Apellido:</label>
-					<input type="text" class="form-control" id="billing-lastname" placeholder="">
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-		</div>
-		<!-- /.row -->
 
-		<div class="row">
-			<!-- .col-xs-12.col-sm-12 -->
-			<div class="col-xs-12 col-sm-12">
-				<div class="form-label">
-					<label for="billing-birthdate">Fecha de nacimiento:</label>
-					<input type="hidden" id="billing-birthdate" value="">
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-4 -->
-		</div>
-		<!-- /.row -->
 
-		<div class="row">
-			<!-- .col-xs-12.col-sm-4 -->
-			<div class="col-xs-12 col-sm-4">
-				<div class="form-group">
-					<select class="form-control">
-						<option value="volvo">Día</option>
-						<option value="saab">Saab</option>
-					</select>
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-4 -->
-			<!-- .col-xs-12.col-sm-4 -->
-			<div class="col-xs-12 col-sm-4">
-				<div class="form-group">
-					<select class="form-control">
-						<option value="volvo">Mes</option>
-						<option value="saab">Saab</option>
-					</select>
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-4 -->
-			<!-- .col-xs-12.col-sm-4 -->
-			<div class="col-xs-12 col-sm-4">
-				<div class="form-group">
-					<select class="form-control">
-						<option value="volvo">Año</option>
-						<option value="saab">Saab</option>
-					</select>
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-4 -->
-		</div>
-		<!-- /.row -->
-	</div>
-	<!-- /.container-fluid -->
-
-	<!-- .container-fluid -->
-	<div class="container-fluid" id="nit">
-		<div class="row">
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="billing-nit">NIT:</label>
-					<input type="text" class="form-control" id="billing-nit" placeholder="">
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-			<!-- .col-xs-12.col-sm-6 -->
-			<div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="billing-business-name">Razón social:</label>
-					<input type="text" class="form-control" id="billing-business-name" placeholder="">
-				</div>
-			</div>
-			<!-- /.col-xs-12.col-sm-6 -->
-		</div>
-		<!-- /.row -->
-	</div>
-	<!-- /.container-fluid -->
-</div>
-<!-- /.checkout.w-4 --> 
-</form>
-{/if}
-
-<hr class="checkout-line">
-
-<form action="{$link->getPageLink('address', true)|escape:'html'}" method="post">
-<div class="checkout w-4">
-  <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
-
-	<!-- .container-fluid -->
-  <div class="container-fluid">
-    <div class="row">
-      <!-- .col-xs-12.col-sm-6 -->
-      <div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="shipping-state">Departamento:</label>
-					<select class="form-control" name="id_state" id="shipping-state">
-						<option value="" selected="selected" disabled>Selecciona</option>
-            <optgroup label="Ciudad / Departamento">
-              <option value="326" data-id-city="1184">Bogotá / Cundinamarca</option>
-              <option value="342" data-id-city="1976">Cali / Valle del Cauca</option>
-              <option value="314" data-id-city="1037">Medellín / Antioquia</option>
-              <option value="316" data-id-city="1162">Barranquilla / Atlántico</option>
-              <option value="339" data-id-city="1835">Bucaramanga / Santander</option>
-            </optgroup>
-            <optgroup label="Departamentos">
-              {foreach from=$estados item=state}
-              <option value="{$state['id_state']}">{$state['state']}</option>
-              {/foreach}
-            </optgroup>
-					</select>
-				</div>
-      </div>
-      <!-- /.col-xs-12.col-sm-6 -->
-			<!-- .col-xs-12.col-sm-6 -->
-      <div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="shipping-city">Ciudad:</label>	
-					<select class="form-control" name="id_city" id="shipping-city" disabled>
-						<option value="" selected="selected" disabled>Selecciona Departamento</option>
-						<option value="volvo">Año</option>
-						<option value="saab">Saab</option>
-					</select>
-				</div>
-      </div>
-      <!-- /.col-xs-12.col-sm-6 -->
-    </div>
-    <!-- /.row -->
-
-		<div class="row">
-      <!-- .col-xs-12 -->
-      <div class="col-xs-12">
-				<div class="form-group">
-					<label for="shipping-address1">Dirección de Entrega:</label>
-					<input type="text" class="form-control" name="address1" id="shipping-address1" placeholder="">
-				</div>
-      </div>
-      <!-- /.col-xs-12 -->
-    </div>
-    <!-- /.row -->
-
-		<div class="row">
-      <!-- .col-xs-12 -->
-      <div class="col-xs-12">
-				<div class="form-group">
-					<label for="shipping-address2">Barrio / Indicaciones <sup>(opcional)</sup>:</label>
-					<input type="text" class="form-control" name="address2" id="shipping-address2" placeholder="">
-				</div>
-      </div>
-      <!-- /.col-xs-12 -->
-    </div>
-    <!-- /.row -->
-
-		<div class="row">
-      <!-- .col-xs-12.col-sm-6 -->
-      <div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="shipping-phone">Teléfono personal:</label>
-					<input type="text" class="form-control" name="phone" id="shipping-phone" placeholder="">
-				</div>
-      </div>
-      <!-- /.col-xs-12.col-sm-6 -->
-			<!-- .col-xs-12.col-sm-6 -->
-      <div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<label for="shipping-phone-mobile">Otro teléfono <sup>(opcional)</sup>:</label>
-					<input type="text" class="form-control" name="phone_mobile" id="shipping-phone-mobile" placeholder="">
-				</div>
-      </div>
-      <!-- /.col-xs-12.col-sm-6 -->
-    </div>
-    <!-- /.row -->
-
-		<div class="row">
-      <!-- .col-xs-12 -->
-      <div class="col-xs-12">
-				<div class="form-group">
-					<label for="shipping-alias">Nombre de la dirección:</label>
-					<input type="text" class="form-control" name="alias" id="shipping-alias" placeholder="Ejm: Casa Mamá, Oficina, Amor...">
-				</div>
-      </div>
-      <!-- /.col-xs-12 -->
-    </div>
-    <!-- /.row -->
-  </div>
-  <!-- /.container-fluid -->
-</div>
-<!-- /.checkout.w-4 --> 
-
-<div class="checkout w-4">
-<!-- .container-fluid -->
-  <div class="container-fluid">
-    <div class="row">
-      <!-- .col-xs-12.col-sm-6 -->
-      <div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-					<button type="button" class="btn btn-block btn-outline-secondary">Regresar</button>
-				</div>
-			</div>
-      <!-- /.col-xs-12.col-sm-6 -->
-			<!-- .col-xs-12.col-sm-6 -->
-      <div class="col-xs-12 col-sm-6">
-				<div class="form-group">
-          <!-- Si la fomula medica existe salto al paso 3 -->			
-          <input type="hidden" name="step" value="{if $formula}3{else}2{/if}" />
-          {if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if}
-		      {if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
-          <input type="hidden" name="token" value="{$token}" />
-
-          <input type="hidden" name="id_country" value="{$pais}" />
-          <input type="hidden" name="city" value="" />
-
-					<button type="submit" class="btn btn-block btn-primary" name="submitAddress">Continuar</button>
-				</div>
-			</div>
-      <!-- /.col-xs-12.col-sm-6 -->
-    </div>
-    <!-- /.row -->
-	</div>
-  <!-- /.container-fluid -->
-</div>
-<!-- /.checkout.w-4 --> 
-</form>
 
 
 <br>
