@@ -432,7 +432,7 @@ color: #979797;
 				                        					{assign var='odd' value=$product@iteration%2}
 				                        					{assign var='noDeleteButton' value=1}
 															{foreach from=$product.features item=feature name=featureLoop}
-																{if $feature.id_feature == '243'}
+																{if $feature.id_feature == '242'}
 				                        							{assign var='DoctorRequired' value=1}
 																{/if}
 				                        					{/foreach}
