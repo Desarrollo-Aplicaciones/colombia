@@ -127,6 +127,7 @@ class AuthController extends AuthControllerCore
 	 */
 	protected function processSubmitLogin()
 	{
+
 		Hook::exec('actionBeforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
@@ -142,6 +143,7 @@ class AuthController extends AuthControllerCore
 		{
 			$customer = new Customer();
 			$authentication = $customer->getByEmail(trim($email), trim($passwd));
+
 			if (!$authentication || !$customer->id)
 				$this->errors[] = Tools::displayError('Authentication failed.');
 			else
@@ -226,6 +228,43 @@ class AuthController extends AuthControllerCore
 }
 		if (Tools::getValue('create_account'))
 			$this->create_account = true;
-	}	
+	}
+
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->addCSS(_THEME_CSS_DIR_.'min-login.css', 'all');
+    }
+
+    public function postProcess(){
+        if (Tools::isSubmit('ajax') && Tools::isSubmit('checkPassword'))
+            $this->checkPassword();
+        else if (Tools::isSubmit('ajax') && Tools::isSubmit('checkMailNotExist'))
+            $this->checkMailNotExist();
+
+        return parent::postProcess();
+
+    }
+
+    private function checkPassword(){
+        $password = Tools::getValue('password');
+        $email = Tools::getValue('email');
+
+        $customer = new Customer();
+        $authentication = $customer->getByEmail(trim($email), trim($password));
+
+        if (!$authentication || !$customer->id)
+            die(json_encode("KO"));
+        else
+            die(json_encode("OK"));
+    }
+
+    private function checkMailNotExist(){
+        $email = Tools::getValue('email');
+        if (Customer::customerExists($email))
+            die(json_encode("KO"));
+        else
+            die(json_encode("OK"));
+    }
 }
 ?>
