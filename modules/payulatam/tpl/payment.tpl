@@ -189,14 +189,6 @@
 <!-- Tarjeta Credito /-->
 
 <!-- Tarjeta Credito codensa -->
-<div id="ctn-tarjeta-credito-codensa" class="cont-opc-pago">
-	<div name="opcion2" id="opciones" onclick="mouse_overd('div21', '#ctn-tarjeta-credito-codensa');">
-		
-		<div class="invisible">
-			<div id="div8rb"></div>
-			<div class="visible2"></div>
-			<div class="visible"></div>
-		</div>
 
 		<div class="payment_module" id="texttarjetac">
 			<input type="radio" value="div21" name="mediopago" id="mediopagot">

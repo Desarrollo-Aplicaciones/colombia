@@ -47,7 +47,8 @@
     }
 
     public function initParams() {
-
+//        var_dump("POST INI: ", $_POST); 
+//        die();
       $tax = (float) self::$cart->getOrderTotal() - (float) self::$cart->getOrderTotal(false);
       $base = (float) self::$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS) + (float) self::$cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS) - (float) $tax;
       if ($tax == 0)
@@ -79,6 +80,16 @@
                       array('value' => 'http://' . htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8') . __PS_BASE_URI__ . 'history.php', 'name' => 'responseUrl'),
                       array('value' => 'http://' . htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8') . __PS_BASE_URI__ . 'modules/payulatam/validation.php', 'name' => 'confirmationUrl'),
                       );
+//       if($_POST['remember_tarjeta'] == 'on'){
+//           
+//                $card = $customer->customer->cards;
+//                 var_dump("CART: ", $customer); die();
+//                $sql =	"INSERT INTO `"._DB_PREFIX_."payu_cards` (`id_customer`, `id_card`, `brand`, `bank`, `card_number`,`holder_name`,`expiration_year`, `expiration_month`)
+//                VALUES (".$customer->id.", '".$card->id."', '".$card->brand."', '".$card->bank_name."', '".$card->card_number."', '".$card->holder_name."', '".$card->expiration_year."', '".$card->expiration_month."');";
+//
+//		 		$test = Db::getInstance()->Execute($sql);
+//            }
+      
 
 if (Configuration::get('PAYU_ACCOUNT_ID') != 0)
   $params[] = array('accountId' => (int) Configuration::get('PAYU_ACCOUNT_ID'), 'name' => 'accountId');

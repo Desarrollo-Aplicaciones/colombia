@@ -155,9 +155,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     } else {
       $validacionPagoPayu = "full";
     }*/
-
     $validacionPagoPayu = "full";
-
     $this->context->smarty->assign(array(
     'order' => $order,
     'order_state' => $order_state,
@@ -495,7 +493,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               $sql_reserve = 'SELECT reserve_on_stock FROM ' . _DB_PREFIX_ . 'stock_available_mv
               WHERE id_product = ' . $product['product_id'];
               $resultReserve = Db::getInstance()->executeS($sql_reserve);
-              $newReserveOnStock = $resultReserve[0]['reserve_on_stock'] - $product['product_quantity_in_stock'];
+              $newReserveOnStock = $resultReserve[0]['reserve_on_stock'] - $product['product_quantity'];
               if ($newReserveOnStock < 0) {
                 $newReserveOnStock = 0;
               }
@@ -503,6 +501,11 @@ class AdminOrdersController extends AdminOrdersControllerCore {
               SET reserve_on_stock = ' . $newReserveOnStock . '
               WHERE id_product = ' . $product['product_id'];
               Db::getInstance()->executeS($sql_new_reserve);
+              
+              $deleteReserve = 'DELETE FROM ' . _DB_PREFIX_ . 'reserve_product
+              WHERE id_product = ' . $product['product_id'] . ' AND id_order = '.$_GET['id_order'];
+              Db::getInstance()->executeS($deleteReserve);
+              
             }
             $template_vars['{firstname}'] = $this->context->customer->firstname;
             $template_vars['{lastname}'] = $this->context->customer->lastname;
@@ -1122,11 +1125,31 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       if ($this->tabAccess['edit'] === '1') {
         $payment_module = Module::getInstanceByName($module_name);
         $cart = new Cart((int) $id_cart);
+        $order = new Order();
         Context::getContext()->currency = new Currency((int) $cart->id_currency);
         Context::getContext()->customer = new Customer((int) $cart->id_customer);
         $employee = new Employee((int) Context::getContext()->cookie->id_employee);
         $cod_pagar = Tools::getValue('cod_pagar');
         $private_message = stripslashes(Tools::getValue('private_message'));
+        
+        $productsCart = new DbQuery();
+        $productsCart->select('pp.id_product, pp.quantity');
+        $productsCart->from('cart_product', 'pp');
+        $productsCart->where('pp.id_cart = ' . pSQL($id_cart));
+        $resultProductsCart = Db::getInstance()->executeS($productsCart);
+        
+        /*$arrProductsStock = [];
+        foreach($resultProductsCart as $value) {
+            
+            $stockAvailableMv = new DbQuery();
+            $stockAvailableMv->select('*');
+            $stockAvailableMv->from('stock_available_mv', 'sa');
+            $stockAvailableMv->where('sa.id_product = ' . pSQL($value['id_product']));
+            $resultStockAvailableMv = Db::getInstance()->executeS($stockAvailableMv);
+            
+            $arrProductsStock[] = $resultStockAvailableMv[0];
+        }*/
+        
         if ($payment_module->validateOrder(
         (int) $cart->id, (int) $id_order_state, $cart->getOrderTotal(true, Cart::BOTH), !empty($cod_pagar) ? $cod_pagar : $payment_module->displayName, $this->l('Manual order -- Employee:') .
         substr($employee->firstname, 0, 1) . '. ' . $employee->lastname, array(), null, false, $cart->secure_key, null, $private_message
@@ -1139,6 +1162,31 @@ class AdminOrdersController extends AdminOrdersControllerCore {
             $sql2 = "INSERT INTO ps_orders_transporte (id_order,EXTRAS) VALUES ($payment_module->currentOrder,'express')";
           Db::getInstance()->Execute($sql2);
         }
+        
+        /*foreach($arrProductsStock as $valueStock) {
+            
+            $validayteStockAvailableMv = new DbQuery();
+            $validayteStockAvailableMv->select('*');
+            $validayteStockAvailableMv->from('stock_available_mv', 'sa');
+            $validayteStockAvailableMv->where('sa.id_product = ' . pSQL($valueStock['id_product']));
+            $resultValidayteStockAvailableMv = Db::getInstance()->executeS($validayteStockAvailableMv);
+            
+            if(count($resultValidayteStockAvailableMv) == 0) {
+                
+                $sqlStock = "INSERT INTO ps_stock_available_mv (id_stock_available,id_product,id_product_attribute,id_shop,id_shop_group,quantity,depends_on_stock,out_of_stock,reserve_on_stock) "
+                        . "VALUES ('".$valueStock['id_stock_available']."',"
+                        . "'".$valueStock['id_product']."',"
+                        . "'".$valueStock['id_product_attribute']."',"
+                        . "'".$valueStock['id_shop']."',"
+                        . "'".$valueStock['id_shop_group']."',"
+                        . "'".$valueStock['quantity']."',"
+                        . "'".$valueStock['depends_on_stock']."',"
+                        . "'".$valueStock['out_of_stock']."',"
+                        . "'".$valueStock['reserve_on_stock']."')";
+                Db::getInstance()->Execute($sqlStock);
+            }
+        }*/
+        
         Address::update_date_delivered();
         if ($payment_module->currentOrder) {
           // Genrenando el descuento de los reservados en el stock
@@ -1148,22 +1196,68 @@ class AdminOrdersController extends AdminOrdersControllerCore {
           $sql->leftJoin('cart_product', 'pp', 'po.id_cart = pp.id_cart');
           $sql->where('po.id_cart = ' . pSQL($id_cart));
           $result = Db::getInstance()->executeS($sql);
+          /*$sin_stock = false;
           foreach ($result as $row) {
             $sql = new DbQuery();
             $sql->select('s.quantity, s.reserve_on_stock');
             $sql->from('stock_available_mv', 's');
             $sql->where('s.id_product = ' . pSQL($row['id_product']));
             $result2 = Db::getInstance()->executeS($sql);
-            if (isset($result2[0])) {
-              if ($result2[0]['quantity'] > 0) {
+            if($result2[0]['quantity'] < ($result2[0]['reserve_on_stock'] + $row['quantity'])) {
+                $sin_stock = true;
+            }
+            
+            $sqlReserve = new DbQuery();
+            $sqlReserve->select('SUM(quantity_reserve) AS quantity_reserve');
+            $sqlReserve->from('reserve_product');
+            $sqlReserve->where('id_product = ' . pSQL($row['id_product']));
+            $sqlReserve->groupBy('id_product');
+            $resultReserve = Db::getInstance()->executeS($sqlReserve);
+            
+            if(count($resultReserve) > 0) {
+                $quantity_reserve = $resultReserve[0]['quantity_reserve'];
+            } else {
+                $quantity_reserve = 0;
+            }
+            
+            $stock = $result2[0]['quantity'] - $result2[0]['reserve_on_stock'];
+            $totalStock = ($stock < 0 ? 0 : $stock);
+            
+            if($quantity_reserve >= $result2[0]['quantity']) {
+                $reserve = 0;
+                $missing = $row['quantity'];
+            } else if($row['quantity'] >= $totalStock) {
+                $reserve = $totalStock;
+                $missing = $row['quantity'] - ($totalStock < 0 ? 0 : $totalStock);
+            } else {
+                $reserve = $row['quantity'];
+                $missing = 0;
+            }
+            
+            if (isset($result2[0]) && $result2[0]['quantity'] > 0) {
                 $newReserveOnStock = $result2[0]['reserve_on_stock'] + $row['quantity'];
                 $sql_new_reserve = 'UPDATE ' . _DB_PREFIX_ . 'stock_available_mv
 	                                        SET reserve_on_stock = ' . $newReserveOnStock . '
 	                                        WHERE id_product = ' . pSQL($row['id_product']);
                 Db::getInstance()->executeS($sql_new_reserve);
-              }
+            }
+            
+            if($missing > 0) {
+                
+                $reserve_products = 'INSERT INTO ' . _DB_PREFIX_ . 'reserve_product(id_order, id_product, quantity_reserve, missing_quantity)
+                                    VALUES('.$payment_module->currentOrder.','.pSQL($row['id_product']).',' . $reserve . ',' . $missing . ')';
+                Db::getInstance()->executeS($reserve_products);
             }
           }
+          if($sin_stock) {
+            $change_status_order = 'UPDATE ' . _DB_PREFIX_ . 'orders
+                                            SET current_state = 9
+                                            WHERE id_order = ' . $payment_module->currentOrder;
+            Db::getInstance()->executeS($change_status_order);
+            
+            $historyStateOrder = "INSERT INTO ps_order_history(id_order, id_order_state, date_add) VALUES(".$payment_module->currentOrder.", 9, '".date('Y-m-d H:i:s')."')";
+            DB::getInstance()->execute($historyStateOrder);
+          }*/
           Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $payment_module->currentOrder . '&vieworder' . '&token=' . $this->token);
         }
       } else
@@ -1894,6 +1988,18 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     // products current stock (from stock_available)
     $flagStockDisplayOption = false;
     foreach ($products as &$product) {
+        
+        $sql = new DbQuery();
+        $sql->select('s.quantity, s.reserve_on_stock');
+        $sql->from('stock_available_mv', 's');
+        $sql->where('s.id_product = ' . pSQL($product['product_id']));
+        $result2 = Db::getInstance()->executeS($sql);
+        
+        $quatintyProduct[$product['product_id']]['quantity'] = $result2[0]['quantity'];
+        $quatintyProduct[$product['product_id']]['reserve_on_stock'] = $result2[0]['reserve_on_stock'];
+        $totalStock = $product['current_stock'] - $result2[0]['reserve_on_stock'];
+        $quatintyProduct[$product['product_id']]['available_stock'] = $totalStock < 0 ? 0 : $totalStock;
+        
       $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
       $resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
       $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
@@ -1982,7 +2088,8 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     "formula_medica" => Utilities::is_formula($cart, $this->context),
     "imgs_formula_medica" => Utilities::getImagenesFormula($order->id),
     'flagStockDisplayOption' => $flagStockDisplayOption,
-    'estadosValidos' => $estadosValidos
+    'estadosValidos' => $estadosValidos,
+    'quatintyProduct' => $quatintyProduct
     );
     $this->motivo_cancelcion();
     $this->get_mensajero_order($this->id_object);

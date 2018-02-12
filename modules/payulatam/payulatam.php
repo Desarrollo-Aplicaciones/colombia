@@ -329,6 +329,17 @@ private function _displayWarning() {
         
         $this->context->smarty->assign(array('pathSsl' => (_PS_VERSION_ >= 1.4 ? Tools::getShopDomainSsl(true, true) : '' ) . __PS_BASE_URI__ . 'modules/payulatam/', 'modulePath' => $this->_path));
 
+        // Tarjetas de crédito almacenadas por el cliente
+        $customer = new Customer($this->context->cart->id_customer);
+        $sqlCreditCards = "SELECT 
+            token_id, 
+            masked_number, 
+            payment_method 
+            FROM "._DB_PREFIX_."payu_cards 
+            WHERE id_customer = ".(int)$customer->id." ORDER BY creation_date DESC";
+        $creditCards = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sqlCreditCards);
+        $this->context->smarty->assign('store_credit_cards', $creditCards);
+
         return $this->display(__FILE__, 'tpl/payment.tpl');
     }
 

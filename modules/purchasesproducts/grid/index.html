@@ -23,10 +23,16 @@
                         age: { type: Number },
                         gender: { type: String }
                     }
+                },
+                filter: {
+                    and: [
+                        { path: "name", filter: "con", value: "John" }
+                    ]
                 }
-               
             },
-            
+            filtering: {
+                enabled: true
+            },
             paging: true,
             columns: [
                 { field: "id", width: "250px", title: "ID" },
