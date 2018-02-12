@@ -459,6 +459,34 @@
   border-image-slice: 1;
 }
 
+.btn-rx-continue {
+	color: #fff;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb04c+0,fe922e+99 */
+  background: #62c35f; /* Old browsers */
+  background: -moz-linear-gradient(-45deg, #62c35f 0%, #3a9b37 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, #62c35f 0%,#3a9b37 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #62c35f 0%,#3a9b37 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62c35f', endColorstr='#3a9b37',GradientType=1 ); /* IE6-9 */
+  
+  -moz-border-image: -moz-linear-gradient(left, #62c35f 0%, #3a9b37 99%);
+  -webkit-border-image: -webkit-linear-gradient(left, #62c35f 0%, #3a9b37 99%);
+  border-image: linear-gradient(to right, #62c35f 0%,#3a9b37 99%);
+  border-image-slice: 1;
+}
+
+.btn-rx-continue:hover {
+	color: #212529;
+	background: -moz-linear-gradient(left, #3a9b37 0%, #62c35f 99%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #3a9b37 0%,#62c35f 99%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #3a9b37 0%,#62c35f 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62c35f', endColorstr='#3a9b37',GradientType=1 ); /* IE6-9 */
+  
+  -moz-border-image: -moz-linear-gradient(left, #3a9b37 0%, #62c35f 99%);
+  -webkit-border-image: -webkit-linear-gradient(left, #3a9b37 0%, #62c35f 99%);
+  border-image: linear-gradient(to right, #3a9b37 0%,#62c35f 99%);
+  border-image-slice: 1;
+}
+
 .btn-block {
 	display: block;
 	width: 100%;
@@ -516,6 +544,40 @@
   background-position-x: 26px;
 }
 
+.checkout address .img-rx.on-order {
+  background: url(../img/checkout/icons-rx.png) 0px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+  /*cursor: pointer;*/
+}
+
+.checkout address .img-rx.online {
+  background: url(../img/checkout/icons-rx.png) 120px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+  /*cursor: pointer;*/
+}
+
+.checkout address.selected .img-rx.on-order {
+  background: url(../img/checkout/icons-rx.png) 80px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+}
+
+.checkout address.selected .img-rx.online {
+  background: url(../img/checkout/icons-rx.png) 40px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+}
+
 .checkout address.selected {
   margin: 0;
   border-left: 4px solid #3A9B37;
@@ -523,6 +585,11 @@
   transform: scale(1.1);
   z-index: 99;
 }
+
+.checkout address.selected.rx {
+  border-left: none !important;
+}
+
 .checkout address.selected .radio {
   color: #3A9B37;
 }
@@ -560,4 +627,14 @@
   text-align:center;
   padding:10px;
   font-size: 14px;
+}
+
+.btn-rx-attach{
+  background-color:#39BC93;
+  color:#FFF;
+  font-size: 12px;
+}
+
+.radio-label .img-rx{
+  width: 100%; 
 }

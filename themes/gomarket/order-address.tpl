@@ -233,7 +233,7 @@ function hide_date_delivered(id_address){
   <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
   <input type="checkbox" name="same" id="addressesAreEquals" value="1" checked="checked" style="display:none;"/>
   {foreach from=$direcciones item=address}
-  <address data-id="{$address['id_address']}" {if $address['id_address'] == $cart->id_address_delivery}class="selected"{/if}>
+  <address data-id="{$address['id_address']}" {if $address['id_address'] == $cart->id_address_delivery}class="selected"{/if} onclick="hide_date_delivered({$address['id_address']});">
     <!-- .container-fluid -->
     <div class="container-fluid">
       <div class="row">
@@ -277,7 +277,7 @@ function hide_date_delivered(id_address){
                   <div class="form-group">
                     <label for="billing-lastname">Día:</label>
                     <select name="" id="day_delivered{$address['id_address']}" name="day_delivered{$address['id_address']}" class="form-control">
-                    {if isset($day_delivered)}
+                    {if isset($day_delivered) && isset($js_json_delivered)}
                       {$day_delivered}
                     {/if}
                   </div>
@@ -292,7 +292,7 @@ function hide_date_delivered(id_address){
                 </div>
               </div>
 
-              {if isset($js_json_delivered)}
+              {if isset($day_delivered) && isset($js_json_delivered)}
                   {$js_json_delivered}
                   <script>
                       $(function(){
