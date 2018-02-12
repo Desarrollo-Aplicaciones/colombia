@@ -1,15 +1,12 @@
-<div class="checkout w-4">
-  <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
-
 	<!-- .container-fluid -->
   <div class="container-fluid">
     <div class="row">
       <!-- .col-xs-12.col-sm-6 -->
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
-					<label for="shipping-state">Departamento:</label>
-					<select class="form-control" name="id_state" id="shipping-state" required>
-						<option value="" selected="selected" disabled>Selecciona</option>
+					<label for="estado" id="label-estado">Departamento:</label>
+					<select class="form-control" name="id_state" id="estado" required>
+						<option value="" selected="selected" disabled></option>
             <optgroup label="Ciudad / Departamento">
               <option value="326" data-id-city="1184">Bogotá / Cundinamarca</option>
               <option value="342" data-id-city="1976">Cali / Valle del Cauca</option>
@@ -29,11 +26,12 @@
 			<!-- .col-xs-12.col-sm-6 -->
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
-					<label for="shipping-city">Ciudad:</label>
+					<label for="ciudad" id="label-ciudad">Ciudad:</label>
           <input type="hidden" name="city" value="">
-					<select class="form-control" name="id_city" id="shipping-city" disabled required>
-						<option value="" selected="selected" disabled>Selecciona Departamento</option>
+					<select class="form-control" name="id_city" id="ciudad" disabled required>
+						<option value="" selected="selected" disabled></option>
 					</select>
+          <input type="hidden" class="hidden" name="city_name" id="nombre_ciudad" value="" />
 				</div>
       </div>
       <!-- /.col-xs-12.col-sm-6 -->
@@ -44,8 +42,8 @@
       <!-- .col-xs-12 -->
       <div class="col-xs-12">
 				<div class="form-group">
-					<label for="shipping-address1">Dirección de Entrega:</label>
-					<input type="text" class="form-control" name="address1" id="shipping-address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" required>
+					<label for="direccion" id="label-direccion">Dirección de Entrega:</label>
+					<input type="text" class="form-control" name="address1" id="direccion" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" required>
 				</div>
       </div>
       <!-- /.col-xs-12 -->
@@ -56,8 +54,8 @@
       <!-- .col-xs-12 -->
       <div class="col-xs-12">
 				<div class="form-group">
-					<label for="shipping-address2">Barrio / Indicaciones <sup>(opcional)</sup>:</label>
-					<input type="text" class="form-control" name="address2" id="shipping-address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}">
+					<label for="complemento" id="label-complemento">Barrio / Indicaciones <sup>(opcional)</sup>:</label>
+					<input type="text" class="form-control" name="address2" id="complemento" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}">
 				</div>
       </div>
       <!-- /.col-xs-12 -->
@@ -68,16 +66,16 @@
       <!-- .col-xs-12.col-sm-6 -->
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
-					<label for="shipping-phone">Teléfono personal:</label>
-					<input type="text" class="form-control" name="phone" id="shipping-phone" pattern="^[0-9]*$" title="Teléfono no válido, sólo números, no espacios" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" required>
+					<label for="fijo" id="label-fijo">Teléfono personal:</label>
+					<input type="text" class="form-control" name="phone" id="fijo" pattern="^[0-9]*$" title="Teléfono no válido, sólo números, no espacios" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" required>
 				</div>
       </div>
       <!-- /.col-xs-12.col-sm-6 -->
 			<!-- .col-xs-12.col-sm-6 -->
       <div class="col-xs-12 col-sm-6">
 				<div class="form-group">
-					<label for="shipping-phone-mobile">Otro teléfono <sup>(opcional)</sup>:</label>
-					<input type="text" class="form-control" name="phone_mobile" id="shipping-phone-mobile" pattern="^[0-9]*$" title="Teléfono no válido, sólo números, no espacios" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}">
+					<label for="movil" id="label-movil">Otro teléfono <sup>(opcional)</sup>:</label>
+					<input type="text" class="form-control" name="phone_mobile" id="movil" pattern="^[0-9]*$" title="Teléfono no válido, sólo números, no espacios" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}">
 				</div>
       </div>
       <!-- /.col-xs-12.col-sm-6 -->
@@ -88,8 +86,8 @@
       <!-- .col-xs-12 -->
       <div class="col-xs-12">
 				<div class="form-group">
-					<label for="shipping-alias">Nombre de la dirección:</label>
-					<input type="text" class="form-control" name="alias" id="shipping-alias" placeholder="Ejm: Casa Mamá, Oficina, Amor..." value="{if isset($smarty.post.alias)}{$smarty.post.alias}{/if}" required>
+					<label for="alias" id="label-alias">Nombre de la dirección:</label>
+					<input type="text" class="form-control" name="alias" id="alias" placeholder="Ejm: Casa Mamá, Oficina, Amor..." value="{if isset($smarty.post.alias)}{$smarty.post.alias}{/if}" required>
           <input type="hidden" name="dni" value="">
 				</div>
       </div>
@@ -98,5 +96,3 @@
     <!-- /.row -->
   </div>
   <!-- /.container-fluid -->
-</div>
-<!-- /.checkout.w-4 --> 

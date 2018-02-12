@@ -426,7 +426,7 @@ FROM  ps_cities_col cities
         $dias = array("Domingo","Lunes","Martes","Mi&eacute;rcoles","Jueves","Viernes","S&aacute;bado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
-        $day_delivered = '<select name="" id="day_delivered" name="day_delivered" style="width: 150px !important;">';
+        $day_delivered = '';
         $horasSelect = array();
 
         $numeroDeHoras = (int) Configuration::get('MAX_HOURS_DELIVERED'); // MAX_HOURS_DELIVERED
@@ -471,67 +471,7 @@ FROM  ps_cities_col cities
         $js_json_delivered = '<script type="text/javascript">
                                 var js_json_delivered = '.json_encode($horasSelect).'
                                 var form_to_add = "";
-                           
-                                    $(function(){                                 
-                                
-                                    if ($("#form_dir").length) {
-                                       form_to_add = "#form_dir"; 
-                                    } else {
-                                       form_to_add = "#cod_form"; 
-                                    }        
-
-                                    $("<input>").attr({
-                                        type: "hidden",
-                                        id: "date_delivered",
-                                        name: "date_delivered"
-                                    }).appendTo(form_to_add);
-
-                                    $("<input>").attr({
-                                        type: "hidden",
-                                        id: "hour_delivered_h",
-                                        name: "hour_delivered_h"
-                                    }).appendTo(form_to_add);
-
-                                    $("#hour_delivered").attr("enabled", "true");
-
-                                    if (js_json_delivered.hasOwnProperty($("#day_delivered").val())) {
-                                        $.each(js_json_delivered[$("#day_delivered").val()], function() {
-                                            $("#hour_delivered").append(
-                                                $("<option></option>").text(this).val(this)
-                                            );
-                                        });
-                                    }
-
-                                    $("#day_delivered").change(function() {
-
-                                        if (js_json_delivered.hasOwnProperty($("#day_delivered").val())) {
-                                            $("#hour_delivered").html("");         
-                                            $.each(js_json_delivered[$("#day_delivered").val()], function() {
-                                                $("#hour_delivered").append(
-                                                    $("<option></option>").text(this).val(this)
-                                                );
-                                        
-                                            });
-                                            $("#hour_delivered_h").val($("#hour_delivered").val());
-                                            $("#hour_delivered option[day_delivered]").show();
-                                        } else {
-                                            $("#hour_delivered").html(""); 
-                                        }
-                                        
-                                    });
-                                                                                                      
-                                    $("#hour_delivered_h").val($("#hour_delivered").val());
-                                    $("#date_delivered").val($("#day_delivered").val());
-                                    $("#day_delivered").change(function() {
-                                        $("#date_delivered").val($("#day_delivered").val());
-                                    });
-
-                                    $("#hour_delivered").change(function() {
-                                        $("#hour_delivered_h").val($("#hour_delivered").val());
-                                        
-                                    });
-                                });
-</script>';
+                            </script>';
 
         return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_delivered);
     }

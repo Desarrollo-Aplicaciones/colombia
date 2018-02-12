@@ -1,5 +1,3 @@
-<!--link rel="stylesheet" type="text/css" href="{$css_dir}order-address.css"-->
-
 {if $opc}
   {assign var="back_order_page" value="order-opc.php"}
 {else}
@@ -131,32 +129,24 @@
 //]]>
 function hide_date_delivered(id_address){
 
-      $.ajax({
-        type: "post",
-        url: "{$base_dir}ajaxs/ajax_address.php",
-        data: {
-          "ajax":true,
-          "id_city_by_id_address":true,
-          "id_address": id_address
-        },
-        success: function(response){
-          var id_city = $.parseJSON(response);
-    if(id_city != 1184 ){
-      $("#date_delivered").prop( "disabled", true );
-      $('#hour_delivered_h').prop( "disabled", true );
-      $('#titulo-2').hide();
-      $('#label-dia').hide();
-      $('#label-hora').hide();
-    }else{
-      $("#date_delivered").prop( "disabled", false  );
-      $('#hour_delivered_h').prop( "disabled", false  );
-      $('#titulo-2').show();
-      $('#label-dia').show();
-      $('#label-hora').show();
-    }
+  $.ajax({
+    type: "post",
+    url: "{$base_dir}ajaxs/ajax_address.php",
+    data: {
+      "ajax":true,
+      "id_city_by_id_address":true,
+      "id_address": id_address
+    },
+    success: function(response){
+      var id_city = $.parseJSON(response);
+      if(id_city != 1184 ){
+        $(".fecha_hora").hide();
+      }else{
+        $(".fecha_hora").show();
+      }
 
-        }
-      });	
+    }
+  });	
 
 }
 
@@ -172,23 +162,14 @@ function hide_date_delivered(id_address){
     hide_date_delivered(id);
       
     if(!$("#rb"+id).is(':checked')){
-    $('#rb'+id).attr('checked', 'checked');
-    $('#rb'+id).trigger("change");
-        $('.agregaNueva').removeClass("titulo");
-        $('#nueva-direccion').slideUp();
-        $('.navigation_block').slideDown();
-       } 
+      $('#rb'+id).attr('checked', 'checked');
+      $('#rb'+id).trigger("change");
+      $('.agregaNueva').removeClass("titulo");
+      $('#nueva-direccion').slideUp();
+      $('.navigation_block').slideDown();
+    } 
   }
 </script>
-<!--form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post" id="form_dir" name="form_dir"-->
-{* if !$opc}
-    <div class="titulo-pasos">{l s='Datos de Entrega'}</div>
-    <div class="botones">
-      <input type="button" id="processAddress" name="processAddress" value="{l s='Continue'} >>" class="enviar-form" />
-        <a id="atras11"href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")}" title="{l s='Previous'}" >
-        << {l s='Previous'}</a>
-    </div>
-{/if *}
 {assign var='current_step' value='address'}
 {include file="$tpl_dir./order-steps.tpl"}
 {include file="$tpl_dir./errors.tpl"}
@@ -203,8 +184,11 @@ function hide_date_delivered(id_address){
 {include file="$tpl_dir./form-billing-user.tpl"}
 
 <hr class="checkout-line">
-
-{include file="$tpl_dir./form-billing-address.tpl"}
+<div class="checkout w-4">
+  <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
+  {include file="$tpl_dir./form-billing-address.tpl"}
+</div>
+<!-- /.checkout.w-4 --> 
 
 <div class="checkout w-4">
 <!-- .container-fluid -->
@@ -243,20 +227,21 @@ function hide_date_delivered(id_address){
 
 {* Address list *}
 {if $direcciones}
-<form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post">
+<form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post"  id="form_dir" name="form_dir">
 <!-- .checkout.w-7 -->
 <div class="checkout w-7">
   <h3>¿A <b>dónde</b> llevamos tu pedido?</h3>
+  <input type="checkbox" name="same" id="addressesAreEquals" value="1" checked="checked" style="display:none;"/>
   {foreach from=$direcciones item=address}
-  <address data-id="{$address['id_address']}">
+  <address data-id="{$address['id_address']}" {if $address['id_address'] == $cart->id_address_delivery}class="selected"{/if}>
     <!-- .container-fluid -->
     <div class="container-fluid">
       <div class="row">
         <!-- .col-xs-12.col-md-4 -->
         <div class="col-xs-12 col-md-4">
           <div class="radio">
-            <input class="radio-address" id="radio-{$address['id_address']}" name="id_address_delivery" value="{$address['id_address']}" type="radio">
-            <label for="radio-{$address['id_address']}" class="radio-label"><b>{$address['alias']}</b></label>
+            <input class="radio-address" id="rb{$address['id_address']}" name="id_address_delivery" value="{$address['id_address']}" type="radio" onchange="enable({$address['id_address']});updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" {if $address['id_address'] == $cart->id_address_delivery}checked="checked"{/if}>
+            <label for="rb{$address['id_address']}" class="radio-label"><b>{$address['alias']}</b></label>
           </div>
         </div>
         <!-- /.col-xs-12.col-md-4 -->
@@ -270,44 +255,107 @@ function hide_date_delivered(id_address){
           </div>
 
           <div class="complete-data">
-            <div class="checkbox">
-              <input type="checkbox" id="checkbox-{$address['id_address']}">
-              <label for="checkbox-{$address['id_address']}">Deseo mi orden con servicio express</label>
-            </div>
+            {if $address['express'] && $expressEnabled && $express_productos}
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox-{$address['id_address']}" onchange="envioExpress({$address['id_address']})" name="express" value="{$address['id_address']}" {if $xps && $address['id_address'] == $cart->id_address_delivery}checked{/if} {if $address['id_address'] != $cart->id_address_delivery}disabled {/if}>
+                <label for="checkbox-{$address['id_address']}">Deseo mi orden con servicio express</label>
+              </div>
+            {/if}
 
             <!-- .datetime-delivery -->
             <div class="datetime-delivery">
               <!-- .row --> 
-              <div class="row">
+              <div class="row fecha_hora">
                 <div class="col-xs-12">            
                   <b>Fecha y hora de entrega</b>
                 </div>
               </div> 
               <!-- /.row --> 
               <!-- .row --> 
-              <div class="row">
+              <div class="row fecha_hora">
                 <div class="col-xs-12 col-md-6">
                   <div class="form-group">
                     <label for="billing-lastname">Día:</label>
-                    <select class="form-control">
-                      <option value="" selected="selected" disabled>Selecciona</option>
-                      <option value="volvo">Día</option>
-                      <option value="saab">Saab</option>
-                    </select>
+                    <select name="" id="day_delivered{$address['id_address']}" name="day_delivered{$address['id_address']}" class="form-control">
+                    {if isset($day_delivered)}
+                      {$day_delivered}
+                    {/if}
                   </div>
                 </div>
 
                 <div class="col-xs-12 col-md-6">
                   <div class="form-group">
                     <label for="billing-lastname">Hora:</label>
-                    <select class="form-control">
-                      <option value="" selected="selected" disabled>Selecciona</option>
-                      <option value="volvo">Mes</option>
-                      <option value="saab">Saab</option>
+                    <select class="form-control seleccion" id="hour_delivered{$address['id_address']}">
                     </select>
                   </div>
                 </div>
               </div>
+
+              {if isset($js_json_delivered)}
+                  {$js_json_delivered}
+                  <script>
+                      $(function(){
+                      
+                          if ($("#form_dir").length) {
+                              form_to_add = "#form_dir"; 
+                          } else {
+                              form_to_add = "#cod_form"; 
+                          }        
+
+                          $("<input>").attr({
+                              type: "hidden",
+                              id: "date_delivered{$address['id_address']}",
+                              name: "date_delivered{$address['id_address']}"
+                          }).appendTo(form_to_add);
+
+                          $("<input>").attr({
+                              type: "hidden",
+                              id: "hour_delivered_h{$address['id_address']}",
+                              name: "hour_delivered_h{$address['id_address']}"
+                          }).appendTo(form_to_add);
+
+                          $("#hour_delivered{$address['id_address']}").attr("enabled", "true");
+
+                          if (js_json_delivered.hasOwnProperty($("#day_delivered{$address['id_address']}").val())) {
+                              $.each(js_json_delivered[$("#day_delivered{$address['id_address']}").val()], function() {
+                                  $("#hour_delivered{$address['id_address']}").append(
+                                      $("<option></option>").text(this).val(this)
+                                  );
+                              });
+                          }
+
+                          $("#day_delivered{$address['id_address']}").change(function() {
+
+                              if (js_json_delivered.hasOwnProperty($("#day_delivered{$address['id_address']}").val())) {
+                                  $("#hour_delivered{$address['id_address']}").html("");         
+                                  $.each(js_json_delivered[$("#day_delivered{$address['id_address']}").val()], function() {
+                                      $("#hour_delivered{$address['id_address']}").append(
+                                          $("<option></option>").text(this).val(this)
+                                      );
+                              
+                                  });
+                                  $("#hour_delivered_h{$address['id_address']}").val($("#hour_delivered{$address['id_address']}").val());
+                                  $("#hour_delivered{$address['id_address']} option[day_delivered{$address['id_address']}]").show();
+                              } else {
+                                  $("#hour_delivered{$address['id_address']}").html(""); 
+                              }
+                              
+                          });
+                                                                                            
+                          $("#hour_delivered_h{$address['id_address']}").val($("#hour_delivered{$address['id_address']}").val());
+                          $("#date_delivered{$address['id_address']}").val($("#day_delivered{$address['id_address']}").val());
+                          $("#day_delivered{$address['id_address']}").change(function() {
+                              $("#date_delivered{$address['id_address']}").val($("#day_delivered{$address['id_address']}").val());
+                          });
+
+                          $("#hour_delivered{$address['id_address']}").change(function() {
+                              $("#hour_delivered_h{$address['id_address']}").val($("#hour_delivered{$address['id_address']}").val());
+                              
+                          });
+                      });
+                  </script>
+              {/if}
               <!-- /.row -->
               <!-- .row --> 
               <div class="row">
@@ -328,7 +376,7 @@ function hide_date_delivered(id_address){
         <!-- /.col-xs-12.col-md-7 -->
 
         <!-- .col-xs-12.col-md-1 -->
-        <div class="col-xs-12 col-md-1">
+        <div class="col-xs-12 col-md-1" onclick="editar_direccion();">
           <button class="btn-edit" title="Editar Dirección"></button>
         </div>
         <!-- /.col-xs-12.col-md-1 -->
@@ -340,7 +388,7 @@ function hide_date_delivered(id_address){
 
   <address>
     <!-- .container-fluid -->
-    <div class="container-fluid">
+    <div class="container-fluid" onclick="nueva_direccion();">
       <div class="row">
         <!-- .col-xs-12 -->
         <div class="col-xs-12">
@@ -379,198 +427,6 @@ function hide_date_delivered(id_address){
 {* /$direcciones *}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div id="order-address">
-
-{if $datacustomer['firstname'] == "" || $datacustomer['identification'] == "" || $datacustomer['id_type'] == 0 }
-  {*include file="$tpl_dir./customer_data_billing.tpl"*}
-{/if}
-  <!-- ************************** PRIMERA COLUMNA ****************************-->
-  <!-- <form action="{$link->getPageLink($back_order_page, true)}" method="post"> FORMULARIO COLUMNA 1-->
-  <!-- <form action="{$link->getPageLink('address', true)|escape:'html'}" method="post" id="add_address"> FORMULARIO COLUMNA 2-->
-  <div class="contenedor" id="primera_columna">
-    <div class="titulo" id="titulo-1">
-      ¿A dónde llevamos tu pedido?
-    </div>
-    <div class="address_container">		
-    <input type="checkbox" name="same" id="addressesAreEquals" value="1" checked="checked" style="display:none;"/>
-    {if $direcciones}
-      {foreach from=$direcciones item=nr}
-      <div class="direccion" onclick="changeAddress({$nr['id_address']});">
-          <div class="radio-direccion">
-            <input type="radio" id="rb{$nr['id_address']}" name="id_address_delivery" value="{$nr['id_address']}" onchange="enable({$nr['id_address']});updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" {if $nr['id_address'] == $cart->id_address_delivery}checked="checked"{/if}"/>
-          </div>
-          <div class="nombre-direccion">{$nr['alias']}</div>
-          <div class="detalle-direccion">{$nr['address1']|truncate:40:"...":true} <br />
-          {if $nr['express'] && $expressEnabled && $express_productos}
-          <div class="express" id="texto_{$nr['id_address']}" {if $nr['id_address'] == $cart->id_address_delivery}style="color:#39CB98;font-weight:600" {/if}>
-            <input type="checkbox" id="{$nr['id_address']}" name="express" value="{$nr['id_address']}" onchange="envioExpress({$nr['id_address']})" {if $xps && $nr['id_address'] == $cart->id_address_delivery}checked{/if} {if $nr['id_address'] != $cart->id_address_delivery}disabled {/if}>
-            Deseo mi orden con servicio express
-          </div>
-          {/if}
-          {* Mostrar envio nocturno y actualizar dirección*}
-          {if $entregaNocturnaEnabled eq 'enabled' && $localidadesBarriosEnabled eq 'enabled' && $paramEntregaNocturana['id_city'] == $nr['id_city']}
-          <div id="{$nr['id_address']}_box_entrega_nocturna" class="express" id="texto_{$nr['id_address']}_nocturna" {if $nr['id_address'] == $cart->id_address_delivery}style="color:#39CB98" {/if}>
-            <select style="height: 10px; font-size: 10px;" id="{$nr['id_address']}localidades" onchange="displayBarrios({$nr['id_address']})" {if $nr['id_address'] != $cart->id_address_delivery}disabled {/if}><option>-Localidad-</option>
-            {$list_localidades}
-            </select> - <select style="height: 10px; font-size: 10px;" id="{$nr['id_address']}barrios"><option {if $nr['id_address'] != $cart->id_address_delivery}disabled {/if}>-Barrio-</option></select>
-            <br> <input type="checkbox" id="{$nr['id_address']}_nocturno_up" name="envioNocturno" value="{$nr['id_address']}" onchange="updateLocaliadBarrio({$nr['id_address']})" {if $entregaNocturna eq 'enabled' && $nr['id_address'] == $cart->id_address_delivery}checked="checked"{/if} {if $nr['id_address'] != $cart->id_address_delivery}disabled {/if}>
-              Deseo mi orden esta misma noche.
-          </div>
-          {/if}
-          {*Mostrar envio nocturno*}
-          {if $entregaNocturnaEnabled eq 'enabled' && $localidadesBarriosEnabled eq 'disabled' && $paramEntregaNocturana['id_city'] == $nr['id_city'] && !$paramEntregaNocturana['auto_load']}
-          <div id="{$nr['id_address']}_box_entrega_nocturna" class="express" id="texto_{$nr['id_address']}_nocturna" {if $nr['id_address'] == $cart->id_address_delivery}style="color:#39CB98" {/if}>
-            
-            <input type="checkbox" id="{$nr['id_address']}_nocturno" name="envioNocturno" value="{$nr['id_address']}" onchange="envio_nocturno({$nr['id_address']})" {if $entregaNocturna eq 'enabled' && $nr['id_address'] == $cart->id_address_delivery}checked="checked"{/if} {if $nr['id_address'] != $cart->id_address_delivery}disabled {/if}> 
-             Deseo mi orden esta misma noche
-            
-          </div>
-          {/if}
-            </div> 
-          <div class="ciudad-direccion">{$nr['city']}</div>
-          <div class="estado-direccion">{$nr['state']}</div>
-      </div>
-      {/foreach}
-  {* Inicio fecha  y hora de entrega *}		
-    <br /><br />
-    <div class="titulo" id="titulo-2" style=" text-align: left;">
-      Fecha y hora de entrega
-    </div>	
-    <br /><br />			
-    <div class="etiqueta" id="label-dia"><label>Día<span class="purpura">*</span>:<br></label> 
-      {if isset($day_delivered) && isset($js_json_delivered)}
-      {$day_delivered}
-      <br>	
-      {$js_json_delivered}		
-      {/if}
-    </div>
-
-
-    <div class="etiqueta" id="label-hora"><label>Hora<span class="purpura">*</span>:<br></label> 
-      <select class="seleccion" id="hour_delivered" style="width: 150px !important;">
-      </select><br>
-    </div>
-  {* Fin fecha  y hora de entrega *}				
-        <br /><br /><br />
-        <a href="javascript:void(0);" class="agregaNueva" onclick="toggleAddressForm();">Agregar nueva dirección</a>
-    </div>
-    {/if}
-  </div>
-  <!-- ************************** FIN PRIMERA COLUMNA ****************************-->			
-  <!-- ************************** SEGUNDA COLUMNA ****************************-->
-  <div class="contenedor" id="nueva-direccion">
-    <div class="campoCorto">
-      <div class="etiqueta" id="label-estado"><label>Departamento<span class="purpura">*</span>:<br /></label>
-        <select class="seleccion" id="estado" name="estado">
-          <option value="" selected="selected" disabled>- Departamento* -</option>
-          <option value="bog">Bogotá - Cundinamarca</option>
-          <option value="cal">Cali - Valle del Cauca</option>
-          <option value="med">Medellín - Antioquia</option>
-          <option value="bar">Barranquilla - Atlántico</option>
-          <option value="buc">Bucaramanga - Santander</option>
-          <option disabled>──────────────</option>
-          {foreach from=$estados item=dp}
-          <option value="{$dp['id_state']}">{$dp['state']}</option>
-          {/foreach}
-        </select><br /> 
-      </div>
-        </div>
-        <div class="campoCorto">
-      <div class="etiqueta" id="label-ciudad"><label>Ciudad<span class="purpura">*</span>:<br /></label>
-        <select class="seleccion" id="ciudad" name="ciudad">
-          <option value="" selected="selected" disabled>- Ciudad* -</option>
-        </select><br /> 
-      </div>
-         <input type="hidden" class="hidden" name="nombre_ciudad" id="nombre_ciudad" value="" />
-    </div>
-    <div class="campoLargo">
-      <div class="etiqueta" id="label-direccion"><label>Dirección<span class="purpura">*</span>:<br /></label>
-      <input class="entrada larga" type="text" value="" placeholder="Dirección*" id="direccion" name="direccion"/><br />
-      </div> 
-    </div>
-    <div class="campoLargo">
-      <div class="etiqueta" id="label-complemento"><label>Barrio / Indicaciones<span class="purpura">*</span>:<br /></label>
-      <input class="entrada larga" type="text" value="" placeholder="Barrio / Indicaciones*" id="complemento" name="complemento"/><br /> 
-      </div>
-    </div>
-        <div class="campoCorto">
-            <div class="etiqueta" id="label-fijo"><label>Teléfono 1<span class="purpura">*</span>:<br /></label>
-            <input class="entrada" type="text" value="" placeholder="Número fijo o celular*" id="fijo" name="fijo"/><br /> 
-            </div>
-        </div>
-        <div class="campoCorto">
-            <div class="etiqueta" id="label-movil"><label>Teléfono 2:<br /></label>
-            <input class="entrada" type="text" value="" placeholder="Teléfono 2, opcional" id="movil" name="movil"/><br /> 
-            </div>
-        </div>
-      {*<div class="campoLargo">
-        <p class="etiqueta" id="label-alias">Nombre de dirección<span class="purpura">*</span>:<br />
-        <input class="entrada larga" type="text" value="" placeholder="Ej: Mi casa, Mi oficina, Mi mamá" id="alias" name="alias"/><br /> 
-        </p>
-      </div>*}
-    <span class="obliga">(<span class="purpura">*</span>) Campos Obligatorios</span>
-    {if $direcciones}
-    <div style="display:inline-block;">
-      <input type="button" value="Registrar dirección" id="new-address"/>
-            <a href="javascript:void(0);" onclick="toggleAddressForm();" class="cancelar">Cancelar</a>
-    </div>
-    {/if}
-  </div>
-  <!-- ************************** FIN SEGUNDA COLUMNA ****************************-->			
-  
-  <div class="navigation_block">
-      <!-- si la fomula medica existe salto al paso 3 -->			
- {if $formula}
-   <input type="hidden" class="hidden" name="step" value="3" />
-  {else}
-  <input type="hidden" class="hidden" name="step" value="2" />
-{/if}
-    <input type="hidden" name="back" value="{$back}" />
-    <input type="button" id="processAddress2" name="processAddress2" value="{if !($direcciones)}Guardar y {/if}{l s='Continue'} >>" class="enviar-form" />
-        <a id="atras12" href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")}" title="{l s='Previous'}" >
-        << {l s='Previous'}</a>
-  </div>
-  <!--/form-->
-</div>
-
 <div id="standard_lightbox">
     <div class="fog"></div>
     <div id="lightbox_content"></div>
@@ -593,77 +449,63 @@ function hide_date_delivered(id_address){
     $('#standard_lightbox .fog').click(function(){
         lightbox_hide();
     });
+
+    function nueva_direccion(){
+      standard_lightbox("new_address");
+    }
+    function editar_direccion(){
+      standard_lightbox("new_address");
+    }
 </script>
+<div id="new_address">
+  <form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post">
+  <div class="checkout w-4">
+    <h3>Agregar <b>nueva</b> dirección</h3>
+    {include file="$tpl_dir./form-billing-address.tpl"}
+  </div>
+
+  <div class="checkout w-4">
+  <!-- .container-fluid -->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- .col-xs-12.col-sm-6 -->
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+            <button type="button" class="btn2 btn-block btn-outline-secondary" onclick="lightbox_hide()">Cancelar</button>
+          </div>
+        </div>
+        <!-- /.col-xs-12.col-sm-6 -->
+        <!-- .col-xs-12.col-sm-6 -->
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+            <!-- Si la fomula medica existe salto al paso 3 -->			
+            <input type="hidden" name="step" value="{if $formula}3{else}2{/if}" />
+            {*if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if*}
+            <input type="hidden" name="back" value="order.php?step=2&multi-shipping=0" />
+            {if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
+            <input type="hidden" name="token" value="{$token}" />
+            <input type="hidden" name="id_country" value="{$id_country}" />
+
+            <button type="button" class="btn2 btn-block btn-primary" name="submitAddress" id="new-address2">Guardar y continuar</button>
+          </div>
+        </div>
+        <!-- /.col-xs-12.col-sm-6 -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <!-- /.checkout.w-4 --> 
+  </form>
+</div>
 
 <link href="{$base_dir}themes/gomarket/css/Lightbox_ConfirmExpress.css" rel="stylesheet" type="text/css">
 
-<div class="contenedor container_24" id="pop-confirmExpress">
-    <div class="close_express" onclick="lightbox_hide();"></div>
-    <div class="block_title_express">
-        Confirmación
-    </div>
-
-    <div class="block_information_express">
-        <label>El pedido llegará en máximo 90 minutos, el costo del servicio express es de <span id="xpsValue"></span><br> adicionales. ¿Deseas activar este servicio?</label>
-    </div>
-    
-    <div class="block_buttons_express">
-      <div id="xpscancel">No, Cancelar</div>
-    <div id="xpsaccept">Si, Aceptar</div>
-    </div>
-</div>
-
-<script>
-
-  $('#estado').change(function(){
-    var id_estado = $(this).val();
-    var ciudad = "";
-    switch (id_estado){
-    case "bog":
-       $(this).val("326");
-       ciudad = "1184";
-      break;
-    case "cal":
-       $(this).val("342");
-       ciudad = "1976";
-      break;
-    case "med":
-       $(this).val("314");
-       ciudad = "1037";
-      break;
-    case "bar":
-       $(this).val("316");
-       ciudad = "1162";
-      break;
-    case "buc":
-       $(this).val("339");
-       ciudad = "1835";
-      break;
-    }
-    id_estado = $(this).val();
-    if (id_estado==""){
-      $('#ciudad').html('<option value="" selected="selected" disabled>- Ciudad -</option>');
-    }else{
-      $.ajax({
-        type: "post",
-        url: "{$base_dir}ajax_formulario_cities.php",
-        data: {
-          "id_state":id_estado
-        },
-        success: function(response){
-          var json = $.parseJSON(response);
-          $('#ciudad').html('<option value="" selected="selected" disabled>- Ciudad -</option>'+json.results);
-          $('#ciudad').val(ciudad);
-          ciudad_s();
-        }
-      });
-    }
-  });
-  
+<script>  
 
   $('#ciudad').change(function(){
     ciudad_s();
-    });
+  });
   
   function ciudad_s()
   {
@@ -673,12 +515,12 @@ function hide_date_delivered(id_address){
   }
 
   
-  $('#new-address').click(function(){
+  $('#new-address2').click(function(){
     $('.validacion').remove();
     var id_country={$pais};
     var id_state=$('#estado').val();
     var id_customer={$cliente};
-    var alias="Direccion {($direcciones|@count)+1}";
+    var alias=$('#alias').val();
     var address1=$('#direccion').val();
     var address2=$('#complemento').val();
     var city=$('#nombre_ciudad').val();
@@ -739,9 +581,14 @@ function hide_date_delivered(id_address){
         }
 
         $('#form_dir').append('<input type="radio" id="rb'+response+'" name="id_address_delivery" value="'+response+'" onchange="enable('+response+');updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" checked="checked"/>');
-        changeAddress(response);
-        //$('#processAddress2').submit();
-        $('#form_dir').submit();
+        setTimeout(function(){ 
+          updateAddressesDisplay();
+          changeAddress(response);
+          setTimeout(function(){ 
+            $('#form_dir').submit(); 
+          }, 1000);
+        }, 1000);
+        
       }
     })
   })
@@ -749,12 +596,10 @@ function hide_date_delivered(id_address){
 {literal}
   function Validate() {
     var id_state=$('#estado').val();
-    //var alias=$('#alias').val();
     var address1=$('#direccion').val();
     var address2=$('#complemento').val();
     var city=$('#ciudad').val();
     var phone=$('#fijo').val();
-    //var phone_mobile=$('#movil').val();
         
     if(id_state==""){
       $('#obliga-estado').remove();
@@ -789,21 +634,6 @@ function hide_date_delivered(id_address){
       }
     }
     
-    /*if(phone_mobile==""){
-      $('#obliga-movil').remove();
-      $('#label-movil').parent().append('<span class="validacion" id="obliga-movil">Campo Requerido</span>');
-      $('#movil').attr("style", "border-color:#A5689C;background-color:#FFFAFA");
-    }else{
-      if (phone_mobile.match(/^[3]{1}([0-2]|[5]){1}\d{1}[2-9]{1}\d{6}$/)){
-        $('#obliga-movil').remove();
-        $('#movil').removeAttr("style"); 
-      }else{
-        $('#obliga-movil').remove();
-        $('#label-movil').parent().append('<span class="validacion" id="obliga-movil">Campo requerido</span>');
-        $('#movil').attr("style", "border-color:#A5689C;background-color:#FFFAFA");
-      }
-    }*/
-    
     if(address1==""){
       $('#obliga-direccion').remove();
       $('#label-direccion').parent().append('<span class="validacion" id="obliga-direccion">Campo Requerido</span>');
@@ -822,15 +652,6 @@ function hide_date_delivered(id_address){
       $('#obliga-complemento').remove();
       $('#complemento').removeAttr("style"); 
     }
-    
-    
-    /*if(alias==""){
-      $('#label-alias').parent().append('<span class="validacion" id="obliga-alias">Campo Requerido</span>');
-      $('#alias').attr("style", "border-color:#A5689C;background-color:#FFFAFA");
-    }else{
-      $('#obliga-alias').remove();
-      $('#alias').removeAttr("style"); 
-    }*/
 
     var error=$('.validacion').length;
     
@@ -1092,74 +913,6 @@ function hide_date_delivered(id_address){
   }
 
 {/literal}
-
-  $('.enviar-form').click(function(){
-
-    var type_document = $('#txt_type_document_customer').val();
-    var number_document = $('#txt_number_document_customer').val();
-    var first_name = $('#txt_firstname_customer').val();
-    var last_name = $('#txt_lastname_customer').val();
-    var id_state = $('#estado').val();
-    var address1 = $('#direccion').val();
-    var address2 = $('#complemento').val();
-    var city = $('#nombre_ciudad').val();
-    var city_id = $('#ciudad').val();
-    var phone = $('#fijo').val();
-    var phone_mobile = $('#movil').val();
-    var active = 1;
-    var id_country = {$pais};
-    var id_customer = {$cliente};
-    var contdata_billing = false;
-    var existdir = $('[name="id_address_delivery"]').val();
-
-    if ( $('#container_data_billing').length ) {
-      contdata_billing = true;
-    }
-
-    if ( typeof($('[name="id_address_delivery"]').val()) === "undefined" ) {
-      existdir = "";
-    }
-
-        if ( $('[name="id_address_delivery"]').is(':checked') && !contdata_billing ) {
-            $('#form_dir').submit();
-        } else {
-
-      $.ajax({
-        type : "post",
-        url : "data_billing.php",
-        data : {
-          "action" : 'insertDataBillingCustomer',
-          "contdata_billing" : contdata_billing,
-          "id_customer" : id_customer,
-          "type_document" : type_document,
-          "number_document" : number_document,
-          "first_name" : first_name,
-          "last_name" : last_name,
-          "id_state" : id_state,
-          "address1" : address1,
-          "address2" : address2,
-          "city" : city,
-          "city_id" : city_id,
-          "phone" : phone,
-          "phone_mobile" : phone_mobile,
-          "active" : active,
-          "id_country" : id_country,
-          "existdir" : existdir
-        },
-        beforeSend: function(beforeresponse) {
-          var resultdatabilling = validatedatabilling();
-          if ( !resultdatabilling ){
-            beforeresponse.abort();
-          }
-        },
-        success: function(response){
-          if ( response == 1 ) {
-            $('#form_dir').submit();
-          }
-        }
-      });
-    }
-  });
 
     function getDocument(){
         var fieldname = 'Nombre';

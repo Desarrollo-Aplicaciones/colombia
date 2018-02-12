@@ -134,63 +134,56 @@ if(isset($this->context->cookie->{'error_pay'}) && !empty($this->context->cookie
 			break;
 	
 			case 1:
-//###############################################    
- if(!isset($_SESSION)) 
-    { 
-        session_start(); 
-    }                            
-// si la varible sesión (formulamedica) se creo                            
-if (isset($_SESSION['formulamedica'])){
-   // si la varible de seción (formulamedica) es igual a true
-   
-if($_SESSION['formulamedica']==true) {
-self::$smarty->assign('formula',true);
-}
- else {
-    self::$smarty->assign('formula',false);
-}
-}
- else {
-    self::$smarty->assign('formula',false);
-} 
+				//###############################################    
+				if (!isset($_SESSION)) { 
+					session_start(); 
+				}
+				// si la varible sesión (formulamedica) se creo                            
+				if (isset($_SESSION['formulamedica'])){
+					// si la varible de seción (formulamedica) es igual a true
+					
+					if($_SESSION['formulamedica']==true) {
+						self::$smarty->assign('formula',true);
+					} else {
+						self::$smarty->assign('formula',false);
+					}
+				} else {
+					self::$smarty->assign('formula',false);
+				} 
 
 
-if(!$this->is_formula())
-{
-self::$smarty->assign('formula',true);    
-}
-                           
-                            
+				if (!$this->is_formula()) {
+					self::$smarty->assign('formula',true);    
+				}       
                             
 				$this->_assignAddress();
 				$this->processAddressFormat();
-				if (Tools::getValue('multi-shipping') == 1)
-				{
+				if (Tools::getValue('multi-shipping') == 1) {
 					$this->_assignSummaryInformations();
 					$this->context->smarty->assign('product_list', $this->context->cart->getProducts());
 					$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping.tpl');
 				}
-				else
-					/******* Codigo para Direcciones Ajax *******/
-					$idcliente = $this->context->customer->id;
+				
+				/******* Codigo para Direcciones Ajax *******/
+				$idcliente = $this->context->customer->id;
 				$sql="SELECT ad.id_address,
-                                  			   ad.id_state,
-                                  			   st.name AS state,
-                                  			   ad.id_customer,
-                                  			   ad.alias,
-                                  			   ad.city,
-                                  			   ad.address1,
-                                  			   ad.address2,
- 												ac.id_city,
-												cc.express_abajo AS express
-                                  		FROM "._DB_PREFIX_."address AS ad
-                                  				Inner Join "._DB_PREFIX_."state AS st
-                                  				ON ad.id_state = st.id_state
-                                  				INNER JOIN "._DB_PREFIX_."address_city AS ac
-												ON ad.id_address=ac.id_address
-												INNER JOIN "._DB_PREFIX_."carrier_city AS cc
-												ON ac.id_city=cc.id_city_des
-                                  		WHERE ad.id_customer='".$idcliente."' AND ad.deleted=0";
+							ad.id_state,
+							st.name AS state,
+							ad.id_customer,
+							ad.alias,
+							ad.city,
+							ad.address1,
+							ad.address2,
+							ac.id_city,
+							cc.express_abajo AS express
+						FROM "._DB_PREFIX_."address AS ad
+							Inner Join "._DB_PREFIX_."state AS st
+							ON ad.id_state = st.id_state
+							INNER JOIN "._DB_PREFIX_."address_city AS ac
+							ON ad.id_address=ac.id_address
+							INNER JOIN "._DB_PREFIX_."carrier_city AS cc
+							ON ac.id_city=cc.id_city_des
+						WHERE ad.id_customer='".$idcliente."' AND ad.deleted=0";
 				$result=Db::getInstance()->ExecuteS($sql,FALSE);
 				$direcciones=array();
 				$total=0;
@@ -228,14 +221,6 @@ self::$smarty->assign('formula',true);
                 
 				$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
 				break;
-	
-				//			case 2:
-				//				if (Tools::isSubmit('processAddress'))
-					//					$this->processAddress();
-				//				$this->autoStep();
-				//				$this->_assignCarrier();
-				//				$this->setTemplate(_PS_THEME_DIR_.'order-carrier.tpl');
-				//			break;
 	
 	
 			case 2:

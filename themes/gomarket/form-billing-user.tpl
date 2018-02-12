@@ -94,10 +94,10 @@
 			<div class="col-xs-12 col-sm-4">
 				<div class="form-group">
 					<select class="form-control" id="birthdate-day" data-validate="true">
-						<option value="">Selecciona</option>
-            {foreach from=$days item=d}
-						<option value="{$d}" {if ($sl_day == $d)}selected="selected"{/if}>{$d}</option>
-					  {/foreach}
+						<option value="">día: </option>
+            			{foreach from=$days item=d}
+							<option value="{$d}" {if ($sl_day == $d)}selected="selected"{/if}>{$d}</option>
+					  	{/foreach}
 					</select>
 				</div>
 			</div>
@@ -106,10 +106,10 @@
 			<div class="col-xs-12 col-sm-4">
 				<div class="form-group">
 					<select class="form-control" id="birthdate-month" data-validate="true">
-            <option value="">Selecciona</option>
-            {foreach from=$months key=k item=m}
-            <option value="{$k}" {if ($sl_month == $m)}selected="selected"{/if}>{l s=$m}</option>
-            {/foreach}
+						<option value="">Mes: </option>
+						{foreach from=$months key=k item=m}
+							<option value="{$k}" {if ($sl_month == $m)}selected="selected"{/if}>{l s=$m}</option>
+						{/foreach}
 					</select>
 				</div>
 			</div>
@@ -118,10 +118,12 @@
 			<div class="col-xs-12 col-sm-4">
 				<div class="form-group">
 					<select class="form-control" id="birthdate-year" data-validate="true">
-            <option value="">Selecciona</option>
-            {foreach from=$years item=y}
-            <option value="{$y}" {if ($sl_year == $y)}selected="selected"{/if}>{$y}</option>
-            {/foreach}
+						<option value="">Año: </option>
+						{foreach from=$years item=y}
+							{if $y < (date('Y')-17) && $y > (date('Y')-100)}
+								<option value="{$y}" {if ($sl_year == $y)}selected="selected"{/if}>{$y}</option>
+							{/if}
+						{/foreach}
 					</select>
 				</div>
 			</div>

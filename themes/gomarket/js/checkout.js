@@ -108,7 +108,7 @@ $(function () {
 
         if (typeof idCity !== "undefined") {
           $city.find('option[value="' + idCity + '"]').prop('selected', true);
-          $('input[name="city"]').val($city.find("option:selected").text());
+          $('input[name="city_name"]').val($city.find("option:selected").text());
         }
       } else {
         $city.find("option:eq(0)").text("Depto. Sin Ciudad");
@@ -120,7 +120,7 @@ $(function () {
    * Address - Add city name
    */
   $('select[name="id_city"]').change(function () {
-    $('input[name="city"]').val($(this).find("option:selected").text());
+    $('input[name="city_name"]').val($(this).find("option:selected").text());
   });
 
   /**
