@@ -292,9 +292,19 @@
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
     <div class="pagocont">
+        {assign var="device" value = md5(session_id() + microtime())}
         <form  method="POST" action="./modules/payulatam/credit_card_codensa.php" id="formPayUc" autocomplete="off" >
+            <p style="background: url(https://maf.pagosonline.net/ws/fp?id={$device}80200")></p>
+            <img src="https://maf.pagosonline.net/ws/fp/clear.png?id={$device}80200">
+            <script src="https://maf.pagosonline.net/ws/fp/check.js?id={$device}80200"></script>
+            <object type="application/x-shockwave-flash"
+            data="https://maf.pagosonline.net/ws/fp/fp.swf?id={$device}80200" width="1" height="1"
+            id="thm_fp">
+            <param name="movie" value="https://maf.pagosonline.net/ws/fp/fp.swf?id={$device}80200"/>
+          </object>
             <div>
                 <div id="formfiles" class="contend-form">
+                    <input type="hidden" name="device"  value="{$device}" va/>
                     <div class="ctn-vlr-total-pedido">
                         El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
                     </div>
