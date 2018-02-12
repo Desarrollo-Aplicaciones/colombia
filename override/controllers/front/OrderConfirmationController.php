@@ -26,8 +26,12 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                    'segmento' => 'Diabéticos',
                    'product' => $product_cart[0]['name'],
                    'id_product' => $product_cart[0]['id_product'],
-                   'phone' => $address_customer[0]['phone']
+                   'phone' => $address_customer[0]['phone'],
+                    'order' => $order,
+                    'address' => new Address($order->id_address_delivery),
            ));
+
+           //ddd($order->getProducts());
 
            if ($this->context->customer->is_guest)
            {
@@ -63,4 +67,5 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
        $results = Db::getInstance()->ExecuteS($query);
        return $results;
    }
+
 }
