@@ -39,14 +39,23 @@ class Cart extends CartCore {
       ),
     );
 
-    public static function addCartMedico($id_cart, $id_medico) {
+    public static function addCartMedico($id_cart, $id_medico, $texto = false) {
+        if($texto){
+            $sql_max = "SELECT MAX(id_medico) as max_medico FROM "._DB_PREFIX_."medico WHERE id_visitador = 20";
+            $result_max = Db::getInstance()->getRow($sql_max);
+            $result_max["max_medico"]++;
+            $sql_medico = "INSERT INTO "._DB_PREFIX_."medico (`id_medico`, `nombre`, `cedula`, `id_visitador`) VALUES ('".$result_max["max_medico"]."', '".$id_medico."', '".$result_max["max_medico"]."', '20');";
+            $result_medico = Db::getInstance()->execute($sql_medico);
+            $sql_especialidad = "INSERT INTO "._DB_PREFIX_."medic_especialidad VALUES('".$result_max["max_medico"]."', '21', 1)";
+            $result_especialidad = Db::getInstance()->execute($sql_especialidad);
+            $id_medico = $result_max["max_medico"];
+        }
         if ($id_medico != 0) {
             $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'doctor_cart WHERE id_cart = ' . $id_cart;
-            $data = array('id_cart' => $id_cart,
-              'id_doctor' => $id_medico);
+            $sql_insert = "INSERT INTO "._DB_PREFIX_."doctor_cart VALUES('".$id_cart."', '".$id_medico."')";
             $error = array();
-            if (!Db::getInstance()->execute($sql) || !Db::getInstance()->insert('doctor_cart', $data)) {
-                die($error['error'] = 'no se pudo agregar el médico');
+            if (!Db::getInstance()->execute($sql) || !Db::getInstance()->execute($sql_insert)) {
+                $error['error'] = 'no se pudo agregar el médico';
             }
         }
         return $error;
