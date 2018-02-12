@@ -175,9 +175,18 @@
                         $('#goStep1').show();
 
                         $('#email-addr').text(jsonData.email);
-                        $('#sms-addr').text(jsonData.phones[0].phone);
+
                         $(".option-regen[data-via='mail']").attr('data-id', jsonData.id_customer);
-                        $(".option-regen[data-via='tel']").attr('data-id', jsonData.phones[0].id_address_delivery);
+
+                        if(jsonData.phones[0]){
+                            $(".option-regen[data-via='tel']").show();
+                            $('#sms-addr').text(jsonData.phones[0].phone);
+                            $(".option-regen[data-via='tel']").attr('data-id', jsonData.phones[0].id_address_delivery);
+
+                        }
+                        else{
+                            $(".option-regen[data-via='tel']").hide();
+                        }
 
                     }
                     else {

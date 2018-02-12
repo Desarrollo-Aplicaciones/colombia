@@ -207,7 +207,7 @@ IF(
 from ps_address a
 left join (SELECT max(id_order) max_order, id_address_delivery from ps_orders o group by id_address_delivery) o on o.id_address_delivery=a.id_address
 where a.id_customer = ".$this->id."
-order by max_order desc) x");
+order by max_order desc) x  where phone is not null");
     }
 
 }
