@@ -26,295 +26,304 @@
 * 1 <a href="{$pathSsl|escape:'htmlall':'UTF-8'}modules/payulatam/payment.php" name="ref1"  id="ref1">
 * 3 <a href="{$pathSsl|escape:'htmlall':'UTF-8'}modules/payulatam/payment.php">
 *}
-{* 
-<!-- COD_efectivo -->
-<div name="opcion4" id="opciones" onclick="mouse_overd('div6');">
-	<div class="invisible">
-		<div id="div6rb" style="display:none">
-		</div>
-		<div class="visible">
-		</div>
-	</div>
-	<div class="payment_module" id="textradiocontrae">
-		<input type="radio" value="div6" name="mediopago" id="mediopagoce"   onclick="mouse_overd('div6');">
-		<div class="image">
-			<img src="{$img_dir}mediosp/cod.jpg" id="imgcontrae" alt="Pago contra entrega"/>
-		</div>
-		{l s='Pago en efectivo' mod='cashondelivery'}
-		{if isset($show_contra_entrega) && $show_contra_entrega }
-			<a href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}?confirm=1&cod_pagar=COD-Efectivo" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow" style="display:none;" id="COD_Efectivo">&nbsp;</a>
-		{/if}
-	</div>
-</div>
 
 
-<div id="div6" style="display: none;">
-	{if isset($medios_de_pago['cashondelivery']) && $medios_de_pago['cashondelivery'] === '1'}
-		<p class="contendfrom">
-			<span class="textapoyo">Paga tu pedido al recibirlo en la dirección que seleccionaste</span>
-		</p>
-		<div style="float:left;width:130px;margin-top:30px;">
-			<input type="button" onclick="window.location.href=$('#COD_Efectivo').attr('href');" class="paymentSubmit" value="Pagar &raquo;">
-		</div>
-	{else}
-		<p class="contendfromd">
-			<span class="textapoyo">El pago en efectivo, no está disponible para tu ciudad, por favor utiliza otro.</span>
-		</p>
-	{/if}
-</div> *}
 
 
+<div class="checkout w-7"> 
 <!-- Pago contraentrega-->
+	<address data-id="div10" class="payment" onclick="{literal}$('#mediopagodatafono').click(){/literal}">
+		<!-- .container-fluid -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<div class="radio">
+						<input class="radio-address" id="mediopagodatafono" name="mediopago" value="div10" type="radio">
+						<label for="mediopagodatafono" class="radio-label" style="display: inline-flex;">
+							<img src="{$img_dir}mediosp/pagocontentrega.png" id="imgcontrae" alt="Pago contra entrega"/>
+						</label>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-2 -->
 
+				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+						<span itemprop="streetAddress"><b>{l s='Pago contra entrega' mod='cashondelivery'}</b></span>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-9 -->
 
+				{if isset($show_contra_entrega) && $show_contra_entrega }
+					<a href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}?confirm=1&cod_pagar=COD-Efectivo" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow" style="display:none;" id="COD_Efectivo">&nbsp;</a>
+					<a href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}?confirm=1&cod_pagar=COD-Tarjeta" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow" id="COD_Datafono" style="display:none;">&nbsp;</a>
+				{/if}
 
+				<div class="col-xs-12 col-md-12 complete-data">
 
-<div id="ctn-contra-entrega" class="cont-opc-pago">
-	<div name="opcion10" id="opciones" onclick="mouse_overd('div10', '#ctn-contra-entrega');">
-		<div class="invisible">
-			<div id="div10rb"></div>
-			<div class="visible2"></div>
-			<div class="visible"></div>
-		</div>
-		<div class="payment_module" id="textradiodatafono">
-			<input type="radio" value="div10" name="mediopago" id="mediopagodatafono"   onclick="mouse_overd('div10');">
-			<div class="image">
-				<img src="{$img_dir}mediosp/pagocontentrega.png" id="imgcontrae" alt="Pago contra entrega" id="img-Pago-contra-entrega"/>
+					{if isset($medios_de_pago['cashondelivery']) && $medios_de_pago['cashondelivery'] === '1'}
+						<div class="ctn-vlr-total-pedido">
+							El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
+						</div>
+						<div class="ctn-vlr-total-pedido">¿Deseas pagar en efectivo o con terminal bancaria?</div>
+						<div id="ctn-contra-entrega-btns">
+							<input type="button" onclick="window.location.href=$('#COD_Efectivo').attr('href');" class="boton_pagos paymentSubmit" value="EFECTIVO">
+							<input type="button" onclick="window.location.href=$('#COD_Datafono').attr('href');" class="boton_pagos paymentSubmit" value="DATÁFONO">
+						</div>
+					{else}
+						<p class="contendfromd">
+							<span class="textapoyo"><strong>El pago en efectivo, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
+						</p>
+					{/if}
+					<!-- /.row -->
+				</div>
+				<!-- /.complete-data -->
 			</div>
-			{l s='Pago contra entrega' mod='cashondelivery'}
-			<div class="cont-mas-menos">
-        		<img id="div10im" src="{$img_dir}mediosp/mas_menos.png">
-  			</div>
-			{if isset($show_contra_entrega) && $show_contra_entrega }
-				<a href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}?confirm=1&cod_pagar=COD-Efectivo" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow" style="display:none;" id="COD_Efectivo">&nbsp;</a>
-	      		<a href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}?confirm=1&cod_pagar=COD-Tarjeta" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow" id="COD_Datafono" style="display:none;">&nbsp;</a>
-			{/if}
 		</div>
-	</div>
-  	<div id="divs">
-		<div id="div10" class="ctn-toggle-payment" style="display: none;">
-			{if isset($medios_de_pago['cashondelivery']) && $medios_de_pago['cashondelivery'] === '1'}
-				<div class="ctn-vlr-total-pedido">
-            		El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
-          		</div>
-          		<div class="ctn-vlr-total-pedido">¿Deseas pagar en efectivo o con terminal bancaria?</div>
-          		<div id="ctn-contra-entrega-btns">
-          			<input type="button" onclick="window.location.href=$('#COD_Efectivo').attr('href');" class="boton_pagos paymentSubmit" value="EFECTIVO">
-          			<input type="button" onclick="window.location.href=$('#COD_Datafono').attr('href');" class="boton_pagos paymentSubmit" value="DATÁFONO">
-          		</div>
-			{else}
-				<p class="contendfromd">
-					<span class="textapoyo"><strong>El pago en efectivo, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
-				</p>
-			{/if}
-		</div>
-	</div>
-</div>
-<div class="separador-medios-pago"></div>
+		<!-- /.container-fluid -->
+	</address>
 <!-- Pago contraentrega/-->
 
 
 <!-- Cuenta Corriente o Ahorros -->
-<div id="ctn-cuenta-corriente" class="cont-opc-pago">
-	<div name="opcion3" id="opciones" onclick="mouse_overd('div9', '#ctn-cuenta-corriente');">
-		<div class="invisible">
-			<div id="div9rb"></div>
-			<div class="visible2"></div>
-			<div class="visible"></div>
-		</div>
-		<div class="payment_module" id="textpse">
-			<input type="radio" value="div9" name="mediopago" id="mediopagop" onclick="mouse_overd('div9');" >
-			<div class="image"><img src="{$img_dir}mediosp/pse.jpg" alt="pagos con PSE"/></div>
-			Cuenta corriente o ahorros
-			<div class="cont-mas-menos">
-	    		<img id="div9im" src="{$img_dir}mediosp/mas_menos.png">
+	<address data-id="div9" class="payment" onclick="{literal}$('#mediopagop').click(){/literal}">
+		<!-- .container-fluid -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<div class="radio">
+						<input class="radio-address" id="mediopagop" name="mediopago" value="div9" type="radio">
+						<label for="mediopagop" class="radio-label" style="display: inline-flex;">
+							<img src="{$img_dir}mediosp/pse.jpg" alt="pagos con PSE"/>
+						</label>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-2 -->
+
+				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+						<span itemprop="streetAddress"><b>Cuenta corriente o ahorros</b></span>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-9 -->
+
+				<div class="col-xs-12 col-md-12 complete-data">
+
+					{if isset($medios_de_pago['Pse']) && $medios_de_pago['Pse'] ==='1'} 
+						<div class="ctn-vlr-total-pedido">
+							El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
+						</div>       
+						<div class="contendfrom">
+							{include file="$tpl_dir../../modules/payulatam/tpl/payuPse.tpl"}
+						</div>
+					{else}
+						<p class="contendfromd">
+							<span class="textapoyo"><strong>El pago desde cuenta, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
+						</p>
+					{/if}
+					<!-- /.row -->
+				</div>
+				<!-- /.complete-data -->
 			</div>
 		</div>
-	</div>
-	<div id="divs">
-		<div id="div9" class="ctn-toggle-payment"  style="display: none; ">
-			{if isset($medios_de_pago['Pse']) && $medios_de_pago['Pse'] ==='1'} 
-				<div class="ctn-vlr-total-pedido">
-	        		El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
-	      		</div>       
-				<div class="contendfrom">
-					{include file="$tpl_dir../../modules/payulatam/tpl/payuPse.tpl"}
-				</div>
-			{else}
-				<p class="contendfromd">
-					<span class="textapoyo"><strong>El pago desde cuenta, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
-				</p>
-			{/if}
-		</div>
-	</div>
-</div>
-<div class="separador-medios-pago"></div>
+		<!-- /.container-fluid -->
+	</address>
 <!-- Cuenta Corriente o Ahorros -->
 
 <!-- Tarjeta Credito -->
-<div id="ctn-tarjeta-credito" class="cont-opc-pago">
-	<div name="opcion2" id="opciones" onclick="mouse_overd('div8', '#ctn-tarjeta-credito');">
-		
-		<div class="invisible">
-			<div id="div8rb"></div>
-			<div class="visible2"></div>
-			<div class="visible"></div>
-		</div>
-
-		<div class="payment_module" id="texttarjeta">
-			<input type="radio" value="div8" name="mediopago" id="mediopagot">
-			{* <input type="radio" value="div8" name="mediopago" id="mediopagot" > *}
-			<div class="image">
-				<img src="{$img_dir}mediosp/credito.jpg" alt="Tarjetas Farmalisto"/>
-			</div>
-			<div class="ctn-title-medio-pago">Tarjeta de crédito</div>
-			<div class="cont-mas-menos"><img id="div8im" src="{$img_dir}mediosp/mas_menos.png"></div>
-		</div> 
-	</div>
-	<div id="divs">
-		<div id="div8" class="ctn-toggle-payment" style="display: none; ">
-			{if isset($medios_de_pago['Tarjeta_credito']) && $medios_de_pago['Tarjeta_credito'] ==='1'}
-				<div class="contendfrom">
-					{include file="$tpl_dir../../modules/payulatam/tpl/credit_card.tpl"}
+	<address data-id="div8" class="payment" onclick="{literal}$('#mediopagot').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
+		<!-- .container-fluid -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<div class="radio">
+						<input class="radio-address" id="mediopagot" name="mediopago" value="div8" type="radio">
+						<label for="mediopagot" class="radio-label" style="display: inline-flex;">
+							<img src="{$img_dir}mediosp/credito.jpg" alt="Tarjetas Farmalisto"/>
+						</label>
+					</div>
 				</div>
-			{else}
-				<p class="contendfromd">
-					<span class="textapoyo"><strong>El pago con tarjeta, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
-				</p>
-			{/if}
+				<!-- /.col-xs-12.col-md-2 -->
+
+				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+						<span itemprop="streetAddress"><b>Tarjeta de crédito</b></span>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-9 -->
+
+				<div class="col-xs-12 col-md-12 complete-data">
+
+					{if isset($medios_de_pago['Tarjeta_credito']) && $medios_de_pago['Tarjeta_credito'] ==='1'}
+						<div class="contendfrom">
+							{include file="$tpl_dir../../modules/payulatam/tpl/credit_card.tpl"}
+						</div>
+					{else}
+						<p class="contendfromd">
+							<span class="textapoyo"><strong>El pago con tarjeta, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
+						</p>
+					{/if}
+					<!-- /.row -->
+				</div>
+				<!-- /.complete-data -->
+			</div>
 		</div>
-	</div>
-</div>
-<div class="separador-medios-pago"></div>
+		<!-- /.container-fluid -->
+	</address>
 <!-- Tarjeta Credito /-->
 
 <!-- Tarjeta Credito codensa -->
-
-		<div class="payment_module" id="texttarjetac">
-			<input type="radio" value="div21" name="mediopago" id="mediopagot">
-			{* <input type="radio" value="div8" name="mediopago" id="mediopagot" > *}
-			<div class="image">
-				<img src="{$img_dir}mediosp/Pago_Codensa.jpg" alt="Tarjetas Farmalisto"/>
-			</div>
-			<div class="ctn-title-medio-pago">Tarjeta de crédito Codensa</div>
-			<div class="cont-mas-menos"><img id="div8im" src="{$img_dir}mediosp/mas_menos.png"></div>
-		</div> 
-	</div>
-	<div id="divs">
-		<div id="div21" class="ctn-toggle-payment" style="display: none; ">
-			{if isset($medios_de_pago['Tarjeta_credito']) && $medios_de_pago['Tarjeta_credito'] ==='1'}
-				<div class="contendfrom">
-					{include file="$tpl_dir../../modules/payulatam/tpl/credit_card_codensa.tpl"}
+	<address data-id="div21" class="payment" onclick="{literal}$('#mediopagocodensa').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
+		<!-- .container-fluid -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<div class="radio">
+						<input class="radio-address" id="mediopagocodensa" name="mediopago" value="div21" type="radio">
+						<label for="mediopagocodensa" class="radio-label" style="display: inline-flex;">
+							<img src="{$img_dir}mediosp/Pago_Codensa.jpg" alt="Tarjetas Farmalisto"/>
+						</label>
+					</div>
 				</div>
-			{else}
-				<p class="contendfromd">
-					<span class="textapoyo"><strong>El pago con tarjeta, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
-				</p>
-			{/if}
+				<!-- /.col-xs-12.col-md-2 -->
+
+				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+						<span itemprop="streetAddress"><b>Tarjeta de crédito Codensa</b></span>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-9 -->
+
+				<div class="col-xs-12 col-md-12 complete-data">
+
+					{if isset($medios_de_pago['Tarjeta_credito']) && $medios_de_pago['Tarjeta_credito'] ==='1'}
+						<div class="contendfrom">
+							{include file="$tpl_dir../../modules/payulatam/tpl/credit_card_codensa.tpl"}
+						</div>
+					{else}
+						<p class="contendfromd">
+							<span class="textapoyo"><strong>El pago con tarjeta, no está disponible para tu ciudad, por favor utiliza otro.</strong></span>
+						</p>
+					{/if}
+					<!-- /.row -->
+				</div>
+				<!-- /.complete-data -->
+			</div>
 		</div>
-	</div>
-</div>
-<div class="separador-medios-pago"></div>
+		<!-- /.container-fluid -->
+	</address>
 <!-- Tarjeta Credito codensa /-->
 
 
 <!-- Baloto -->
-<div id="ctn-baloto" class="cont-opc-pago">
-	<div name="opcion1" id="opciones" onclick="mouse_overd('div7', '#ctn-baloto');">
-		<div class="invisible">
-			<div id="div7rb"></div>
-			<div class="visible2"></div>
-			<div class="visible"></div>
+	<address data-id="div7" class="payment" onclick="{literal}$('#mediopagob').click(){/literal}">
+		<!-- .container-fluid -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<div class="radio">
+						<input class="radio-address" id="mediopagob" name="mediopago" value="div7" type="radio">
+						<label for="mediopagob" class="radio-label" style="display: inline-flex;">
+							<img src="{$img_dir}mediosp/baloto.jpg" id="imgbaloto" alt="Pagos con Baloto"/>
+						</label>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-2 -->
+
+				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+						<span itemprop="streetAddress"><b>Vía Baloto</b></span>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-9 -->
+
+				<div class="col-xs-12 col-md-12 complete-data">
+
+					<div class="ctn-vlr-total-pedido">
+						El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
+					</div> 
+
+					{if isset($disableBaloto) and !$disableBaloto and (isset($isblockmpb) and !$isblockmpb) and isset($medios_de_pago['Baloto']) && $medios_de_pago['Baloto'] ==='1'}
+
+
+						<div class="ctn-vlr-total-pedido">
+							Finaliza tu compra para recibir los datos con los que podrás acercarte a un punto Baloto y realizar tu pago.
+							{include file="$tpl_dir../../modules/payulatam/tpl/payuBaloto.tpl"}
+						</div>
+
+						<div class="cont-trust-img">
+							<input type="button" onclick="$('#botoncitosubmit').click();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
+						</div>
+
+					{else if isset($isblockmpb) and $isblockmpb}
+
+						<div class="ctn-vlr-total-pedido">
+							<span class="textapoyo"><strong>El monto para Baloto no debe superar los 500.000 pesos. Por favor intenta con otro medio de pago.</strong></span>
+						</div>
+
+					{else}
+
+						<div class="ctn-vlr-total-pedido">
+							<span class="textapoyo"><strong>El pago con Baloto no está disponible para tu ciudad, por favor intenta con otro medio de pago.</strong></span>
+						</div>
+
+					{/if}
+					<!-- /.row -->
+				</div>
+				<!-- /.complete-data -->
+			</div>
 		</div>
-		<div class="payment_module" id="textradiobaloto">
-			<input type="radio" value="div7" name="mediopago" id="mediopagob"   onclick="mouse_overd('div7');" >
-			<div class="image"><img src="{$img_dir}mediosp/baloto.jpg" id="imgbaloto" alt="Pagos con Baloto"/></div>
-			Vía Baloto
-			<div class="cont-mas-menos">
-        		<img id="div7im" src="{$img_dir}mediosp/mas_menos.png">
-  			</div>
-		</div>
-	</div>
-	<div id="divs">
-		<div id="div7" class="ctn-toggle-payment" style="display: none;">
-			<div class="ctn-vlr-total-pedido">
-	    		El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
-	  		</div> 
-
-			{if isset($disableBaloto) and !$disableBaloto and (isset($isblockmpb) and !$isblockmpb) and isset($medios_de_pago['Baloto']) && $medios_de_pago['Baloto'] ==='1'}
-
-
-				<div class="ctn-vlr-total-pedido">
-					Finaliza tu compra para recibir los datos con los que podrás acercarte a un punto Baloto y realizar tu pago.
-					{include file="$tpl_dir../../modules/payulatam/tpl/payuBaloto.tpl"}
-				</div>
-
-				<div class="cont-trust-img">
-					<input type="button" onclick="$('#botoncitosubmit').click();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
-				</div>
-
-			{else if isset($isblockmpb) and $isblockmpb}
-
-				<div class="ctn-vlr-total-pedido">
-					<span class="textapoyo"><strong>El monto para Baloto no debe superar los 500.000 pesos. Por favor intenta con otro medio de pago.</strong></span>
-				</div>
-
-			{else}
-
-				<div class="ctn-vlr-total-pedido">
-					<span class="textapoyo"><strong>El pago con Baloto no está disponible para tu ciudad, por favor intenta con otro medio de pago.</strong></span>
-				</div>
-
-			{/if}
-
-		</div>
-	</div>
-</div>
-<div class="separador-medios-pago"></div>
+		<!-- /.container-fluid -->
+	</address>
 <!-- Baloto /-->
 
 <!-- Pago con efecty -->
-<div id="ctn-efecty" class="cont-opc-pago">
-	<div name="opcion5" id="opciones" onclick="mouse_overd('div5', '#ctn-efecty');">
-		<div class="invisible">
-			<div id="div5rb"></div>
-			<div class="visible2"></div>
-			<div class="visible"></div>
-		</div>
-		<div class="payment_module" id="textradioefecty">
-			<input type="radio" value="div5" name="mediopago" id="mediopagoe" onclick="mouse_overd('div5');" >
-			<div class="image">
-				<img src="{$img_dir}mediosp/efecty.jpg" alt="Pago con Efecty" id="imgEfecty"/>
-			</div>
-			Pago con Efecty
-			<div class="cont-mas-menos">
-        		<img id="div5im" src="{$img_dir}mediosp/mas_menos.png">
-  			</div>
-		</div> 
-	</div>
+	<address data-id="div5" class="payment" onclick="{literal}$('#mediopagoe').click(){/literal}">
+		<!-- .container-fluid -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<div class="radio">
+						<input class="radio-address" id="mediopagoe" name="mediopago" value="div5" type="radio">
+						<label for="mediopagoe" class="radio-label" style="display: inline-flex;">
+							<img src="{$img_dir}mediosp/efecty.jpg" alt="Pago con Efecty" id="imgEfecty"/>
+						</label>
+					</div>
+				</div>
+				<!-- /.col-xs-12.col-md-2 -->
 
-	<div id="divs">
-		<div id="div5" class="ctn-toggle-payment" style="display: none;">
-			<div class="ctn-vlr-total-pedido">
-	    		El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
-	  		</div>
-			{if isset($disableBaloto) and !$disableBaloto and (isset($isblockmpb) and !$isblockmpb) and isset($medios_de_pago['Efecty']) && $medios_de_pago['Efecty'] ==='1'}
-		   		<p class="ctn-vlr-total-pedido">Finaliza tu compra para recibir los datos con los que podras acercarte a un punto Efecty y realizar tu pago.</p>
-		   		<div class="cont-trust-img">
-		   			<input type="button" onclick="$('#botoncitosubmit').click();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
-		   		</div>
-				{include file="$tpl_dir../../modules/payulatam/tpl/payuEfecty.tpl"}
-			{else if isset($isblockmpb) and $isblockmpb}
-				<div class="ctn-vlr-total-pedido">
-					<p class="textapoyo"><strong>El monto para Efecty no debe superar los 500.000 pesos. Por favor intenta con otro medio de pago.</strong></p>
+				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+						<span itemprop="streetAddress"><b>Pago con Efecty</b></span>
+					</div>
 				</div>
-			{else}
-				<div class="ctn-vlr-total-pedido">
-					<p class="textapoyo"><strong>El pago con Efecty no está disponible para tu ciudad, por favor intenta con otro medio de pago.</strong></p>
+				<!-- /.col-xs-12.col-md-9 -->
+
+				<div class="col-xs-12 col-md-12 complete-data">
+
+					<div class="ctn-vlr-total-pedido">
+						El valor total de tu pedido es de <strong class="ctn-vlr-total-pedido-semibold">{displayPrice price=$total_price} (Impuestos incl.)</strong>
+					</div>
+					{if isset($disableBaloto) and !$disableBaloto and (isset($isblockmpb) and !$isblockmpb) and isset($medios_de_pago['Efecty']) && $medios_de_pago['Efecty'] ==='1'}
+						<p class="ctn-vlr-total-pedido">Finaliza tu compra para recibir los datos con los que podras acercarte a un punto Efecty y realizar tu pago.</p>
+						<div class="cont-trust-img">
+							<input type="button" onclick="$('#botoncitosubmit').click();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
+						</div>
+						{include file="$tpl_dir../../modules/payulatam/tpl/payuEfecty.tpl"}
+					{else if isset($isblockmpb) and $isblockmpb}
+						<div class="ctn-vlr-total-pedido">
+							<p class="textapoyo"><strong>El monto para Efecty no debe superar los 500.000 pesos. Por favor intenta con otro medio de pago.</strong></p>
+						</div>
+					{else}
+						<div class="ctn-vlr-total-pedido">
+							<p class="textapoyo"><strong>El pago con Efecty no está disponible para tu ciudad, por favor intenta con otro medio de pago.</strong></p>
+						</div>
+					{/if}
+					<!-- /.row -->
 				</div>
-			{/if}
+				<!-- /.complete-data -->
+			</div>
 		</div>
-	</div>
-</div>
-<div class="separador-medios-pago"></div>
+		<!-- /.container-fluid -->
+	</address>
 <!-- Pago con efecty /-->
+</div>

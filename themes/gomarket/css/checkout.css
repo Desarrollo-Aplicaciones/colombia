@@ -590,6 +590,10 @@
   border-left: none !important;
 }
 
+.checkout address.selected.payment {
+  transform: scale(1.03);
+}
+
 .checkout address.selected .radio {
   color: #3A9B37;
 }

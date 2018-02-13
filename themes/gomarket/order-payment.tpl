@@ -26,44 +26,8 @@
 <script	src="{$base_dir_ssl}js/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
 <script src="{$base_dir_ssl}themes/gomarket/js/jquery.validate.js"></script>
 <script src="{$base_dir_ssl}themes/gomarket/js/jquery-ui.js"></script>
-{*}
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css">
-{*}
 <script src="{$base_dir_ssl}js/jquery.form.js"></script>
 
-{* if isset($disableBaloto) and $disableBaloto OR (isset($isblockmpb) and $isblockmpb)} 
-
-
- <style type="text/css">
-  #imgbaloto,#mediopagob, #imgEfecty, #mediopagoe {
-  opacity: 0.6;
-}
-
-#textradiobaloto,#textradioefecty
-{
-color: #979797;
-
-}
- 
- </style>
-{/if}
-{if isset($show_contra_entrega) and !$show_contra_entrega }
-    
-    <style type="text/css">
-  #imgcontrae,#mediopagoce {
-  opacity: 0.6;
-}
-
-#textradiocontrae
-{
-color: #979797;
-
-}
- 
- </style>
-    
-{/if *}
 {literal}
 	<script>
 
@@ -276,10 +240,6 @@ color: #979797;
     </script>
 {/if}
 
-{* if !$opc}<div class="titulo-pasos">Modos de pago</div>{/if *}
-{* <a href="{$link->getPageLink('order', true, NULL, "step=1")}" id="navegarAtras2" title="{l s='Previous'}" > 
-<< Anterior</a> *}
-
 <div id="uls">
 	{if !$opc}
 		{assign var='current_step' value='payment'}
@@ -325,7 +285,6 @@ color: #979797;
 								{assign var='noDeleteButton' value=1}
 								{* Display the product line *}
                                 <!-- Imprime productos -->
-								{*include file="$tpl_dir./shopping-cart-product-line-formula.tpl"*}
                         		{* Then the customized datas ones*}
                         		{if isset($customizedDatas.$productId.$productAttributeId)}
                         			{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization'}
@@ -432,7 +391,7 @@ color: #979797;
 				                        					{assign var='odd' value=$product@iteration%2}
 				                        					{assign var='noDeleteButton' value=1}
 															{foreach from=$product.features item=feature name=featureLoop}
-																{if $feature.id_feature == '242'}
+																{if $feature.id_feature == '243'}
 				                        							{assign var='DoctorRequired' value=1}
 																{/if}
 				                        					{/foreach}
@@ -482,25 +441,6 @@ color: #979797;
 				                       					{/if}
 				                       				</div>
 
-				                       				{* if $use_taxes}
-														{if $priceDisplay}
-															<div class="cart_total_price">
-																<div class="descripcion">{if $display_tax_label}{l s='Total products (tax excl.)'}{else}{l s='Total products'}{/if}</div>
-																<div class="price2" id="total_product">{displayPrice price=$total_products}</div>
-															</div>
-														{else}
-															<div class="cart_total_price">
-																<div class="descripcion">{if $display_tax_label}{l s='Total products (tax incl.)'}{else}{l s='Total products'}{/if}</div>
-																<div class="price2" id="total_product">{displayPrice price=$total_products_wt}</div>
-															</div>
-														{/if}
-													{else}
-														<div class="cart_total_price">
-															<div class="descripcion">{l s='Total products:'}</div>
-															<div class="price2" id="total_product">{displayPrice price=$total_products}</div>
-														</div>
-													{/if *}
-
 													<!-- total envio -->
 													{if $total_shipping_tax_exc <= 0 && !isset($virtualCart) && $quitarenvio == 0 }
 														<div class="cart_total_price" style="{if !isset($carrier->id) || is_null($carrier->id)}display:none;{/if}">
@@ -529,47 +469,6 @@ color: #979797;
 															</div>
 														{/if}
 													{/if}
-
-													{* if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
-														<div class="cart_total_price" style="{if !isset($carrier->id) || is_null($carrier->id)}display:none;{/if}">
-															<div class="descripcion">{l s='Shipping:'}</div>
-															<div class="price2" id="total_shipping">{l s='Free Shipping!'}</div>
-														</div> 
-													{else}
-														{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
-															{if $priceDisplay}
-																<<div class="cart_total_price" {if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
-																	<div class="descripcion">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}</div>
-																	<div class="price2" id="total_shipping">{displayPrice price=$total_shipping_tax_exc}</div>
-																</div>
-															{else}
-																<div class="cart_total_price" {if $total_shipping <= 0} style="display:none;"{/if}>
-																	<div class="descripcion">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</div>
-																	<div class="price2" id="total_shipping" >{displayPrice price=$total_shipping}</div>
-																</div>
-															{/if}
-														{else}
-															<div class="cart_total_price" {if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
-																<div class="descripcion">{l s='Total shipping:'}</div>
-																<div class="price2" id="total_shipping" >{displayPrice price=$total_shipping_tax_exc}</div>
-															</div>
-														{/if}
-													{/if *}
-										                        
-										                        
-										                        <!-- total sin IVA -->
-										                        
-													{* if $use_taxes}
-													<div class="cart_total_price">
-														<div class="descripcion">{l s='Total (tax excl.):'}</div>
-														<div class="price2" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</div>
-													</div>
-													<div class="cart_total_price">
-														<div class="descripcion">{l s='Total tax:'}</div>
-														<div class="price2" id="total_tax">{displayPrice price=$total_tax}</div>
-													</div>
-													{/if *}
-
 													<!-- descuentos -->
 													{if count($discounts)}
 														<div class="cart_total_price">
@@ -925,19 +824,16 @@ color: #979797;
 					$("#ingresar_medico").removeAttr('disabled');
 				}
 				var medico_registrado = false;
-				var nombre = '';
-				var id_pay = '';
 
-				$(".cont-opc-pago").click(function(){
+				$(".payment").click(function(){
 					if(!medico_registrado){
-						nombre = $(this).attr('id');
-						id_pay = $(this).children("#divs").children(":first")[0].id;
 						standard_lightbox('care-lines', true);
 					}
 				});
 
 				$(".lightbox_close").click(function(){
-					mouse_overd(id_pay, '#' + nombre);
+					$("address").removeClass("selected");
+					$('address input:radio').removeAttr("checked");
 					lightbox_hide();
 				});
 
@@ -965,7 +861,6 @@ color: #979797;
 						data: { 'medico_fnd' : ($('#med_fnd').val() === "")?$('#medico').val():$('#med_fnd').val() },
 						dataType: "json"	
 					}).done(function( msg ) {
-						console.log(msg);
 						if(msg.result.error){
 							$("#medico_error").html(msg.result.error);
 						}else{
