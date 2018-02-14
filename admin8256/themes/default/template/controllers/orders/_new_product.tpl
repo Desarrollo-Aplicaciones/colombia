@@ -35,8 +35,8 @@
 		</div>
 	</td>
 	<td style="display:none;">
-		{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" size="4" disabled="disabled" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
-		{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" size="4" disabled="disabled" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}<br />
+		{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" readonly="readonly" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" size="4" disabled="disabled" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
+		{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" readonly="readonly" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" size="4" disabled="disabled" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}<br />
 	</td>
 	<td style="display:none;" align="center" class="productQuantity"><input type="text" name="add_product[product_quantity]" id="add_product_product_quantity" value="1" size="3" disabled="disabled" /></td>
 	{if ($order->hasBeenPaid())}<td style="display:none;" align="center" class="productQuantity">&nbsp;</td>{/if}
