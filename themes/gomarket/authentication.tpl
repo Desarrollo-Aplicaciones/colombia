@@ -64,8 +64,9 @@
 
         margin: 10px 0 0px;
     }
-    input[type="checkbox"]:focus{
-        outline:0;
+
+    input[type="checkbox"]:focus {
+        outline: 0;
     }
 
 </style>
@@ -127,7 +128,8 @@
                            value=""/>
                 </p>
 
-                <p style="margin-top: 9px;"><a href="{$link->getPageLink('password')}" id="" style="color: #7174ee">{l s='¿Olvidaste tu contraseña?'}
+                <p style="margin-top: 9px;"><a href="{$link->getPageLink('password')}" id=""
+                                               style="color: #7174ee">{l s='¿Olvidaste tu contraseña?'}
                         ​​​​​​​</a></p>
 
                 <p id="error-text" class="class-error"
@@ -158,7 +160,8 @@
                 <p class="text">
                     <label for="name"
                            style="line-height: 10px; margin-top: 20px; font-size: 14px; font-weight: 700 ">{l s='Ingresa tu nombre'}</label>
-                    <input type="text" required id="name-register" name="firstname" class="input-custom" placeholder="{l s='Nombre'}"
+                    <input type="text" required id="name-register" name="firstname" class="input-custom"
+                           placeholder="{l s='Nombre'}"
                            value=""/>
                 </p>
 
@@ -182,7 +185,7 @@
                 <p class="text">
                     <label for="email"
                            style="line-height: 10px; margin-top: 20px; font-size: 14px; font-weight: 700 ">{l s='Confirma la contraseña'}</label>
-                    <input type="password"required id="repassword" name="repassword" class="input-custom"
+                    <input type="password" required id="repassword" name="repassword" class="input-custom"
                            placeholder="{l s='contraseña'}"
                            value=""/>
                 </p>
@@ -191,14 +194,18 @@
                 <div class="text TOS" style="display: flex;">
                     <div class="TOSreg" style="    display: inline-block;width: 48px;    margin: 8px 11px 0 0;">
 
-                        <input type="checkbox" value="None" id="TOSreg" name="check" style="display: block" required> <label
+                        <input type="checkbox" value="None" id="TOSreg" name="check" style="display: block" required>
+                        <label
                                 for="TOSreg"></label></div>
-                    <div class="TOSlegend" style=" width: auto;margin-top: 1px;color: #777777;line-height: 23px;  width: auto !important;">
+                    <div class="TOSlegend"
+                         style=" width: auto;margin-top: 1px;color: #777777;line-height: 23px;  width: auto !important;">
                         Confirmo que soy mayor de edad y acepto
-                        <a href="{$base_uri}?id_cms=3&controller=cms" target="blank" target="blank" style="color: #39bc93; text-decoration: none;">
+                        <a href="{$base_uri}?id_cms=3&controller=cms" target="blank" target="blank"
+                           style="color: #39bc93; text-decoration: none;">
                             los términos y las condiciones</a>
                         legales y la autorización
-                        <a href="{$base_uri}?id_cms=3&controller=cms" target="blank" target="blank" style="color: #39bc93; text-decoration: none;">habeas data.</a></div>
+                        <a href="{$base_uri}?id_cms=3&controller=cms" target="blank" target="blank"
+                           style="color: #39bc93; text-decoration: none;">habeas data.</a></div>
                     <div class="rterror" id="errorTOSreg"></div>
                 </div>
 
@@ -220,58 +227,62 @@
 
 <div style="height: 10px"></div>
 
+
+
 <div style="text-align: center; width: 300px;">
     <a href="{$base_dir}" class="button" id="goBack" value="">{l s='Regresar al inicio'} </a>
     <input type="button" class="button" id="goStep1" style="display: none" value="{l s='Regresar'}"/>
 </div>
 
 <script>
-    jQuery("form").submit(function(e){
+    jQuery("form").submit(function (e) {
         e.preventDefault();
     });
 
-    jQuery(function($) { $.extend({
-        form: function(url, data, method) {
-            if (method == null) method = 'POST';
-            if (data == null) data = {};
+    jQuery(function ($) {
+        $.extend({
+            form: function (url, data, method) {
+                if (method == null) method = 'POST';
+                if (data == null) data = {};
 
-            var form = $('<form>').attr({
-                method: method,
-                action: url
-            }).css({
-                display: 'none'
-            });
+                var form = $('<form>').attr({
+                    method: method,
+                    action: url
+                }).css({
+                    display: 'none'
+                });
 
-            var addData = function(name, data) {
-                if ($.isArray(data)) {
-                    for (var i = 0; i < data.length; i++) {
-                        var value = data[i];
-                        addData(name + '[]', value);
-                    }
-                } else if (typeof data === 'object') {
-                    for (var key in data) {
-                        if (data.hasOwnProperty(key)) {
-                            addData(name + '[' + key + ']', data[key]);
+                var addData = function (name, data) {
+                    if ($.isArray(data)) {
+                        for (var i = 0; i < data.length; i++) {
+                            var value = data[i];
+                            addData(name + '[]', value);
                         }
+                    } else if (typeof data === 'object') {
+                        for (var key in data) {
+                            if (data.hasOwnProperty(key)) {
+                                addData(name + '[' + key + ']', data[key]);
+                            }
+                        }
+                    } else if (data != null) {
+                        form.append($('<input>').attr({
+                            type: 'hidden',
+                            name: String(name),
+                            value: String(data)
+                        }));
                     }
-                } else if (data != null) {
-                    form.append($('<input>').attr({
-                        type: 'hidden',
-                        name: String(name),
-                        value: String(data)
-                    }));
-                }
-            };
+                };
 
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    addData(key, data[key]);
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        addData(key, data[key]);
+                    }
                 }
+
+                return form.appendTo('body');
             }
-
-            return form.appendTo('body');
-        }
-    }); });
+        });
+    });
 
 
     doingAjax = false;
@@ -345,11 +356,11 @@
 
     var passwordLogin = document.getElementById("password");
 
-    $('#password').keyup(function() {
+    $('#password').keyup(function () {
         passwordLogin.setCustomValidity("");
     });
 
-    $('#btn-login2').click(function(e){
+    $('#btn-login2').click(function (e) {
         if ($('#form_loginpassword')[0].checkValidity() && !doingAjax) {
             e.preventDefault();
             doingAjax = true;
@@ -370,8 +381,13 @@
                 },
                 success: function (jsonData) {
                     console.log(jsonData);
-                    if (jsonData=='OK') {
-                        $.form(baseUri, { controller: 'authentication', SubmitLogin: '1', email: $('#email').val(), passwd: $('#password').val() }, 'POST').submit();
+                    if (jsonData == 'OK') {
+                        $.form(baseUri, {
+                            controller: 'authentication',
+                            SubmitLogin: '1',
+                            email: $('#email').val(),
+                            passwd: $('#password').val()
+                        }, 'POST').submit();
                     }
                     else {
                         passwordLogin.setCustomValidity("Contraseña incorrecta");
@@ -392,11 +408,11 @@
 
     var emailinput = document.getElementById("email-register");
 
-    $('#email-register').keyup(function() {
+    $('#email-register').keyup(function () {
         emailinput.setCustomValidity("");
     });
 
-    $('#btn-register').click(function(e){
+    $('#btn-register').click(function (e) {
 
         if ($('#form_register')[0].checkValidity() && !doingAjax) {
             doingAjax = true;
@@ -415,11 +431,18 @@
                     token: token
                 },
                 success: function (jsonData) {
-                    if (jsonData=='OK') {
-                        $.form(baseUri, { controller: 'authentication', submitAccount: '1', email: $('#email-register').val(), passwd: $('#password-register').val(),
-                            customer_firstname: $('#name-register').val(), lastname: $('#lastname-register').val() , email_create:1,
-                            is_new_customer:1,
-                            back:'my-account'  }, 'POST').submit();
+                    if (jsonData == 'OK') {
+                        $.form(baseUri, {
+                            controller: 'authentication',
+                            submitAccount: '1',
+                            email: $('#email-register').val(),
+                            passwd: $('#password-register').val(),
+                            customer_firstname: $('#name-register').val(),
+                            lastname: $('#lastname-register').val(),
+                            email_create: 1,
+                            is_new_customer: 1,
+                            back: 'my-account'
+                        }, 'POST').submit();
                     }
                     else {
                         emailinput.setCustomValidity("Ya existe una cuenta creada con este email");
@@ -500,6 +523,16 @@
 
     });
 
+    $('#divStep3 form input').on('input', function (e) {
+        validateFormRegister();
+    });
+
+    $('#divStep3 form input').change(function () {
+        validateFormRegister();
+    });
+
+
+
     {/literal}
 </script>
 
@@ -509,21 +542,23 @@
 
     var loginPassword = document.getElementById("password")
 
-    function validatePassword(){
+    function validatePassword() {
 
         if (password.value.length < 5)
             password.setCustomValidity("Contraseña inválida");
         else
             password.setCustomValidity("");
 
-        if(password.value != confirm_password.value) {
+        if (password.value != confirm_password.value) {
             confirm_password.setCustomValidity("Las contraseñas deben coincidir");
         } else {
             confirm_password.setCustomValidity('');
         }
+
+        validateFormRegister();
     }
 
-    function validateLoginPassword(){
+    function validateLoginPassword() {
         if (loginPassword.value.length < 5)
             loginPassword.setCustomValidity("Contraseña inválida");
         else
@@ -534,6 +569,17 @@
 
     password.onkeyup = validatePassword;
     confirm_password.onkeyup = validatePassword;
+
+    function validateFormRegister() {
+        if ($('#form_register')[0].checkValidity()) {
+            $('#form_register #btn-register').val("Crear cuenta");
+        }
+        else {
+            $('#form_register #btn-register').val("Completa tus datos");
+        }
+    }
+
+
 </script>
 
 <!-- Start of LiveChat (www.livechatinc.com) code -->
@@ -541,10 +587,13 @@
     window.__lc = window.__lc || {};
     window.__lc.license = 6077601;
     window.__lc.chat_between_groups = false;
-    (function() {
-        var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
+    (function () {
+        var lc = document.createElement('script');
+        lc.type = 'text/javascript';
+        lc.async = true;
         lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(lc, s);
     })();
 </script>
 <!-- End of LiveChat code -->

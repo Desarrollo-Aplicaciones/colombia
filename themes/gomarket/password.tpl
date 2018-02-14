@@ -113,7 +113,7 @@
                    style="display: none">{l s='Ups, no hemos podido encontrar el código de recuperación.'}​​​​​​​</p>
 
                 <p class="submit">
-                    <input type="submit" class="button" id="btn-code" value="{l s='Continuar'}" style="    margin-top: 10px;"/>
+                    <input type="submit" class="button" id="btn-code" value="{l s='Continuar'}" style="    margin-top: 10px; color: #fde1c0; border: #fde1c0 3px solid;"/>
                 </p>
             </fieldset>
         </form>
