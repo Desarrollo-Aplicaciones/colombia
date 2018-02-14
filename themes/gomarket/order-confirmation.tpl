@@ -56,9 +56,10 @@
     </div>
 
     <div id="order-comprobante" class="conf-block">
-        <a href=""><img src="{$img_dir}ThankYouPage-Imprimir.jpg" /> <b>Imprimir</b> <span style="color: #6dc3a5">comprobante</span></a>
+        <a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id_order}")|escape:'html'}" target="_blank"><img src="{$img_dir}ThankYouPage-Imprimir.jpg" /> <b>Imprimir</b> <span style="color: #6dc3a5">comprobante</span></a>
     </div>
 
+    {if $cart->is_formula()}
     <div id="order-factura" class="conf-block shadow">
         <div class="formula-icon">
             <img src="{$img_dir}ThankYouPage-Alerta.jpg" />
@@ -68,6 +69,7 @@
             pedido</b>.
         </div>
     </div>
+    {/if}
 
     <div id="datos-pedido" class="conf-block shadow">
         Pedido: <b>{{$order->id}}</b>
@@ -98,10 +100,6 @@
                     <td>{$address->city}</td>
                 </tr>
 
-                <tr>
-                    <td>Comentarios</td>
-                    <td></td>
-                </tr>
             </table>
         </div>
 

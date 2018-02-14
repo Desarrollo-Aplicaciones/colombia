@@ -15,6 +15,14 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
             $customer = new Customer((int)$order->id_customer);
             $product_cart = $this->getProductsCart($cart->id);
             $address_customer = $this->getAddressCustomer($customer->id);
+
+            $extraPayu = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT extras FROM ps_pagos_payu WHERE id_cart = '.$this->id_cart);
+            $extraPayu = explode(';',$extraPayu);
+
+            if(isset($extraPayu[1])){
+                $order->numPago = $extraPayu[0];
+                $order->fechaCadu = $extraPayu[1];
+            }
             
            $this->context->smarty->assign(array(
                    'is_guest' => $this->context->customer->is_guest,
