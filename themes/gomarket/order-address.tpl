@@ -459,7 +459,7 @@ function hide_date_delivered(id_address){
     }
 </script>
 <div id="new_address">
-  <form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post" id="address_form">
+  <form action="{$link->getPageLink('address', true)|escape:'html'}" method="post" id="address_form">
   <div class="checkout w-4">
     <h3>Agregar <b>nueva</b> dirección</h3>
     {include file="$tpl_dir./form-billing-address.tpl"}
@@ -515,9 +515,8 @@ function hide_date_delivered(id_address){
     if(($('#ciudad').val()) != "")$('#direccion').focus();
   }
 
-  
-  $('#new-address2').click(function(){
-    $('.validacion').remove();
+  function generarNuevaDireccion(){
+    console.log('nueva');
     var id_country={$pais};
     var id_state=$('#estado').val();
     var id_customer={$cliente};
@@ -592,6 +591,66 @@ function hide_date_delivered(id_address){
         
       }
     })
+  }
+
+  function editarDireccion(id){
+    console.log('editar');
+    var id_country={$pais};
+    var id_state=$('#estado').val();
+    var id_customer={$cliente};
+    var alias=$('#alias').val();
+    var address1=$('#direccion').val();
+    var address2=$('#complemento').val();
+    var city=$('#nombre_ciudad').val();
+    var city_id=$('#ciudad').val();
+    var phone=$('#fijo').val();
+    var phone_mobile=$('#movil').val();
+    var active = 1;
+    var address = $("#address_id").val();
+    $.ajax({
+      type:"POST",
+      url:"{$base_dir}app/services/setAddress/",
+      data: {
+        "id_country":id_country,
+        "id_state":id_state,
+        "id_customer":id_customer,
+        "alias":alias,
+        "address1":address1,
+        "address2":address2,
+        "city":city,
+        "id_city":city_id,
+        "phone":phone,
+        "mobile":phone_mobile,
+        "id": id
+      },
+      beforeSend: function(ev) {
+          var result = Validate();
+          if (result){
+            $("#nueva-direccion").empty();
+            $("#nueva-direccion").html('<img style="margin: auto;" src="{$img_ps_dir}ad/waiting.gif" />');
+          }else{
+            ev.abort();
+          }
+      },
+      success: function(response){
+        updateAddressesDisplay();
+        changeAddress(id);
+        setTimeout(function(){ 
+          $('#form_dir').submit(); 
+        }, 1000);
+        
+      }
+    })
+  }
+
+  $('#new-address2').click(function(){
+    $('.validacion').remove();
+    var address = $("#address_id").val();
+    if(address !== ""){
+      editarDireccion(address);
+    }else{
+      generarNuevaDireccion();
+    }
   })
   
 {literal}
