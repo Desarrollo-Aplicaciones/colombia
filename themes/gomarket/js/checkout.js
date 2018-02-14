@@ -129,4 +129,22 @@ $(function () {
   $('input[name="number_document"]').keyup(function () {
     $('input[name="dni"]').val($(this).val());
   });
+
+  /**
+   * Medical Formula Rx
+   */
+  $('.trash-rx').click(function () {
+    $('input[id="upload"], input[type="file"]').val('');
+    $(".btn-rx-attach").prop("disabled", false);
+    $(this).hide();
+  });
+
+  $('.checkout input[type="file"]').change(function () {
+    if ($(this).val()) {
+      $(".btn-rx-attach").prop("disabled", true);
+      $('.trash-rx').show();
+    } else {
+      $('.trash-rx').hide();
+    }
+  });
 });

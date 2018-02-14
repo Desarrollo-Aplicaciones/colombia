@@ -221,10 +221,12 @@
 						<div class="row">
 							<div class="col-xs-12 col-md-2">
 								<button type="button" name="attach" onclick="$('#archivoformula').click();" class="btn2 btn-rx-attach">Adjuntar</button>
+
 							</div>
 							<div class="col-xs-12 col-md-10">
 								<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" onchange="validarArchivo();">
 								<input type="text" id="upload" disabled>
+								<a class="trash-rx" href="javascript:void(0)">Eliminar</a>
 								<div class="errorvalid" id="errorupload"></div>
 							</div>
 						</div>
