@@ -80,15 +80,16 @@ $(function () {
   /**
    * Address - Get Cities By State Available
    */
-  $('select[name="id_state"]').change(function () {
+  $('select[name="id_state"]').change(function (event) {
+    event.stopImmediatePropagation();
     var $state = $(this);
-    var $city = $('select[name="id_city"]');
-    var $choose = $city.find("option:disabled");
+    var $city = $('select[name="id_city"]:first');
+    var $choose = $city.find("option:first:disabled");
     var idCity = $state.find("option:selected").data("idCity");
-    
+
     $city.prop("disabled", true);
     $choose.text("Cargando...");
-    
+
     $.getJSON("/app/services/cities", {
       id_state: $state.val()
     })
