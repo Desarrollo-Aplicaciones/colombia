@@ -89,6 +89,7 @@
 					<label for="alias" id="label-alias">Nombre de la dirección:</label>
 					<input type="text" class="form-control" name="alias" id="alias" placeholder="Ejm: Casa Mamá, Oficina, Amor..." value="{if isset($smarty.post.alias)}{$smarty.post.alias}{/if}" required>
           <input type="hidden" name="dni" value="">
+          <input type="hidden" name="address_id" id="address_id" value="">
 				</div>
       </div>
       <!-- /.col-xs-12 -->

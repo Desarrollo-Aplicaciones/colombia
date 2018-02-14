@@ -175,6 +175,8 @@ if(isset($this->context->cookie->{'error_pay'}) && !empty($this->context->cookie
 							ad.address1,
 							ad.address2,
 							ac.id_city,
+							ad.phone,
+							ad.phone_mobile,
 							cc.express_abajo AS express
 						FROM "._DB_PREFIX_."address AS ad
 							Inner Join "._DB_PREFIX_."state AS st
@@ -239,8 +241,6 @@ if(isset($this->context->cookie->{'error_pay'}) && !empty($this->context->cookie
 					$this->autoStep();
 					$this->_assignCarrier();
 					$this->setTemplate(_PS_THEME_DIR_.'order-carrier.tpl');
-					//$this->setTemplate(_PS_THEME_DIR_.'order-carrier-test.tpl');
-					//$this->setTemplate(_PS_THEME_DIR_.'order-carrier-org.tpl');
 	
 				}
 				else{

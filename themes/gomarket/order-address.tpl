@@ -376,8 +376,8 @@ function hide_date_delivered(id_address){
         <!-- /.col-xs-12.col-md-7 -->
 
         <!-- .col-xs-12.col-md-1 -->
-        <div class="col-xs-12 col-md-1" onclick="editar_direccion();">
-          <button class="btn-edit" title="Editar Dirección"></button>
+        <div class="col-xs-12 col-md-1" onclick='editar_direccion({$address|@json_encode});'>
+          <button type="button" class="btn-edit" title="Editar Dirección"></button>
         </div>
         <!-- /.col-xs-12.col-md-1 -->
       </div>
@@ -433,32 +433,33 @@ function hide_date_delivered(id_address){
     <div class="recent"></div>
 </div>
 <script>
-    function lightbox_hide(){
-        $('#standard_lightbox').fadeOut('slow');
-        $('#page').removeClass("blurred");
-        $('#'+($('#lightbox_content div').attr("id"))).appendTo( '#standard_lightbox .recent' );
-        $('#lightbox_content').empty();
-        }
-    function standard_lightbox(id){
-        $('#lightbox_content').empty();
-        $('#'+id).appendTo( "#lightbox_content" );
-        $('#lightbox_content #'+id).show();
-        $('#standard_lightbox').fadeIn('slow');
-        $('#page').addClass("blurred");
-    }
-    $('#standard_lightbox .fog').click(function(){
-        lightbox_hide();
-    });
-
     function nueva_direccion(){
       standard_lightbox("new_address");
     }
-    function editar_direccion(){
-      standard_lightbox("new_address");
+
+    function editar_direccion(arreglo){
+      inicializar_direccion(arreglo)
+      standard_lightbox("new_address", false, "address_form");
+    }
+
+    function inicializar_direccion(arreglo){
+      $("#estado").val(arreglo.id_state);
+      $("#estado").trigger("change");
+      $("#nombre_ciudad").val(arreglo.city);
+      $("#direccion").val(arreglo.address1);
+      $("#complemento").val(arreglo.address2);
+      $("#alias").val(arreglo.alias);
+      $("#address_id").val(arreglo.id_address);
+      $("#fijo").val(arreglo.phone);
+      $("#movil").val(arreglo.phone_mobile);
+
+      setTimeout(function(){ 
+        $("#ciudad").val(arreglo.id_city); 
+      }, 1000);
     }
 </script>
 <div id="new_address">
-  <form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post">
+  <form action="{$link->getPageLink($back_order_page, true)}{if $formula}&paso=pagos{else}&paso=formula{/if}" method="post" id="address_form">
   <div class="checkout w-4">
     <h3>Agregar <b>nueva</b> dirección</h3>
     {include file="$tpl_dir./form-billing-address.tpl"}
@@ -471,7 +472,7 @@ function hide_date_delivered(id_address){
         <!-- .col-xs-12.col-sm-6 -->
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
-            <button type="button" class="btn2 btn-block btn-outline-secondary" onclick="lightbox_hide()">Cancelar</button>
+            <button type="button" class="btn2 btn-block btn-outline-secondary" onclick="lightbox_hide('address_form')">Cancelar</button>
           </div>
         </div>
         <!-- /.col-xs-12.col-sm-6 -->
