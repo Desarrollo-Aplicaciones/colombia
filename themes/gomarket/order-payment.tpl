@@ -381,6 +381,7 @@
 													</div>
 												</div>
 				                        		<div id="contenedorProducto" >
+													{assign var='DoctorRequired' value=0}
 				                        			<div id="productos" >
 				                        				{assign var='quitarenvio' value=0}
 				                        				{foreach from=$products item=product name=productLoop}
@@ -391,8 +392,12 @@
 				                        					{assign var='odd' value=$product@iteration%2}
 				                        					{assign var='noDeleteButton' value=1}
 															{foreach from=$product.features item=feature name=featureLoop}
-																{if $feature.id_feature == '243'}
-				                        							{assign var='DoctorRequired' value=1}
+																{if $feature.id_feature == Configuration::get('PS_FEATURE_VALUE_MEDICO')}
+																	{if $feature.id_feature_value == Configuration::get('PS_FEATURE_VALUE_MEDICO_SI')}
+				                        								{assign var='DoctorRequired' value=1}
+																	{elseif $DoctorRequired == '0'}
+																		{assign var='DoctorRequired' value=2}
+																	{/if}
 																{/if}
 				                        					{/foreach}
 				                        					{* Display the product line *}
@@ -753,7 +758,7 @@
 	</script>
 {/literal}
 {* Modal para pedir médicos *}
-{if $DoctorRequired == '1'}
+{if $DoctorRequired >= '1'}
 	<div id="care-lines">
 		<div class="lightbox_close"></div>
 		<div class="lightbox_title">Ingresa el nombre de tu médico</div>
@@ -766,8 +771,12 @@
 			</div>
 			<div style="margin-bottom: 20px; clear:both;"></div>
 			<div>
-				<button type="button" id="no_medico" class="button">No tengo médico</button>
-				<button type="button" id="ingresar_medico" class="button" disabled="">Continuar</button>
+				{if $DoctorRequired == '2'}
+					<button type="button" id="no_medico" class="button">No tengo médico</button>
+					<button type="button" id="ingresar_medico" class="button" disabled="">Continuar</button>
+				{else}
+					<button type="button" id="ingresar_medico" style="width: 100% !important;" class="button" disabled="">Continuar</button>
+				{/if}
 			</div>
 			<div id="medico_error"></div>
 			<style type="text/css">
