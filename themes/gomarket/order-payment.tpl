@@ -763,45 +763,54 @@
 			<div class="formulario_unido">
 				<input type="text" name="medico" id="medico"\>
 				<input type="hidden" name="med_fnd" id="med_fnd" value="">
-				<button type="button" id="ingresar_medico" class="button" disabled="">INGRESAR</button>
+			</div>
+			<div style="margin-bottom: 20px; clear:both;"></div>
+			<div>
+				<button type="button" id="no_medico" class="button">No tengo médico</button>
+				<button type="button" id="ingresar_medico" class="button" disabled="">Continuar</button>
 			</div>
 			<div id="medico_error"></div>
 			<style type="text/css">
 				#medico{
 					border: 2px solid #646464;
-					border-right: 0;
-					border-bottom-left-radius: 5px;
-					border-top-left-radius: 5px;
+					border-radius: 5px;
 					background: #fff;
 					height: 25px;
 					line-height: 25px;
 					padding: 0px 0px;
 					color: #646464;
-					width: 79%;
+					width: 100%;
 					height: 40px;
 					float: left;
 					text-align: center;
 				}
 
 				#ingresar_medico{
-					border: 2px solid #39CB98;
-					background-color: #39CB98;
+					border: 2px solid #FE922E;
+					background-color: #FE922E;
 					background-image: none;
 					font-size: 13px;
 					font-family: 'Open Sans';
 					text-transform: capitalize;
 					font-weight: 600;
-					width: 20%;
+					width: 49%;
 					height: 45px;
 					color: #ffffff;
 					border-radius: 5px;
 				}
 
-				#ingresar_medico:hover{
-					background-color: #399e98;
+				#no_medico{
+					border: 2px solid #4d4d4d;
+					background-color: white;
 					background-image: none;
 					font-size: 13px;
-					font-family: 'Open Sans', sans-serif;
+					font-family: 'Open Sans';
+					text-transform: capitalize;
+					font-weight: 600;
+					width: 49%;
+					height: 45px;
+					color: #4d4d4d;
+					border-radius: 5px;
 				}
 
 				#ingresar_medico:active{
@@ -810,6 +819,15 @@
 					color: #39cb98;
 					font-size: 12px;
 					font-family: 'Open Sans', sans-serif;
+				}
+
+				div.autosuggest ul li.as_highlight a{
+					background-color: #4d4d4d !important;
+				}
+
+				div.autosuggest ul li a{
+					width: 100%;
+					font-size: 13px;
 				}
 			</style>
 
@@ -870,13 +888,25 @@
 					});
 				});
 
+				$("#no_medico").click(function(){
+					lightbox_hide();
+					medico_registrado = true;
+				});
+
 			});
 		</script>
 		<style>
 
 			#as_medico{
 				z-index: 2001;
-				width: auto !important;
+			}
+
+			div.autosuggest{
+				width: 27% !important;
+			}
+
+			#as_ul{
+				width: 100% !important;
 			}
 			#care-lines{
 				margin-top: 15px;
