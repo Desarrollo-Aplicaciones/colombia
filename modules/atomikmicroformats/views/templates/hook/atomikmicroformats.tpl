@@ -93,7 +93,7 @@
         "@type": "Offer",
         "priceCurrency": "{$atomik.currency.iso_code|escape:'html':'UTF-8'}",
         "name": "{$atomik.product.name|escape:'html':'UTF-8'}",
-        "price": "{$precio|escape:'html':'UTF-8'}",
+        /* "price": "{$precio|escape:'html':'UTF-8'}", */
         "image": "{$atomik.product.cover_link|escape:'html':'UTF-8'}",
 
         "sku": "{$atomik.product.reference|escape:'htmlall':'UTF-8'}",
@@ -113,7 +113,7 @@
         "@type": "Offer",
         "name": "{$atomik.product.name|escape:'html':'UTF-8'} - {' '|implode:$combination.attributes_values} {$combination.reference|escape:'htmlall':'UTF-8'} ",
         "priceCurrency": "{$atomik.currency.iso_code|escape:'html':'UTF-8'}",
-        "price": "{$precio|escape:'html':'UTF-8'}",
+        /* "price": "{$precio|escape:'html':'UTF-8'}", */
         "image": "{if $combination.id_image > 0}{$link->getImageLink($atomik.product.link_rewrite, $combination.id_image, 'home_default')|escape:'html':'UTF-8'}{else}{$atomik.product.cover_link|escape:'html':'UTF-8'}{/if}",
 
         "sku": "{$combination.reference|escape:'htmlall':'UTF-8'}",
