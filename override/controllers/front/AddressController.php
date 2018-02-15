@@ -9,7 +9,10 @@ class AddressController extends AddressControllerCore
 	public function initContent()
 	{
 		parent::initContent();
-	
+		
+		$this->context->controller->addJS(_THEME_JS_DIR_.'checkout.js','all');
+		$this->context->controller->addCSS(_THEME_CSS_DIR_.'checkout.css','all');
+
 		$this->assignCountries();
 		$this->assignVatNumber();
 		$this->assignAddressFormat();
@@ -46,50 +49,45 @@ class AddressController extends AddressControllerCore
 			$direcciones[]=$row;
 			$total+=1;
 		}
-		
-		
-		$pais = $this->context->country->id;
-		$sqlpais="SELECT ps_state.id_state, ps_state.name AS state
-                                            FROM ps_state
-                                            WHERE ps_state.id_country =  ".$pais." ORDER BY state ASC ;";
-		$rspais=Db::getInstance()->ExecuteS($sqlpais,FALSE);
-		$estados=array();
-		foreach($rspais as $estado) {
-			$estados[]=$estado;
-		}
 
+		
 		// datos tipos de documentos
 		$this->context->smarty->assign('document_types', Utilities::data_type_documents() );
 		// datos customer
 		$this->context->smarty->assign('datacustomer', Utilities::data_customer_billing( $idcliente ) );
-
 		$this->context->smarty->assign('cliente',$idcliente);
-		$this->context->smarty->assign('pais',$pais);
-		$this->context->smarty->assign('estados',$estados);
 		$this->context->smarty->assign('total',$total);
 		$this->context->smarty->assign('direcciones',$direcciones);
+		
+		$selectCountry = (int)Configuration::get('PS_COUNTRY_DEFAULT');
+		$this->context->smarty->assign('id_country', $selectCountry);
+		$this->context->smarty->assign('states', State::getStatesByIdCountry($selectCountry));
+
+		/* Generate years, months and days */
+		if ($this->context->customer->birthday) {
+			$birthday = explode('-', $this->context->customer->birthday);
+		}	else {
+			$birthday = array('-', '-', '-');
+		}
+		$this->context->smarty->assign(array(
+			'years' => Tools::dateYears(),
+			'sl_year' => $birthday[0],
+			'months' => Tools::dateMonths(),
+			'sl_month' => $birthday[1],
+			'days' => Tools::dateDays(),
+			'sl_day' => $birthday[2],
+			'errors' => $this->errors,
+			'genders' => Gender::getGenders(),
+		));
 		/******* Fin Codigo para Direcciones Ajax *******/
 		$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
 	}
-/**
+
+	/**
 	 * Process changes on an address
 	 */
 	protected function processSubmitAddress()
 	{
-
-						$val_cityid='';
-						$val_address_up='';
-						$val_savedir=0; //no guarda direccion
-
-						if(isset($_POST['submitAddress'])){
-									$val_savedir=1; //guarda direccion
-									
-									$val_address_up = $_POST['id_address'];
-									$val_cityid = $_POST['city'];
-									$_POST['city'] = $_POST['city_id'];
-									$_POST['city_id'] = $val_cityid; 									
-						}
-
 		$address = new Address();
 		$this->errors = $address->validateController();
 		$address->id_customer = (int)$this->context->customer->id;
@@ -119,7 +117,7 @@ class AddressController extends AddressControllerCore
 				$address->address2 = $normalize->AddressLineStandardization($address->address2);
 			}
 
-			$postcode = Tools::getValue('postcode');exit;
+			$postcode = Tools::getValue('postcode');
 			/* Check zip code format */
 			/*if ($country->zip_code_format && !$country->checkZipCode($postcode))
 				$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
@@ -130,9 +128,9 @@ class AddressController extends AddressControllerCore
 			*/
 
 			// Check country DNI
-			/*if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
+			if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
 				$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
-			else if (!$country->isNeedDni())*/ //comentado para no requerir el numero de dni en la direccion del cliente
+			else if (!$country->isNeedDni())
 				$address->dni = null;
 		}
 		// Check if the alias exists
@@ -193,20 +191,6 @@ class AddressController extends AddressControllerCore
 		// Save address
 		if ($result = $address->save())
 		{
-
-			if($val_savedir == 1) { // si estoy guardando direccion
-
-				/*$Id_address=Db::getInstance()->Insert_ID(); 
-
-				Db::getInstance()->insert('address_city', array(
-				    'id_address'=>(int)$Id_address,
-				    'id_city'=>(int)$val_cityid
-				));
-				//$fp=fopen("/tmp/archivo_dir.txt","a+"); fwrite($fp,"paso insert: AuthControllerCore-> ".'id_city: '.$val_cityid.' - id_address = '.$Id_address); fclose($fp);
-				*/
-
-			}
-
 			// Update id address of the current cart if necessary
 			if (isset($address_old) && $address_old->isUsed())
 				$this->context->cart->updateAddressId($address_old->id, $address->id);

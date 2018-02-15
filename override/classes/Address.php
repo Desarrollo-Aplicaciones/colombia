@@ -1,6 +1,4 @@
 <?php
-
-
 class Address extends AddressCore
 {
 
@@ -21,71 +19,63 @@ class Address extends AddressCore
     protected static $_idZones = array();
     protected static $_idCountries = array();
 
-    	/**
+    /**
 	 * @see ObjectModel::add()
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
+        if (!parent::add($autodate, $null_values))
+			return false;
 
-       // $fp=fopen("/tmp/archivo_dir.txt","a+"); fwrite($fp,print_r($_POST,true)."\r\n\r\n\r\n"); fclose($fp);
-        
-		$dir_change = explode( "|", $this->city );
-		
-		$nom_city = $this->city;
-          
-		if ( is_numeric($dir_change[0]) && $dir_change[0] != '' && $dir_change[0] != null) {
+		if (Validate::isUnsignedId($this->id_customer))
+            Customer::resetAddressCache($this->id_customer);
 
-			$arr_nom_city = City::getCityByIdCity($dir_change[0]);
-			$nom_city = $arr_nom_city[0]['city_name'];
-            $val_id_city = $dir_change[0];
-
-		} elseif ( isset($_POST['city_id']) && is_numeric($_POST['city_id'])) {
-
-            $arr_nom_city = City::getCityByIdCity($_POST['city_id']);
-            $nom_city = $arr_nom_city[0]['city_name'];
-            $val_id_city = $_POST['city_id'];
+        $dir_change = explode( "|", $this->city );
+    
+        if ( ($this->postcode == '' ||  $this->postcode == NULL) && ( isset($dir_change[1]) && $dir_change[1] != '' && $dir_change[1] != NULL ) ) {
+            $this->postcode = $dir_change[1];
         }
 
-		$this->city = $nom_city;
+        $idCity = 0;
+		if ( is_numeric($dir_change[0]) && $dir_change[0] != '' && $dir_change[0] != null) {
+			$arr_nom_city = City::getCityByIdCity($dir_change[0]);
+			$this->city = $arr_nom_city[0]['city_name'];
+            $idCity = $dir_change[0];
+		} elseif ( isset($_POST['city_id']) && is_numeric($_POST['city_id'])) {
+            $arr_nom_city = City::getCityByIdCity($_POST['city_id']);
+            $this->city = $arr_nom_city[0]['city_name'];
+            $idCity = $_POST['city_id'];
+        }
+        $idCity = empty($idCity) ? Tools::getValue("id_city") : $idCity;
 
-        //$fp=fopen("/tmp/archivo_dir.txt","a+"); fwrite($fp,print_r($this,true)."\r\n\r\n\r\n"); fclose($fp);
+        if ($idCity) {
+            Db::getInstance()->insert('address_city', array(
+                'id_address'=>(int)$this->id, 
+                'id_city'=>(int)Tools::getValue("id_city")
+            ));
+        }
 
-
-		if ( ($this->postcode == '' ||  $this->postcode == NULL) && ( isset($dir_change[1]) && $dir_change[1] != '' && $dir_change[1] != NULL ) ) {
-			$this->postcode = $dir_change[1];
-		}
-
-        
-
-		if (!parent::add($autodate, $null_values))
-			return false;
-                
-        
-        
-                		$Id_address=Db::getInstance()->Insert_ID(); 
-
-                        if(isset($this->id_city) && !empty($this->id_city))
-                            $val_id_city = $this->id_city;
-
-				if($Id_address == 0) {
-					$Id_address = $this->id;
-					
-					Db::getInstance()->update('address_city', array( 'id_city'=>(int)$val_id_city ), 'id_address = '.(int)$Id_address );
-                    $fp=fopen("/tmp/archivo_dir.txt","a+"); fwrite($fp,"paso update: ".'id_city: '.$val_id_city.' - id_address = '.$Id_address); fclose($fp);
-
-				} else {
-
-					Db::getInstance()->insert('address_city', array( 'id_address'=>(int)$Id_address, 'id_city'=>(int)$val_id_city ));
-                    $fp=fopen("/tmp/archivo_dir.txt","a+"); fwrite($fp,"paso insert: ".'id_city: '.$val_id_city.' - id_address = '.$Id_address); fclose($fp);
-				}
-
-			if (Validate::isUnsignedId($this->id_customer))
-			Customer::resetAddressCache($this->id_customer);
+        if (Tools::getValue("type_document") 
+            && Tools::getValue("number_document") 
+            && $this->id_customer) {
+            $customer = new Customer( $this->id_customer );
+			$customer->firstname = Tools::getValue("firstname");
+			$customer->lastname = Tools::getValue("lastname");
+			$customer->id_type = Tools::getValue("type_document");
+			$customer->identification = Tools::getValue("number_document");
+			$customer->birthday = Tools::getValue("birthday");
+			if( $customer->id_type == 4 ) {
+				$customer_group[0] = 4;
+				$customer->addGroups($customer_group);
+			}
+			$customer->update();
+			$customer->updateGroupDiscount($customer->identification);
+        }
 
 		return true;
 	}
 
-        public function update($null_values = false)
+    public function update($null_values = false)
     {
         // Empty related caches
         if (isset(self::$_idCountries[$this->id]))
@@ -97,7 +87,6 @@ class Address extends AddressCore
 
         return ObjectModel::update($null_values);
     }
-
 
    	/**
 	 * @see ObjectModel::delete()
@@ -437,7 +426,7 @@ FROM  ps_cities_col cities
         $dias = array("Domingo","Lunes","Martes","Mi&eacute;rcoles","Jueves","Viernes","S&aacute;bado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
-        $day_delivered = '<select name="" id="day_delivered" name="day_delivered" style="width: 150px !important;">';
+        $day_delivered = '';
         $horasSelect = array();
 
         $numeroDeHoras = (int) Configuration::get('MAX_HOURS_DELIVERED'); // MAX_HOURS_DELIVERED
@@ -482,67 +471,7 @@ FROM  ps_cities_col cities
         $js_json_delivered = '<script type="text/javascript">
                                 var js_json_delivered = '.json_encode($horasSelect).'
                                 var form_to_add = "";
-                           
-                                    $(function(){                                 
-                                
-                                    if ($("#form_dir").length) {
-                                       form_to_add = "#form_dir"; 
-                                    } else {
-                                       form_to_add = "#cod_form"; 
-                                    }        
-
-                                    $("<input>").attr({
-                                        type: "hidden",
-                                        id: "date_delivered",
-                                        name: "date_delivered"
-                                    }).appendTo(form_to_add);
-
-                                    $("<input>").attr({
-                                        type: "hidden",
-                                        id: "hour_delivered_h",
-                                        name: "hour_delivered_h"
-                                    }).appendTo(form_to_add);
-
-                                    $("#hour_delivered").attr("enabled", "true");
-
-                                    if (js_json_delivered.hasOwnProperty($("#day_delivered").val())) {
-                                        $.each(js_json_delivered[$("#day_delivered").val()], function() {
-                                            $("#hour_delivered").append(
-                                                $("<option></option>").text(this).val(this)
-                                            );
-                                        });
-                                    }
-
-                                    $("#day_delivered").change(function() {
-
-                                        if (js_json_delivered.hasOwnProperty($("#day_delivered").val())) {
-                                            $("#hour_delivered").html("");         
-                                            $.each(js_json_delivered[$("#day_delivered").val()], function() {
-                                                $("#hour_delivered").append(
-                                                    $("<option></option>").text(this).val(this)
-                                                );
-                                        
-                                            });
-                                            $("#hour_delivered_h").val($("#hour_delivered").val());
-                                            $("#hour_delivered option[day_delivered]").show();
-                                        } else {
-                                            $("#hour_delivered").html(""); 
-                                        }
-                                        
-                                    });
-                                                                                                      
-                                    $("#hour_delivered_h").val($("#hour_delivered").val());
-                                    $("#date_delivered").val($("#day_delivered").val());
-                                    $("#day_delivered").change(function() {
-                                        $("#date_delivered").val($("#day_delivered").val());
-                                    });
-
-                                    $("#hour_delivered").change(function() {
-                                        $("#hour_delivered_h").val($("#hour_delivered").val());
-                                        
-                                    });
-                                });
-</script>';
+                            </script>';
 
         return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_delivered);
     }

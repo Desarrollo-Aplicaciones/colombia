@@ -23,6 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <link rel="stylesheet" href="{$css_dir}order-confirmation.css" type="text/css" media="screen" charset="utf-8" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/flick/jquery-ui.css">
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js"></script>
 {capture name=path}{l s='Order confirmation'}{/capture}
 {*include file="$tpl_dir./breadcrumb.tpl"*}
 

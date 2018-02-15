@@ -1,0 +1,665 @@
+/* https://github.com/zirafa/bootstrap-grid-only */
+@import 'grid12.css';
+
+#address .sf-contener {
+  display: none;
+}
+
+.w-4 {
+  width: 400px;
+}
+
+.w-7 {
+  width: 650px;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 767px) {
+  .w-4,
+  .w-7 {
+    width: 100%;
+  }
+}
+
+.checkout {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9375rem;
+}
+
+.checkout h3 {
+  font-family: 'Montserrat';
+  font-size: 20px;
+  padding-bottom: 0;
+  text-align: center;
+}
+
+.checkout sup {
+  color: #999;
+  font-size: .9375rem;
+}
+
+.checkout input::placeholder {
+  color: #dcdcdc;
+}
+
+.checkout .mt-0 { 
+  margin-top: .5rem !important;
+}
+
+.checkout .text-right {
+  text-align: right;
+}
+
+.checkout-line {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ededed;
+  margin: 1rem 13rem;
+  padding: 0; 
+}
+
+/**
+ * Order - Steps
+ */
+#order-step {
+  background: url(../img/checkout/line.png) center center repeat;
+  width: 100%;
+}
+
+#order-step #accordion {
+  margin: 10px auto;
+  max-width: 340px;
+  overflow: hidden;
+  width: 100%;
+  padding: 0 20px 0 20px;
+  background-color: #fff;
+}
+
+#order-step #accordion ul {
+  display: table;
+  margin: 0;
+  padding: 0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+#order-step #accordion ul li {
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: table-cell;
+  height: 50px;
+  position: relative;
+  text-align: center;
+  transition: all 500ms ease;
+  vertical-align: bottom;
+  width: 9.999%;
+}
+
+#order-step #accordion ul li.active ~ li div a {
+  color: #646464 !important
+}
+
+#order-step #accordion ul li div {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
+#order-step #accordion ul li div a {
+  border: 1px solid #b4b4b4;
+  box-sizing: border-box;
+  color: #3a9b37;
+  display: block;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+  height: 50px;
+  padding: 5px 0 5px 0;
+  position: relative;
+  text-decoration: none;
+  transition: all 200ms ease;
+  width: 100%;
+  /*z-index: 3;*/
+}
+
+#order-step #accordion ul li div a * {
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  /*z-index: 5;*/
+}
+
+#order-step #accordion ul li div a span {
+  text-overflow: clip;
+  text-transform: uppercase;
+}
+
+#order-step #accordion ul li div a p {
+  display: none;
+  margin-top: 0;
+}
+
+#order-step #accordion li { 
+  width: 8%; 
+}
+
+#order-step #accordion li.active { 
+  width: 60%; 
+}
+
+#order-step #accordion li.active a { 
+  background: #62c35f; /* Old browsers */
+  background: -moz-linear-gradient(-45deg, #62c35f 0%, #3a9b37 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, #62c35f 0%,#3a9b37 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #62c35f 0%,#3a9b37 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  border: none !important;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62c35f', endColorstr='#3a9b37',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+#order-step #accordion li.active a * {
+  -webkit-transform: translateX(0);
+  color: #fff;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+#order-step #accordion li.active a span {
+  font-weight: bold;
+}
+
+#order-step #accordion li.active a p {
+  display: block;
+}
+
+#order-step #accordion li.active .icon {
+  display: none;
+}
+
+#order-step #accordion .icon {
+  background-image: url(../img/checkout/icons-checkout.png);
+  background-repeat: no-repeat;
+  height: 22px;
+  margin: 0 auto;
+  width: 22px;
+}
+
+#order-step #accordion #cart { 
+  background-position: -126px 0; 
+}
+
+#order-step #accordion #delivery { 
+  background-position: -151px 0; 
+}
+
+#order-step #accordion #rx { 
+  background-position: -175px 0; 
+}
+
+#order-step #accordion #pay { 
+  background-position: -201px 0; 
+}
+
+#order-step #accordion ul li.active ~ li #pay {
+  background-position: -76px 0;
+}
+
+#order-step #accordion ul li.active ~ li #rx {
+  background-position: -50px 0;
+}
+
+#order-step #accordion ul li.active ~ li #delivery {
+  background-position: -26px 0;
+}
+
+#order-step #accordion ul li.active ~ li #cart {
+  background-position: -2px 0;
+}
+
+/**
+ * Radio Buttons 
+ * https://codepen.io/triss90/pen/XNEdRe
+ */
+.checkout #document-type {
+  margin-bottom: 1rem;
+}
+.checkout .radio {
+  margin: .7rem .8rem;
+}
+.checkout .radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+.checkout .radio input[type="radio"] + .radio-label:before {
+  content: '';
+  background: #f4f4f4;
+  border-radius: 100%;
+  border: 1px solid #b4b4b4;
+  display: inline-block;
+  width: 1.4em;
+  height: 1.4em;
+  position: relative;
+  top: 0;
+  margin-right: 1em;
+  vertical-align: middle;
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: all 250ms ease;
+  transition: all 250ms ease;
+}
+.checkout .radio input[type="radio"]:checked + .radio-label:before {
+  background-color: #3a9b37;
+  -webkit-box-shadow: inset 0 0 0 2px #f4f4f4;
+          box-shadow: inset 0 0 0 2px #f4f4f4;
+}
+.checkout .radio input[type="radio"]:focus + .radio-label:before {
+  outline: none;
+  border-color: #c8c8c8;
+}
+.checkout .radio input[type="radio"]:disabled + .radio-label:before {
+  -webkit-box-shadow: inset 0 0 0 2px #f4f4f4;
+          box-shadow: inset 0 0 0 2px #f4f4f4;
+  border-color: #b4b4b4;
+  background: #b4b4b4;
+}
+.checkout .radio input[type="radio"] + .radio-label:empty:before {
+  margin-right: 0;
+}
+.checkout .radio-horizontal {
+  border-radius: 5px;
+  border: 2px solid #c2c2b7;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+.checkout .radio-horizontal.checked {
+  border: 2px solid #89c387;
+}
+
+/**
+ * Checkbox 
+ * https://medium.com/claritydesignsystem/pure-css-accessible-checkboxes-and-radios-buttons-54063e759bb3
+ */
+.checkout .checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.checkout .checkbox label {
+  position: relative;
+  display: inline-block;
+  
+  /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
+  padding-left: 26px;
+  color: #1e6eB2;
+  font-weight: bold;
+}
+
+.checkout .checkbox label::before,
+.checkout .checkbox label::after {
+  position: absolute;
+  content: "";
+  
+  /*Needed for the line-height to take effect*/
+  display: inline-block;
+}
+
+/*Outer box of the fake checkbox*/
+.checkout .checkbox label::before {
+  height: 16px;
+  width: 16px;
+  
+  border: 1px solid #1e6eB2;
+  border-radius: 4px;
+  left: 0px;
+  
+  /*(24px line-height - 16px height of fake checkbox) / 2 - 1px for the border
+    *to vertically center it.
+    */
+  top: 1px;
+}
+
+/*Checkmark of the fake checkbox*/
+.checkout .checkbox label::after {
+  height: 5px;
+  width: 9px;
+  border-left: 2px solid;
+  border-bottom: 2px solid;
+  
+  transform: rotate(-45deg);
+  
+  left: 4px;
+  top: 5px;
+}
+
+/*Hide the checkmark by default*/
+.checkout .checkbox input[type="checkbox"] + label::after {
+  content: none;
+}
+
+/*Unhide on the checked state*/
+.checkout .checkbox input[type="checkbox"]:checked + label::after {
+  content: "";
+}
+
+/*Adding focus styles on the outer-box of the fake checkbox*/
+.checkout .checkbox input[type="checkbox"]:focus + label::before {
+  outline: rgb(59, 153, 252) auto 5px;
+}
+
+
+/**
+ * Form
+ */
+.checkout input, .checkout select {
+    height: 30px;
+    vertical-align:top;
+}
+
+.checkout input, .checkout select, .checkout textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.checkout .form-group {
+  margin-bottom: 1rem;
+}
+
+.checkout .form-label,
+.checkout .form-group label {
+  display: inline-block;
+  margin-bottom: .3rem;
+}
+
+.checkout .form-control {
+  display: block;
+	width: 100%;
+	padding: 0;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	color: #7B7D7D;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 2px solid #ededed;
+}
+
+.checkout .form-control option {
+  color: #000;
+}
+.checkout .form-control option:checked {
+  color: #3a9b37;
+}
+
+#natural-person,
+#nit {
+  display: none;
+}
+
+
+/**
+ * Botones
+ */
+.btn2 {
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	border-radius: .25rem;
+	display: inline-block;
+	font-size: 1rem;
+	font-weight: bold;
+	line-height: 1.5;
+	padding: .375rem .75rem;
+	text-align: center;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	vertical-align: middle;
+	white-space: nowrap;
+  border: 2px solid transparent;
+  user-select: none;
+}
+
+.btn-outline-secondary {
+	color: #999;
+	background-color: transparent;
+	background-image: none;
+  border-color: #999;
+}
+
+.btn-outline-secondary:hover {
+	color: #fff;
+	background-color: #999;
+	border-color: #999;
+}
+
+.btn-primary {
+	color: #fff;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb04c+0,fe922e+99 */
+  background: #ffb04c; /* Old browsers */
+  background: -moz-linear-gradient(left, #ffb04c 0%, #fe922e 99%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #ffb04c 0%,#fe922e 99%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #ffb04c 0%,#fe922e 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb04c', endColorstr='#fe922e',GradientType=1 ); /* IE6-9 */
+  
+  -moz-border-image: -moz-linear-gradient(left, #ffb04c 0%, #fe922e 99%);
+  -webkit-border-image: -webkit-linear-gradient(left, #ffb04c 0%, #fe922e 99%);
+  border-image: linear-gradient(to right, #ffb04c 0%,#fe922e 99%);
+  border-image-slice: 1;
+}
+
+.btn-primary:hover {
+	color: #212529;
+	background: -moz-linear-gradient(left, #fe922e 0%, #ffb04c 99%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #fe922e 0%,#ffb04c 99%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #fe922e 0%,#ffb04c 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb04c', endColorstr='#fe922e',GradientType=1 ); /* IE6-9 */
+  
+  -moz-border-image: -moz-linear-gradient(left, #fe922e 0%, #ffb04c 99%);
+  -webkit-border-image: -webkit-linear-gradient(left, #fe922e 0%, #ffb04c 99%);
+  border-image: linear-gradient(to right, #fe922e 0%,#ffb04c 99%);
+  border-image-slice: 1;
+}
+
+.btn-rx-continue {
+	color: #fff;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb04c+0,fe922e+99 */
+  background: #62c35f; /* Old browsers */
+  background: -moz-linear-gradient(-45deg, #62c35f 0%, #3a9b37 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, #62c35f 0%,#3a9b37 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #62c35f 0%,#3a9b37 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62c35f', endColorstr='#3a9b37',GradientType=1 ); /* IE6-9 */
+  
+  -moz-border-image: -moz-linear-gradient(left, #62c35f 0%, #3a9b37 99%);
+  -webkit-border-image: -webkit-linear-gradient(left, #62c35f 0%, #3a9b37 99%);
+  border-image: linear-gradient(to right, #62c35f 0%,#3a9b37 99%);
+  border-image-slice: 1;
+}
+
+.btn-rx-continue:hover {
+	color: #212529;
+	background: -moz-linear-gradient(left, #3a9b37 0%, #62c35f 99%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #3a9b37 0%,#62c35f 99%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #3a9b37 0%,#62c35f 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62c35f', endColorstr='#3a9b37',GradientType=1 ); /* IE6-9 */
+  
+  -moz-border-image: -moz-linear-gradient(left, #3a9b37 0%, #62c35f 99%);
+  -webkit-border-image: -webkit-linear-gradient(left, #3a9b37 0%, #62c35f 99%);
+  border-image: linear-gradient(to right, #3a9b37 0%,#62c35f 99%);
+  border-image-slice: 1;
+}
+
+.btn-block {
+	display: block;
+	width: 100%;
+}
+
+/**
+ * Address
+ */
+.checkout address {
+  margin-bottom: .7rem;
+  padding: .5rem 0;
+  font-family: "Open Sans", sans-serif;
+  font-size: .875rem;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+  transition: transform .3s ease-in-out, box-shadow .1s ease-in-out;
+  background: #fff;
+  position: relative;
+	z-index: 9;
+}
+
+.checkout address:hover {
+	box-shadow: none;
+}
+
+.checkout address span[itemprop="streetAddress"] {
+  color: #6b6b6b;
+}
+
+.checkout address span[itemprop="addressLocality"],
+.checkout address span[itemprop="addressRegion"] {
+  color: #9e9e9e;
+  display: block;
+  font-size: .75rem;
+}
+
+.checkout address .complete-data {
+  display: none;
+  margin-top: 1rem;
+}
+
+.checkout address .datetime-delivery {
+  margin-top: 1rem;
+}
+
+.checkout address .btn-edit {
+  background: url(../img/checkout/icons-checkout.png) 151px 0 transparent;
+  border: medium none !important;
+  width: 28px;
+  height: 28px;
+  color: transparent;
+  /*cursor: pointer;*/
+}
+
+.checkout address .btn-edit:hover {
+  background-position-x: 26px;
+}
+
+.checkout address .img-rx.on-order {
+  background: url(../img/checkout/icons-rx.png) 0px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+  /*cursor: pointer;*/
+}
+
+.checkout address .img-rx.online {
+  background: url(../img/checkout/icons-rx.png) 120px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+  /*cursor: pointer;*/
+}
+
+.checkout address.selected .img-rx.on-order {
+  background: url(../img/checkout/icons-rx.png) 80px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+}
+
+.checkout address.selected .img-rx.online {
+  background: url(../img/checkout/icons-rx.png) 40px 0 transparent;
+  border: medium none !important;
+  width: 40px;
+  height: 40px;
+  color: transparent;
+}
+
+.checkout address.selected {
+  margin: 0;
+  border-left: 4px solid #3A9B37;
+  box-shadow: 0 6px 10px 0 rgba(0,0,0,0.14),0 1px 18px 0 rgba(0,0,0,0.12),0 3px 5px -1px rgba(0,0,0,0.3);
+  transform: scale(1.1);
+  z-index: 99;
+}
+
+.checkout address.selected.rx {
+  border-left: none !important;
+}
+
+.checkout address.selected.payment {
+  transform: scale(1.03);
+}
+
+.checkout address.selected .radio {
+  color: #3A9B37;
+}
+
+.checkout address.selected span[itemprop="streetAddress"] {
+  color: #3A9B37;
+}
+
+.checkout address.selected .complete-data {
+  display: block;
+}
+
+.checkout address #add-address {
+  align-items:center;
+  color: #39BC93;
+  cursor: pointer;
+  display:flex;
+}
+.checkout address #add-address span {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+.checkout address #add-address {
+  margin: .2rem .8rem;
+}
+
+#new_address{
+  margin-top: 15px;
+  margin-right: 30px;
+  background-color: white;
+  position: relative;
+  display:none;
+  width: auto;
+  height: auto;
+  text-align:center;
+  padding:10px;
+  font-size: 14px;
+}
+
+.btn-rx-attach{
+  background-color:#39BC93;
+  color:#FFF;
+  font-size: 12px;
+}
+
+.radio-label .img-rx{
+  width: 100%; 
+}
+
+
+/**
+ * Medical Formula Rx
+ */
+.checkout .trash-rx {
+  display: none;
+  overflow: hidden;
+  color: transparent;
+  right: 10px;
+  top: 0px;
+  position: absolute;
+  background: url(../img/checkout/icon-trash.png) no-repeat 0 0;
+  height: 22px;
+  width: 20px;
+  transition: initial;
+}
+
+.checkout .trash-rx:hover {
+  background-position-x: -20px;
+}

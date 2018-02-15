@@ -26,44 +26,8 @@
 <script	src="{$base_dir_ssl}js/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
 <script src="{$base_dir_ssl}themes/gomarket/js/jquery.validate.js"></script>
 <script src="{$base_dir_ssl}themes/gomarket/js/jquery-ui.js"></script>
-{*}
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css">
-{*}
 <script src="{$base_dir_ssl}js/jquery.form.js"></script>
 
-{* if isset($disableBaloto) and $disableBaloto OR (isset($isblockmpb) and $isblockmpb)} 
-
-
- <style type="text/css">
-  #imgbaloto,#mediopagob, #imgEfecty, #mediopagoe {
-  opacity: 0.6;
-}
-
-#textradiobaloto,#textradioefecty
-{
-color: #979797;
-
-}
- 
- </style>
-{/if}
-{if isset($show_contra_entrega) and !$show_contra_entrega }
-    
-    <style type="text/css">
-  #imgcontrae,#mediopagoce {
-  opacity: 0.6;
-}
-
-#textradiocontrae
-{
-color: #979797;
-
-}
- 
- </style>
-    
-{/if *}
 {literal}
 	<script>
 
@@ -276,10 +240,6 @@ color: #979797;
     </script>
 {/if}
 
-{* if !$opc}<div class="titulo-pasos">Modos de pago</div>{/if *}
-{* <a href="{$link->getPageLink('order', true, NULL, "step=1")}" id="navegarAtras2" title="{l s='Previous'}" > 
-<< Anterior</a> *}
-
 <div id="uls">
 	{if !$opc}
 		{assign var='current_step' value='payment'}
@@ -325,7 +285,6 @@ color: #979797;
 								{assign var='noDeleteButton' value=1}
 								{* Display the product line *}
                                 <!-- Imprime productos -->
-								{*include file="$tpl_dir./shopping-cart-product-line-formula.tpl"*}
                         		{* Then the customized datas ones*}
                         		{if isset($customizedDatas.$productId.$productAttributeId)}
                         			{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization'}
@@ -422,6 +381,7 @@ color: #979797;
 													</div>
 												</div>
 				                        		<div id="contenedorProducto" >
+													{assign var='DoctorRequired' value=0}
 				                        			<div id="productos" >
 				                        				{assign var='quitarenvio' value=0}
 				                        				{foreach from=$products item=product name=productLoop}
@@ -431,6 +391,15 @@ color: #979797;
 				                        					{assign var='cannotModify' value=1}
 				                        					{assign var='odd' value=$product@iteration%2}
 				                        					{assign var='noDeleteButton' value=1}
+															{foreach from=$product.features item=feature name=featureLoop}
+																{if $feature.id_feature == Configuration::get('PS_FEATURE_VALUE_MEDICO')}
+																	{if $feature.id_feature_value == Configuration::get('PS_FEATURE_VALUE_MEDICO_SI')}
+				                        								{assign var='DoctorRequired' value=1}
+																	{elseif $DoctorRequired == '0'}
+																		{assign var='DoctorRequired' value=2}
+																	{/if}
+																{/if}
+				                        					{/foreach}
 				                        					{* Display the product line *}
 				                        					<!-- Imprime productos -->
 				                        					{include file="$tpl_dir./shopping-cart-product-line-formula.tpl"}
@@ -477,25 +446,6 @@ color: #979797;
 				                       					{/if}
 				                       				</div>
 
-				                       				{* if $use_taxes}
-														{if $priceDisplay}
-															<div class="cart_total_price">
-																<div class="descripcion">{if $display_tax_label}{l s='Total products (tax excl.)'}{else}{l s='Total products'}{/if}</div>
-																<div class="price2" id="total_product">{displayPrice price=$total_products}</div>
-															</div>
-														{else}
-															<div class="cart_total_price">
-																<div class="descripcion">{if $display_tax_label}{l s='Total products (tax incl.)'}{else}{l s='Total products'}{/if}</div>
-																<div class="price2" id="total_product">{displayPrice price=$total_products_wt}</div>
-															</div>
-														{/if}
-													{else}
-														<div class="cart_total_price">
-															<div class="descripcion">{l s='Total products:'}</div>
-															<div class="price2" id="total_product">{displayPrice price=$total_products}</div>
-														</div>
-													{/if *}
-
 													<!-- total envio -->
 													{if $total_shipping_tax_exc <= 0 && !isset($virtualCart) && $quitarenvio == 0 }
 														<div class="cart_total_price" style="{if !isset($carrier->id) || is_null($carrier->id)}display:none;{/if}">
@@ -524,47 +474,6 @@ color: #979797;
 															</div>
 														{/if}
 													{/if}
-
-													{* if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
-														<div class="cart_total_price" style="{if !isset($carrier->id) || is_null($carrier->id)}display:none;{/if}">
-															<div class="descripcion">{l s='Shipping:'}</div>
-															<div class="price2" id="total_shipping">{l s='Free Shipping!'}</div>
-														</div> 
-													{else}
-														{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
-															{if $priceDisplay}
-																<<div class="cart_total_price" {if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
-																	<div class="descripcion">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}</div>
-																	<div class="price2" id="total_shipping">{displayPrice price=$total_shipping_tax_exc}</div>
-																</div>
-															{else}
-																<div class="cart_total_price" {if $total_shipping <= 0} style="display:none;"{/if}>
-																	<div class="descripcion">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</div>
-																	<div class="price2" id="total_shipping" >{displayPrice price=$total_shipping}</div>
-																</div>
-															{/if}
-														{else}
-															<div class="cart_total_price" {if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
-																<div class="descripcion">{l s='Total shipping:'}</div>
-																<div class="price2" id="total_shipping" >{displayPrice price=$total_shipping_tax_exc}</div>
-															</div>
-														{/if}
-													{/if *}
-										                        
-										                        
-										                        <!-- total sin IVA -->
-										                        
-													{* if $use_taxes}
-													<div class="cart_total_price">
-														<div class="descripcion">{l s='Total (tax excl.):'}</div>
-														<div class="price2" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</div>
-													</div>
-													<div class="cart_total_price">
-														<div class="descripcion">{l s='Total tax:'}</div>
-														<div class="price2" id="total_tax">{displayPrice price=$total_tax}</div>
-													</div>
-													{/if *}
-
 													<!-- descuentos -->
 													{if count($discounts)}
 														<div class="cart_total_price">
@@ -848,3 +757,229 @@ color: #979797;
 		$("#voucher").ajaxForm(options);
 	</script>
 {/literal}
+{* Modal para pedir médicos *}
+{if $DoctorRequired >= '1'}
+	<div id="care-lines">
+		<div class="lightbox_close"></div>
+		<div class="lightbox_title">Ingresa el nombre de tu médico</div>
+		<div class="lightbox_resume">
+			<p>Para continuar con la compra por favor ingresa el nombre de tu médico.</p>
+			<div style="margin-bottom: 20px; clear:both;"></div>
+			<div class="formulario_unido">
+				<input type="text" name="medico" id="medico"\>
+				<input type="hidden" name="med_fnd" id="med_fnd" value="">
+			</div>
+			<div style="margin-bottom: 20px; clear:both;"></div>
+			<div>
+				{if $DoctorRequired == '2'}
+					<button type="button" id="no_medico" class="button">No tengo médico</button>
+					<button type="button" id="ingresar_medico" class="button" disabled="">Continuar</button>
+				{else}
+					<button type="button" id="ingresar_medico" style="width: 100% !important;" class="button" disabled="">Continuar</button>
+				{/if}
+			</div>
+			<div id="medico_error"></div>
+			<style type="text/css">
+				#medico{
+					border: 2px solid #646464;
+					border-radius: 5px;
+					background: #fff;
+					height: 25px;
+					line-height: 25px;
+					padding: 0px 0px;
+					color: #646464;
+					width: 100%;
+					height: 40px;
+					float: left;
+					text-align: center;
+				}
+
+				#ingresar_medico{
+					border: 2px solid #FE922E;
+					background-color: #FE922E;
+					background-image: none;
+					font-size: 13px;
+					font-family: 'Open Sans';
+					text-transform: capitalize;
+					font-weight: 600;
+					width: 49%;
+					height: 45px;
+					color: #ffffff;
+					border-radius: 5px;
+				}
+
+				#no_medico{
+					border: 2px solid #4d4d4d;
+					background-color: white;
+					background-image: none;
+					font-size: 13px;
+					font-family: 'Open Sans';
+					text-transform: capitalize;
+					font-weight: 600;
+					width: 49%;
+					height: 45px;
+					color: #4d4d4d;
+					border-radius: 5px;
+				}
+
+				#ingresar_medico:active{
+					background-color: #FFF;
+					border: 1px #39cb98 solid;
+					color: #39cb98;
+					font-size: 12px;
+					font-family: 'Open Sans', sans-serif;
+				}
+
+				div.autosuggest ul li.as_highlight a{
+					background-color: #4d4d4d !important;
+				}
+
+				div.autosuggest ul li a{
+					width: 100%;
+					font-size: 13px;
+				}
+			</style>
+
+		</div>
+	</div>
+	{literal}
+		<script>
+			$(document).ready(function() {
+
+				function setUserID(myValue) {
+					$('#med_fnd').val(myValue);
+					$("#ingresar_medico").removeAttr('disabled');
+				}
+				var medico_registrado = false;
+
+				$(".payment").click(function(){
+					if(!medico_registrado){
+						standard_lightbox('care-lines', true);
+					}
+				});
+
+				$(".lightbox_close").click(function(){
+					$("address").removeClass("selected");
+					$('address input:radio').removeAttr("checked");
+					lightbox_hide();
+				});
+
+				$("#medico").keypress(function(){
+					$("#med_fnd").val("");
+					if($(this).val() !== ''){
+						$("#ingresar_medico").removeAttr('disabled');
+					}
+				});
+
+				var options = {
+					script:"lisme.php?",
+					varname:"input",
+					json:true,
+					shownoresults:true,
+					maxresults:10,
+					callback: function (obj) { setUserID(obj.id); }
+				};
+				var as_json = new bsn.AutoSuggest('medico', options);
+
+				$("#ingresar_medico").click(function(){
+					$.ajax({
+						type: "POST",
+						url: "lisme.php",
+						data: { 'medico_fnd' : ($('#med_fnd').val() === "")?$('#medico').val():$('#med_fnd').val() },
+						dataType: "json"	
+					}).done(function( msg ) {
+						if(msg.result.error){
+							$("#medico_error").html(msg.result.error);
+						}else{
+							lightbox_hide();
+							medico_registrado = true;
+						}
+					});
+				});
+
+				$("#no_medico").click(function(){
+					lightbox_hide();
+					medico_registrado = true;
+				});
+
+			});
+		</script>
+		<style>
+
+			#as_medico{
+				z-index: 2001;
+			}
+
+			div.autosuggest{
+				width: 27% !important;
+			}
+
+			#as_ul{
+				width: 100% !important;
+			}
+			#care-lines{
+				margin-top: 15px;
+				margin-right: 30px;
+				width:440px;
+				background-color: white;
+				position: relative;
+				display:none;
+				text-align:center;
+				padding:10px;
+				font-size: 14px;
+			}
+
+			#care-lines .lightbox_title{
+				position:relative;
+				display: inline-block;
+				background-color: #FE922E;
+				padding:10px;
+				color:#fff;
+				font-weight: 600;
+				top:-27px;
+			}
+			#care-lines .lightbox_title:after {
+				left: 0;
+				top: 100%;
+				content: " ";
+				height: 0;
+				width: 0;
+				position: absolute;
+				pointer-events: none;
+				border-style: solid;
+				border-color: #FE922E transparent transparent transparent;
+				border-width: 9px 119px 0 119px;
+			}
+			#care-lines .lightbox_close, #product_voucher .lightbox_close, #favorite_lightbox .lightbox_close{
+				content: "asdf";
+				font-size: 19.3px;
+				width:26px;
+				height:26px;
+				-webkit-border-radius: 50%;
+				border-radius: 50%;
+				border:7px solid white;
+				background-color: #4d4d4d;
+				position:absolute;
+				top:-10px;
+				right:-10px;
+				color:white;
+				font-weight: 600;
+				cursor: pointer;
+			}
+			#care-lines .lightbox_close:after, #product_voucher .lightbox_close:after, #favorite_lightbox .lightbox_close:after{content: "\00D7";}
+			#care-lines .lightbox_resume{
+				padding: 10px;
+				border-bottom: 1px solid #c8c8c8;
+			}
+			@media (max-width:800px) {
+				#lightbox_content {
+					width:100%; /*The width is 100%, when the viewport is 800px or smaller*/
+				}
+
+				#care-lines {
+					width:90%;
+				}
+			}
+		</style>
+	{/literal}
+{/if}
