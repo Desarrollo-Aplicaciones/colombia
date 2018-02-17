@@ -5,6 +5,18 @@
   display: none;
 }
 
+.text-left {
+  text-align: left!important;
+}
+
+.text-center {
+  text-align: center!important;
+}
+
+.text-right {
+	text-align: right!important;
+}
+
 .w-4 {
   width: 400px;
 }
@@ -12,6 +24,10 @@
 .w-7 {
   width: 650px;
   margin-bottom: 2rem;
+}
+
+.margin-3 {
+  margin: 3rem;
 }
 
 @media (max-width: 767px) {
@@ -63,6 +79,7 @@
  * Order - Steps
  */
 #order-step {
+ 	margin-bottom: 1.5rem;
   background: url(../img/checkout/line.png) center center repeat;
   width: 100%;
 }
@@ -433,30 +450,14 @@
 
 .btn-primary {
 	color: #fff;
-  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffb04c+0,fe922e+99 */
-  background: #ffb04c; /* Old browsers */
-  background: -moz-linear-gradient(left, #ffb04c 0%, #fe922e 99%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(left, #ffb04c 0%,#fe922e 99%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to right, #ffb04c 0%,#fe922e 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb04c', endColorstr='#fe922e',GradientType=1 ); /* IE6-9 */
-  
-  -moz-border-image: -moz-linear-gradient(left, #ffb04c 0%, #fe922e 99%);
-  -webkit-border-image: -webkit-linear-gradient(left, #ffb04c 0%, #fe922e 99%);
-  border-image: linear-gradient(to right, #ffb04c 0%,#fe922e 99%);
-  border-image-slice: 1;
+  background-color: #ff922e;
+  border: 2px solid #ff922e;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
-	color: #212529;
-	background: -moz-linear-gradient(left, #fe922e 0%, #ffb04c 99%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(left, #fe922e 0%,#ffb04c 99%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to right, #fe922e 0%,#ffb04c 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb04c', endColorstr='#fe922e',GradientType=1 ); /* IE6-9 */
-  
-  -moz-border-image: -moz-linear-gradient(left, #fe922e 0%, #ffb04c 99%);
-  -webkit-border-image: -webkit-linear-gradient(left, #fe922e 0%, #ffb04c 99%);
-  border-image: linear-gradient(to right, #fe922e 0%,#ffb04c 99%);
-  border-image-slice: 1;
+	color: #ff922e;
+  background-color: #fff;
 }
 
 .btn-rx-continue {
@@ -495,43 +496,55 @@
 /**
  * Address
  */
-.checkout address {
-  margin-bottom: .7rem;
-  padding: .5rem 0;
+.checkout section {
+  background: #fff;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
   font-family: "Open Sans", sans-serif;
   font-size: .875rem;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
-  transition: transform .3s ease-in-out, box-shadow .1s ease-in-out;
-  background: #fff;
+  margin-bottom: .7rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: .5rem 0;
   position: relative;
-	z-index: 9;
+  transition: transform .3s ease-in-out, box-shadow .1s ease-in-out;
+  width: 89%;
+  z-index: 9;
 }
 
-.checkout address:hover {
-	box-shadow: none;
+.checkout section:not(.selected) {
+  cursor: pointer;
+ }
+
+.checkout section:hover {
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
 }
 
-.checkout address span[itemprop="streetAddress"] {
+.checkout section:hover .radio,
+.checkout section:hover span[itemprop="streetAddress"] {
+	color: #3a9b37;
+}
+
+.checkout section span[itemprop="streetAddress"] {
   color: #6b6b6b;
 }
 
-.checkout address span[itemprop="addressLocality"],
-.checkout address span[itemprop="addressRegion"] {
+.checkout section span[itemprop="addressLocality"],
+.checkout section span[itemprop="addressRegion"] {
   color: #9e9e9e;
   display: block;
   font-size: .75rem;
 }
 
-.checkout address .complete-data {
+.checkout section .complete-data {
   display: none;
   margin-top: 1rem;
 }
 
-.checkout address .datetime-delivery {
+.checkout section .datetime-delivery {
   margin-top: 1rem;
 }
 
-.checkout address .btn-edit {
+.checkout section .btn-address-edit {
   background: url(../img/checkout/icons-checkout.png) 151px 0 transparent;
   border: medium none !important;
   width: 28px;
@@ -540,11 +553,11 @@
   /*cursor: pointer;*/
 }
 
-.checkout address .btn-edit:hover {
+.checkout section .btn-address-edit:hover {
   background-position-x: 26px;
 }
 
-.checkout address .img-rx.on-order {
+.checkout section .img-rx.on-order {
   background: url(../img/checkout/icons-rx.png) 0px 0 transparent;
   border: medium none !important;
   width: 40px;
@@ -553,7 +566,7 @@
   /*cursor: pointer;*/
 }
 
-.checkout address .img-rx.online {
+.checkout section .img-rx.online {
   background: url(../img/checkout/icons-rx.png) 120px 0 transparent;
   border: medium none !important;
   width: 40px;
@@ -562,7 +575,7 @@
   /*cursor: pointer;*/
 }
 
-.checkout address.selected .img-rx.on-order {
+.checkout section.selected .img-rx.on-order {
   background: url(../img/checkout/icons-rx.png) 80px 0 transparent;
   border: medium none !important;
   width: 40px;
@@ -570,7 +583,7 @@
   color: transparent;
 }
 
-.checkout address.selected .img-rx.online {
+.checkout section.selected .img-rx.online {
   background: url(../img/checkout/icons-rx.png) 40px 0 transparent;
   border: medium none !important;
   width: 40px;
@@ -578,45 +591,45 @@
   color: transparent;
 }
 
-.checkout address.selected {
-  margin: 0;
+.checkout section.selected {
+  /*margin: 0;*/
   border-left: 4px solid #3A9B37;
   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.14),0 1px 18px 0 rgba(0,0,0,0.12),0 3px 5px -1px rgba(0,0,0,0.3);
   transform: scale(1.1);
   z-index: 99;
 }
 
-.checkout address.selected.rx {
+.checkout section.selected.rx {
   border-left: none !important;
 }
 
-.checkout address.selected.payment {
+.checkout section.selected.payment {
   transform: scale(1.03);
 }
 
-.checkout address.selected .radio {
+.checkout section.selected .radio {
   color: #3A9B37;
 }
 
-.checkout address.selected span[itemprop="streetAddress"] {
+.checkout section.selected span[itemprop="streetAddress"] {
   color: #3A9B37;
 }
 
-.checkout address.selected .complete-data {
+.checkout section.selected .complete-data {
   display: block;
 }
 
-.checkout address #add-address {
+.checkout section #add-address {
   align-items:center;
   color: #39BC93;
   cursor: pointer;
   display:flex;
 }
-.checkout address #add-address span {
+.checkout section #add-address span {
   font-size: 2rem;
   margin-right: 1rem;
 }
-.checkout address #add-address {
+.checkout section #add-address {
   margin: .2rem .8rem;
 }
 

@@ -66,15 +66,23 @@ $(function () {
   });
 
   /**
-   * Address - Vertical Radio Buttons
+   * Vertical Radio Buttons
    */
-  $(".checkout address .radio-address").click(function (event) {
+  $(".checkout section .radio-address").click(function (event) {
     event.stopImmediatePropagation();
     var idAddress = $(this).val();
-    var $address = $("address[data-id='" + idAddress + "']");
+    var $address = $("section[data-id='" + idAddress + "']");
 
-    $("address").removeClass("selected");
+    $("section").removeClass("selected");
     $address.addClass("selected");
+  });
+  // Select the entire card
+  $(".checkout section").click(function (event) {
+    event.stopImmediatePropagation();
+    var $this = $(this);
+    if (!$this.hasClass("selected")) {
+      $this.find(".radio-address").click();
+    }
   });
 
   /**
@@ -109,7 +117,7 @@ $(function () {
 
         if (typeof idCity !== "undefined") {
           $city.find('option[value="' + idCity + '"]').prop('selected', true);
-          $('input[name="city_name"]').val($city.find("option:selected").text());
+          $('input[name="city"]').val($city.find("option:selected").text());
         }
       } else {
         $city.find("option:eq(0)").text("Depto. Sin Ciudad");
@@ -121,7 +129,7 @@ $(function () {
    * Address - Add city name
    */
   $('select[name="id_city"]').change(function () {
-    $('input[name="city_name"]').val($(this).find("option:selected").text());
+    $('input[name="city"]').val($(this).find("option:selected").text());
   });
 
   /**
@@ -130,6 +138,45 @@ $(function () {
   $('input[name="number_document"]').keyup(function () {
     $('input[name="dni"]').val($(this).val());
   });
+
+  /**
+   * Address - Show modal form
+   */
+  $('#add-address').click(function (event) {
+    $("#modal-address").find("form").trigger("reset");
+    $('input[name="id_address"]').val("");
+    $("#modal-address").modal();
+  });
+
+  /**
+   * Address - Edit
+   */
+  $('.btn-address-edit').click(function (event) {
+    event.stopImmediatePropagation();
+    $("#modal-address").modal();
+    var data = $(this).data("address");
+    console.log(data);
+    for (var name in data) {
+      $('input[name="' + name + '"]').val(data[name]);
+
+      if (data["id_state"] && data["id_city"]) {
+        $('select[name="id_state"]')
+          .val(data["id_state"])
+          .find('option:selected')
+          .data("idCity", data["id_city"])
+          .trigger("change");
+      }
+    }
+  });
+
+  /**
+   * Form - Prevent double submission of forms
+   */
+  /*$("form.no-ajax").submit(function () {
+    $(this).find("button[type='submit']")
+      .text("Procesando...")
+      .prop('disabled', true);
+  });*/
 
   /**
    * Medical Formula Rx

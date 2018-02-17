@@ -364,6 +364,10 @@ $this->setTemplate(_PS_THEME_DIR_.'order-payment.tpl');
 break;
 
 case 3:
+if (Tools::isSubmit('processAddress')) {
+	$this->processAddress();
+}
+
  $this->disableMediosP();
       $this->show_contra_entrega();
       $this->block_medioP_sobre_costo();

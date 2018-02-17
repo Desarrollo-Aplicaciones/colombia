@@ -32,7 +32,7 @@
 
 <div class="checkout w-7"> 
 <!-- Pago contraentrega-->
-	<address data-id="div10" class="payment" onclick="{literal}$('#mediopagodatafono').click(){/literal}">
+	<section data-id="div10" class="payment" onclick="{literal}$('#mediopagodatafono').click(){/literal}">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -80,12 +80,12 @@
 			</div>
 		</div>
 		<!-- /.container-fluid -->
-	</address>
+	</section>
 <!-- Pago contraentrega/-->
 
 
 <!-- Cuenta Corriente o Ahorros -->
-	<address data-id="div9" class="payment" onclick="{literal}$('#mediopagop').click(){/literal}">
+	<section data-id="div9" class="payment" onclick="{literal}$('#mediopagop').click(){/literal}">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -126,11 +126,11 @@
 			</div>
 		</div>
 		<!-- /.container-fluid -->
-	</address>
+	</section>
 <!-- Cuenta Corriente o Ahorros -->
 
 <!-- Tarjeta Credito -->
-	<address data-id="div8" class="payment" onclick="{literal}$('#mediopagot').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
+	<section data-id="div8" class="payment" onclick="{literal}$('#mediopagot').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -168,11 +168,11 @@
 			</div>
 		</div>
 		<!-- /.container-fluid -->
-	</address>
+	</section>
 <!-- Tarjeta Credito /-->
 
 <!-- Tarjeta Credito codensa -->
-	<address data-id="div21" class="payment" onclick="{literal}$('#mediopagocodensa').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
+	<section data-id="div21" class="payment" onclick="{literal}$('#mediopagocodensa').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -210,12 +210,12 @@
 			</div>
 		</div>
 		<!-- /.container-fluid -->
-	</address>
+	</section>
 <!-- Tarjeta Credito codensa /-->
 
 
 <!-- Baloto -->
-	<address data-id="div7" class="payment" onclick="{literal}$('#mediopagob').click(){/literal}">
+	<section data-id="div7" class="payment" onclick="{literal}$('#mediopagob').click(){/literal}">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -273,11 +273,11 @@
 			</div>
 		</div>
 		<!-- /.container-fluid -->
-	</address>
+	</section>
 <!-- Baloto /-->
 
 <!-- Pago con efecty -->
-	<address data-id="div5" class="payment" onclick="{literal}$('#mediopagoe').click(){/literal}">
+	<section data-id="div5" class="payment" onclick="{literal}$('#mediopagoe').click(){/literal}">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -324,6 +324,6 @@
 			</div>
 		</div>
 		<!-- /.container-fluid -->
-	</address>
+	</section>
 <!-- Pago con efecty /-->
 </div>

@@ -134,7 +134,7 @@
 	<div class="checkout w-7"> 
 		<p style="margin-bottom:20px;"><b>Selecciona una opción</b></p>
 
-		<address data-id="entrega" class="selected rx">
+		<section data-id="entrega" class="selected rx">
 			<!-- .container-fluid -->
 			<div class="container-fluid">
 				<div class="row">
@@ -183,9 +183,9 @@
 				</div>
 			</div>
 			<!-- /.container-fluid -->
-		</address>
+		</section>
 
-		<address data-id="online" class="rx">
+		<section data-id="online" class="rx">
 			<!-- .container-fluid -->
 			<div class="container-fluid">
 				<div class="row">
@@ -248,7 +248,7 @@
 				</div>
 			</div>
 			<!-- /.container-fluid -->
-		</address>     
+		</section>     
 	</div> 
 <!-- fin opciones -->
 
