@@ -161,11 +161,12 @@
 					<div class="col-xs-12 col-md-12 complete-data">
 						<!-- .row --> 
 						<div class="row">
-							<div class="col-xs-12 col-md-12">            
+							<div class="col-xs-12 col-md-12 rx">            
 								<b>Recuerda que al momento de la entrega de tu producto (antibiótico) el repartidor te pedirá tu receta médica. no se te olvide tenerla a la mano.</b>
 							</div>
 						</div> 
 						<!-- /.row --> 
+						<div style="margin-top:20px; clear:both;"></div>
 						<!-- .row --> 
 						<div class="row">
 							<div class="col-xs-12 col-md-9 visible-md visible-lg"></div>
@@ -212,14 +213,14 @@
 					<div class="col-xs-12 col-md-12 complete-data">
 						<!-- .row --> 
 						<div class="row">
-							<div class="col-xs-12 col-md-12">            
+							<div class="col-xs-12 col-md-12 rx">            
 								(Formatos de archivo permitidos: .png, .jpg, .pdf, .tiff, .xcf, .gif, .pcx, .wmp, .raw, .jp2, .bmp, .dng)
 							</div>
 						</div> 
 						<div style="clear:both; margin-top:10px;"></div>
 						<!-- /.row --> 
 						<div class="row">
-							<div class="col-xs-12 col-md-2">
+							<div class="col-xs-12 col-md-2 rx">
 								<button type="button" name="attach" onclick="$('#archivoformula').click();" class="btn2 btn-rx-attach">Adjuntar</button>
 
 							</div>

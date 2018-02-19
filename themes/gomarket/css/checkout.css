@@ -676,3 +676,21 @@
 .checkout .trash-rx:hover {
   background-position-x: -20px;
 }
+
+@media (min-width: 992px)
+{
+  .col-xs-12.rx{
+  padding-left: 4%;
+  }
+}
+
+.payment.w-7.checkout{
+  width: 100%;
+}
+
+@media (max-width: 992px)
+{
+  #order-step #accordion{
+    padding: 0;
+  }
+}

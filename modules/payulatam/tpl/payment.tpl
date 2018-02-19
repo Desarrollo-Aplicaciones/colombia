@@ -30,13 +30,13 @@
 
 
 
-<div class="checkout w-7"> 
+<div class="checkout w-7 payment"> 
 <!-- Pago contraentrega-->
 	<section data-id="div10" class="payment" onclick="{literal}$('#mediopagodatafono').click(){/literal}">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-12 col-md-2">
+				<div class="col-xs-4 col-md-4">
 					<div class="radio">
 						<input class="radio-address" id="mediopagodatafono" name="mediopago" value="div10" type="radio">
 						<label for="mediopagodatafono" class="radio-label" style="display: inline-flex;">
@@ -46,7 +46,7 @@
 				</div>
 				<!-- /.col-xs-12.col-md-2 -->
 
-				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+				<div class="col-xs-8 col-md-8" style="padding-top:10px;">
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="streetAddress"><b>{l s='Pago contra entrega' mod='cashondelivery'}</b></span>
 					</div>
@@ -89,7 +89,7 @@
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-12 col-md-2">
+				<div class="col-xs-4 col-md-4">
 					<div class="radio">
 						<input class="radio-address" id="mediopagop" name="mediopago" value="div9" type="radio">
 						<label for="mediopagop" class="radio-label" style="display: inline-flex;">
@@ -99,7 +99,7 @@
 				</div>
 				<!-- /.col-xs-12.col-md-2 -->
 
-				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+				<div class="col-xs-8 col-md-8" style="padding-top:10px;">
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="streetAddress"><b>Cuenta corriente o ahorros</b></span>
 					</div>
@@ -134,7 +134,7 @@
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-12 col-md-2">
+				<div class="col-xs-4 col-md-4">
 					<div class="radio">
 						<input class="radio-address" id="mediopagot" name="mediopago" value="div8" type="radio">
 						<label for="mediopagot" class="radio-label" style="display: inline-flex;">
@@ -144,7 +144,7 @@
 				</div>
 				<!-- /.col-xs-12.col-md-2 -->
 
-				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+				<div class="col-xs-8 col-md-8" style="padding-top:10px;">
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="streetAddress"><b>Tarjeta de crédito</b></span>
 					</div>
@@ -176,7 +176,7 @@
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-12 col-md-2">
+				<div class="col-xs-4 col-md-4">
 					<div class="radio">
 						<input class="radio-address" id="mediopagocodensa" name="mediopago" value="div21" type="radio">
 						<label for="mediopagocodensa" class="radio-label" style="display: inline-flex;">
@@ -186,7 +186,7 @@
 				</div>
 				<!-- /.col-xs-12.col-md-2 -->
 
-				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+				<div class="col-xs-8 col-md-8" style="padding-top:10px;">
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="streetAddress"><b>Tarjeta de crédito Codensa</b></span>
 					</div>
@@ -219,7 +219,7 @@
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-12 col-md-2">
+				<div class="col-xs-4 col-md-4">
 					<div class="radio">
 						<input class="radio-address" id="mediopagob" name="mediopago" value="div7" type="radio">
 						<label for="mediopagob" class="radio-label" style="display: inline-flex;">
@@ -229,7 +229,7 @@
 				</div>
 				<!-- /.col-xs-12.col-md-2 -->
 
-				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+				<div class="col-xs-8 col-md-8" style="padding-top:10px;">
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="streetAddress"><b>Vía Baloto</b></span>
 					</div>
@@ -281,7 +281,7 @@
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-12 col-md-2">
+				<div class="col-xs-4 col-md-4">
 					<div class="radio">
 						<input class="radio-address" id="mediopagoe" name="mediopago" value="div5" type="radio">
 						<label for="mediopagoe" class="radio-label" style="display: inline-flex;">
@@ -291,7 +291,7 @@
 				</div>
 				<!-- /.col-xs-12.col-md-2 -->
 
-				<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+				<div class="col-xs-8 col-md-8" style="padding-top:10px;">
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="streetAddress"><b>Pago con Efecty</b></span>
 					</div>
