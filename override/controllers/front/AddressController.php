@@ -154,6 +154,10 @@ class AddressController extends AddressControllerCore
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
 
 		// Don't continue this process if we have errors !
+		if ($this->errors && Tools::getValue('cartAddress')) {
+			Tools::redirect('index.php?controller=order&step=1&errors='.html_entity_decode(implode("~", $this->errors)));
+		}
+
 		if ($this->errors && !$this->ajax)
 			return;
 

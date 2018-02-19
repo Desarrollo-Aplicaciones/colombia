@@ -414,8 +414,8 @@
                     <input type="hidden" name="dni" value="{$datacustomer['identification']}" />
                     <input type="hidden" name="firstname" value="{$datacustomer['firstname']}" />
                     <input type="hidden" name="lastname" value="{$datacustomer['lastname']}" />
+                    <input type="hidden" name="cartAddress" value="on"/>
                     <input type="hidden" name="id_address" value="" />
-                    <!--input type="hidden" name="id_type" value="{$datacustomer['id_type']}" /-->
 
                     <button type="submit" class="btn2 btn-block btn-primary" name="submitAddress">Guardar y continuar</button>
                   </div>
