@@ -127,11 +127,6 @@ class AddressController extends AddressControllerCore
 				$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
 			*/
 
-			// Check lastname NIT
-			if (empty(Tools::getValue('lastname')) && (int)Tools::getValue('type_document') == 4) {
-				$address->lastname = ".";
-			}
-
 			// Check country DNI
 			if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
 				$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');

@@ -149,6 +149,7 @@
 				<div class="form-group">
 					<label for="billing-business-name">Razón social:</label>
 					<input type="text" class="form-control" id="billing-business-name" name="firstname" value="{$datacustomer['firstname']}" placeholder="" data-validate="true">
+					<input type="hidden" name="lastname" value=".">
 				</div>
 			</div>
 			<!-- /.col-xs-12.col-sm-6 -->
