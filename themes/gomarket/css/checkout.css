@@ -680,7 +680,8 @@
 @media (min-width: 992px)
 {
   .col-xs-12.rx{
-  padding-left: 4%;
+    padding-left: 4%;
+    padding-right: 4%;
   }
 }
 
