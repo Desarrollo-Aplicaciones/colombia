@@ -235,7 +235,7 @@
                   <div class="col-xs-12 col-md-6">
                     <div class="form-group">
                       <label for="billing-lastname">Día:</label>
-                      <select name="" id="day_delivered{$address['id_address']}" name="day_delivered{$address['id_address']}" class="form-control">
+                      <select id="day_delivered{$address['id_address']}" name="date_delivery" class="form-control">
                       {if isset($day_delivered) && isset($js_json_delivered)}
                         {$day_delivered}
                       {/if}
@@ -245,7 +245,7 @@
                   <div class="col-xs-12 col-md-6">
                     <div class="form-group">
                       <label for="billing-lastname">Hora:</label>
-                      <select class="form-control seleccion" id="hour_delivered{$address['id_address']}">
+                      <select class="form-control seleccion" id="hour_delivered{$address['id_address']}" name="time_windows">
                       </select>
                     </div>
                   </div>

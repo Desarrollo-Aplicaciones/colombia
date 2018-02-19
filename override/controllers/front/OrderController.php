@@ -71,6 +71,7 @@ class OrderController extends OrderControllerCore
   {
     parent::initContent();
 
+
 		if ($errors = Tools::getValue('errors')) {
       $this->errors = explode("~", $errors);
     }
@@ -402,6 +403,12 @@ class OrderController extends OrderControllerCore
         // Context::getContext()->cookie->entrega_nocturna = 'disabled';    
         exit('{"entrega_nocturna" : false, "valor" : 0}');
       }
+    }
+
+    if (Tools::getValue('date_delivery') && Tools::getValue('time_windows')) {
+      $this->context->cart->date_delivery = Tools::getValue('date_delivery');
+      $this->context->cart->time_windows = Tools::getValue('time_windows');
+      $this->context->cart->time_delivery = trim(explode("a", Tools::getValue('time_windows'))[0]);
     }
     
     
