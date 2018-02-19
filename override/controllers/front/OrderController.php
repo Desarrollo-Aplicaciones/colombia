@@ -71,6 +71,10 @@ class OrderController extends OrderControllerCore
   {
     parent::initContent();
 
+		if ($errors = Tools::getValue('errors')) {
+      $this->errors = explode("~", $errors);
+    }
+
     // https://github.com/jschr/bootstrap-modal
     $this->context->controller->addJS(_THEME_JS_DIR_ . 'checkout.js', 'all');
     $this->context->controller->addJS(_THEME_JS_DIR_ . 'bootstrap-modal.min.js', 'all');
