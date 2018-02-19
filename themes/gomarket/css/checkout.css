@@ -694,3 +694,10 @@
     padding: 0;
   }
 }
+
+/**
+ * Modal
+ */
+.hide {
+  display: none;
+}
