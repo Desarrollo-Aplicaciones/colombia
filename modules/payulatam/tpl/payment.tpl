@@ -281,7 +281,7 @@
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-4 col-md-4">
+				<div class="col-xs-5 col-md-4">
 					<div class="radio">
 						<input class="radio-address" id="mediopagoe" name="mediopago" value="div5" type="radio">
 						<label for="mediopagoe" class="radio-label" style="display: inline-flex;">
@@ -291,7 +291,7 @@
 				</div>
 				<!-- /.col-xs-12.col-md-2 -->
 
-				<div class="col-xs-8 col-md-8" style="padding-top:10px;">
+				<div class="col-xs-7 col-md-8" style="padding-top:10px;">
 					<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 						<span itemprop="streetAddress"><b>Pago con Efecty</b></span>
 					</div>

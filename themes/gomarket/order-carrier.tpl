@@ -169,8 +169,8 @@
 						<div style="margin-top:20px; clear:both;"></div>
 						<!-- .row --> 
 						<div class="row">
-							<div class="col-xs-12 col-md-9 visible-md visible-lg"></div>
-							<div class="col-xs-12 col-md-3">
+							<div class="col-xs-12 col-md-8 visible-md visible-lg"></div>
+							<div class="col-xs-12 col-md-4 rx">
 								<div class="form-group text-right">
 									{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
 										<button type="submit" name="processCarrier" class="btn2 btn-block btn-rx-continue">Continuar</button>
@@ -224,7 +224,7 @@
 								<button type="button" name="attach" onclick="$('#archivoformula').click();" class="btn2 btn-rx-attach">Adjuntar</button>
 
 							</div>
-							<div class="col-xs-12 col-md-10">
+							<div class="col-xs-12 col-md-10 rx">
 								<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" onchange="validarArchivo();">
 								<input type="text" id="upload" disabled>
 								<a class="trash-rx" href="javascript:void(0)">Eliminar</a>
@@ -234,8 +234,8 @@
 						<div style="clear:both; margin-top:10px;"></div>
 						<!-- .row --> 
 						<div class="row">
-							<div class="col-xs-12 col-md-9 visible-md visible-lg"></div>
-							<div class="col-xs-12 col-md-3">
+							<div class="col-xs-12 col-md-8 visible-md visible-lg"></div>
+							<div class="col-xs-12 col-md-4 rx">
 								<div class="form-group text-right">
 									{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
 										<button type="submit" name="processCarrier" class="btn2 btn-block btn-rx-continue">Continuar</button>
