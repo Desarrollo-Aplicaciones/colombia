@@ -214,7 +214,7 @@
 						<!-- .row --> 
 						<div class="row">
 							<div class="col-xs-12 col-md-12 rx">            
-								(Formatos de archivo permitidos: .png, .jpg, .pdf, .tiff, .xcf, .gif, .pcx, .wmp, .raw, .jp2, .bmp, .dng)
+								(Formatos de archivo permitidos: .png, .jpg, .gif, .pdf)
 							</div>
 						</div> 
 						<div style="clear:both; margin-top:10px;"></div>
@@ -225,7 +225,7 @@
 
 							</div>
 							<div class="col-xs-12 col-md-10 rx">
-								<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" onchange="validarArchivo();">
+								<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" accept="image/x-png, image/gif, image/jpeg, application/pdf" onchange="validarArchivo();">
 								<input type="text" id="upload" disabled>
 								<a class="trash-rx" href="javascript:void(0)">Eliminar</a>
 								<div class="errorvalid" id="errorupload"></div>
