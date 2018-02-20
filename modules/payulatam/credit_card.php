@@ -37,6 +37,7 @@ require_once(_PS_MODULE_DIR_ . 'payulatam/creditcards.class.php');
 class PayuCreditCard extends PayUControllerWS {
 
     public $ssl = true;
+    private $paymentCountry = "CO";
 
     public function setMedia() {
         parent::setMedia();
@@ -385,7 +386,7 @@ class PayuCreditCard extends PayUControllerWS {
                                   },
                                   "type":"AUTHORIZATION_AND_CAPTURE",
                                   "paymentMethod":"' . $paymentMethod . '",
-                                  "paymentCountry":"' . $country . '",
+                                  "paymentCountry":"' . $this->paymentCountry . '",
                                   "deviceSessionId": "' . $_deviceSessionId . '",
                                   "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                                   "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
@@ -552,7 +553,7 @@ class PayuCreditCard extends PayUControllerWS {
                  },
                  "type":"AUTHORIZATION_AND_CAPTURE",
                  "paymentMethod":"' . $paymentMethod . '",
-                 "paymentCountry":"' . $country . '",
+                 "paymentCountry":"' . $this->paymentCountry . '",
                  "deviceSessionId": "' . $_deviceSessionId . '",
                  "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                  "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
@@ -645,7 +646,7 @@ class PayuCreditCard extends PayUControllerWS {
                  },
                  "type":"AUTHORIZATION_AND_CAPTURE",
                  "paymentMethod":"' . $paymentMethod . '",
-                 "paymentCountry":"' . $country . '",
+                 "paymentCountry":"' . $this->paymentCountry . '",
                  "deviceSessionId": "' . $_deviceSessionId . '",
                  "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                  "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
@@ -865,7 +866,7 @@ class PayuCreditCard extends PayUControllerWS {
                     },
                     "type":"AUTHORIZATION_AND_CAPTURE",
                     "paymentMethod":"' . $paymentMethod . '",
-                    "paymentCountry":"' . $country . '",
+                    "paymentCountry":"' . $this->paymentCountry . '",
                     "deviceSessionId": "' . $_deviceSessionId . '",
                     "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                     "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
