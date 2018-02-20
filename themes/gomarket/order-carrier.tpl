@@ -238,7 +238,8 @@
 							<div class="col-xs-12 col-md-4 rx">
 								<div class="form-group text-right">
 									{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
-										<button type="submit" name="processCarrier" class="btn2 btn-block btn-rx-continue">Continuar</button>
+										<input type="hidden" name="processCarrier" value="true"/>
+										<button type="submit" class="btn2 btn-block btn-rx-continue">Continuar</button>
 									{/if}
 								</div>
 							</div>
