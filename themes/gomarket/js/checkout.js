@@ -159,7 +159,6 @@ $(function () {
     event.stopImmediatePropagation();
     $("#modal-address").modal();
     var data = $(this).data("address");
-    console.log(data);
     for (var name in data) {
       $('input[name="' + name + '"]').val(data[name]);
 
