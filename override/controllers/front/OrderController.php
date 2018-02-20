@@ -405,13 +405,12 @@ class OrderController extends OrderControllerCore
       }
     }
 
-    if (Tools::getValue('date_delivery') && Tools::getValue('time_windows')) {
-      $this->context->cart->date_delivery = Tools::getValue('date_delivery');
-      $this->context->cart->time_windows = Tools::getValue('time_windows');
-      $this->context->cart->time_delivery = trim(explode("a", Tools::getValue('time_windows'))[0]);
-    }
-    
-    
+    // Date and time of delivery
+    $this->context->cart->date_delivery = Tools::getValue('date_delivery') ? Tools::getValue('date_delivery') : null;
+    $this->context->cart->time_windows = Tools::getValue('time_windows') ? Tools::getValue('time_windows') : null;
+    $timeWindow = explode("a", Tools::getValue('time_windows'));
+    $this->context->cart->time_delivery = count($timeWindow) > 1 ? trim($timeWindow[0]) : null;
+
     if (Tools::getValue('display_barrios') && Tools::getValue('display_barrios')) {
       $barrios     = Utilities::get_list_barrios(Tools::getValue('lid_localiad'));
       $str_barrios = '<option >-Barrio-</option>';

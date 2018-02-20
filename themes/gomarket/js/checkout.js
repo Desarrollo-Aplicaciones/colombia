@@ -83,6 +83,10 @@ $(function () {
     if (!$this.hasClass("selected")) {
       $this.find(".radio-address").click();
     }
+
+    // Avoid sending multiple names
+    $('.checkout section [data-superfluous="true"]').prop("disabled", true);
+    $this.find('[data-superfluous="true"]').prop("disabled", false);
   });
 
   /**
