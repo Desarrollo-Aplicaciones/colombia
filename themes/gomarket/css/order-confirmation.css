@@ -115,11 +115,17 @@ div.titlebox::before
 	text-align: left;
 }
 
+#order-container #resumen table tbody tr td{
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
 #order-container #resumen table tr td:last-child {
 	font-weight: 700;
 	white-space: nowrap;
 	padding-left: 34px;
 	padding-right: 15px;
+	text-align: right;
 }
 
 #order-container #resumen table tbody tr td:first-child {

@@ -163,19 +163,19 @@
 
     <div id="sedes">
         <div class="sede">
-            Bogotá: <br/> <b>(57 1) 492 6263 </b>
+            Bogotá: <br/> <b>492 6363</b>
         </div>
 
         <div class="sede">
-            Cali: <br/> <b> (+57 2) 3860083 </b>
+            Cali: <br/> <b>386 0083</b>
         </div>
 
         <div class="sede">
-            Medellín: <br/>  <b>(+57 4) 283 61 50 </b>
+            Medellín: <br/>  <b>283 6150 </b>
         </div>
 
         <div class="sede">
-            Barranquilla: <br/> <b> (+57 5) 3197970 </b>
+            Barranquilla: <br/> <b>319 7970 </b>
         </div>
 
         <div class="sede">
