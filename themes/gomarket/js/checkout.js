@@ -198,4 +198,21 @@ $(function () {
       $('.trash-rx').hide();
     }
   });
+
+  /**
+   * Mask Credit Card
+   */
+  String.prototype.toCardFormat = function () {
+    return this.replace(/[^0-9]/g, "").substr(0, 16).split("").reduce(cardFormat, "");
+    function cardFormat(str, l, i) {
+      return str + ((!i || (i % 4)) ? "" : "-") + l;
+    }
+  };
+
+  $('input[data-openpay-card="card_number"]').keyup(function () {
+    var $this = $(this);
+    $this.val($this.val().toCardFormat());
+    $('input[name="numerot"]').val($this.val().replace(/-/g, ''));
+  });
+
 });

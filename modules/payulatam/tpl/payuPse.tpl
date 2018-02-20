@@ -213,7 +213,7 @@ function bank()
                 </div>
                 
                 <div class="cont-trust-img">
-                    <input type="button" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR">
+                    <input type="submit" class="paymentSubmit boton-pagos-excep" value="PAGAR">
                 </div>
                                 
                 <input type="hidden" id="PaymentMethodForm_parameter_PagosOnlinePayment_Pse_pse_userAgent" name="PaymentMethodForm[parameter][PagosOnlinePayment_Pse][pse_userAgent]" value="Mozilla/5.0 (Windows NT 6.1; rv:26.0) Gecko/20100101 Firefox/26.0">

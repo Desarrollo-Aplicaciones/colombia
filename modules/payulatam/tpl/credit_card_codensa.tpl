@@ -109,7 +109,7 @@
                         "error": function(result) {
                             console.log("Error ajaxbines -> "+result);
                         },
-                        "data": {numerot: $( "#numerot" ).val(), accion: "ajax_bin"},
+                        "data": {numerot: $('input[name="numerot"]').val(), accion: "ajax_bin"},
                         "async": true
                     });
                 });
@@ -139,9 +139,6 @@
                 rules :{
                     numerot : {
                         required : true,
-                        number : true,   //para validar campo solo numeros
-                        minlength : 14 , //para validar campo con minimo 3 caracteres
-                        maxlength : 16 //para validar campo con maximo 9 caracteres                                   
                     },
                     codigot : {
                         required : true,
@@ -174,9 +171,6 @@
                 messages: {
                     numerot: { 
                         required: "Campo Requerido.",
-                        number : "Campo Requerido.",
-                        minlength: "Campo Requerido.",
-                        maxlength: "Campo Requerido.",
                     },
                     codigot: { 
                         required: "Campo Requerido.",
@@ -206,25 +200,6 @@
                         required : "El campo es requerido."
                     }
                 },
-            });
-
-            $("#formPayU").submit(function(event) {
-                $('#numerot').validateCreditCard(function(result) {
-                    if(result.card_type === null){
-                        console.log("tarjeta no valida ");
-                        $('#numerot').addClass('error');
-                        $('#numerot').removeClass('valid');
-                        event.preventDefault();
-                        alert("El numero de tarjeta no es valido.");
-                        //$("#tarjetainvalida").css("display: inline;");
-                    }
-                    else{
-                        console.log("Valida ok");
-                        $('#numerot').removeClass('error');
-                        $('#numerot').addClass('valid');
-                        //$("#tarjetainvalida").css("display: none;");
-                    }
-                });
             });
         });
         
@@ -310,7 +285,8 @@
                     </div>
                     <div class="cardAttr">
                         {* <div class="textCard">Número de Tarjeta de Crédito<span class="purple">*</span>: </div> *}
-                        <input type="text" name="numerot" autocomplete="off" data-openpay-card="card_number" id="numerot" placeholder="Número de Tarjeta de Crédito o Débito *"/>
+                        <input type="text" autocomplete="off" data-openpay-card="card_number" id="numerot" placeholder="Número de Tarjeta de Crédito o Débito *"/>
+                        <input type="hidden" name="numerot" value="">
                     </div>
                     <div class="cardAttr">
                         {* <div class="textCard">Nombre del Titular<span class="purple">*</span>: </div> *}
@@ -362,7 +338,7 @@
                         <img class="trust_img" src="{$img_dir}authentication/seguridad.jpg" />
                     </div>
                     <div class="cont-trust-img">
-                        <input type="button" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR">
+                        <input type="submit" class="paymentSubmit boton-pagos-excep" value="PAGAR">
                         {* <input type="button" id="submit_btn" onclick="$('#botoncitosubmit').click();" class="paymentSubmit boton-pagos-excep" value="PAGAR"> *}
                     </div>
                 </div>

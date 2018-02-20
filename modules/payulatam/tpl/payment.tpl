@@ -32,7 +32,7 @@
 
 <div class="checkout w-7 payment"> 
 <!-- Pago contraentrega-->
-	<section data-id="div10" class="payment" onclick="{literal}$('#mediopagodatafono').click(){/literal}">
+	<section data-id="div10" class="payment">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -85,7 +85,7 @@
 
 
 <!-- Cuenta Corriente o Ahorros -->
-	<section data-id="div9" class="payment" onclick="{literal}$('#mediopagop').click(){/literal}">
+	<section data-id="div9" class="payment">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -130,7 +130,7 @@
 <!-- Cuenta Corriente o Ahorros -->
 
 <!-- Tarjeta Credito -->
-	<section data-id="div8" class="payment" onclick="{literal}$('#mediopagot').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
+	<section data-id="div8" class="payment">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -172,7 +172,7 @@
 <!-- Tarjeta Credito /-->
 
 <!-- Tarjeta Credito codensa -->
-	<section data-id="div21" class="payment" onclick="{literal}$('#mediopagocodensa').click(); $('html, body').animate({ scrollTop: $(this).offset().top }, 1000);{/literal}">
+	<section data-id="div21" class="payment">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -215,7 +215,7 @@
 
 
 <!-- Baloto -->
-	<section data-id="div7" class="payment" onclick="{literal}$('#mediopagob').click(){/literal}">
+	<section data-id="div7" class="payment">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -251,7 +251,7 @@
 						</div>
 
 						<div class="cont-trust-img">
-							<input type="button" onclick="$('#botoncitosubmit').click();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
+							<input type="button" onclick="$('#formBaloto').submit();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
 						</div>
 
 					{else if isset($isblockmpb) and $isblockmpb}
@@ -277,7 +277,7 @@
 <!-- Baloto /-->
 
 <!-- Pago con efecty -->
-	<section data-id="div5" class="payment" onclick="{literal}$('#mediopagoe').click(){/literal}">
+	<section data-id="div5" class="payment">
 		<!-- .container-fluid -->
 		<div class="container-fluid">
 			<div class="row">
@@ -306,7 +306,7 @@
 					{if isset($disableBaloto) and !$disableBaloto and (isset($isblockmpb) and !$isblockmpb) and isset($medios_de_pago['Efecty']) && $medios_de_pago['Efecty'] ==='1'}
 						<p class="ctn-vlr-total-pedido">Finaliza tu compra para recibir los datos con los que podras acercarte a un punto Efecty y realizar tu pago.</p>
 						<div class="cont-trust-img">
-							<input type="button" onclick="$('#botoncitosubmit').click();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
+							<input type="button" onclick="$('#formEfecty').submit();" class="boton-pagos-excep paymentSubmit" value="PAGAR">
 						</div>
 						{include file="$tpl_dir../../modules/payulatam/tpl/payuEfecty.tpl"}
 					{else if isset($isblockmpb) and $isblockmpb}
