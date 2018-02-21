@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<link rel="stylesheet" href="{$css_dir}order-confirmation.css" type="text/css" media="screen" charset="utf-8"/>
+<link rel="stylesheet" href="{$css_dir}order-confirmation.css?v=1" type="text/css" media="screen" charset="utf-8"/>
 {capture name=path}{l s='Order confirmation'}{/capture}
 {*include file="$tpl_dir./breadcrumb.tpl"*}
 
