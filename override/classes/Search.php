@@ -74,7 +74,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		if ($ajax)
 		{
 
-			$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+			$conn_string = Configuration::get('STR_CON_POSTGRESQL');
 			//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 			$dbconn4 = pg_pconnect($conn_string);
 			$conn_open = 1;
@@ -244,7 +244,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		else if ($order_by == 'date_upd')
 			$alias = 'p.';
 
-		$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+		$conn_string = Configuration::get('STR_CON_POSTGRESQL');
 		//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 		$dbconn4 = pg_pconnect($conn_string);
 		$conn_open = 1;
@@ -429,7 +429,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 			$alias = 'product_shop.';
 
 
-		$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+		$conn_string = Configuration::get('STR_CON_POSTGRESQL');
 //		$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 		$dbconn4 = pg_pconnect($conn_string);
 		$conn_open = 1;
@@ -586,7 +586,6 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 	public static function findApp($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
 	$order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
 	{
-            $porcen_simil = Configuration::get('SEARCH_PORCENT_SIMILITUD');
             
 		if (!$context)
 			$context = Context::getContext();
@@ -627,7 +626,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 				if ($word[0] != '-') {
 					$cant_words++;
 					$sum_words_fibo += $cant_words;
-					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= ".$porcen_simil." ";
+					$score_array[] = " ( 100 - ( ( search.levenshtein(sw.word, '".pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH))."') ) * 100)/ length(sw.word) ) >= 70 ";
 					$listword .= $word.';';				
 					
 					if ($cant_words == 1 && is_numeric($word) && strlen($word) >= 5 ) { // si la palabra que busco es la primera palabra y es numérica
@@ -653,7 +652,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		if ($ajax)
 		{
 
-			$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+			$conn_string = Configuration::get('STR_CON_POSTGRESQL');
 			//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 			$dbconn4 = pg_pconnect($conn_string);
 			$conn_open = 1;
@@ -667,14 +666,14 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 													UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra
 					 		) pepe
  						) tw 
-					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= ".$porcen_simil." )
+					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )
 				GROUP BY si.id_product 
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
 
 			$alenum = 0;
 			if ( $resultado = pg_exec($query_psql)) {
-				
+
 					$alenum = rand(10,50);
 					$sql_create = 'CREATE TEMPORARY TABLE tmp_search_'.$alenum.' (
 						id_asc  int NOT NULL AUTO_INCREMENT ,
@@ -785,7 +784,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 		else if ($order_by == 'date_upd')
 			$alias = 'p.';
 
-		$conn_string = "host=localhost port=15432 dbname=farmalisto_colombia user=search password=search123";
+		$conn_string = Configuration::get('STR_CON_POSTGRESQL');
 		//$conn_string = "host=search.cuznbgafgkfl.us-east-1.rds.amazonaws.com port=5432 dbname=farmalisto_colombia user=bus_col password='nyT.19*xS'";
 		$dbconn4 = pg_pconnect($conn_string);
 		$conn_open = 1;
@@ -799,7 +798,7 @@ public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $
 													UNNEST(STRING_TO_ARRAY('".$listword."', ';')) palabra
 					 		) pepe
  						) tw 
-					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= ".$porcen_simil." )
+					ON ( sw.word LIKE tw.palabra || '%' OR ( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) >= 70 )
 				GROUP BY si.id_product 
 				HAVING sum(tw.orden) > 0
 				ORDER BY sum(tw.orden) DESC, sum( 100 - ( ( search.levenshtein(sw.word, tw.palabra) ) * 100)/ length(sw.word) ) DESC";
