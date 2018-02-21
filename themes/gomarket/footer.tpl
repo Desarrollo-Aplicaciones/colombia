@@ -212,16 +212,18 @@ $( "#hombre1,#mujer1" ).click(function() {
             $('#'+($('#lightbox_content div').attr("id"))).appendTo( '#standard_lightbox .recent' );
             $('#lightbox_content').empty();
             }
-        function standard_lightbox(id){
+        function standard_lightbox(id, bloqueo = false){
             $('#lightbox_content').empty();
             $('#'+id).appendTo( "#lightbox_content" );
             $('#lightbox_content #'+id).show();
             $('#standard_lightbox').fadeIn('slow');
             $('#page').addClass("blurred");
+            if(!bloqueo){
+                $('#standard_lightbox .fog').click(function(){
+                    lightbox_hide();
+                });
+            }
         }
-        $('#standard_lightbox .fog').click(function(){
-            lightbox_hide();
-        });
     </script>
 <!--/Lightbox container-->
 
@@ -582,4 +584,18 @@ window.__lc.chat_between_groups = false;
 		{/if}
 	{/foreach}
 {/if}
+{literal}
+<script type="text/javascript">
+   var _smid = '7ymgpvwlezxrq1wn';
+   (function(w, r, a, sm, s ) {
+       w['SalesmanagoObject'] = r;
+       w[r] = w[r] || function () {( w[r].q = w[r].q || [] ).push(arguments)};
+       sm = document.createElement('script');
+       sm.type = 'text/javascript'; sm.async = true; sm.src = a;
+       s = document.getElementsByTagName('script')[0];
+       s.parentNode.insertBefore(sm, s);
+    })(window, 'sm', ('https:' == document.location.protocol ? 'https://' : 'http://')
+    + 'app2.salesmanago.pl/static/sm.js');
+</script> 
+{/literal}
 </html>

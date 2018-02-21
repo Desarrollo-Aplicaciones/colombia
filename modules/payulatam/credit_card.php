@@ -37,6 +37,7 @@ require_once(_PS_MODULE_DIR_ . 'payulatam/creditcards.class.php');
 class PayuCreditCard extends PayUControllerWS {
 
     public $ssl = true;
+    private $paymentCountry = "CO";
 
     public function setMedia() {
         parent::setMedia();
@@ -248,6 +249,8 @@ class PayuCreditCard extends PayUControllerWS {
             $test = (intval($conn['produccion']) == 0) ? 'true' : 'false';
             $referenceCode = $params[2]['referenceCode'] . '_' . $intentos;
             $signature = $conf->sing($params[2]['referenceCode'] . '_' . $intentos . '~' . $params[4]['amount'] . '~' . $currency);
+            $street1 = addslashes(substr($address->address1, 0, 99));
+            $street2 = "N/A";
 
             //      Paymnet gateway PayU and remember card
             if ($conn['nombre_pasarela'] == 'payulatam' && $post['remember']) {
@@ -342,8 +345,8 @@ class PayuCreditCard extends PayUControllerWS {
                                           "emailAddress":"' . $params[5]['buyerEmail'] . '",
                                           "dniNumber":"' . $dni . '",   
                                           "shippingAddress": {
-                                              "street1": "' . substr($address->address1, 0, 99) . '",
-                                              "street2":"N/A",    
+                                              "street1":"' . $street1 . '",
+                                              "street2":"' . $street2 . '",    
                                               "city": "' . $address->city . '",
                                               "state": "' . $conf->get_state($address->id_state) . '",
                                               "country": "' . $country . '",
@@ -352,8 +355,8 @@ class PayuCreditCard extends PayUControllerWS {
                                           }
                                     },      
                                     "shippingAddress":{
-                                        "street1":"' . substr($address->address1, 0, 99) . '",
-                                        "street2":"N/A",
+                                        "street1":"' . $street1 . '",
+                                        "street2":"' . $street2 . '",
                                         "city":"' . $address->city . '",
                                         "state":"' . $conf->get_state($address->id_state) . '",
                                         "country":"' . $country . '",
@@ -368,8 +371,8 @@ class PayuCreditCard extends PayUControllerWS {
                                     "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
                                     "dniNumber":"' . $dni . '",
                                     "billingAddress":{
-                                        "street1":"' . substr($address->address1, 0, 99) . '",
-                                        "street2":"N/A",
+                                        "street1":"' . $street1 . '",
+                                        "street2":"' . $street2 . '",
                                         "city":"' . $address->city . '",
                                         "state":"' . $conf->get_state($address->id_state) . '",
                                         "country":"' . $country . '",
@@ -383,7 +386,7 @@ class PayuCreditCard extends PayUControllerWS {
                                   },
                                   "type":"AUTHORIZATION_AND_CAPTURE",
                                   "paymentMethod":"' . $paymentMethod . '",
-                                  "paymentCountry":"' . $country . '",
+                                  "paymentCountry":"' . $this->paymentCountry . '",
                                   "deviceSessionId": "' . $_deviceSessionId . '",
                                   "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                                   "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
@@ -502,8 +505,8 @@ class PayuCreditCard extends PayUControllerWS {
                        "emailAddress":"' . $params[5]['buyerEmail'] . '",
                        "dniNumber":"' . $dni . '",   
                        "shippingAddress": {
-                        "street1": "' . substr($address->address1, 0, 99) . '",
-                        "street2":"N/A",    
+                        "street1":"' . $street1 . '",
+                        "street2":"' . $street2 . '",    
                         "city": "' . $address->city . '",
                         "state": "' . $conf->get_state($address->id_state) . '",
                         "country": "' . $country . '",
@@ -513,8 +516,8 @@ class PayuCreditCard extends PayUControllerWS {
                   },      
 
                   "shippingAddress":{
-                   "street1":"' . substr($address->address1, 0, 99) . '",
-                   "street2":"N/A",
+                   "street1":"' . $street1 . '",
+                   "street2":"' . $street2 . '",
                    "city":"' . $address->city . '",
                    "state":"' . $conf->get_state($address->id_state) . '",
                    "country":"' . $country . '",
@@ -529,8 +532,8 @@ class PayuCreditCard extends PayUControllerWS {
                    "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
                    "dniNumber":"' . $dni . '",
                    "billingAddress":{
-                     "street1":"' . substr($address->address1, 0, 99) . '",
-                     "street2":"N/A",
+                     "street1":"' . $street1 . '",
+                     "street2":"' . $street2 . '",
                      "city":"' . $address->city . '",
                      "state":"' . $conf->get_state($address->id_state) . '",
                      "country":"' . $country . '",
@@ -550,7 +553,7 @@ class PayuCreditCard extends PayUControllerWS {
                  },
                  "type":"AUTHORIZATION_AND_CAPTURE",
                  "paymentMethod":"' . $paymentMethod . '",
-                 "paymentCountry":"' . $country . '",
+                 "paymentCountry":"' . $this->paymentCountry . '",
                  "deviceSessionId": "' . $_deviceSessionId . '",
                  "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                  "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
@@ -598,8 +601,8 @@ class PayuCreditCard extends PayUControllerWS {
                        "emailAddress":"' . $params[5]['buyerEmail'] . '",
                        "dniNumber":"' . $dni . '",   
                        "shippingAddress": {
-                        "street1": "' . substr($address->address1, 0, 99) . '",
-                        "street2":"N/A",    
+                        "street1": "' . $street1 . '",
+                        "street2":"' . $street2 . '",    
                         "city": "' . $address->city . '",
                         "state": "' . $conf->get_state($address->id_state) . '",
                         "country": "' . $country . '",
@@ -609,8 +612,8 @@ class PayuCreditCard extends PayUControllerWS {
                   },      
 
                   "shippingAddress":{
-                   "street1":"' . substr($address->address1, 0, 99) . '",
-                   "street2":"N/A",
+                   "street1":"' . $street1 . '",
+                   "street2":"' . $street2 . '",
                    "city":"' . $address->city . '",
                    "state":"' . $conf->get_state($address->id_state) . '",
                    "country":"' . $country . '",
@@ -625,8 +628,8 @@ class PayuCreditCard extends PayUControllerWS {
                    "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
                    "dniNumber":"' . $dni . '",
                    "billingAddress":{
-                     "street1":"' . substr($address->address1, 0, 99) . '",
-                     "street2":"N/A",
+                     "street1":"' . $street1 . '",
+                     "street2":"' . $street2 . '",
                      "city":"' . $address->city . '",
                      "state":"' . $conf->get_state($address->id_state) . '",
                      "country":"' . $country . '",
@@ -643,7 +646,7 @@ class PayuCreditCard extends PayUControllerWS {
                  },
                  "type":"AUTHORIZATION_AND_CAPTURE",
                  "paymentMethod":"' . $paymentMethod . '",
-                 "paymentCountry":"' . $country . '",
+                 "paymentCountry":"' . $this->paymentCountry . '",
                  "deviceSessionId": "' . $_deviceSessionId . '",
                  "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                  "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
@@ -774,6 +777,8 @@ class PayuCreditCard extends PayUControllerWS {
             $id_address = $this->context->cart->id_address_delivery;
             $reference_code = $customer->id . '_' . $id_cart . '_' . $id_order . '_' . $id_address;
             $_deviceSessionId = NULL;
+            $street1 = addslashes(substr($address->address1, 0, 99));
+            $street2 = "N/A";
 
             if (isset($this->context->cookie->deviceSessionId) && !empty($this->context->cookie->deviceSessionId) && strlen($this->context->cookie->deviceSessionId) === 32) {
                 $_deviceSessionId = $this->context->cookie->deviceSessionId;
@@ -820,8 +825,8 @@ class PayuCreditCard extends PayUControllerWS {
                             "emailAddress":"' . $params[5]['buyerEmail'] . '",
                             "dniNumber":"' . $dni . '",   
                             "shippingAddress": {
-                                "street1": "' . substr($address->address1, 0, 99) . '",
-                                "street2":"N/A",    
+                                "street1":"' . $street1 . '",
+                                "street2":"' . $street2 . '",    
                                 "city": "' . $address->city . '",
                                 "state": "' . $conf->get_state($address->id_state) . '",
                                 "country": "' . $country . '",
@@ -830,8 +835,8 @@ class PayuCreditCard extends PayUControllerWS {
                             }
                       },      
                       "shippingAddress":{
-                          "street1":"' . substr($address->address1, 0, 99) . '",
-                          "street2":"N/A",
+                          "street1":"' . $street1 . '",
+                          "street2":"' . $street2 . '",
                           "city":"' . $address->city . '",
                           "state":"' . $conf->get_state($address->id_state) . '",
                           "country":"' . $country . '",
@@ -846,8 +851,8 @@ class PayuCreditCard extends PayUControllerWS {
                       "contactPhone":"' . ((!empty($address->phone)) ? $address->phone : $address->phone_mobile) . '",
                       "dniNumber":"' . $dni . '",
                       "billingAddress":{
-                          "street1":"' . substr($address->address1, 0, 99) . '",
-                          "street2":"N/A",
+                          "street1":"' . $street1 . '",
+                          "street2":"' . $street2 . '",
                           "city":"' . $address->city . '",
                           "state":"' . $conf->get_state($address->id_state) . '",
                           "country":"' . $country . '",
@@ -861,7 +866,7 @@ class PayuCreditCard extends PayUControllerWS {
                     },
                     "type":"AUTHORIZATION_AND_CAPTURE",
                     "paymentMethod":"' . $paymentMethod . '",
-                    "paymentCountry":"' . $country . '",
+                    "paymentCountry":"' . $this->paymentCountry . '",
                     "deviceSessionId": "' . $_deviceSessionId . '",
                     "ipAddress": "' . $_SERVER['REMOTE_ADDR'] . '",
                     "userAgent": "' . $_SERVER['HTTP_USER_AGENT'] . '",
@@ -916,7 +921,8 @@ class PayuCreditCard extends PayUControllerWS {
             PasarelaPagoCore::set_cart_pay_process($id_cart, 0);
             Tools::redirectLink($url_reintento);
             exit();
-        } else {
+        } 
+        else {
             $this->context->cookie->{'error_pay'} = json_encode(array('ERROR' => 'Valida tus datos he intenta de nuevo.'));
             PasarelaPagoCore::set_cart_pay_process($id_cart, 0);
             Tools::redirectLink($url_reintento);

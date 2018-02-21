@@ -147,10 +147,10 @@ function addcartlightbox( element ) {
 									{if array_key_exists($product.id_product,$prods_redireccion)}
 										<a class="button  exclusive" href="{$prods_redireccion[$product.id_product]}", false)}" title="{l s='Comprar'}">{l s='Comprar'}</a>
 									{else}
-							<a imgpro="{$product.id_image}"linkrewrite="{$product.link_rewrite}"namepro="{$product.name}"pricepro="{$product.price}" class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)}" title="{l s='Comprar'}">{l s='Comprar'}</a>
+							<a imgpro="{$product.id_image}"linkrewrite="{$product.link_rewrite}"namepro="{$product.name}"pricepro="{$product.price}" class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',true, NULL, "add&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)}" title="{l s='Comprar'}">{l s='Comprar'}</a>
 									{/if}
 								{else}
-							<a imgpro="{$product.id_image}"linkrewrite="{$product.link_rewrite}"namepro="{$product.name}"pricepro="{$product.price}" class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}", false)}" title="{l s='Comprar'}">{l s='Comprar'}</a>
+							<a imgpro="{$product.id_image}"linkrewrite="{$product.link_rewrite}"namepro="{$product.name}"pricepro="{$product.price}" class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',true, NULL, "add&amp;id_product={$product.id_product|intval}", false)}" title="{l s='Comprar'}">{l s='Comprar'}</a>
 								{/if}						
 							{else}
 								<span class="exclusive">{l s='Out of stock'}</span>

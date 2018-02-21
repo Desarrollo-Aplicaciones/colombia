@@ -15,6 +15,14 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
             $customer = new Customer((int)$order->id_customer);
             $product_cart = $this->getProductsCart($cart->id);
             $address_customer = $this->getAddressCustomer($customer->id);
+
+            $extraPayu = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT extras FROM ps_pagos_payu WHERE id_cart = '.$this->id_cart);
+            $extraPayu = explode(';',$extraPayu);
+
+            if(isset($extraPayu[1])){
+                $order->numPago = $extraPayu[0];
+                $order->fechaCadu = $extraPayu[1];
+            }
             
            $this->context->smarty->assign(array(
                    'is_guest' => $this->context->customer->is_guest,
@@ -26,8 +34,12 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                    'segmento' => 'Diabéticos',
                    'product' => $product_cart[0]['name'],
                    'id_product' => $product_cart[0]['id_product'],
-                   'phone' => $address_customer[0]['phone']
+                   'phone' => $address_customer[0]['phone'],
+                    'order' => $order,
+                    'address' => new Address($order->id_address_delivery),
            ));
+
+           //ddd($order->getProducts());
 
            if ($this->context->customer->is_guest)
            {
@@ -63,4 +75,5 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
        $results = Db::getInstance()->ExecuteS($query);
        return $results;
    }
+
 }

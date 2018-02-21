@@ -22,202 +22,214 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<link rel="stylesheet" href="{$css_dir}order-confirmation.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="{$css_dir}order-confirmation.css" type="text/css" media="screen" charset="utf-8"/>
 {capture name=path}{l s='Order confirmation'}{/capture}
 {*include file="$tpl_dir./breadcrumb.tpl"*}
 
-<h1>{l s='Order confirmation'}</h1>
+{*<h1>{l s='Order confirmation'}</h1>*}
 
 {assign var='current_step' value='payment'}
-{include file="$tpl_dir./order-steps.tpl"}
+{*include file="$tpl_dir./order-steps.tpl"*}
 
 {include file="$tpl_dir./errors.tpl"}
 
 {$HOOK_ORDER_CONFIRMATION}
-{$HOOK_PAYMENT_RETURN}
 
-{literal}
 
-<p class="titulo">
-		¡Excelente, tu pedido en Farmalisto.com.co se ha registrado con éxito!
-</p>
-<p class="importante">
-	NOTA IMPORTANTE:
-</p>
+<div id="order-container"">
 
-<p class="parrafo">
-	<span class="strong">Bogotá:</span> 
-	Sí realizaste tu pedido entre 1:00 AM y las 08:00 AM lo recibirás en horas de la Mañana del mismo día, 
-	si lo realizaste después de las 8:00 AM y antes de las 04:00 pm, lo recibirás el mismo día en horas de la mañana y tarde, 
-	despues de 04:00pm la entrega esta sujeta a disponibilidad de inventario. Los pedidos será entregados de lunes a viernes entre 8:00 AM a 9:00 PM y el Sábado, los domingos y festivos de 08:00 AM a 6:00 PM, se realizan entregas sujetas a disponibilidad de inventario.
-</p>
+    <div class="titlebox">
+        <img src="{$img_dir}ThankYouPage-Check.jpg" />
+    </div>
 
-<div class="recuerda_div">
-	<img title="Recuerda"
-	 src="img/cms/Landing-Page/Icono_Gracias.jpg"
-	 alt="Recuerda"
-	 class="recuerda_img"/>
-	<span class="recuerda_txt1">Recuerda:</span><br><br>
-	<span class="recuerda_txt2">Para medicamentos formulados se debe presentar la receta médica en el momento de recibir el producto.</span>
+    <div id="order-title" class="conf-block">
+        Gracias por comprar en <b>Farmalisto</b> <br/>
+        el número de tu pedido es: <span class="price"><b>{{$order->id}}</b></span> <br/>
+        <b>por valor de: {displayPrice price=$order->total_paid_tax_incl currency=$order->id_currency}</b>
+    </div>
+
+    <div id="order-return" class="conf-block shadow">
+        {* Desactivamos Hook Payment ya que todos los modulos están dentro del mismo y no tienen Order Return *}
+        {* $HOOK_PAYMENT_RETURN *}
+
+        {include file="$tpl_dir./order-conf-payment.tpl" order=$order}
+    </div>
+
+    <div id="order-comprobante" class="conf-block">
+        <a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id_order}")|escape:'html'}" target="_blank"><img src="{$img_dir}ThankYouPage-Imprimir.jpg" /> <b>Imprimir</b> <span style="color: #6dc3a5">comprobante</span></a>
+    </div>
+
+    {if $cart->is_formula()}
+    <div id="order-factura" class="conf-block shadow">
+        <div class="formula-icon">
+            <img src="{$img_dir}ThankYouPage-Alerta.jpg" />
+        </div>
+        <div class="formula-desc">
+        Uno o más de tus productos requiere <b>fórmula médica</b>, debes <b>presentarla</b> al momento de <b>recibir tu
+            pedido</b>.
+        </div>
+    </div>
+    {/if}
+
+    <div id="datos-pedido" class="conf-block shadow">
+        Pedido: <b>{{$order->id}}</b>
+        <div id="desglose-datos">
+            <table>
+                <tr>
+                    <td>Fecha</td>
+                    <td>{$order->date_add|date_format:"%d de %B de %Y"}</td>
+                </tr>
+
+                <tr>
+                    <td>Identificacion</td>
+                    <td>{$address->dni}</td>
+                </tr>
+
+                <tr>
+                    <td>Nombres y Apellidos</td>
+                    <td>{$name_customer}</td>
+                </tr>
+
+                <tr>
+                    <td>Dirección</td>
+                    <td>{$address->address1}</td>
+                </tr>
+
+                <tr>
+                    <td>Ciudad</td>
+                    <td>{$address->city}</td>
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+
+    <div id="resumen" class="shadow">
+        Resumen
+
+        <table>
+            <tbody>
+            {foreach key=key item=product from=$order->getProducts()}
+            <tr>
+                <td>{$product.product_name}</td>
+                <td>{$product.product_quantity}</td>
+                <td>{displayPrice price=$product.total_price_tax_incl currency=$order->id_currency}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td>Subtotal</td>
+                <td>{displayPrice price=$order->total_products_wt currency=$order->id_currency}</td>
+            </tr>
+            {*<tr>
+                <td></td>
+                <td>Iva</td>
+                <td>$ 23232</td>
+            </tr>*}
+            <tr>
+                <td></td>
+                <td>Descuentos</td>
+                <td>{displayPrice price=$order->total_discounts_tax_incl currency=$order->id_currency}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Domicilio</td>
+                <td>{displayPrice price=$order->total_shipping_tax_incl currency=$order->id_currency}</td>
+            </tr>
+            <tr class="total">
+                <td></td>
+                <td>TOTAL</td>
+                <td>{displayPrice price=$order->total_paid_tax_incl currency=$order->id_currency}</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div id="buttons">
+        <a href="{$link->getPageLink('history', true)|escape:'html'}">Mis pedidos</a>
+        <a href="/">Seguir comprando</a>
+    </div>
+
+
 </div>
-<p class="parrafo" style="font-size: 14pt;">
-	<span class="strong">Resto del país:</span> 
-	Tus pedidos serán entregados en un plazo máximo de 48 horas hábiles a partir de la confirmación de tu pedido.
-</p>
 
-<img title="Confirmación pedido"
-	 src="img/cms/Landing-Page/confirmacion.jpg"
-	 alt="Confirmación pedido"
-	 class="imagen"/>
-{/literal}
 
-{if !isset($smarty.cookies.validamobile)}
+<div id="prefooter">
+    <p>Si deseas mayor información acerca del estado de la transacción puedes comunicarte a nuestras <b> líneas de atención
+            al cliente en: </b></p>
 
-	{literal}
-	<p class="text">
-		<span class="follow">Síguenos:</span>
-		<a href="https://www.facebook.com/farmalistocolombia">
-			<img title="facebook"
-				 src="img/cms/socialmedia/REDES_SOCIALES/FB.png"
-				 alt="facebook"
-				 width="62"
-				 height="40" />
-		</a>
-		<a href="https://twitter.com/farmalistocol">
-			<img title="twitter"
-				 src="img/cms/socialmedia/REDES_SOCIALES/TW.png"
-				 alt="twitter"
-				 width="62"
-				 height="40" />
-		</a>
-		<a href="https://www.youtube.com/farmalistocolombia">
-			<img title="YouTube"
-				 src="img/cms/socialmedia/REDES_SOCIALES/YT.png"
-				 alt="YouTube"
-				 width="62"
-				 height="40" />
-		</a>
-		<a href="https://plus.google.com/+FarmalistoColombia/posts">
-			<img title="Google+"
-				 src="img/cms/socialmedia/REDES_SOCIALES/G+.png"
-				 alt="Google+"
-				 width="62"
-				 height="40" />
-		</a>
-		<a href="http://www.linkedin.com/company/farmalisto">
-			<img title="LinkedIn"
-				 src="img/cms/socialmedia/REDES_SOCIALES/IN.png"
-				 alt="LinkedIn"
-				 width="62"
-				 height="40" />
-		</a>
-		<a href="https://es.foursquare.com/v/farmalisto/52a5d642498edb2474373525">
-			<img title="Foursquare"
-				 src="img/cms/socialmedia/REDES_SOCIALES/FS.png"
-				 alt="Foursquare"
-				 width="62"
-				 height="40" />
-		</a>
-	</p>
-	{/literal}
-	
-{/if}
+    <div id="sedes">
+        <div class="sede">
+            Bogotá: <br/> <b>492 6363</b>
+        </div>
 
-{literal}
-<p class="text">
-	Consulta el estado de tus pedidos 
-	<span class="strong">
-{/literal}
+        <div class="sede">
+            Cali: <br/> <b>386 0083</b>
+        </div>
 
-{if !isset($smarty.cookies.validamobile)}
-	{if $is_guest}
-		<a href="{$link->getPageLink('guest-tracking', true, NULL, "id_order={$reference_order}&email={$email}")|escape:'html'}" title="{l s='Follow my order'}" class="text">aquí</a>
-	{else}
-		<a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='Back to orders'}" class="text">aquí</a>
-	{/if}
-{/if}
+        <div class="sede">
+            Medellín: <br/>  <b>283 6150 </b>
+        </div>
 
-{literal}
-	</span>
-</p>
-<p class="text">
-	<span class="strong">
-		¿Tienes más preguntas? 
-	</span>
-	¡Quizá en la sección de preguntas frecuentes encuentres una respuesta inmediata!
-</p>
-{/literal}
-{if !isset($smarty.cookies.validamobile)}
-	{literal}
-		<p class="text">
-			<span class="strong">
-				<a href="content/1-entregas" target="_blank" class="text">
-					Clic aquí
-				</a>
-			</span>
-		</p>
-		<p class="text">
-			<a href="/">
-				<img title="Volver a la tienda"
-					 src="img/cms/socialmedia/REDES_SOCIALES/perfil%20horarios-03.png"
-					 alt="Volver a la tienda"
-					 width="100"
-					 height="101" />
-			</a>
-		</p>
-		<p class="text">
-			<a href="/" class="text">
-				Volver a la tienda
-			</a>
-		</p>
-	{/literal}
-{/if}
+        <div class="sede">
+            Barranquilla: <br/> <b>319 7970 </b>
+        </div>
 
+        <div class="sede">
+            Línea nacional: <br/> <b> 01 800 913 3830</b>
+        </div>
+
+    </div>
+
+    <p>o enviar tus inquietudes al correo electrónico <b> contacto@farmalisto.com.co </b></p>
+</div>
 
 
 <script type="text/javascript">
-{if isset($id_product) && ($id_product == 39473 || $id_product == 39474 || $id_product == 39493 || $id_product == 39494)}
-var datos = {};
-datos['formId'] = "a775a964-524c-4eba-b050-9a97d41c4ffd";
-datos['lang'] = "en";
-datos['testAxId'] = "";
-datos['smActionUrl'] = "/form/7ymgpvwlezxrq1wn/";
-datos['validationToken'] = "4f979a0287ee4c0aaea99a44a7d3b9f5";
+    {if isset($id_product) && ($id_product == 39473 || $id_product == 39474 || $id_product == 39493 || $id_product == 39494)}
+    var datos = {};
+    datos['formId'] = "a775a964-524c-4eba-b050-9a97d41c4ffd";
+    datos['lang'] = "en";
+    datos['testAxId'] = "";
+    datos['smActionUrl'] = "/form/7ymgpvwlezxrq1wn/";
+    datos['validationToken'] = "4f979a0287ee4c0aaea99a44a7d3b9f5";
 
-datos['sm-form-name'] = "{$name_customer}";
-datos['sm-cst.idcustomer'] = "{$id_customer}";
-datos['sm-form-email'] = "{$email_customer}";
-datos['sm-form-phone'] = "{$phone}";
-datos['sm-cst.producto'] = "{$product}";
-datos['sm-cst.segmento'] = "{$segmento}";
-var link = "https://app2.emlgrid.com/form/7ymgpvwlezxrq1wn/contact.htm";
+    datos['sm-form-name'] = "{$name_customer}";
+    datos['sm-cst.idcustomer'] = "{$id_customer}";
+    datos['sm-form-email'] = "{$email_customer}";
+    datos['sm-form-phone'] = "{$phone}";
+    datos['sm-cst.producto'] = "{$product}";
+    datos['sm-cst.segmento'] = "{$segmento}";
+    var link = "https://app2.emlgrid.com/form/7ymgpvwlezxrq1wn/contact.htm";
 
-$.ajax({
-    url: link,
-    type: "post",
-    data: datos,
-    success: function(respuesta){
-        console.log(respuesta);
-    }
-}).always(function(){
+    $.ajax({
+        url: link,
+        type: "post",
+        data: datos,
+        success: function (respuesta) {
+            console.log(respuesta);
+        }
+    }).always(function () {
 //window.location.href = "aqui-pagina-redireccion";
 //alert("aqui-alerta-si-se-necesita");
-})
+    })
 
-{/if}
+    {/if}
 </script>
 
 
 {if isset($pse) && $pse!=false }
-
     <script type="text/javascript">
 
-        function redireccionar(){
-            window.location="{$bankdest2}";
-        } 
+        function redireccionar() {
+            window.location = "{$bankdest2}";
+        }
 
-        $(document).ready(function(){
-            setTimeout ("redireccionar()", 1000); 
+        $(document).ready(function () {
+            setTimeout("redireccionar()", 1000);
         });
     </script>
 {/if}
