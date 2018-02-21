@@ -42,7 +42,7 @@
 {elseif $order->payment=='Pse'}
     <div class="payment-detail">
         <div class="payment-logo"><img src="{$img_dir}ThankYouPage-PagoTarjeta.jpg"/></div>
-        <div class="payment-desc"><b>Seleccionaste pago  <span style="color: #67b164">con Pse.</span></b>
+        <div class="payment-desc"><b>Seleccionaste pago  <span style="color: #67b164">con pse.</span></b>
             <br/> Ya estamos <b>preparando</b> tu pedido
         </div>
     </div>
