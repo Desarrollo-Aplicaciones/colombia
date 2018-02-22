@@ -406,7 +406,7 @@
                     <!-- Si la fomula medica existe salto al paso 3 -->			
                     <input type="hidden" name="step" value="1" />
                     {*if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if*}
-                    <input type="hidden" name="back" value="order.php?step=1&multi-shipping=0" />
+                    <input type="hidden" name="back" value="order.php?step=2&multi-shipping=0" />
                     {if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
                     <input type="hidden" name="token" value="{$token}" />
 
@@ -414,7 +414,7 @@
                     <input type="hidden" name="dni" value="{$datacustomer['identification']}" />
                     <input type="hidden" name="firstname" value="{$datacustomer['firstname']}" />
                     <input type="hidden" name="lastname" value="{$datacustomer['lastname']}" />
-                    <input type="hidden" name="cartAddress" value="on"/>
+                    <input type="hidden" name="select_address" value="true"/>
                     <input type="hidden" name="id_address" value="" />
 
                     <button type="submit" class="btn2 btn-block btn-primary" name="submitAddress">Guardar y continuar</button>

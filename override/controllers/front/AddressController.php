@@ -154,7 +154,7 @@ class AddressController extends AddressControllerCore
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
 
 		// Don't continue this process if we have errors !
-		if ($this->errors && Tools::getValue('cartAddress')) {
+		if ($this->errors && Tools::getValue('select_address')) {
 			Tools::redirect('index.php?controller=order&step=1&errors='.html_entity_decode(implode("~", $this->errors)));
 		}
 
@@ -201,11 +201,14 @@ class AddressController extends AddressControllerCore
 			else // Update cart address
 				$this->context->cart->autosetProductAddress();
 
-            if ((bool)(Tools::getValue('select_address', false)) == true OR Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
-            {
-                $this->context->cart->id_address_invoice = (int)$address->id;
-                $this->context->cart->update();
-            }
+			if ((bool)(Tools::getValue('select_address', false)) == true OR (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE')))
+				$this->context->cart->id_address_invoice = (int)$address->id;
+			elseif (Configuration::get('PS_ORDER_PROCESS_TYPE'))
+				$this->context->cart->id_address_invoice = (int)$this->context->cart->id_address_delivery;
+
+			$this->context->cart->update();
+
+			$this->context->cart->updateAddressId((int)$this->context->cart->id_address_delivery, (int)$address->id);
 
 			if ($this->ajax)
 			{
