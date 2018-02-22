@@ -56,7 +56,7 @@ class Model extends PaymentModule {
 		$context = Context::getContext();
 		$results = Search::findApp($id_lang, $expr, $page_number, $page_size, $order_by, $order_way, FALSE, FALSE);
 		$products = array();
-		if ((int) count($results['result']) > 0) {
+		if ((int) $results['total'] > 0) {
 			$total_rows = (int) $results['total'];
 			// $total_rows = (int) count($results['result']);
 			$total_pages = ceil($total_rows / $page_size);
@@ -70,7 +70,7 @@ class Model extends PaymentModule {
 					$start = ($page_number - 1) * $page_size;
 				}
 
-				$products['title'] = strtolower( $expr );
+				$products['title'] = $expr;
 				$products['total_pages'] = $total_pages;
 				$products['total_rows'] = $total_rows;
 				$products['page'] = $page_number;
@@ -119,12 +119,12 @@ class Model extends PaymentModule {
 						if( strlen($value['name']) > 62 ) {
 							$textocorto = mb_strcut( $value['name'], 0, 62 ).'...';
 						} else {
-							$textocorto = $value['name'];
+							$textocorto =  strtolower(strip_tags($value['name']));
 						}
 						$array_prod[] = array(
 						                      'id' => (int) $value['id_product'],
 						                      'reference' => (string) $value['reference'],
-						                      'name' => strtolower(strip_tags($value['name'])),
+						                      'name' => htmlspecialchars( strtolower(strip_tags($value['name'])), ENT_DISALLOWED ),
 						                      'shortname' => strtolower($textocorto),
 							//'ref' => $value['reference'],
 							//'desc' => strip_tags($value['description']),
@@ -951,8 +951,7 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
 		}
 
 
-		if ( $id_cart != NULL ) {
-
+		if ( $this->context->cookie->id_cart != NULL ) {
 			$discounts_return = array();
 			foreach ($this->context->cart->getDiscounts() as $key => $value) {
 				$type_voucher = 'cupon';
@@ -968,7 +967,7 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
 		}
 
 
-		if ( isset($discounts_return[0]) && $aplicar_cupon == 1 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
+		if ( isset($discounts_return[0]) && $aplicar_cupon == 0 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true ) {
 
 			$discounts_return = array();
 			$discounts_return[] = array( 'success' => false, 'msg' => 'Cupon incorrecto, no aplicado' );
@@ -985,7 +984,7 @@ public function cart($products_app, $id_customer, $id_address = 0 ,$discounts = 
 		$total_discounts = $this->context->cart->getOrderTotal(TRUE,Cart::ONLY_DISCOUNTS);
 		
 		$msg = json_decode($this->context->cookie->{'msg_app'});
-		if($return){
+		if($return && (isset($discounts_return[0]) && $aplicar_cupon == 0 && !isset( $discounts_return[0]['success'] ) && !$discounts_return[0]['success'] == true )){
 			return $this->cart($products, (int)$this->context->cart->id_customer, (int)$this->context->cart->id_address_invoice, $discounts_return, $deleteDiscount, $msg, (int)$this->context->cart->id, $clear, FALSE);
 		}else{
 			return array('id_cart' => (int)$this->context->cart->id,
