@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<link rel="stylesheet" href="{$css_dir}order-confirmation.css?v=1" type="text/css" media="screen" charset="utf-8"/>
+<link rel="stylesheet" href="{$css_dir}order-confirmation.css?v=4" type="text/css" media="screen" charset="utf-8"/>
 {capture name=path}{l s='Order confirmation'}{/capture}
 {*include file="$tpl_dir./breadcrumb.tpl"*}
 
@@ -163,23 +163,23 @@
 
     <div id="sedes">
         <div class="sede">
-            Bogotá: <br/> <b>492 6363</b>
+            Bogotá: <br/> <b><a href="tel:+5714926363" style="color: #e6e6e6">(+57 1) 492 6363</a></b>
         </div>
 
         <div class="sede">
-            Cali: <br/> <b>386 0083</b>
+            Cali: <br/> <b><a href="tel:+5723860083" style="color: #e6e6e6">(+57 2) 386 0083</a></b>
         </div>
 
         <div class="sede">
-            Medellín: <br/>  <b>283 6150 </b>
+            Medellín: <br/>  <b><a href="tel:+5742836150" style="color: #e6e6e6">(+57 4) 283 6150</a> </b>
         </div>
 
         <div class="sede">
-            Barranquilla: <br/> <b>319 7970 </b>
+            Barranquilla: <br/> <b><a href="tel:+5753197970 " style="color: #e6e6e6">(+57 5) 319 7970 </a></b>
         </div>
 
         <div class="sede">
-            Línea nacional: <br/> <b> 01 800 913 3830</b>
+            Línea nacional: <br/> <b><a href="tel:018009133830" style="color: #e6e6e6"> 01 800 913 3830</a> </b>
         </div>
 
     </div>
