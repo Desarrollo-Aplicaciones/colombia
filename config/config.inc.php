@@ -127,6 +127,7 @@ setlocale(LC_COLLATE, $locale);
 setlocale(LC_CTYPE, $locale);
 setlocale(LC_TIME, $locale);
 setlocale(LC_NUMERIC, 'en_US.UTF-8');
+setlocale(LC_TIME,"es_ES.UTF-8");
 
 /* Instantiate cookie */
 
