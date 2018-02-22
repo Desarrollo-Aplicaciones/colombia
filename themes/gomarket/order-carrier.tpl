@@ -162,7 +162,7 @@
 						<!-- .row --> 
 						<div class="row">
 							<div class="col-xs-12 col-md-12 rx">            
-								<b>Recuerda que al momento de la entrega de tu producto (antibiótico) el repartidor te pedirá tu receta médica. no se te olvide tenerla a la mano.</b>
+								<b>Recuerda que al momento de la entrega de tu producto el repartidor te pedirá tu formula médica. no se te olvide tenerla a la mano.</b>
 							</div>
 						</div> 
 						<!-- /.row --> 
@@ -214,7 +214,7 @@
 						<!-- .row --> 
 						<div class="row">
 							<div class="col-xs-12 col-md-12 rx">            
-								(Formatos de archivo permitidos: .png, .jpg, .gif, .pdf)
+								(Formatos de archivo permitidos: .png, .jpg, .gif)
 							</div>
 						</div> 
 						<div style="clear:both; margin-top:10px;"></div>
@@ -225,7 +225,7 @@
 
 							</div>
 							<div class="col-xs-12 col-md-10 rx">
-								<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" accept="image/x-png, image/gif, image/jpeg, application/pdf" onchange="validarArchivo();">
+								<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" accept="image/png, image/gif, image/jpeg" onchange="validarArchivo();">
 								<input type="text" id="upload" disabled>
 								<a class="trash-rx" href="javascript:void(0)">Eliminar</a>
 								<div class="errorvalid" id="errorupload"></div>
