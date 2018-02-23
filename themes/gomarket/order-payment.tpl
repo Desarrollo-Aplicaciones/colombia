@@ -992,6 +992,9 @@
 				#care-lines {
 					width:90%;
 				}
+				div.autosuggest{
+					width: 100% !important;
+				}
 			}
 		</style>
 	{/literal}
