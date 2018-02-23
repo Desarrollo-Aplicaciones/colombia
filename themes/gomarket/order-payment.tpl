@@ -843,7 +843,7 @@
 		</div>
 	</div>
 	{literal}
-		<script>
+		<script>		
 			$(document).ready(function() {
 
 				function setUserID(myValue) {
@@ -854,14 +854,20 @@
 
 				$(".payment").click(function(){
 					if(!medico_registrado){
+						if(mobileHelper.deviceVerification(["iPad", "iPhone", "iPod"])){
+							$("#page").hide();
+							$("#Boton-Click2Call").hide();
+							$("#standard_lightbox").css("position","relative");
+							$("#standard_lightbox").css("height","1000px");
+						}
 						standard_lightbox('care-lines', true);
 					}
 				});
 
 				$(".lightbox_close").click(function(){
-					$("address").removeClass("selected");
-					$('address input:radio').removeAttr("checked");
-					lightbox_hide();
+					$("section").removeClass("selected");
+					$('section input:radio').removeAttr("checked");
+					cerrarModalpayment();
 				});
 
 				$("#medico").keypress(function(){
@@ -891,21 +897,28 @@
 						if(msg.result.error){
 							$("#medico_error").html(msg.result.error);
 						}else{
-							lightbox_hide();
+							cerrarModalpayment();
 							medico_registrado = true;
 						}
 					});
 				});
 
 				$("#no_medico").click(function(){
-					lightbox_hide();
+					cerrarModalpayment();
 					medico_registrado = true;
 				});
+
+				function cerrarModalpayment(){
+					if(mobileHelper.deviceVerification(["iPad", "iPhone", "iPod"])){
+						$("#page").show();
+						$("#Boton-Click2Call").show();
+					}
+					lightbox_hide();
+				}
 
 			});
 		</script>
 		<style>
-
 			#as_medico{
 				z-index: 2001;
 			}
