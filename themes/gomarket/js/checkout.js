@@ -82,6 +82,7 @@ $(function () {
     var $this = $(this);
     if (!$this.hasClass("selected")) {
       $this.find(".radio-address").click();
+      $("html, body").stop().animate({ scrollTop: $this.offset().top - 150 }, 500);
     }
 
     // Avoid sending multiple names
