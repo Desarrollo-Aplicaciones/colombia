@@ -83,11 +83,11 @@ $(function () {
     if (!$this.hasClass("selected")) {
       $this.find(".radio-address").click();
       $("html, body").stop().animate({ scrollTop: $this.offset().top - 150 }, 500);
-    }
 
-    // Avoid sending multiple names
-    $('.checkout section [data-superfluous="true"]').prop("disabled", true);
-    $this.find('[data-superfluous="true"]').prop("disabled", false);
+      // Avoid sending multiple names
+      $('.checkout section [data-superfluous="true"]').prop("disabled", true);
+      $this.find('[data-superfluous="true"]').prop("disabled", false);
+    }
   });
 
   /**
