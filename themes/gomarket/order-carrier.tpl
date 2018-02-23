@@ -162,7 +162,7 @@
 						<!-- .row --> 
 						<div class="row">
 							<div class="col-xs-12 col-md-12 rx">            
-								<b>Recuerda que al momento de la entrega de tu producto el repartidor te pedirá tu formula médica. no se te olvide tenerla a la mano.</b>
+								<b>Recuerda que al momento de la entrega de tu producto el repartidor te pedirá tu fórmula médica. no se te olvide tenerla a la mano.</b>
 							</div>
 						</div> 
 						<!-- /.row --> 
