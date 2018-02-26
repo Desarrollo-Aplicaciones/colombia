@@ -28,6 +28,7 @@ require_once(dirname(__FILE__).'/defines.inc.php');
 $start_time = microtime(true);
 
 /* SSL configuration */
+if(!defined('_PS_SSL_PORT_'))
 define('_PS_SSL_PORT_', 443);
 
 /* Improve PHP configuration to prevent issues */
@@ -99,7 +100,11 @@ catch (PrestaShopException $e)
 	$e->displayMessage();
 }
 
+/*define('_THEME_NAME_', $context->shop->getTheme());
+define('__PS_BASE_URI__', $context->shop->getBaseURI()); */
+if(!defined('_THEME_NAME_'))
 define('_THEME_NAME_', $context->shop->getTheme());
+if(!defined('__PS_BASE_URI__'))
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
@@ -212,7 +217,7 @@ $context->link = new Link($https_link, $https_link);
  * @deprecated : these defines are going to be deleted on 1.6 version of Prestashop
  * USE : Configuration::get() method in order to getting the id of order state
  */
-define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
+/*define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
 define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));
 define('_PS_OS_PREPARATION_', Configuration::get('PS_OS_PREPARATION'));
 define('_PS_OS_SHIPPING_',    Configuration::get('PS_OS_SHIPPING'));
@@ -223,6 +228,32 @@ define('_PS_OS_ERROR_',       Configuration::get('PS_OS_ERROR'));
 define('_PS_OS_OUTOFSTOCK_',  Configuration::get('PS_OS_OUTOFSTOCK'));
 define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
 define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
+define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));*/
+
+
+if(!defined('_PS_OS_CHEQUE_'))
+define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
+if(!defined('_PS_OS_PAYMENT_'))
+define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));
+if(!defined('_PS_OS_PREPARATION_'))
+define('_PS_OS_PREPARATION_', Configuration::get('PS_OS_PREPARATION'));
+if(!defined('_PS_OS_SHIPPING_'))
+define('_PS_OS_SHIPPING_',    Configuration::get('PS_OS_SHIPPING'));
+if(!defined('_PS_OS_DELIVERED_'))
+define('_PS_OS_DELIVERED_',   Configuration::get('PS_OS_DELIVERED'));
+if(!defined('_PS_OS_CANCELED_'))
+define('_PS_OS_CANCELED_',    Configuration::get('PS_OS_CANCELED'));
+if(!defined('_PS_OS_REFUND_'))
+define('_PS_OS_REFUND_',      Configuration::get('PS_OS_REFUND'));
+if(!defined('_PS_OS_ERROR_'))
+define('_PS_OS_ERROR_',       Configuration::get('PS_OS_ERROR'));
+if(!defined('_PS_OS_OUTOFSTOCK_'))
+define('_PS_OS_OUTOFSTOCK_',  Configuration::get('PS_OS_OUTOFSTOCK'));
+if(!defined('_PS_OS_BANKWIRE_'))
+define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
+if(!defined('_PS_OS_PAYPAL_'))
+define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
+if(!defined('_PS_OS_WS_PAYMENT_'))
 define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
 
 /* Get smarty */
