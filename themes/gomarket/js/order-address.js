@@ -421,7 +421,7 @@ function updateAddressDisplay(addressType)
 /*alert("addressType:" +$("input[name='id_address_delivery']:checked").val());
 alert("a:" + $("#input[name='id_address_" + addressType + "']:checked").val());
 */
-	var idAddress = parseInt($("input[name='id_address_" + addressType + "']:checked").val());
+	/*var idAddress = parseInt($("input[name='id_address_" + addressType + "']:checked").val());
 	//alert("idaddress:" +idAddress);
 	buildAddressBlock(idAddress, addressType, $('#address_' + addressType));
 
@@ -433,10 +433,10 @@ alert("a:" + $("#input[name='id_address_" + addressType + "']:checked").val());
 		link = link.replace(expression, 'id_address=' + idAddress);
 		$('ul#address_' + addressType + ' li.address_update a').attr('href', link);
 	}
-	resizeAddressesBox();
+	resizeAddressesBox();*/
 }
 
-function updateAddresses()
+/*function updateAddresses()
 {
 	var idAddress_delivery = parseInt($("input[name='id_address_delivery']:checked").val());
 	var idAddress_invoice = parseInt($("input[name='id_address_delivery']:checked").val());
@@ -479,7 +479,7 @@ function updateAddresses()
 			}
 		});
 	resizeAddressesBox();
-}
+}*/
 function enable(id)
 {		
 		updateDelivery(true);

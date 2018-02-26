@@ -566,7 +566,6 @@
 	{/if}
 {/if}
 
-<div id="HOOK_SHOPPING_CART">{$HOOK_SHOPPING_CART}</div>
 
 {* Define the style if it doesn't exist in the PrestaShop version*}
 {* Will be deleted for 1.5 version and more *}
@@ -617,7 +616,7 @@
 	{/if}
 {/if}
 
-
+<div id="HOOK_SHOPPING_CART">{$HOOK_SHOPPING_CART}</div>
 
 {literal}
 <script type="text/javascript">

@@ -10,6 +10,10 @@ class Cart extends CartCore {
     public $CONTADOR;
     public $CONTADOR2;
 
+    public $date_delivery;
+    public $time_delivery;
+    public $time_windows;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -36,6 +40,9 @@ class Cart extends CartCore {
         'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         'device' => array('type' => self::TYPE_STRING),
+        'date_delivery' => array('type' => self::TYPE_DATE, 'required' => false),
+        'time_delivery' => array('type' => self::TYPE_DATE, 'required' => false),
+        'time_windows' => array('type' => self::TYPE_STRING, 'required' => false),
       ),
     );
 

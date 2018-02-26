@@ -205,26 +205,37 @@ $( "#hombre1,#mujer1" ).click(function() {
         <div id="lightbox_content"></div>
         <div class="recent"></div>
     </div>
+    {literal}
     <script>
-        function lightbox_hide(){
+    var formulario_text = '';
+        function lightbox_hide(formulario = ""){
+            if(formulario !== ""){
+                $('#' + formulario)[0].reset();
+                $('#' + formulario).find('input[type=hidden]').each(function(){    
+                    this.value = "";
+                });
+            }
             $('#standard_lightbox').fadeOut('slow');
             $('#page').removeClass("blurred");
             $('#'+($('#lightbox_content div').attr("id"))).appendTo( '#standard_lightbox .recent' );
             $('#lightbox_content').empty();
-            }
-        function standard_lightbox(id, bloqueo = false){
+        }
+        function standard_lightbox(id, bloqueo = false, formulario = ""){
+            formulario_text = formulario
             $('#lightbox_content').empty();
             $('#'+id).appendTo( "#lightbox_content" );
             $('#lightbox_content #'+id).show();
             $('#standard_lightbox').fadeIn('slow');
             $('#page').addClass("blurred");
             if(!bloqueo){
-                $('#standard_lightbox .fog').click(function(){
-                    lightbox_hide();
+                $('#standard_lightbox .fog').click({x:formulario_text}, function(event){
+                    console.log(event.data.x);
+                    lightbox_hide(event.data.x);
                 });
             }
         }
     </script>
+    {/literal}
 <!--/Lightbox container-->
 
 <!-- redirection page -->

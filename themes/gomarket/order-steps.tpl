@@ -33,38 +33,48 @@
 {/if}
 
 {if !$opc}
-<!-- Steps -->
-<ul class="step" id="order_step">
-	<li id="step_begin" class="{if $current_step=='summary'}step_current{else}{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address' || $current_step=='login'}step_done{else}step_todo{/if}{/if}">
-		{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address' || $current_step=='login'}
-		<a href="{$link->getPageLink('order', true)}&paso=inicial">
-			1. Mi Carrito
-		</a>
-		{else}
-		1. Mi Carrito
-		{/if}
-	</li>
-	<li class="{if $current_step=='address'}step_current{else}{if $current_step=='payment' || $current_step=='shipping'}step_done{else}step_todo{/if}{/if}">
-		{if $current_step=='payment' || $current_step=='shipping'}
-		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1&multi-shipping={$multi_shipping}")|escape:'html'}">
-			2. Datos de entrega
-		</a>
-		{else}
-		2. Datos de entrega
-		{/if}
-	</li>
-	<li class="{if $current_step=='shipping'}step_current{else}{if $current_step=='payment'}step_done{else}step_todo{/if}{/if}">
-		{if $current_step=='payment'}
-		<a href="javascript:void(0)">
-			3. Fórmula médica
-		</a>
-		{else}
-		3. Fórmula médica
-		{/if}
-	</li>
-	<li id="step_end" class="{if $current_step=='payment'}step_current{else}step_todo{/if}">
-		4. Modos de Pago
-	</li>
-</ul>
-<!-- /Steps -->
+<div id="order-step">
+	<div id="accordion">
+		<ul>
+			<li {if $current_step=='summary'}class="active"{/if}>
+				<div>
+					<a href="{$link->getPageLink('order', true)}&paso=inicial">
+						<span>1</span>
+						<p>Mi Carrito</p>
+						<div class="icon" id="cart"></div>
+					</a>
+				</div>
+			</li>
+			<li {if $current_step=='address'}class="active"{/if}>
+				<div>
+					<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1&multi-shipping={$multi_shipping}")|escape:'html'}">
+						<span>2</span>
+						<p>Datos de entrega</p>
+						<div class="icon" id="delivery"></div>
+					</a>
+				</div>
+			</li>
+
+			<li {if $current_step=='shipping'}class="active"{/if}>
+				<div>
+					<a href="javascript:void(0);">
+						<span>3</span>
+						<p>Fórmula médica</p>
+						<div class="icon" id="rx"></div>
+					</a>
+				</div>
+			</li>
+
+			<li {if $current_step=='payment'}class="active"{/if}>
+				<div>
+					<a href="javascript:void(0);">
+						<span>4</span>
+						<p>Modos de Pago</p>
+						<div class="icon" id="pay"></div>
+					</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
 {/if}
