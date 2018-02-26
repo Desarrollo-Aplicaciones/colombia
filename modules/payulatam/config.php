@@ -146,11 +146,7 @@ class ConfPayu {
         //$protocolo='http://';
         //}
 // Url archivo de verificaciÃ³n webservice   
-        $nombre_archivo = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $nombre_archivo = explode('/', $nombre_archivo);
-        $var = array_pop($nombre_archivo);
-        $nombre_archivo = implode('/', $nombre_archivo);
-        return $urlValidation = $protocolo . $_SERVER['HTTP_HOST'] . $nombre_archivo . '/validationws.php';
+        return $urlValidation = $protocolo . $_SERVER['HTTP_HOST'] . Configuration::get('PAYU_URL') . '/validationws.php';
     }
 
     public function pago_payu($id_order, $id_customer, $json_request, $json_response, $method, $extras, $id_cart, $id_address) {
