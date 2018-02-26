@@ -83,8 +83,8 @@ class Address extends AddressCore
         if (isset(self::$_idZones[$this->id]))
             unset(self::$_idZones[$this->id]);
 
-        if (Tools::getValue("id_city")) {
-            $this->id_city = Tools::getValue("id_city");
+        if (Tools::getValue("id_city") || Tools::getValue("city_id")) {
+            $this->id_city = Tools::getValue("id_city") ? Tools::getValue("id_city") : Tools::getValue("city_id");
         }
         
         if (!isset($this->id_city) || empty($this->id_city)) {
@@ -92,6 +92,9 @@ class Address extends AddressCore
         }
 
         $result = Db::getInstance()->update('address_city', array('id_city'=>(int)$this->id_city), 'id_address = '.(int)$this->id);
+        if (!$result) {
+            return false;
+        }
 
         return ObjectModel::update($null_values);
     }
