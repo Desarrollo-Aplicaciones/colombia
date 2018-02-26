@@ -46,12 +46,12 @@ class Address extends AddressCore
             $this->city = $arr_nom_city[0]['city_name'];
             $idCity = $_POST['city_id'];
         }
-        $idCity = empty($idCity) ? Tools::getValue("id_city") : $idCity;
+        $idCity = empty($idCity) ? (Tools::getValue("id_city") ? Tools::getValue("id_city") : Tools::getValue("city_id")) : $idCity;
 
         if ($idCity) {
             Db::getInstance()->insert('address_city', array(
                 'id_address'=>(int)$this->id, 
-                'id_city'=>(int)Tools::getValue("id_city")
+                'id_city'=>(int)$idCity
             ));
         }
 
