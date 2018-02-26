@@ -9,8 +9,7 @@ float:left;
 .archivoformula
 {
 display:block;
-float:left;
-height:16px;
+height:auto;
 background-color:#39CB98;
 color:#FFF;
 font-size: 12px;
@@ -27,7 +26,11 @@ cursor:pointer;
 background-color:#FFF;
 color:#39CB98;
 }
-#upload{height:28px;width:145px;}
+#upload{
+  width: 100%;
+  border: none;
+  border-bottom: #19AB78 solid 1px;
+}
 #megamenu-responsive, .manufacturerContainer{display:none;}
 
 #carrier_area {width: 100%;}

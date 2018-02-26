@@ -83,7 +83,7 @@ class REST {
 			case "POST":
 				// Obtiene los datos enviados y decodifica el json
 				$_POST = json_decode(file_get_contents('php://input'), true);
-				$this->_request = $this->cleanInputs($_POST);
+				$this->_request = $this->cleanInputs(($_POST)?$_POST:$_REQUEST);
 				break;
 			case "GET":
 			case "DELETE":

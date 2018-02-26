@@ -59,7 +59,7 @@
 	function validarArchivo(){
 		valor=($("#archivoformula").val()).split("\\");
 		$("#upload").val(valor[(valor.length)-1]);
-		}
+	}
 </script>
 {if !$opc}
 	<script type="text/javascript">
@@ -109,45 +109,6 @@
 	<form enctype="multipart/form-data" id="form"  accept="application/pdf, image/*" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}&paso=pagos" method="post" onsubmit="return acceptCGV();">
 
 {/if}
-           
-<!-- inicio formulario -->
-
-{* <div style="width: 100%;">
-{if !$opc}
-	
-        <div class="titulo-pasos">Fórmula Médica</div>
-{else}
-		<div class="titulo-pasos">2 {l s='Delivery methods'}</div>
-{/if}
-
-
-
-<div class="cart_navigation1">
- <!-- btn navegación -->
- {if !$opc}
-
-  
-	{if !$is_guest}
-            
-            		
-			{if $back}
-				<a  href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html'}" title=" " class="buttonatras"><< Anterior</a>
-			{else}
-                        <a  id="atras1" style="float: left; overflow: visible;   position: relative;  z-index: 1;" href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html'}" title="Anterior" class="buttonatras"><< Anterior</a>
-			{/if}
-		{else}
-				<a id="atras2" style="float: left; overflow: visible;  position: relative;  z-index: 1;"  href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" title="Anterior" class="buttonatras"><< Anterior</a>
-		{/if}
-                
-                {if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
-                    <input type="submit" id="processCarrier" name="processCarrier" value="Continuar >>" style="float: right; overflow: visible;  position: relative;  z-index: 1; " />
-		{/if}
-	
-{/if}
- 
- <!-- btn navegación -->   
-</div>
-</div> *}
 
 {if !$opc}
 	{assign var='current_step' value='shipping'}
@@ -164,300 +125,137 @@
 {/if}
 
 
-<div class="titulo">Selecciona una opción para registrar tu fórmula médica </div>
 
 
     
 <div id="formula">
         
-<!-- opciones control de formula medica -->
-<div id="optios" > 
+	<!-- opciones control de formula medica -->
+	<div class="checkout w-7"> 
+		<p style="margin-bottom:20px;"><b>Selecciona una opción</b></p>
 
-<!-- opcion 1 entrgar con el pedido --> 
-<div id="entrega">
-	<div class="invisible">
-		<div id="div2rb" style="display:none">
-			<div class="radioicon">
-				<div class="radio2"></div>
-			</div>
-		</div>
-		<div class="visible"></div>
-	</div>
-	<div class="item1"><input type="radio" name="opcion" onclick="showdiv('div2');" value="entrega" id="opcion2" checked/></div>
-	<div class="item2">
-		<img  src="{$img_dir}formula-medica/entrega.jpg" id="div2ImgS" style="display: none;"/>
-		<img  src="{$img_dir}formula-medica/entrega2.jpg" id="div2Img"/>
-	</div>
-	<div class="item3"><p class="textitulo" >Entregar al recibir tu pedido</p></div>
-	<div class="item4">
-		<p class="textitulo" >Puedes entregar una copia de tu fórmula al representante de nuestro servicio de entregas.</p>
-	</div>
-</div>
+		<section data-id="entrega" class="selected rx">
+			<!-- .container-fluid -->
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-12 col-md-2">
+						<div class="radio">
+							<input class="radio-address" id="opcion2" name="opcion" value="entrega" type="radio" checked="checked">
+							<label for="opcion2" class="radio-label" style="display: inline-flex;">
+								<div class="img-rx on-order"></div>
+							</label>
+						</div>
+					</div>
+					<!-- /.col-xs-12.col-md-2 -->
 
-<div id="div2" style="display: none;">
-		<div class="descropcion">
-		<p class="textapoyo">Saca una copia como soporte y entrégala al repartidor en el momento que recibas tu pedido, así podremos brindarte un servicio con mayor calidad y efectividad a la hora de tu entrega.</p>
-		</div>
-	
-		{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
-	         <div id="segundoCarrier"><input type="submit" id="processCarrier" name="processCarrier" value="Continuar >>" class="exclusive" /></div>
-		{/if}
-</div>
+					<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+						<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+							<span itemprop="streetAddress">Entregar <b>al recibir tu pedido</b></span>
+							<span itemprop="addressLocality">
+								<p class="textitulo" >Puedes entregar una copia de tu fórmula al representante de nuestro servicio de entregas.</p>
+							</span>
+						</div>
+					</div>
+					<!-- /.col-xs-12.col-md-9 -->
 
-<!-- fin entregar con el pedido -->
-
-{*
-<!-- opcion 2 digitar formual medica -->    
-<div id="editar"  >
-	<div class="invisible">
-		<div id="div1rb" style="display:none">
-			<div class="radioicon">
-				<div class="radio2"></div>
-			</div>
-		</div>
-		<div class="visible"></div>
-	</div>
-    <div class="item1"><input type="radio" name="opcion" value="digitar" onclick="showdiv('div1');" id="opcion1"/></div>
-    <div class="item2">
-    	<img src="{$img_dir}formula-medica/sistema.jpg" id="div1ImgS" style="display: none;"/>
-    	<img src="{$img_dir}formula-medica/sistema2.jpg" id="div1Img" />
-    </div>
-    <div class="item3"><p class="textitulo" >Registra los datos de tu fórmula médica</p></div>
-	<div class="item4">
-		<p class="textitulo" >Ingresa la información solicitada solo de los medicamentos que requieren fórmula médica</p>
-	</div>
-</div>
-<!-- fin editar -->
-
-
-
-<div id="div1" style="display: none;">
- 
-<fieldset id="formula-medica">
-
-
-
-	<div class="formularioeps">
-
-<div class="diveps">
-<p class="textitulo"><label for="nombre">Quién te generó la fórmula?</label></p>
-<select id="origen">
-	<option value="particular">Particular</option>
-	<option value="eps">EPS</option>
-</select>
-</div>
-<div style="float:left;width:100%">
-	<p class="textitulo"> <label id="labeps" for="listeps">Seleccione su E.P.S.</label></p>
-	<select name="listeps" id="listeps" >
-		<option value="">Seleccione</option>
-		<option value="2">Aliansalud</option>
-		<option value="3">Ambuq</option>
-		<option value="4">Asmet Salud</option>
-		<option value="5">Café Salud</option>
-		<option value="6">Cajacopi</option>
-		<option value="7">Capital Salud</option>
-		<option value="8">Caprecom</option>
-		<option value="9">Capresoca</option>
-		<option value="10">Colmedica</option>
-		<option value="11">Colsubsidio</option>
-		<option value="12">Comfaboy</option>
-		<option value="13">Comfacor</option>
-		<option value="14">Comfama</option>
-		<option value="15">Comfamiliar</option>
-		<option value="16">Comfandi</option>
-		<option value="17">Comfenalco</option>
-		<option value="18">Comparta</option>
-		<option value="19">Compensar</option>
-		<option value="20">Convida</option>
-		<option value="21">Coomeva</option>
-		<option value="22">Coosalud</option>
-		<option value="23">Cruz Blanca</option>
-		<option value="24">Ecoopsos</option>
-		<option value="25">Emssanar</option>
-		<option value="26">EPS Sura</option>
-		<option value="27">Famisanar</option>
-		<option value="28">Golden Group</option>
-		<option value="29">Humanavivir</option>
-		<option value="30">Mutual Ser </option>
-		<option value="31">Nueva EPS</option>
-		<option value="32">Pijaos salud</option>
-		<option value="33">Salud Colpatria</option>
-		<option value="34">Salud Total</option>
-		<option value="35">SaludCoop</option>
-		<option value="36">Saludvida</option>
-		<option value="37">Sanitas</option>
-		<option value="38">Solsalud</option>
-		<option value="39">SOS(servicio occidental de salud)</option>
-	</select>
-	<div class="errorvalid" id="errorlisteps"></div>
-	</div> 
- 			</div><!--fin column2-->
-
-<div class="formulario" >
-	<div style="width:50%; display: inline-block">
-		<p class="textitulo"><label for="dosis">Posologia* (Dosis)</label></p>
-		<input type="text" id="dosis" name ="dosis" placeholder="Ejemplo: Tomar una cada 8 horas"/>
-				<div class="errorvalid" id="errordosis"></div>
-	</div>
-	<div style="width:50%; display: inline-block">
-		<p class="textitulo"><label for="eps">Fecha de prescripción*</label></p>
-		<input type="hidden" id="datepicker" name="datepicker" onchange="alert($(this).val());">
-		{html_select_date prefix=NULL start_year="-1" month_format="%m" 
-			year_empty="año" year_extra='id="año" onchange="cambiaFecha()"'
-			month_empty="mes" month_extra='id="mes" onchange="cambiaFecha()"'
-			day_empty="día" day_extra='id="dia" onchange="cambiaFecha()"' day_value_format="%02d"
-			field_order="DMY" time=NULL}
-		<div class="errorvalid" id="errordatepicker"></div>
-	</div>
-</div>
-
-<div class="formulario" id="datosmedico" >
-	<div style="width:50%; display: inline-block">
-		<p class="textitulo"><label for="nombre">Nombre de tu Médico*:</label></p>
-		<input name="nombremedico" id="nombremedico" type="text" />
-		<div class="errorvalid" id="errornombremedico"></div>
-	</div>
-	<div style="width:50%; display: inline-block">
-		<p class="textitulo"><label for="tarjeta">Tarjeta profesional*:</label></p>
-		<input type="text" id="tarjeta" name="tarjeta" onkeypress="return validar_texto(event)"/>
-		<div class="errorvalid" id="errortarjeta"></div>
-	</div>
-</div>
-	<div style="float:left;margin-left:75px;margin-top:15px;">
-	{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
-         <input type="submit" id="processCarrier" name="processCarrier" value="Continuar >>" class="exclusive" />
-	{/if}
-	</div>
-
-  </fieldset>
-<!--  -->
-
- </div>    <!--fin div1 -->                   
-
- 
- 
- 
-<!-- opcion 3 llamada de farmalisto --> 
-<div id="llamada" >
-	<div class="invisible">
-		<div id="div3rb" style="display:none">
-			<div class="radioicon">
-				<div class="radio2"></div>
-			</div>
-		</div>
-		<div class="visible"></div>
-	</div>
-        <div class="item1"><input type="radio" name="opcion" value="llamada" onclick="showdiv('div3');" id="opcion3" /></div>
-		<div class="item2">
-			<img src="{$img_dir}formula-medica/telefono.jpg" id="div3ImgS" style="display: none;"/>
-			<img src="{$img_dir}formula-medica/telefono2.jpg" id="div3Img"/>
-		</div>
-        <div class="item3"><p class="textitulo" >Recibe una llamada</p></div>
-		<div class="item4">
-			<p class="textitulo" >Recibe una llamada de servicio al cliente en un numero fijo.</p>
-		</div>
-
-</div>
-<!-- fin llamada -->
-
-
-<div id="div3" style="display: none;">
-	<div style="float:left;width:50%;padding-right:4%">
-		<p class="textapoyo">Registra en el siguiente formulario tu numero telefónico en el cual podemos contactarte, y recibe una llamada de nuestro servicio al cliente, podrás entregar los datos de la formula medica vía telefónica, así podremos brindarte un servicio con mayor calidad y efectividad a la hora de tu entrega.</p>
-	</div>
-	<div style="float:left;width:45%;">
-		<fieldset id="formula-medica">
-		<div class="textitulo" style="float:left;"><label for="nombre">Tu numero de teléfono fijo o movil*:</label><br />
-		    <input id="telefono" name="telefono" type="text" size="28" placeholder="Ciudad-Télefono" />
-		    <div class="errorvalid" id="errortelefono"></div>
-		</div>
-			{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
-				<div id="segundoCarrier"><input type="submit" id="processCarrier" name="processCarrier" value="Continuar >>" class="exclusive" /></div>
-			{/if}
-		</fieldset>
-	</div>
-<!--  -->
-*}
-     
- </div>
-
-<!-- enviar archivo adjunto -->
-<div id="online"  >
-	<div class="invisible">
-		<div id="div4rb" style="display:none">
-			<div class="radioicon">
-				<div class="radio2"></div>
-			</div>
-		</div>
-		<div class="visible"></div>
-	</div>
-        <div class="item1"><input type="radio" name="opcion" onclick="showdiv('div4');" value="online" id="opcion4" /></div>
-        <div class="item2">
-        	<img src="{$img_dir}formula-medica/arroba2.jpg" id="div4Img"/>
-        	<img src="{$img_dir}formula-medica/arroba.jpg" id="div4ImgS" style="display: none;"/>
-        </div>
-        <div class="item3"><p class="textitulo" >Enviar Online</p></div>
-		<div class="item4">
-			<p class="textitulo" >Toma una fotografía con tu webcam o celular, escanea y adjunta la imagen de tu fórmula.</p>
-		</div>
-
-</div>
-
-<!-- fin adjunto -->  
-
-
-<div id="div4" style="display: none;">
-	<div class="descropcion">
-		<div class="textapoyo" >
-			Toma una fotografía con tu webcam o celular, escanea y adjunta la imagen de tu fórmula.<br />
-			<span class="formatos">(Formatos de archivo permitidos: .png, .jpg, .pdf, .tiff, .xcf, .gif, .pcx, .wmp, .raw, .jp2, .bmp, .dng)</span>
-		</div>
-	</div>
-	<div class="file-formula">
-		<fieldset id="formula-medica">
-			<p class="textitulo" style="float:left;"><label for="nombre">Archivo fórmula*:&nbsp;</label></p>
-				<div style="float:left">
-					<span class="archivoformula" onclick="$('#archivoformula').click();">Adjuntar archivo</span> 
-						<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" onchange="validarArchivo();">
-					<input type="text" id="upload" disabled>
+					<div class="col-xs-12 col-md-12 complete-data">
+						<!-- .row --> 
+						<div class="row">
+							<div class="col-xs-12 col-md-12 rx">            
+								<b>Recuerda que al momento de la entrega de tu producto el repartidor te pedirá tu fórmula médica. no se te olvide tenerla a la mano.</b>
+							</div>
+						</div> 
+						<!-- /.row --> 
+						<div style="margin-top:20px; clear:both;"></div>
+						<!-- .row --> 
+						<div class="row">
+							<div class="col-xs-12 col-md-8 visible-md visible-lg"></div>
+							<div class="col-xs-12 col-md-4 rx">
+								<div class="form-group text-right">
+									{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
+										<button type="submit" name="processCarrier" class="btn2 btn-block btn-rx-continue">Continuar</button>
+									{/if}
+								</div>
+							</div>
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.complete-data -->
 				</div>
-				<div class="errorvalid" id="errorupload"></div>
-				{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
-			<div style="float:left;margin-left:119px;margin-top:20px;"><input type="submit" id="processCarrier" name="processCarrier" value="Continuar >>" class="exclusive" /></div>
-			{/if}
+			</div>
+			<!-- /.container-fluid -->
+		</section>
 
-		</fieldset>
+		<section data-id="online" class="rx">
+			<!-- .container-fluid -->
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-12 col-md-2">
+						<div class="radio">
+							<input class="radio-address" id="opcion4" name="opcion" value="online" type="radio">
+							<label for="opcion4" class="radio-label" style="display: inline-flex;">
+								<div class="img-rx online"></div>
+							</label>
+						</div>
+					</div>
+					<!-- /.col-xs-12.col-md-2 -->
 
-<!--  -->
+					<div class="col-xs-12 col-md-8" style="padding-top:10px;">
+						<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+							<span itemprop="streetAddress">Enviar <b>Online</b></span>
+							<span itemprop="addressLocality">
+								<p class="textitulo">Toma una fotografía con tu webcam o celular, escanea y adjunta la imagen de tu fórmula.</p>
+							</span>
+						</div>
+					</div>
+					<!-- /.col-xs-12.col-md-9 -->
 
-     
- </div>
-    
-    </div>
+					<div class="col-xs-12 col-md-12 complete-data">
+						<!-- .row --> 
+						<div class="row">
+							<div class="col-xs-12 col-md-12 rx">            
+								(Formatos de archivo permitidos: .png, .jpg, .gif)
+							</div>
+						</div> 
+						<div style="clear:both; margin-top:10px;"></div>
+						<!-- /.row --> 
+						<div class="row">
+							<div class="col-xs-12 col-md-2 rx">
+								<button type="button" name="attach" onclick="$('#archivoformula').click();" class="btn2 btn-rx-attach">Adjuntar</button>
+
+							</div>
+							<div class="col-xs-12 col-md-10 rx">
+								<input style="display:none;" name="archivoformula" type="file" id="archivoformula" size="5" accept="image/png, image/gif, image/jpeg" onchange="validarArchivo();">
+								<input type="text" id="upload" disabled>
+								<a class="trash-rx" href="javascript:void(0)">Eliminar</a>
+								<div class="errorvalid" id="errorupload"></div>
+							</div>
+						</div>
+						<div style="clear:both; margin-top:10px;"></div>
+						<!-- .row --> 
+						<div class="row">
+							<div class="col-xs-12 col-md-8 visible-md visible-lg"></div>
+							<div class="col-xs-12 col-md-4 rx">
+								<div class="form-group text-right">
+									{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
+										<input type="hidden" name="processCarrier" value="true"/>
+										<button type="submit" class="btn2 btn-block btn-rx-continue">Continuar</button>
+									{/if}
+								</div>
+							</div>
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.complete-data -->
+				</div>
+			</div>
+			<!-- /.container-fluid -->
+		</section>     
+	</div> 
 <!-- fin opciones -->
 
 
 <!--- divs formularios -->
-
-
-
-
-    
- <!-- formula medica -->   
- 
- <!-- fin formula -->
- 
- <!-- Contraentrega -->
-
- <!--Fin Contraentrega --> 
- 
-
-
- 
-
-
-
-
 
 <div id="old-code" style="display:none;">
         {if isset($virtual_cart) && $virtual_cart}
