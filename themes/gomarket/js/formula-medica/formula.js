@@ -316,9 +316,7 @@ allowSubmit = false;
 if (!archivoformula) return;
 while (archivoformula.indexOf("\\") != -1)
 archivoformula = archivoformula.slice(archivoformula.indexOf("\\") + 1);
-//ext = archivoformula.slice(archivoformula.indexOf(".")).toLowerCase();
 ext = archivoformula.split('.').pop().toLowerCase();
-console.log(ext);
 for (var i = 0; i < extArray.length; i++) {
 if (extArray[i] == ext) { allowSubmit = true; break; }
 }

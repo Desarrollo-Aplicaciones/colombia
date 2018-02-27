@@ -199,7 +199,7 @@
           <div class="col-xs-12 col-md-4">
             <div class="radio">
               <input class="radio-address" id="rb{$address['id_address']}" name="id_address_delivery" value="{$address['id_address']}" type="radio" {if $address['id_address'] == $cart->id_address_delivery}checked="checked"{/if}>
-              <label for="rb{$address['id_address']}" class="radio-label"><b>{$address['alias']}</b></label>
+              <label for="rb{$address['id_address']}" class="radio-label"><b>{$address['alias']|truncate:28:'...'|escape:'htmlall':'UTF-8'}</b></label>
             </div>
           </div>
           <!-- /.col-xs-12.col-md-4 -->
@@ -444,81 +444,3 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- /#modal-address -->
-
-{*
-<div id="standard_lightbox">
-    <div class="fog"></div>
-    <div id="lightbox_content"></div>
-    <div class="recent"></div>
-</div>
-<script>
-    function nueva_direccion(){
-      standard_lightbox("new_address");
-    }
-
-    function editar_direccion(arreglo){
-      inicializar_direccion(arreglo)
-      standard_lightbox("new_address", false, "address_form");
-    }
-
-    function inicializar_direccion(arreglo){
-      $("#estado").val(arreglo.id_state);
-      $("#estado").trigger("change");
-      $("#nombre_ciudad").val(arreglo.city);
-      $("#direccion").val(arreglo.address1);
-      $("#complemento").val(arreglo.address2);
-      $("#alias").val(arreglo.alias);
-      $("#address_id").val(arreglo.id_address);
-      $("#fijo").val(arreglo.phone);
-      $("#movil").val(arreglo.phone_mobile);
-
-      setTimeout(function(){ 
-        $("#ciudad").val(arreglo.id_city); 
-      }, 1000);
-    }
-</script>
-
-<div id="new_address">
-  <form action="{$link->getPageLink('address', true)|escape:'html'}" method="post" id="address_form">
-  <div class="checkout w-4">
-    <h3>Agregar <b>nueva</b> dirección</h3>
-    {include file="$tpl_dir./form-billing-address.tpl"}
-  </div>
-
-  <div class="checkout w-4">
-  <!-- .container-fluid -->
-    <div class="container-fluid">
-      <div class="row">
-        <!-- .col-xs-12.col-sm-6 -->
-        <div class="col-xs-12">
-          <div class="form-group">
-            <!-- Si la fomula medica existe salto al paso 3 -->			
-            <input type="hidden" name="step" value="{if $formula}3{else}2{/if}" />
-            <input type="hidden" name="back" value="order.php?step=2&multi-shipping=0" />
-            {if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
-            <input type="hidden" name="token" value="{$token}" />
-            <input type="hidden" name="id_country" value="{$id_country}" />
-
-            <button type="button" class="btn2 btn-block btn-primary" name="submitAddress" id="new-address2">Guardar y continuar</button>
-          </div>
-        </div>
-        <!-- /.col-xs-12.col-sm-6 -->
-      </div>
-      <!-- /.row -->
-      <div class="row">
-        <!-- .col-xs-12.col-sm-6 -->
-        <div class="col-xs-12">
-          <div class="form-group">
-            <button type="button" class="btn2 btn-block btn-outline-secondary" onclick="lightbox_hide('address_form')">Cancelar</button>
-          </div>
-        </div>
-        <!-- /.col-xs-12.col-sm-6 -->
-      </div>
-      <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-  </div>
-  <!-- /.checkout.w-4 --> 
-  </form>
-</div>
-*}             
