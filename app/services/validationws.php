@@ -45,7 +45,7 @@ $logPayu->logtxt('Fecha de transacción-WS: '.$mysqldate.'\r\n'.var_export($logP
       Logger::AddLog('payulatam [validationws.php] log-response-payu error: ' . $exc->getTraceAsString(), 2, null, null, null, true);
     }
 
-//$payU = new PayULatam();
-//$payU->validationws();
+$payU = new PayULatam();
+$payU->validationws();
 
 }

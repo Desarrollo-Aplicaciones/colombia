@@ -387,7 +387,7 @@ private function _displayWarning() {
         //$idCart = substr($ref, 6 + strlen(Configuration::get('PS_SHOP_NAME')));
     $idCart = explode('_', $ref)[2];
     $this->context->cart = new Cart((int) $idCart);
-    $total_order = $this->context->cart->getOrderTotals()['total_orden'];
+    $total_order = $this->context->cart->getOrderTotalPaid();
     if (!$this->context->cart->OrderExists()) {
         Logger::AddLog('[Payulatam] The shopping card ' . (int) $idCart . ' doesn\'t have any order created', 2, null, null, null, true);
         return false;
