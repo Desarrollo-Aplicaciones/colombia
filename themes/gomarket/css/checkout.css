@@ -258,7 +258,6 @@
   background: #f4f4f4;
   border-radius: 100%;
   border: 1px solid #b4b4b4;
-  display: inline-block;
   width: 1.4em;
   height: 1.4em;
   position: relative;
@@ -269,6 +268,7 @@
   text-align: center;
   -webkit-transition: all 250ms ease;
   transition: all 250ms ease;
+  float: left;
 }
 .checkout .radio input[type="radio"]:checked + .radio-label:before {
   background-color: #3a9b37;

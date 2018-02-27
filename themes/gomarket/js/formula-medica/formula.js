@@ -310,19 +310,21 @@ if (archivoformula.length == 0 || /^\s+$/.test(archivoformula)) {
  }
  
  
-extArray = new Array(".png", ".jpg", ".pdf",".tiff",".xcf",".gif",".pcx",".wmp",".raw",".jp2",".bmp",".dng");
+extArray = new Array("png", "jpg", "gif");
 
 allowSubmit = false;
 if (!archivoformula) return;
 while (archivoformula.indexOf("\\") != -1)
 archivoformula = archivoformula.slice(archivoformula.indexOf("\\") + 1);
-ext = archivoformula.slice(archivoformula.indexOf(".")).toLowerCase();
+//ext = archivoformula.slice(archivoformula.indexOf(".")).toLowerCase();
+ext = archivoformula.split('.').pop().toLowerCase();
+console.log(ext);
 for (var i = 0; i < extArray.length; i++) {
 if (extArray[i] == ext) { allowSubmit = true; break; }
 }
 if (allowSubmit) form.submit();
 else
-    document.getElementById("errorupload").innerHTML = "Campo requerido";
+    document.getElementById("errorupload").innerHTML = "Archivo no permitido";
 	document.getElementById("upload").style.backgroundColor="#FFFAFA";
 	document.getElementById("upload").style.borderColor="#A5689C";
 /*alert("Se permiten �nicamente archivos con la extenci\u00f3n: " 
