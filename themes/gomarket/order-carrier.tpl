@@ -445,19 +445,32 @@
 
 
 {if !$opc}
-<div class="cart_navigation submit" style="width: 100%;">
-	<input type="hidden" name="step" value="3" />
-	<input type="hidden" name="back" value="{$back}" />
-	{if !$is_guest}
-		{if $back}
-			<a  href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html'}" title=" " class="buttonatras"><< Anterior</a>
-		{else}
-            <div id="segundo"> <a  id="atras1" style="float: left; overflow: visible;   position: relative;  z-index: 1;" href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html'}" title="Anterior" class="buttonatras"><< Anterior</a></div>
-		{/if}
-	{else}
-		<a id="atras2" href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" title="Anterior" class="buttonatras"><< Anterior</a>
-	{/if}
+<!-- .checkout.w-7 -->
+<div class="checkout w-7">
+	<!-- .container-fluid -->
+	<div class="container-fluid">
+		<div class="row">
+			<!-- .col-xs-12 -->
+			<div class="col-xs-12 col-sm-6 col-sm-offset-3">
+				<input type="hidden" name="step" value="3" />
+				<input type="hidden" name="back" value="{$back}" />
+				{if !$is_guest}
+					{if $back}
+						<a class="btn2 btn-block btn-outline-secondary" href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html'}" title="Regresar">Regresar</a>
+					{else}
+						<a id="atras1" class="btn2 btn-block btn-outline-secondary" style="float: left; overflow: visible;   position: relative;  z-index: 1;" href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html'}" title="Regresar">Regresar</a>
+					{/if}
+				{else}
+					<a id="atras2" class="btn2 btn-block btn-outline-secondary" href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" title="Regresar">Regresar</a>
+				{/if}
+			</div>
+			<!-- /.col-xs-12 -->
+		</div>
+		<!-- /.row -->
+	</div>
+	<!-- /.container-fluid -->
 </div>
+<!-- /.checkout.w-7 -->
 </form>
 {else}
 	<h3>{l s='Leave a message'}</h3>
