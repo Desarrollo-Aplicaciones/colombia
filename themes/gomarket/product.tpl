@@ -198,13 +198,6 @@ function update_shipping(){
 	var cuenta = $("#quantity_wanted").val() * {$productPrice};
 	var acum = {$valor_carrito};
 	var subtotal= {$envio_gratis} - ( acum + cuenta );
-	/*if (subtotal < 0) {
-		$('.shipping_val').hide();
-		$('.free_shipping').show('slow');
-	}else{
-		$('.free_shipping').hide();
-		$('.shipping_val').show('slow');
-	}*/
 	$('#lightbox_qty').html($("#quantity_wanted").val());
 	$('#lightbox_subtotal').html(cuenta);
 }
@@ -274,49 +267,12 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 	</div>
 {/if}
 
-	{*<div class="divinvima" style="width:100%;">
-		<img class="imagenvima_es" src="{$img_dir}pdp/PDP_Invima_escritorio3.jpg" />
-		<img class="imagenvima_mv" src="{$img_dir}pdp/PDP_Invima_movil3.jpg" usemap="#map_imagenvima_mv" />
-		<map name="map_imagenvima_mv">
-			<area shape=rect coords="3,166,148,208" href="tel:+0314926363" alt="Bogotá" title="Bogotá">
-			<area shape=rect coords="163,166,308,208" href="tel:+0318912562" alt="Cali" title="Cali">
-			<area shape=rect coords="3,214,148,256" href="tel:+0312040695" alt="Medellín" title="Medellín">
-			<area shape=rect coords="163,214,308,256" href="tel:+0313851691" alt="Barranquilla" title="Barranquilla">
-			<area shape=rect coords="3,266,148,308" href="tel:+0180009133830" alt="lineaGratuitaNacional" title="lineaGratuitaNacional">
-		</map>
-	</div>*}
-
-	<!--/Fin Campo de fórmula médica-->
-
-
-<!-- :FABER: Codío para reciclar.-->
-
-	<!--Favoritos->
-	<div class="social_network">	
-		<div class="fb-follow" data-href="https://www.facebook.com/farmalistocolombia" data-colorscheme="light" data-layout="button_count" data-show-faces="false"></div>
-		<div class="mark">{$HOOK_EXTRA_LEFT}</div>
-	</div>
-	<!-/Favoritos-->
-
-<!-- /:FABER: Codío para reciclar.-->
-
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
 <!-- Contenedor del producto con precio-->
 <div class="contenido_producto">
 	{* Contenedor de las imagenes del producto *}
 	<div class="ctn-product-imgs">
-		{* {if isset($isformula) && $isformula}
-			<div id="image-block-static">
-				<span id="view_full_size">
-					<img id="bigpic" alt="https://www.farmalisto.com.mx/img/p/es-default-thickbox_default.jpg" class="jqzoom" src="{$img_dir}pdp/PDP_Invima_escritorio_2.jpg"  rel="">
-					<div class="zoomdiv" style="top: 0px; left: -305px; width: 300px; height: 300px; display: block;">
-						<img  src="{$img_dir}pdp/PDP_Invima_escritorio_2.jpg" class="bigimg">
-					</div>
-				</span>
-			</div>
-
-		{else} *}
 		
 			<!-- thumbnails -->
 			{if isset($images) && count($images) >= 1}
@@ -426,9 +382,6 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							{if $priceDisplay >= 0 && $priceDisplay <= 2}
 							{if $productPriceWithoutReduction > $productPrice}
 								<span id="old_price_display">{convertPrice price=$productPriceWithoutReduction}</span>
-								{* {if $tax_enabled && $display_tax_label == 1}
-								{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
-								{/if} *}
 							{/if}
 							{/if}
 							</span>
@@ -477,14 +430,6 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				</div>
 			</div>
 
-			<!--div class="beneficio">
-				<span class="shipping_val">
-					Envío por compras menores {* a <b>{convertPrice price=$envio_gratis}</b>: Bogotá <b>{convertPrice price=1000}</b> resto del país <b>{convertPrice price=5000}</b> *}
-				</span>
-				<span class="free_shipping">
-					<b>¡Envío Gratuito!</b>
-				</span>
-			</div-->
 			{if ($productPrice > 0) AND !((!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE) AND (array_key_exists($product->id,$prods_redireccion)) == 0}
 				<div id="add_to_cart" class="buttons_bottom_block" >
 					<input type="hidden" name="token" />
@@ -694,11 +639,7 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				<img src="{$img_dir}pdp/truck1.jpg" class="img-truck" id="truck1">
 			</div>
 			<div class="ctn-txt-arrow">
-                            {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
 				<span id="txt-green-times-delivery">Costos de envío</span>
-                            {else}
-                                <span id="txt-green-times-delivery">Tiempos de entrega</span>
-                            {/if}
 				<div class="ctn-img-desplegable" id="open-close">
 					<span class="img-desplegable-plus">+</span>
 				</div>
@@ -706,85 +647,29 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 		</div>
 
 		<div class="ctn-times-delivery" id="times-delivery" style="display: none;">
-                    {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
-                        <span class="txt-gray">  Para envíos de <strong> dispositivos electrónicos y dispositivos médicos tipo 2B </strong>se cobrará un costo de envío adicional. Validar el valor con los agentes de Call Center:<strong> 4926365</strong> </span>
-                    {else}
-			<div class="ctn-valor-min"><span class="txt-green-small"><strong>Valor mínimo</strong> de pedido: <strong>$25.000</strong></span></div>
-			<div class="ctn-info-times-delivery">
-				<span class="txt-gray">
-					¿Cuál es el costo de envío de los pedidos?
-					<br><br>
-					<strong>Bogotá:</strong> <span class="txt-green-small">Envío gratis</span> por compras superiores a <strong>$50.000</strong>. Por compras inferiores el costo será de <strong>$1.000</strong> <br>
-					<strong>Principales Ciudades:</strong> Para todos los pedidos el costo será de <strong>$8.500</strong> (Carga hasta de tres kilos) <br>
-					<strong>Trayectos Especiales:</strong> Para todos los pedidos el costo será de <strong>$28.000</strong> (Carga hasta de tres kilos)<br>
-				</span>
-			</div>
-			<div class="ctn-valor-min"><a href="{$base_dir}content/1-entregas-y-pedidos-domicilios" class="txt-green-small"><strong>Ver más...</strong></a></div>
-                    {/if}
+			{if $product->shipping_costs}
+				<span class="txt-gray"> {$product->shipping_costs} </span>
+			{else}
+				<div class="ctn-valor-min">
+					<span class="txt-green-small">
+						<strong>Valor mínimo</strong> de pedido: <strong>$25.000</strong>
+					</span>
+				</div>
+				<div class="ctn-info-times-delivery">
+					<span class="txt-gray">
+						¿Cuál es el costo de envío de los pedidos?
+						<br><br>
+						<strong>Bogotá:</strong> <span class="txt-green-small">Envío gratis</span> por compras superiores a <strong>$50.000</strong>. Por compras inferiores el costo será de <strong>$1.000</strong> <br>
+						<strong>Principales Ciudades:</strong> Para todos los pedidos el costo será de <strong>$8.500</strong> (Carga hasta de tres kilos) <br>
+						<strong>Trayectos Especiales:</strong> Para todos los pedidos el costo será de <strong>$28.000</strong> (Carga hasta de tres kilos)<br>
+					</span>
+				</div>
+				<div class="ctn-valor-min"><a href="{$base_dir}content/1-entregas-y-pedidos-domicilios" class="txt-green-small"><strong>Ver más...</strong></a></div>
+			{/if}
 		</div>
 
 	</div>
 	{* Contactanos *}
-
-
-<!--Beneficios
-	<div class="ben_col">
-		<div class="beneficio">
-			<div class="img_ben">
-				<img  src="{$img_dir}pdp/b_rx.png" alt="Toda la fórmula médica en un solo lugar"/>
-			</div>
-			<div class="des_ben">Toda la fórmula médica en un solo lugar</div>
-		</div>
-		<div class="beneficio">
-			<div class="img_ben"><img  src="{$img_dir}pdp/b_price.png" alt="Garantía del mejor precio*"/></div>
-			<div class="des_ben">Garantía del mejor precio*</div>
-		</div>
-		<div class="beneficio">
-			<div class="img_ben"><img  src="{$img_dir}pdp/b_security.png" alt="Compras con total seguridad y discreción"/></div>
-			<div class="des_ben">Compras con total seguridad y discreción</div>
-		</div>
-		{if isset($isboton) && $isboton}
-			<div class="boton" id="boton">
-				<div id="globalDiv">
-					<div id="mainDiv" >
-						<div id="image0" class="image">
-							<img  src="{$img_dir}pdp/fondo.png" border=0/>
-						</div>
-						<div id="image1" class="image">
-								<img  src="{$img_dir}pdp/here.png" border=0/>
-						</div>
-						<div id="image2" class="image">
-								<img  src="{$img_dir}pdp/fondo.png" border=0/>
-						</div>
-						<div id="image3" class="image">
-							<img  src="{$img_dir}pdp/discount.png" border=0/>
-						</div>
-						<div id='bullets' class='slide_nav12837' ></div>
-					</div>
-					<div id='statusbar_wrapper'>
-						<div id='statusbar'></div>
-					</div>
-				</div>
-				<script language='javascript' src='{$js_dir}pdp/TweenMax.1.11.4.min.js'></script>
-				<script type='text/javascript' src='{$js_dir}pdp/spin.min.js'></script>
-				<script type='text/javascript' src='{$js_dir}pdp/boton.js'></script>
-			</div>
-		{else}
-			<div class="beneficio">
-				<div class="img_ben"><img  src="{$img_dir}pdp/b_lorry.png" alt="Realizamos domicilios a todo el país"/></div>
-				<div class="des_ben">Realizamos domicilios a todo el país</div>
-			</div>
-		{/if}
-		
-		<div class="beneficio_resp">
-			<img  src="{$img_dir}pdp/b_rx.png" alt="Toda la fórmula médica en un solo lugar"/>
-			<img  src="{$img_dir}pdp/b_price.png" alt="Garantía del mejor precio*"/>
-			<img  src="{$img_dir}pdp/b_security.png" alt="Compras con total seguridad y discreción"/>
-			<img  src="{$img_dir}pdp/b_lorry.png" alt="Realizamos domicilios a todo el país"/>
-		</div>
-	</div>
-
-/Beneficios-->
 
 
 </div>
@@ -801,13 +686,8 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 				{if $attachments}<li><a id="more_info_tab_attachments" href="#idTab9">{l s='Download'}</a></li>{/if}
 				{if isset($accessories) AND $accessories}<li><a href="#idTab4">{l s='Accessories'}</a></li>{/if}
 				{if isset($product) && $product->customizable}<li><a href="#idTab10">{l s='Product customization'}</a></li>{/if}
-                {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
-                  <li><a href="#idTab99" id="tab-times-delivery">Costos de envío</a></li>
-                  {$HOOK_PRODUCT_TAB}
-                {else}  
-                  <li><a href="#idTab99" id="tab-times-delivery">Tiempos de entrega</a></li>
-                  {$HOOK_PRODUCT_TAB}
-                {/if}
+				<li><a href="#idTab99" id="tab-times-delivery">Costos de envío</a></li>
+				{$HOOK_PRODUCT_TAB}
 			</ul>
 
 			<div id="more_info_sheets" class="sheets align_justify">
@@ -819,30 +699,6 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
             <div id="scro"><h2 class="font-h2">{$disponibilidad}</h2><p style="text-align: justify;" align="justify">&nbsp;</p>{$product->description_short}</div>
 					</div>
 				{/if}
-
-				{if $features}
-					{* <div class="title_hide_show">{l s='Data sheet'}</div> *}
-				{/if}
-				
-				{*if isset($features) && $features}
-					<!-- product's features -->
-					<ul id="idTab2" class="rte bullet content_hide_show">
-						<div id="scro">
-							{foreach from=$features item=feature}
-								{if isset($feature.value)}
-									<li>
-										<span>{$feature.name|escape:'htmlall':'UTF-8'}</span>
-										{$feature.value|escape:'htmlall':'UTF-8'}
-									</li>
-								{/if}
-							{/foreach}
-						</div>
-					</ul>
-				{/if*}
-
-				{if $attachments}
-					{* <div class="title_hide_show" style="display:none">{l s='Download'}</div> *}
-				{/if}
 				
 				{if isset($attachments) && $attachments}
 					<ul id="idTab9" class="rte bullet content_hide_show"style="font-family: 'Open Sans', sans-serif;">
@@ -853,10 +709,6 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 							</li>
 						{/foreach}
 					</ul>
-				{/if}
-				
-				{if isset($accessories) AND $accessories}
-					{* <div class="title_hide_show" style="display:none">{l s='Accessories'}</div> *}
 				{/if}
 				
 				{if isset($accessories) AND $accessories}
@@ -907,8 +759,8 @@ $('.cart_quantity_down').unbind('click').live('click', function(){
 
 				<ul id="idTab99" class="rte bullet content_hide_show">
 					<div class="ctn-times-delivery-li">
-                      {if $product->id == 39473 || $product->id == 39474 ||$product->id == 39494}
-                        <span class="txt-gray">  Para envíos de <strong> dispositivos electrónicos y dispositivos médicos tipo 2B </strong>se cobrará un costo de envío adicional. Validar el valor con los agentes de Call Center:<strong> 4926365</strong> </span>
+                      {if $product->shipping_costs}
+                        <span class="txt-gray">  {$product->shipping_costs} </span>
                       {else}  
 						<span class="txt-gray">
 							¿Cuál es el costo de envío de los pedidos?
