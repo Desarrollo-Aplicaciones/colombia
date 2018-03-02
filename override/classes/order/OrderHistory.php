@@ -128,7 +128,7 @@ class OrderHistory extends OrderHistoryCore
 			if (Validate::isLoadedObject($order))
 			{
 				// Join PDF invoice if order state is "payment accepted"
-				if ( ( (int)$result['id_order_state'] === 2 || (int)$result['id_order_state'] === 4 ) && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
+				if ( ( (int)$result['id_order_state'] === 4 ) && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
 				{
 					$context = Context::getContext();
 					$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $context->smarty);
