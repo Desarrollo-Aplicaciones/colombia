@@ -62,7 +62,7 @@
 				<td class="history_method">{$order.payment|escape:'htmlall':'UTF-8'}</td>
 				<td class="history_state">{if isset($order.order_state)}{$order.order_state|escape:'htmlall':'UTF-8'}{/if}</td>
 				<td class="history_invoice">
-				{if (isset($order.invoice) && $order.invoice && isset($order.invoice_number) && $order.invoice_number) && isset($invoiceAllowed) && $invoiceAllowed == true}
+				{if (isset($order.invoice) && $order.invoice && isset($order.invoice_number) && $order.invoice_number) && (isset($order.delivery_number) && $order.delivery_number)  && isset($invoiceAllowed) && $invoiceAllowed == true}
 					<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" title="{l s='Invoice'}" class="_blank"><img src="{$img_dir}icon/pdf.gif" alt="{l s='Invoice'}" class="icon" /></a>
 					<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" title="{l s='Invoice'}" class="_blank"></a>
 				{else}-{/if}
