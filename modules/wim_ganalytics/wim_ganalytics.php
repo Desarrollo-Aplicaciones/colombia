@@ -769,16 +769,25 @@ public function __construct()
         if (!isset(Context::getContext()->cookie->id_guest)){
                     Guest::setNewGuest(Context::getContext()->cookie);
         }
-            
-        $id_guest = $this->context->customer->id_guest;
+
+        $id_guest = null;
+
+        if(isset($this->context->controller->php_self)){
+            $id_guest = $this->context->customer->id_guest;
+        }
+
         $uuid = $this->getUUID($id_guest);
         $v = Configuration::get('WIM_GANALYTICS_VERSION_PROTOCOL');
         $tid = strtoupper(Configuration::get('WIM_GANALYTICS_TRACKING_ID'));
         $cid = $uuid;
-        $controller = $this->context->controller->php_self;
+
+        $controller = null;
+        if(isset($this->context->controller->php_self)){
+            $controller = $this->context->controller->php_self;
+        }
         $uid = $id_guest;
         
-        if(empty($v) || empty($tid) || (empty($controller) && !$isTransaction))
+        if(empty($v) || empty($tid) || (empty($controller) ))
             return;
         
         $data= array();
