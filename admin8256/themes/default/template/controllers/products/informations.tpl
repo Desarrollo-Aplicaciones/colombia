@@ -302,6 +302,20 @@
 					<p class="clear"></p>
 				</td>
 			</tr>
+			<tr>
+				<td class="col-left">
+					{include file="controllers/products/multishop/checkbox.tpl" field="shipping_costs" type="tinymce" multilang="true"}
+					<label>Costos de envío<br /></label>
+					<p class="product_description">({l s='Appears in the body of the product page'})</p>
+				</td>
+				<td style="padding-bottom:5px;">
+						{include file="controllers/products/textarea_lang.tpl" languages=$languages
+						input_name='shipping_costs'
+						input_value=$product->shipping_costs
+						}
+					<p class="clear"></p>
+				</td>
+			</tr>
 		{if $images}
 			<tr>
 				<td class="col-left"><label></label></td>
