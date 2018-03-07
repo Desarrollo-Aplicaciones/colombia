@@ -1,0 +1,1 @@
+importScripts('https://app2-salesmanago-pl-01.salesmanagopush.com/sw.js');
