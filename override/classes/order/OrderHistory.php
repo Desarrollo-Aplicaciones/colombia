@@ -30,8 +30,9 @@ class OrderHistory extends OrderHistoryCore
 		if (isset($result['template']) && Validate::isEmail($result['email']))
 		{
                     if ($order->id) {
-                        if ( (int)$result['id_order_state'] !== 8 && (int)$result['id_order_state'] !== 18 && (int)$result['id_order_state'] !== 6 && (int)$result['id_order_state'] !== 4 
-                                && (int)$result['id_order_state'] !== 22 && (int)$result['id_order_state'] !== 20 && (int)$result['id_order_state'] !== 5) {
+						$id_order_state = (int)$result['id_order_state'];
+                        if ( $id_order_state !== 8 && $id_order_state !== 18 && $id_order_state !== 6 && $id_order_state !== 4 
+                                && $id_order_state !== 22 && $id_order_state !== 20 && $id_order_state !== 5) {
                             // Genrenando el descuento de los reservados en el stock
                             $sql = new DbQuery();
                             $sql->select('pp.id_product, pp.quantity');
@@ -91,15 +92,10 @@ class OrderHistory extends OrderHistoryCore
                                                       VALUES('.$order->id.','.pSQL($row['id_product']).',' . $reserve . ',' . $missing . ')';
                                   Db::getInstance()->executeS($reserve_products);
                               }
-                            }
-                            if($sin_stock) {
-                              $change_status_order = 'UPDATE ' . _DB_PREFIX_ . 'orders
-                                                              SET current_state = 9
-                                                              WHERE id_order = ' . $order->id;
-                              Db::getInstance()->executeS($change_status_order);
-
-                              $historyStateOrder = "INSERT INTO ps_order_history(id_order, id_order_state, date_add) VALUES(".$order->id.", 9, '".date('Y-m-d H:i:s')."')";
-                              DB::getInstance()->execute($historyStateOrder);
+							}
+                            if($sin_stock && !in_array($id_order_state, array(Configuration::get('PS_OS_ARRAY_IN_STOCK')))) {
+                              	$this->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order, true);
+								parent::addWithemail();
                             }
                         }
                     }
