@@ -2154,4 +2154,8 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       //echo '<br><br>ENTRA 1<br><br>';   
     }
   }
+
+    public function sendChangedNotification(Order $order = null) {
+       return true;
+    }
 }

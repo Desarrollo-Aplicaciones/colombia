@@ -39,7 +39,7 @@
 		{if isset($document->is_delivery)}
 		<tr class="invoice_line" id="delivery_{$document->id}">
 		{else}
-		<tr class="invoice_line" id="invoice_{$document->id}">
+		<tr class="invoice_line" id="invoice_{$document->id}" style="{if !$order->delivery_number && $employee->id_profile!=1}display: none"{/if}>
 		{/if}
 	{elseif get_class($document) eq 'OrderSlip'}
 		<tr class="invoice_line" id="orderslip_{$document->id}">

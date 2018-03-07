@@ -685,14 +685,10 @@ class PaymentModule extends PaymentModuleCore {
                         if (is_array($extra_vars))
                             $data = array_merge($data, $extra_vars);
 
-                        // Join PDF invoice
-                        if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
-                            $pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
-                            $file_attachement['content'] = $pdf->render(false);
-                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
-                            $file_attachement['mime'] = 'application/pdf';
-                        } else
-                            $file_attachement = null;
+                        // FAR-54 - PDF Invoice only on Shipped state
+                        $file_attachement = null;
+
+
 
                         if (Validate::isEmail($this->context->customer->email)){
 

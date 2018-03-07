@@ -175,6 +175,17 @@
 		<tr style="text-align: center; font-size: 10pt;"><td>{$type_payment}</td></tr>
 	</table>
 	<br>
+
+	<table style="width: {$sizeticket};">
+        {if $order_invoice->getRestPaid() > 0}
+            {l s='El cliente tiene un valor a cancelar por'}: {displayPrice price=$order_invoice->getRestPaid() currency=$currency->id}
+        {elseif $order_invoice->getRestPaid() < 0}
+            {l s='Saldo a favor del cliente por'}: {displayPrice price=-$order_invoice->getRestPaid() currency=$currency->id}
+        {/if}
+	</table>
+	<br>
+	<br>
+
 	<table style="width: {$sizeticket};">
 		<tr><td>Fecha de Entrega: {$date_delivery}</td></tr>
 		<tr><td>Hora de Entrega: {$time_windows}</td></tr>

@@ -43,8 +43,8 @@
 		{if $can_edit}
 		<span class="product_price_edit" style="display:none;">
 			<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']}" />
-			{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
-			{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}
+			{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" readonly="readonly" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
+			{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" readonly="readonly" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}
 		</span>
 		{/if}
 	</td>
@@ -131,7 +131,7 @@
 		<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
 		<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
 	</td>
-	{if ($can_edit && !$order->hasBeenDelivered())}
+	{if ($can_edit && !$order->hasBeenDelivered()) && !sizeof($discounts)}
 	<td class="product_invoice" colspan="2" style="display: none;text-align:center;">
 		{if sizeof($invoices_collection)}
 		<select name="product_invoice" class="edit_product_invoice">

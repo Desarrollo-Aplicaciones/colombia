@@ -963,7 +963,7 @@ function save_private_message() {
 			</div>
 			<legend><img src="../img/admin/cart.gif" alt="{l s='Products:'}" />{l s='Products:'}</legend>
 			<div style="float:left;width: 100%;">
-				{if $can_edit}
+				{if $can_edit && !sizeof($discounts) }
 				{if !$order->hasBeenDelivered()}<div style="float: left;"><a href="#" class="add_product button"><img src="../img/admin/add.gif" alt="{l s='Add a product'}" /> {l s='Add a product'}</a></div>{/if}
 				<div style="float: right; margin-right: 10px" id="refundForm">
 				<!--
@@ -1092,7 +1092,7 @@ function save_private_message() {
 							{/if}
 						</tr>
 						{/foreach}
-					{*if $can_edit}
+					{if $can_edit && !$order->hasBeenDelivered() && !sizeof($discounts)}
 						<tr>
 							<td colspan="3" class="center">
 								<a class="button" href="#" id="add_voucher"><img src="../img/admin/add.gif" alt="{l s='Add'}" /> {l s='Add a new discount'}</a>
@@ -1103,7 +1103,7 @@ function save_private_message() {
 								{include file='controllers/orders/_discount_form.tpl'}
 							</td>
 						</tr>
-					{/if*}
+					{/if}
 					</table>
 				</div>
 				{/if}
