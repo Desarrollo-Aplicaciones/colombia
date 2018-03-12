@@ -29,10 +29,7 @@
 {*<h1>{l s='Order confirmation'}</h1>*}
 
 {assign var='current_step' value='payment'}
-<<<<<<< HEAD
-=======
 {*include file="$tpl_dir./order-steps.tpl"*}
->>>>>>> fff42f1ad213cdf0f5c83fbb133e32107e4a6645
 
 {include file="$tpl_dir./errors.tpl"}
 
