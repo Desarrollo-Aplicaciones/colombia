@@ -2038,6 +2038,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     //error_log("\n\n\n\n\n\n\n estadosValidos: ".print_r($estadosValidos,true),3,"/tmp/states.log");
     $cart = new Cart($order->id_cart);
     // Smarty assign
+      ;
     $this->tpl_view_vars = array(
     'order' => $order,
     'cart' => $cart,
@@ -2073,7 +2074,7 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     'carrierModuleCall' => $carrier_module_call,
     'iso_code_lang' => $this->context->language->iso_code,
     'id_lang' => $this->context->language->id,
-    'can_edit' => ($this->tabAccess['edit'] == 1),
+    'can_edit' => ($this->tabAccess['edit'] == 1 && in_array( $this->context->employee->id_profile, explode(',',Configuration::get('PROFILE_EDIT_ORDERS')) )),
     'current_id_lang' => $this->context->language->id,
     'invoices_collection' => $order->getInvoicesCollection(),
     'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
@@ -2154,8 +2155,4 @@ class AdminOrdersController extends AdminOrdersControllerCore {
       //echo '<br><br>ENTRA 1<br><br>';   
     }
   }
-
-    public function sendChangedNotification(Order $order = null) {
-       return true;
-    }
 }
