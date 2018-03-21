@@ -156,7 +156,8 @@ class PasswordController extends PasswordControllerCore
                 '{email}' => $customer->email,
                 '{lastname}' => $customer->lastname,
                 '{firstname}' => $customer->firstname,
-                '{url}' => $this->context->link->getPageLink('password', true, null, 'token=' . $customer->secure_key . '&id_customer=' . (int)$customer->id)
+                '{url}' => $this->context->link->getPageLink('password', true, null, 'token=' . $customer->secure_key . '&id_customer=' . (int)$customer->id),
+                '{url_route}' => $content_dir
             );
             if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), $mail_params, $customer->email, $customer->firstname . ' ' . $customer->lastname))
                 $this->context->smarty->assign(array('confirmation' => 2, 'customer_email' => $customer->email));

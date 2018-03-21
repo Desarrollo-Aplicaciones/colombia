@@ -23,6 +23,30 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<style >
+    
+    #fondoLog{
+        background-image: linear-gradient(134deg, rgb(98, 195, 95) 3%, rgb(58, 155, 55) 53%, rgb(57, 188, 147) 103%);
+        background-size: auto;
+        background-repeat: repeat;
+        background-position: center center;
+        width: 3382px;
+        height: 334px;
+        position: absolute;
+    }
+
+    .postValidate{
+        background-color: #FE922E !important;
+        border: none !important;
+        color: white !important;
+    }
+
+    .validCampo{
+        border-bottom: 2px solid rgb(58, 155, 55) !important;
+    }
+
+</style>
+
 
 <div style="text-align: center; margin: 85px 0 60px 0">
     <img src="/themes/gomarket/img/logo-farmalisto.png"/>
@@ -33,7 +57,7 @@
 
 
     <div id="divStep1" style="padding: 15px 30px; display: block">
-        <div style="line-height: 20px;">{l s='Ingrese una nueva contraseña para tu cuenta y'} <strong> {l s='¡Listo!'}</strong>
+        <div style="line-height: 20px;">{l s='Ingresa una nueva contraseña para tu cuenta y'} <strong> {l s='¡Listo!'}</strong>
 
         </div>
 
@@ -45,13 +69,13 @@
             <fieldset>
                 <p class="text">
 
-                    <input type="password" id="inpassword" required name="password" class="input-custom" placeholder="{l s='Nueva contraseña'}"
+                    <input type="password" id="inpassword" required name="password" class="input-custom rePass" placeholder="{l s='Nueva contraseña'}"
                            value="" maxlength="19" style="margin-top: 15px;"/>
                 </p>
 
                 <p class="text">
 
-                    <input type="password" id="repassword" required name="repassword" class="input-custom" placeholder="{l s='Confirma la contraseña'}"
+                    <input type="password" id="repassword" required name="repassword" class="input-custom rePass" placeholder="{l s='Confirma la contraseña'}"
                            value="" maxlength="19"/>
                 </p>
 
@@ -96,11 +120,14 @@
 
     function validatePassword(){
 
-        if (password.value.length < 5)
+        if (password.value.length < 5){
             password.setCustomValidity("Contraseña inválida");
-        else
+            
+        }
+        else{
             password.setCustomValidity("");
-
+            
+        }
         if(password.value != confirm_password.value) {
             confirm_password.setCustomValidity("Las contraseñas deben coincidir");
         } else {
@@ -206,4 +233,28 @@
 
         }
     });
+
+    $('.rePass').on('input', function(){
+        var pass = $("#repassword").val();
+        var pass2 = $("#inpassword").val(); 
+
+        if(pass.length > 5){
+            $("#repassword").addClass('validCampo');
+        }else{
+            $("#repassword").removeClass('validCampo');
+        }
+
+        if(pass2.length > 5){
+            $("#inpassword").addClass('validCampo');
+        }else{
+            $("#inpassword").removeClass('validCampo');
+        }
+
+        if(pass.length > 5 && pass2.length > 5){
+            $("#btn-restore").addClass('postValidate');
+        }else{
+            $("#btn-restore").removeClass('postValidate');
+        }
+    });
+
 </script>

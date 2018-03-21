@@ -23,6 +23,47 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<style >
+    
+    #fondoLog{
+        background-image: linear-gradient(134deg, rgb(98, 195, 95) 3%, rgb(58, 155, 55) 53%, rgb(57, 188, 147) 103%);
+        background-size: auto;
+        background-repeat: repeat;
+        background-position: center center;
+        width: 3382px;
+        height: 334px;
+        position: absolute;
+    }
+
+    .postValidate{
+        background-color: #FE922E !important;
+        border: none !important;
+        color: white !important;
+    }
+
+    .validCampo{
+        border-bottom: 2px solid rgb(58, 155, 55) !important;
+    }
+
+    #resendSMS{
+        font-weight: bold;
+        color: #39BC93;
+    }
+    #email-addr{
+        display: block;
+        width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    @media (max-width: 480px) {
+        #email-addr{
+            font-size: 12px;
+        }
+    }
+
+</style>
+
 
 <div style="text-align: center; margin: 85px 0 60px 0">
     <img src="/themes/gomarket/img/logo-farmalisto.png"/>
@@ -54,7 +95,7 @@
             </fieldset>
         </form>
 
-        {l s='¿No tienes cuenta?'} <a href="{$link->getPageLink('authentication', true)}"
+        {l s='¿No tienes cuenta?'} <a href="{$link->getPageLink('authentication', true)}?reg=5"
                                       style="color: #3db990; font-weight: 700;">{l s='Créala aquí'}</a>
 
     </div>
@@ -177,7 +218,7 @@
                         $('#email-addr').text(jsonData.email);
 
                         $(".option-regen[data-via='mail']").attr('data-id', jsonData.id_customer);
-
+                        console.log(jsonData.phones[0]);
                         if(jsonData.phones[0]){
                             $(".option-regen[data-via='tel']").show();
                             $('#sms-addr').text(jsonData.phones[0].phone);
@@ -224,6 +265,7 @@
                     token: token
                 },
                 success: function (jsonData) {
+                    console.log(jsonData);
                     if (!jsonData.errors) {
 
                         $('#divStep2').hide();
@@ -269,6 +311,7 @@
                     token: token
                 },
                 success: function (jsonData) {
+                    console.log(jsonData);
                     if (jsonData.url) {
 
                         window.location.href = jsonData.url;
@@ -288,4 +331,33 @@
     });
 
     {/literal}
+
+    ///Nuevo
+
+    document.getElementById('email').addEventListener('input', function() {
+
+        var str = $("#email").val(); 
+        var res = str.match(/[.]/);
+        var res2 = str.match(/@/);
+        if(res == '.' && res2 == '@'){
+            $("#btn-restore").addClass('postValidate');
+            $("#email").addClass('validCampo');
+        }else{
+            $("#btn-restore").removeClass('postValidate');
+            $("#email").removeClass('validCampo');
+        }
+    });
+
+    document.getElementById('code').addEventListener('input', function() {
+
+        var codigo = $("#code").val(); 
+        if(codigo.length > 5){
+            $("#btn-code").addClass('postValidate');
+            $("#code").addClass('validCampo');
+        }else{
+            $("#btn-code").removeClass('postValidate');
+            $("#code").removeClass('validCampo');
+        }
+    });
+
 </script>

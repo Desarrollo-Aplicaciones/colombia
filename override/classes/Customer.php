@@ -190,24 +190,26 @@ class Customer extends CustomerCore
 
     public function getValidPhones()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS("select CONCAT(SUBSTRING(phone, 1, LENGTH(phone)-4),'****') phone,  REPLACE(phone,'+','') valid_phone, id_address_delivery from (
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS("select CONCAT(SUBSTRING(phone, 1, LENGTH(phone)-4),'****') phone,  REPLACE(phone,'+','') valid_phone, id_address as id_address_delivery from (
 select  
 distinct(IFNULL(
 IF(
  (LENGTH(REPLACE(`phone_mobile`, ' ', ''))=10 AND LEFT( REPLACE(`phone_mobile`, ' ', ''),1 )=3) OR
   (LENGTH(REPLACE(`phone_mobile`, ' ', ''))=12 AND LEFT( REPLACE(`phone_mobile`, ' ', ''),3 )='573') OR
     (LENGTH(REPLACE(`phone_mobile`, ' ', ''))=11 AND LEFT( REPLACE(`phone_mobile`, ' ', ''),3 )='346') OR
-  (LENGTH(REPLACE(`phone_mobile`, ' ', ''))=13 AND LEFT( REPLACE(`phone_mobile`, ' ', ''),4 )='+573'), REPLACE(`phone`, ' ', ''), null),
+  (LENGTH(REPLACE(`phone_mobile`, ' ', ''))=13 AND LEFT( REPLACE(`phone_mobile`, ' ', ''),4 )='+573'), REPLACE(`phone_mobile`, ' ', ''), null),
 
 IF( 
  (LENGTH(REPLACE(`phone`, ' ', ''))=10 AND LEFT( REPLACE(`phone`, ' ', ''),1 )=3) OR
   (LENGTH(REPLACE(`phone`, ' ', ''))=12 AND LEFT( REPLACE(`phone`, ' ', ''),3 )='573') OR
       (LENGTH(REPLACE(`phone`, ' ', ''))=11 AND LEFT( REPLACE(`phone`, ' ', ''),3 )='346') OR
-  (LENGTH(REPLACE(`phone`, ' ', ''))=13 AND LEFT( REPLACE(`phone`, ' ', ''),4 )='+573'), REPLACE(`phone`, ' ', ''), null))) phone, id_address_delivery
+  (LENGTH(REPLACE(`phone`, ' ', ''))=13 AND LEFT( REPLACE(`phone`, ' ', ''),4 )='+573'), REPLACE(`phone`, ' ', ''), null))) phone, a.id_address
 from ps_address a
 left join (SELECT max(id_order) max_order, id_address_delivery from ps_orders o group by id_address_delivery) o on o.id_address_delivery=a.id_address
 where a.id_customer = ".$this->id."
 order by max_order desc) x  where phone is not null");
+
+
     }
 
 }

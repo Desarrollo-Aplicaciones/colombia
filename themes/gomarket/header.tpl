@@ -152,7 +152,6 @@
 
 </script>
 {/literal*}
-<script charset="UTF-8" src="//cdn.sendpulse.com/28edd3380a1c17cf65b137fe96516659/js/push/3980a60071856ff2f793718eae2e10fc_1.js" async></script>
 	</head>
 	
 	<body {if isset($page_name)}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column{/if} {if $hide_right_column}hide-right-column{/if} {if $content_only} content_only {/if}">
@@ -245,6 +244,7 @@
 
 				<div id="columns" class="{if isset($grid_column)}{$grid_column}{/if} grid_24 omega alpha">
 				{if $page_name != 'index'}
+                                    {if isset($is_brandcorner) && ($is_brandcorner != 1)}
 					{if isset($settings)}
 						{if (($settings->column == '2_column_left' || $settings->column == '3_column'))}
 							<!-- Left -->
@@ -259,6 +259,7 @@
 								{$HOOK_LEFT_COLUMN}
 							</div>
 					{/if}
+                                    {/if}
 				{/if}
 				<div class="container_24">
 					<!-- Center -->
