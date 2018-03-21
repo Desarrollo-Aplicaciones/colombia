@@ -95,22 +95,22 @@
     @media only screen and (max-width: 500px) and (min-width: 120px) {
         .degradado{
             transform: rotate(0deg) translate(-312px, 0px) rotate(0deg) !important;
-        }  
+        }
     }
     @media only screen and (max-width: 800px) and (min-width: 501px) {
         .degradado{
             transform: rotate(0deg) translate(-500px, 0px) rotate(0deg) !important;
-        }  
+        }
     }
     @media only screen and (max-width: 1200px) and (min-width: 801px) {
         .degradado{
             transform: rotate(0deg) translate(-800px, 0px) rotate(0deg) !important;
-        }  
+        }
     }
     @media (min-width: 1200px) {
         .degradado{
             transform: rotate(0deg) translate(-1200px, 0px) rotate(0deg) !important;
-        }  
+        }
     }
 
     .degradado{
@@ -120,10 +120,10 @@
         animation-duration: 0.2s;
         animation-timing-function: linear;
         animation-fill-mode: both;
-    }  
-  
+    }
+
     @keyframes degr {
-        from   { opacity: 0; transform: rotate(0deg) translate(0px, 0px) rotate(0deg) !important;} 
+        from   { opacity: 0; transform: rotate(0deg) translate(0px, 0px) rotate(0deg) !important;}
         to  { opacity: 1; transform: rotate(0deg) translate(-1460px, 0px) rotate(0deg) !important;}
     }
 
@@ -135,10 +135,10 @@
         animation-timing-function: linear;
         animation-fill-mode: both;
         transform: rotate(0deg) translate(0px, 0px) rotate(0deg) !important;
-    } 
+    }
 
     @keyframes degrOut {
-        from   { opacity: 1; transform: rotate(0deg) translate(-1460px, 0px) rotate(0deg) !important;} 
+        from   { opacity: 1; transform: rotate(0deg) translate(-1460px, 0px) rotate(0deg) !important;}
         to  { opacity: 0; transform: rotate(0deg) translate(0px, 0px) rotate(0deg) !important;}
     }
 
@@ -154,31 +154,31 @@
     }
 
     .stepOne {
-      animation: one 1s ;
-      animation-direction: alternate;
+        animation: one 1s ;
+        animation-direction: alternate;
     }
 
     @keyframes one {
-      0% {
-        transform: rotateY(0deg);
-      }
-      100% {
-        transform: rotateY(-90deg);
-      }
+        0% {
+            transform: rotateY(0deg);
+        }
+        100% {
+            transform: rotateY(-90deg);
+        }
     }
 
     .stepTwo {
-      animation: two 1s ;
-      animation-direction: alternate;
+        animation: two 1s ;
+        animation-direction: alternate;
     }
 
     @keyframes two {
-      0% {
-        transform: rotateY(-90deg);
-      }
-      100% {
-        transform: rotateY(0deg);
-      }
+        0% {
+            transform: rotateY(-90deg);
+        }
+        100% {
+            transform: rotateY(0deg);
+        }
     }
     .box-account{
         overflow: hidden;
@@ -216,7 +216,7 @@
 </div>
 
 <div class="box-account">
-    
+
     <div class="box-title">
         <div style="margin: auto;">
             <h1 style="color: #000 ; border: none" id="title-step1">{l s='Ingresa tu'}
@@ -232,8 +232,8 @@
     </div>
 
 
-        
-    
+
+
     <div id="divStep1" style="padding: 15px 30px; {if $smarty.get.reg != 5} display: block {else} display: none; {/if}">
         <form method="post" class="std" id="form_loginemail">
             <fieldset>
@@ -462,7 +462,7 @@
                 },
                 success: function (jsonData) {
                     if (jsonData.email) {
-                        
+
                         $('#welcome-mail').text($('#email').val());
 
                         $('#error-text').hide();
@@ -482,7 +482,7 @@
                         $(".option-regen[data-via='mail']").attr('data-id', jsonData.id_customer);
                         //$(".option-regen[data-via='tel']").attr('data-id', jsonData.phones[0].id_address_delivery);
                         $("#btn-login1").addClass('postValidate');
-                        
+
                     }
                     else {
                         $('#error-text').show();
@@ -502,7 +502,7 @@
     $(".goLogin").on('click',function(){
         $('#divStep1').removeClass("divStep1out");
         $('#btn-login1').css("left","0px");
-        
+
     });
 
     var passwordLogin = document.getElementById("password");
@@ -634,7 +634,7 @@
         $('#title-step1').show();
 
     });
-    
+
     $('.option-regen').click(function (e) {
         e.preventDefault();
         if (!doingAjax) {
@@ -733,7 +733,7 @@
 
     document.getElementById('email').addEventListener('input', function() {
 
-        var str = $("#email").val(); 
+        var str = $("#email").val();
         var res = str.match(/[.]/);
         var res2 = str.match(/@/);
         if(res == '.' && res2 == '@'){
@@ -747,7 +747,7 @@
 
     document.getElementById('password').addEventListener('input', function() {
 
-        var pass = $("#password").val(); 
+        var pass = $("#password").val();
         if(pass.length > 5){
             $("#btn-login2").addClass('postValidate');
             $("#password").addClass('validCampo');
@@ -758,13 +758,13 @@
     });
 
     $('.registro').on('input', function(){
-       
-        var email = $("#email-register").val(); 
-        var nombre = $("#name-register").val(); 
-        var apellido = $("#lastname-register").val(); 
-        var contrasena = $("#password-register").val(); 
-        var contrasena2 = $("#repassword").val(); 
-        var checkbox = $("#TOSreg").val(); 
+
+        var email = $("#email-register").val();
+        var nombre = $("#name-register").val();
+        var apellido = $("#lastname-register").val();
+        var contrasena = $("#password-register").val();
+        var contrasena2 = $("#repassword").val();
+        var checkbox = $("#TOSreg").val();
         var res = email.match(/[.]/);
         var res2 = email.match(/@/);
         if(res == '.' && res2 == '@'){
@@ -803,17 +803,17 @@
         }else{
             $("#btn-register").removeClass('postValidate');
         }
-        
+
     });
 
     $('#TOSreg').on('change', function(){
         if( $('#TOSreg').is(':checked') ){
-            var email = $("#email-register").val(); 
-            var nombre = $("#name-register").val(); 
-            var apellido = $("#lastname-register").val(); 
-            var contrasena = $("#password-register").val(); 
-            var contrasena2 = $("#repassword").val(); 
-            var checkbox = $("#TOSreg").val(); 
+            var email = $("#email-register").val();
+            var nombre = $("#name-register").val();
+            var apellido = $("#lastname-register").val();
+            var contrasena = $("#password-register").val();
+            var contrasena2 = $("#repassword").val();
+            var checkbox = $("#TOSreg").val();
             var res = email.match(/[.]/);
             var res2 = email.match(/@/);
             if(res == '.' && res2 == '@' && nombre.length > 1 && apellido.length > 1 && contrasena.length > 5 && contrasena2.length > 5 ){
