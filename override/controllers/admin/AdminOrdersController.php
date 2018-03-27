@@ -1119,12 +1119,23 @@ class AdminOrdersController extends AdminOrdersControllerCore {
     }
     /* boton crear una orden */
     elseif (Tools::isSubmit('submitAddOrder') && ($id_cart = Tools::getValue('id_cart')) && ($module_name = Tools::getValue('payment_module_name')) && ($id_order_state = Tools::getValue('id_order_state')) && Validate::isModuleName($module_name)) {       //echo 'else if override';                
-      $query_update_employee = "UPDATE ps_cart
+      
+        $date_delivered = Tools::getValue('date_delivered');
+        $hour_delivered_h = Tools::getValue('hour_delivered_h');
+        
+        $query_update_employee = "UPDATE ps_cart
                     SET id_employee = " . (int) Context::getContext()->cookie->id_employee . "
                     WHERE id_cart = " . (int) $id_cart;
+        
       if ($this->tabAccess['edit'] === '1') {
         $payment_module = Module::getInstanceByName($module_name);
         $cart = new Cart((int) $id_cart);
+        $cart->date_delivery = $date_delivered;
+        $cart->time_delivery = substr($hour_delivered_h,0,5);
+        $cart->time_windows = $hour_delivered_h;
+        $cart->update();
+        
+        
         $order = new Order();
         Context::getContext()->currency = new Currency((int) $cart->id_currency);
         Context::getContext()->customer = new Customer((int) $cart->id_customer);

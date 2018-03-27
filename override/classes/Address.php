@@ -414,8 +414,7 @@ FROM  ps_cities_col cities
         return '!';
     }
    
-    public static function horaDeEntrega()
-    {    
+    public static function horaDeEntrega(){
         date_default_timezone_set('America/Bogota');
 
         $inicio_intervalos = (int) Configuration::get('INIT_INTERVALS');
@@ -438,6 +437,9 @@ FROM  ps_cities_col cities
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
         $day_delivered = '';
+        
+        $day_delivered_back = '<select name="" id="day_delivered" name="day_delivered" style="width: 150px !important;">';
+        
         $horasSelect = array();
 
         $numeroDeHoras = (int) Configuration::get('MAX_HOURS_DELIVERED'); // MAX_HOURS_DELIVERED
@@ -477,16 +479,78 @@ FROM  ps_cities_col cities
             }
 
         }
-
-        $day_delivered.= '</select>';
+        $day_delivered_back .=  $day_delivered .= ' </select>';
+/// 
         $js_json_delivered = '<script type="text/javascript">
                                 var js_json_delivered = '.json_encode($horasSelect).'
                                 var form_to_add = "";
                             </script>';
+        
+        $js_json_delivered_back =  '<script type="text/javascript">
+                                var js_json_delivered = '.json_encode($horasSelect).'
+                                var form_to_add = "";
 
-        return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_delivered);
+                                    $(function(){
+     
+                                       form_to_add = "#cod_form";
+
+                                    $("<input>").attr({
+                                        type: "hidden",
+                                        id: "date_delivered",
+                                        name: "date_delivered"
+                                    }).appendTo(form_to_add);
+
+                                    $("<input>").attr({
+                                        type: "hidden",
+                                        id: "hour_delivered_h",
+                                        name: "hour_delivered_h"
+                                    }).appendTo(form_to_add);
+
+                                    $("#hour_delivered").attr("enabled", "true");
+
+                                    if (js_json_delivered.hasOwnProperty($("#day_delivered").val())) {
+                                        $.each(js_json_delivered[$("#day_delivered").val()], function() {
+                                            $("#hour_delivered").append(
+                                                $("<option></option>").text(this).val(this)
+                                            );
+                                        });
+                                    }
+
+                                    $("#day_delivered").change(function() {
+
+                                        if (js_json_delivered.hasOwnProperty($("#day_delivered").val())) {
+                                                    console.log("day_delivered");
+                                            $("#hour_delivered").html("");
+                                            $.each(js_json_delivered[$("#day_delivered").val()], function() {
+                                                $("#hour_delivered").append(
+                                                    $("<option></option>").text(this).val(this)
+                                                );
+
+                                            });
+                                            $("#hour_delivered_h").val($("#hour_delivered").val());
+                                            $("#hour_delivered option[day_delivered]").show();
+                                        } else {
+                                            $("#hour_delivered").html("");
+                                        }
+
+                                    });
+
+                                    $("#hour_delivered_h").val($("#hour_delivered").val());
+                                    $("#date_delivered").val($("#day_delivered").val());
+                                    $("#day_delivered").change(function() {
+                                        $("#date_delivered").val($("#day_delivered").val());
+                                    });
+
+                                    $("#hour_delivered").change(function() {
+                                        $("#hour_delivered_h").val($("#hour_delivered").val());
+
+                                    });
+                                });
+                            </script>';
+
+        return array('js_json_delivered' => $js_json_delivered, 'day_delivered' =>$day_delivered, 'day_delivered_back' => $day_delivered_back, 'js_json_delivered_back' => $js_json_delivered_back);
     }
-
+      
 
 	public static function update_date_delivered(){
 		if ( Tools::getValue( 'hour_delivery' )  == 2 ){

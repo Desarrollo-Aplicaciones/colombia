@@ -1455,10 +1455,10 @@
 	<br>
 	<div id="ctn_toogle_hour_delivery" style="">
 		<div class="etiqueta" id="label-dia"><label>Día<span class="purpura">*</span>:<br></label> 
-			{if isset($day_delivered) && isset($js_json_delivered)}
-			{$day_delivered}
+			{if isset($day_delivered_back) && isset($js_json_delivered_back)}
+			{$day_delivered_back}
 			<br>	
-			{$js_json_delivered}
+			{$js_json_delivered_back}
 			{/if}
 		</div>
 
