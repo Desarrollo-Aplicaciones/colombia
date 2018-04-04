@@ -560,9 +560,9 @@ window.onload = init;
     + 'app2.salesmanago.pl/static/sm.js');
 </script> 
 {/literal}
-{literal}
+{*literal}
 <script type="text/javascript"> var ews = 1;var _smid = "7ymgpvwlezxrq1wn"; (function(w, r, a, sm, s ) { w['SalesmanagoObject'] = r; w[r] = w[r] || function () {( w[r].q = w[r].q || [] ).push(arguments)}; sm = document.createElement('script'); sm.type = 'text/javascript'; sm.async = true; sm.src = a; s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sm, s); })(window, 'sm', ('https:' == document.location.protocol ? 'https://' : 'http://') + 'app2.salesmanago.pl/static/sm.js'); sm('webPush', ['0281d7fb-754a-4350-ac5a-3ce08f228152', '87600']); </script>
-{/literal}
+{/literal*}
 </body>
 
 <!-- Start of LiveChat (www.livechatinc.com) code -->
